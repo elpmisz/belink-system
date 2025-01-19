@@ -55,7 +55,7 @@ $SettingCustomer = ($page === "SettingCustomer" ? 'class="active"' : "");
         <li <?php echo $ServicePayment ?>>
           <a href="/payment">
             <i class="fa fa-bars pr-2"></i>
-            Payment Voucher
+            Payment Order
           </a>
         </li>
       </ul>
@@ -63,7 +63,7 @@ $SettingCustomer = ($page === "SettingCustomer" ? 'class="active"' : "");
         <li <?php echo $ServiceReceipt ?>>
           <a href="/receipt">
             <i class="fa fa-bars pr-2"></i>
-            Receipt Voucher
+            Receipt Order
           </a>
         </li>
       </ul>

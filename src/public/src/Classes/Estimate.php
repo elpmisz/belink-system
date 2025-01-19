@@ -121,6 +121,91 @@ class Estimate
     return $stmt->execute($data);
   }
 
+  public function estimate_item_count($data)
+  {
+    $sql = "SELECT 
+      COUNT(*)
+    FROM belink.estimate_item a
+    WHERE a.status = 1
+    AND a.request_id = ?
+    AND a.expense_id = ?
+    AND a.estimate = ?";
+    $stmt = $this->dbcon->prepare($sql);
+    $stmt->execute($data);
+    return $stmt->fetchColumn();
+  }
+
+  public function estimate_item_insert($data)
+  {
+    $sql = "INSERT INTO belink.estimate_item(`request_id`, `expense_id`, `estimate`) VALUES(?,?,?)";
+    $stmt = $this->dbcon->prepare($sql);
+    return $stmt->execute($data);
+  }
+
+  public function estimate_item_view($data, $reference = null)
+  {
+    $sql = "SELECT 
+      a.id,
+      CONCAT('[',c.`code`,'] ',c.`name`) expense_name,
+      a.estimate
+    FROM belink.estimate_item a
+    LEFT JOIN belink.estimate_request b
+    ON a.request_id = b.id
+    LEFT JOIN belink.expense c
+    ON a.expense_id = c.id
+    WHERE a.`status` = 1
+    AND b.`uuid` = ? ";
+    if (!empty($reference)) {
+      $sql .= " AND c.reference = '{$reference}' ";
+    }
+    $sql .= " ORDER BY c.reference ASC, a.id ASC ";
+    $stmt = $this->dbcon->prepare($sql);
+    $stmt->execute($data);
+    return $stmt->fetchAll();
+  }
+
+  public function estimate_item_reference($data)
+  {
+    $sql = "SELECT 
+      c.`reference`,
+      d.`name` reference_name
+    FROM belink.estimate_item a
+    LEFT JOIN belink.estimate_request b
+    ON a.request_id = b.id
+    LEFT JOIN belink.expense c
+    ON a.expense_id = c.id
+    LEFT JOIN belink.expense d
+    ON c.`reference` = d.id
+    WHERE a.`status` = 1
+    AND b.`uuid` = ?
+    GROUP BY c.`reference` 
+    ORDER BY c.`reference` ASC";
+    $stmt = $this->dbcon->prepare($sql);
+    $stmt->execute($data);
+    return $stmt->fetchAll();
+  }
+
+  public function estimate_item_update($data)
+  {
+    $sql = "UPDATE belink.estimate_item SET
+    estimate = ?,
+    updated = NOW()
+    WHERE id = ?";
+    $stmt = $this->dbcon->prepare($sql);
+    return $stmt->execute($data);
+  }
+
+
+  public function estimate_item_delete($data)
+  {
+    $sql = "UPDATE belink.estimate_item SET
+    status = 0,
+    updated = NOW()
+    WHERE id = ?";
+    $stmt = $this->dbcon->prepare($sql);
+    return $stmt->execute($data);
+  }
+
   public function estimate_file_count($data)
   {
     $sql = "SELECT 
@@ -215,6 +300,21 @@ class Estimate
     if (!empty($keyword)) {
       $sql .= " AND (a.code LIKE '%{$keyword}%' OR a.name LIKE '%{$keyword}%') ";
     }
+    $stmt = $this->dbcon->prepare($sql);
+    $stmt->execute();
+    return $stmt->fetchAll();
+  }
+
+  public function expense_select($keyword)
+  {
+    $sql = "SELECT a.id,
+      CONCAT('[',a.`code`,'] ',a.`name`) `text`
+    FROM belink.expense a
+    WHERE a.`status` = 1 ";
+    if (!empty($keyword)) {
+      $sql .= " AND (a.code LIKE '%{$keyword}%' OR a.name LIKE '%{$keyword}%') ";
+    }
+    $sql .= " ORDER BY a.code ASC ";
     $stmt = $this->dbcon->prepare($sql);
     $stmt->execute();
     return $stmt->fetchAll();

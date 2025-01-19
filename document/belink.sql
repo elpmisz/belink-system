@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: database
--- Generation Time: Jan 15, 2025 at 08:44 AM
+-- Generation Time: Jan 19, 2025 at 01:47 PM
 -- Server version: 11.6.2-MariaDB-ubu2404
 -- PHP Version: 8.2.27
 
@@ -62,6 +62,41 @@ CREATE TABLE `estimate_file` (
   `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `estimate_file`
+--
+
+INSERT INTO `estimate_file` (`id`, `request_id`, `name`, `status`, `updated`, `created`) VALUES
+(1, 1, '0b1732ba2835b590d7fc0adc44bd3794.pdf', 1, NULL, '2025-01-19 19:28:34');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `estimate_item`
+--
+
+CREATE TABLE `estimate_item` (
+  `id` int(11) NOT NULL,
+  `request_id` int(11) NOT NULL,
+  `expense_id` int(11) NOT NULL,
+  `estimate` decimal(20,2) NOT NULL,
+  `status` int(1) NOT NULL DEFAULT 1,
+  `updated` datetime DEFAULT NULL,
+  `created` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `estimate_item`
+--
+
+INSERT INTO `estimate_item` (`id`, `request_id`, `expense_id`, `estimate`, `status`, `updated`, `created`) VALUES
+(1, 1, 5, 40000.00, 1, '2025-01-19 19:39:09', '2025-01-19 18:47:25'),
+(2, 1, 3, 300000.00, 1, '2025-01-19 19:39:09', '2025-01-19 18:47:25'),
+(3, 1, 8, 12000.00, 1, '2025-01-19 19:39:09', '2025-01-19 18:47:25'),
+(4, 1, 9, 250000.00, 1, '2025-01-19 19:39:09', '2025-01-19 18:47:25'),
+(5, 1, 16, 120000.00, 1, '2025-01-19 19:39:09', '2025-01-19 19:30:31'),
+(6, 1, 6, 50000.00, 1, NULL, '2025-01-19 19:39:09');
+
 -- --------------------------------------------------------
 
 --
@@ -76,6 +111,15 @@ CREATE TABLE `estimate_remark` (
   `status` int(1) NOT NULL,
   `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `estimate_remark`
+--
+
+INSERT INTO `estimate_remark` (`id`, `request_id`, `login_id`, `text`, `status`, `created`) VALUES
+(1, 1, 1, '', 2, '2025-01-19 20:05:05'),
+(2, 1, 1, '', 3, '2025-01-19 20:05:11'),
+(3, 1, 1, '', 4, '2025-01-19 20:05:17');
 
 -- --------------------------------------------------------
 
@@ -101,6 +145,13 @@ CREATE TABLE `estimate_request` (
   `updated` datetime DEFAULT NULL,
   `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `estimate_request`
+--
+
+INSERT INTO `estimate_request` (`id`, `uuid`, `last`, `login_id`, `customer_id`, `order_number`, `product_name`, `title_name`, `sales_name`, `budget`, `type`, `remark`, `action`, `status`, `updated`, `created`) VALUES
+(1, '2916f3d7-d65b-11ef-8f0b-0242ac120005', 1, 1, 1, 'SO07010001', 'Breeze', 'Unilever-Breeze Esan', 'Esan Caravan', 3.00, 1, 'TESTTEST\r\nTESTTEST', 1, 4, '2025-01-19 20:05:17', '2025-01-19 18:47:25');
 
 -- --------------------------------------------------------
 
@@ -230,6 +281,12 @@ ALTER TABLE `estimate_file`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `estimate_item`
+--
+ALTER TABLE `estimate_item`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `estimate_remark`
 --
 ALTER TABLE `estimate_remark`
@@ -280,19 +337,25 @@ ALTER TABLE `customer`
 -- AUTO_INCREMENT for table `estimate_file`
 --
 ALTER TABLE `estimate_file`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `estimate_item`
+--
+ALTER TABLE `estimate_item`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `estimate_remark`
 --
 ALTER TABLE `estimate_remark`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `estimate_request`
 --
 ALTER TABLE `estimate_request`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `expense`

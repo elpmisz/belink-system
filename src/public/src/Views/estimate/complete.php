@@ -13,6 +13,7 @@ $uuid = (!empty($param[0]) ? $param[0] : "");
 $row = $ESTIMATE->estimate_view([$uuid]);
 $files = $ESTIMATE->estimate_file_view([$uuid]);
 $remarks = $ESTIMATE->estimate_remark_view([$uuid]);
+$reference = $ESTIMATE->estimate_item_reference([$uuid]);
 ?>
 
 <div class="card shadow">
@@ -90,6 +91,51 @@ $remarks = $ESTIMATE->estimate_remark_view([$uuid]);
               <?php echo $row['type_name'] ?>
             </div>
           </div>
+
+          <?php
+          if (COUNT($reference) > 0) :
+            foreach ($reference as $ref) :
+          ?>
+              <div class="row justify-content-center mb-2">
+                <div class="col-sm-12">
+                  <div class="h5"><?php echo $ref['reference_name'] ?></div>
+                  <div class="table-responsive">
+                    <table class="table table-bordered table-sm item-table">
+                      <thead>
+                        <tr>
+                          <th width="10%">#</th>
+                          <th width="40%">รายจ่าย</th>
+                          <th width="20%">งบประมาณ</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <?php
+                        $items = $ESTIMATE->estimate_item_view([$uuid], $ref['reference']);
+                        $total = 0;
+                        foreach ($items as $key => $item) :
+                          $key++;
+                          $total += $item['estimate'];
+                        ?>
+                          <tr>
+                            <td class="text-center"><?php echo $key ?></td>
+                            <td class="text-left"><?php echo $item['expense_name'] ?></td>
+                            <td class="text-right"><?php echo number_format($item['estimate'], 2) ?></td>
+                          </tr>
+                        <?php endforeach; ?>
+                        <tr>
+                          <td class="text-center h5" colspan="2">รวม</td>
+                          <td class="text-right h5"><?php echo number_format($total, 2) ?></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+          <?php
+            endforeach;
+          endif;
+          ?>
+
           <div class="row mb-2">
             <label class="col-xl-2 offset-xl-2 col-form-label">เอกสารแนบ</label>
             <div class="col-xl-6">
@@ -122,38 +168,38 @@ $remarks = $ESTIMATE->estimate_remark_view([$uuid]);
       </div>
 
       <?php if (COUNT($remarks) > 0) : ?>
-      <div class="row justify-content-center mb-2">
-        <div class="col-xl-10">
-          <hr>
-          <div class="h5 text-primary">รายละเอียดการดำเนินการ</div>
-          <div class="table-responsive">
-            <table class="table table-sm table-bordered table-hover">
-              <thead>
-                <tr>
-                  <th width="10%">#</th>
-                  <th width="20%">ผู้ดำเนินการ</th>
-                  <th width="60%">รายละเอียดการ</th>
-                  <th width="10%">วันที่</th>
-                </tr>
-              </thead>
-              <?php
-              foreach ($remarks as $remark) :
-              ?>
-                <tr>
-                  <td class="text-center">
-                    <span class="badge badge-<?php echo $remark['status_color'] ?> font-weight-light">
-                      <?php echo $remark['status_name'] ?>
-                    </span>
-                  </td>
-                  <td class="text-center"><?php echo $remark['username'] ?></td>
-                  <td class="text-left"><?php echo str_replace("\r\n", "<br>", $remark['text']) ?></td>
-                  <td class="text-center"><?php echo $remark['created'] ?></td>
-                </tr>
-              <?php endforeach; ?>
-            </table>
+        <div class="row justify-content-center mb-2">
+          <div class="col-xl-10">
+            <hr>
+            <div class="h5 text-primary">รายละเอียดการดำเนินการ</div>
+            <div class="table-responsive">
+              <table class="table table-sm table-bordered table-hover">
+                <thead>
+                  <tr>
+                    <th width="10%">#</th>
+                    <th width="20%">ผู้ดำเนินการ</th>
+                    <th width="60%">รายละเอียดการ</th>
+                    <th width="10%">วันที่</th>
+                  </tr>
+                </thead>
+                <?php
+                foreach ($remarks as $remark) :
+                ?>
+                  <tr>
+                    <td class="text-center">
+                      <span class="badge badge-<?php echo $remark['status_color'] ?> font-weight-light">
+                        <?php echo $remark['status_name'] ?>
+                      </span>
+                    </td>
+                    <td class="text-center"><?php echo $remark['username'] ?></td>
+                    <td class="text-left"><?php echo str_replace("\r\n", "<br>", $remark['text']) ?></td>
+                    <td class="text-center"><?php echo $remark['created'] ?></td>
+                  </tr>
+                <?php endforeach; ?>
+              </table>
+            </div>
           </div>
         </div>
-      </div>
       <?php endif; ?>
 
       <div class="row justify-content-center">

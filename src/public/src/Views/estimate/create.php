@@ -104,6 +104,43 @@ include_once(__DIR__ . "/../layout/header.php");
               </div>
             </div>
           </div>
+
+          <div class="row justify-content-center mb-2">
+            <div class="col-sm-12">
+              <div class="table-responsive">
+                <table class="table table-bordered table-sm item-table">
+                  <thead>
+                    <tr>
+                      <th width="10%">#</th>
+                      <th width="40%">รายจ่าย</th>
+                      <th width="20%">งบประมาณ</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="item-tr">
+                      <td class="text-center">
+                        <button type="button" class="btn btn-sm btn-success item-increase">+</button>
+                        <button type="button" class="btn btn-sm btn-danger item-decrease">-</button>
+                      </td>
+                      <td class="text-left">
+                        <select class="form-control form-control-sm expense-select" name="item_expense[]" required></select>
+                        <div class="invalid-feedback">
+                          กรุณากรอกข้อมูล!
+                        </div>
+                      </td>
+                      <td class="text-left">
+                        <input type="number" class="form-control form-control-sm" name="item_estimate[]" min="1" required>
+                        <div class="invalid-feedback">
+                          กรุณากรอกข้อมูล!
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
           <div class="row mb-2">
             <label class="col-xl-2 offset-xl-2 col-form-label">เอกสารแนบ</label>
             <div class="col-xl-6">
@@ -153,6 +190,25 @@ include_once(__DIR__ . "/../layout/header.php");
 <?php include_once(__DIR__ . "/../layout/footer.php"); ?>
 <script>
   initializeSelect2(".customer-select", "/estimate/customer-select", "-- รายชื่อลูกค้า --");
+  initializeSelect2(".expense-select", "/estimate/expense-select", "-- รายชื่อรายจ่าย --");
+
+  $(".item-decrease").hide();
+  $(document).on("click", ".item-increase", function() {
+    $(".expense-select").select2('destroy');
+    let row = $(".item-tr:last");
+    let clone = row.clone();
+    clone.find("input, select").val("");
+    clone.find("span").text("");
+    clone.find(".item-increase").hide();
+    clone.find(".item-decrease").show();
+    clone.find(".item-decrease").on("click", function() {
+      $(this).closest("tr").remove();
+    });
+
+    row.after(clone);
+    clone.show();
+    initializeSelect2(".expense-select", "/estimate/expense-select", "-- รายชื่อรายจ่าย --");
+  });
 
   $(".file-decrease").hide();
   $(document).on("click", ".file-increase", function() {

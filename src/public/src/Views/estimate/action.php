@@ -57,6 +57,16 @@ if ($action === "estimate-create") {
       $ESTIMATE->estimate_insert([$estimate_last, $login_id, $customer_id, $order_number, $product_name, $title_name, $sales_name, $budget, $type, $remark]);
       $request_id = $ESTIMATE->last_insert_id();
 
+      foreach ($_POST['item_expense'] as $key => $row) {
+        $item_expense = (isset($_POST['item_expense'][$key]) ? $VALIDATION->input($_POST['item_expense'][$key]) : "");
+        $item_estimate = (isset($_POST['item_estimate'][$key]) ? $VALIDATION->input($_POST['item_estimate'][$key]) : "");
+
+        $estimate_item_count = $ESTIMATE->estimate_item_count([$request_id, $item_expense, $item_estimate]);
+        if (intval($estimate_item_count) === 0) {
+          $ESTIMATE->estimate_item_insert([$request_id, $item_expense, $item_estimate]);
+        }
+      }
+
       foreach ($_FILES['file']['name'] as $key => $row) {
         $file_name = (isset($_FILES['file']['name']) ? $_FILES['file']['name'][$key] : "");
         $file_tmp = (isset($_FILES['file']['tmp_name']) ? $_FILES['file']['tmp_name'][$key] : "");
@@ -65,7 +75,7 @@ if ($action === "estimate-create") {
         $file_document = ["pdf", "doc", "docx", "xls", "xlsx"];
         $file_allow = array_merge($file_image, $file_document);
         $file_extension = pathinfo(strtolower($file_name), PATHINFO_EXTENSION);
-  
+
         if (!empty($file_name) && in_array($file_extension, $file_allow)) {
           if (in_array($file_extension, $file_document)) {
             $file_rename = "{$file_random}.{$file_extension}";
@@ -77,7 +87,7 @@ if ($action === "estimate-create") {
             $file_path = (__DIR__ . "/../../Publics/estimate/{$file_rename}");
             $VALIDATION->image_upload($file_tmp, $file_path);
           }
-  
+
           $estimate_file_count = $ESTIMATE->estimate_file_count([$request_id, $file_rename]);
           if (intval($estimate_file_count) === 0) {
             $ESTIMATE->estimate_file_insert([$request_id, $file_rename]);
@@ -105,6 +115,25 @@ if ($action === "estimate-update") {
     $budget = (isset($_POST['budget']) ? $VALIDATION->input($_POST['budget']) : "");
     $type = (isset($_POST['type']) ? $VALIDATION->input($_POST['type']) : "");
     $remark = (isset($_POST['remark']) ? $VALIDATION->input($_POST['remark']) : "");
+
+    foreach ($_POST['item__id'] as $key => $row) {
+      $item__id = (isset($_POST['item__id'][$key]) ? $VALIDATION->input($_POST['item__id'][$key]) : "");
+      $item__estimate = (isset($_POST['item__estimate'][$key]) ? $VALIDATION->input($_POST['item__estimate'][$key]) : "");
+
+      $ESTIMATE->estimate_item_update([$item__estimate, $item__id]);
+    }
+
+    if (isset($_POST['item_expense'])) {
+      foreach ($_POST['item_expense'] as $key => $row) {
+        $item_expense = (isset($_POST['item_expense'][$key]) ? $VALIDATION->input($_POST['item_expense'][$key]) : "");
+        $item_estimate = (isset($_POST['item_estimate'][$key]) ? $VALIDATION->input($_POST['item_estimate'][$key]) : "");
+
+        $estimate_item_count = $ESTIMATE->estimate_item_count([$request_id, $item_expense, $item_estimate]);
+        if (intval($estimate_item_count) === 0) {
+          $ESTIMATE->estimate_item_insert([$request_id, $item_expense, $item_estimate]);
+        }
+      }
+    }
 
     foreach ($_FILES['file']['name'] as $key => $row) {
       $file_name = (isset($_FILES['file']['name']) ? $_FILES['file']['name'][$key] : "");
@@ -200,6 +229,20 @@ if ($action === "finance-data") {
   }
 }
 
+if ($action === "item-delete") {
+  try {
+    $data = json_decode(file_get_contents("php://input"), true);
+    $id = $data['id'];
+    if (!empty($id)) {
+      $ESTIMATE->estimate_item_delete([$id]);
+      echo json_encode(200);
+    } else {
+      echo json_encode(500);
+    }
+  } catch (PDOException $e) {
+    die($e->getMessage());
+  }
+}
 
 if ($action === "file-delete") {
   try {
@@ -220,6 +263,17 @@ if ($action === "customer-select") {
   try {
     $keyword = (isset($_POST['q']) ? $VALIDATION->input($_POST['q']) : "");
     $result = $ESTIMATE->customer_select($keyword);
+
+    echo json_encode($result);
+  } catch (PDOException $e) {
+    die($e->getMessage());
+  }
+}
+
+if ($action === "expense-select") {
+  try {
+    $keyword = (isset($_POST['q']) ? $VALIDATION->input($_POST['q']) : "");
+    $result = $ESTIMATE->expense_select($keyword);
 
     echo json_encode($result);
   } catch (PDOException $e) {

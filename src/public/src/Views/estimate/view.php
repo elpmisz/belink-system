@@ -11,6 +11,7 @@ $param = (isset($params) ? explode("/", $params) : "");
 $uuid = (!empty($param[0]) ? $param[0] : "");
 
 $row = $ESTIMATE->estimate_view([$uuid]);
+$items = $ESTIMATE->estimate_item_view([$uuid]);
 $files = $ESTIMATE->estimate_file_view([$uuid]);
 $remarks = $ESTIMATE->estimate_remark_view([$uuid]);
 ?>
@@ -139,6 +140,60 @@ $remarks = $ESTIMATE->estimate_remark_view([$uuid]);
               </div>
             </div>
           </div>
+
+          <div class="row justify-content-center mb-2">
+            <div class="col-sm-12">
+              <div class="table-responsive">
+                <table class="table table-bordered table-sm item-table">
+                  <thead>
+                    <tr>
+                      <th width="10%">#</th>
+                      <th width="40%">รายจ่าย</th>
+                      <th width="20%">งบประมาณ</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <?php
+                    foreach ($items as $item) :
+                    ?>
+                      <tr>
+                        <td class="text-center">
+                          <a href="javascript:void(0)" class="badge badge-danger font-weight-light item-delete" id="<?php echo $item['id'] ?>">ลบ</a>
+                          <input type="hidden" class="form-control form-control-sm text-center" name="item__id[]" value="<?php echo $item['id'] ?>" readonly>
+                        </td>
+                        <td class="text-left"><?php echo $item['expense_name'] ?></td>
+                        <td class="text-left">
+                          <input type="number" class="form-control form-control-sm" name="item__estimate[]" value="<?php echo $item['estimate'] ?>" min="1" required>
+                          <div class="invalid-feedback">
+                            กรุณากรอกข้อมูล!
+                          </div>
+                        </td>
+                      </tr>
+                    <?php endforeach; ?>
+                    <tr class="item-tr">
+                      <td class="text-center">
+                        <button type="button" class="btn btn-sm btn-success item-increase">+</button>
+                        <button type="button" class="btn btn-sm btn-danger item-decrease">-</button>
+                      </td>
+                      <td class="text-left">
+                        <select class="form-control form-control-sm expense-select" name="item_expense[]"></select>
+                        <div class="invalid-feedback">
+                          กรุณากรอกข้อมูล!
+                        </div>
+                      </td>
+                      <td>
+                        <input type="number" class="form-control form-control-sm" name="item_estimate[]" min="1">
+                        <div class="invalid-feedback">
+                          กรุณากรอกข้อมูล!
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
           <div class="row mb-2">
             <label class="col-xl-2 offset-xl-2 col-form-label">เอกสารแนบ</label>
             <div class="col-xl-6">
@@ -188,38 +243,38 @@ $remarks = $ESTIMATE->estimate_remark_view([$uuid]);
       </div>
 
       <?php if (COUNT($remarks) > 0) : ?>
-      <div class="row justify-content-center mb-2">
-        <div class="col-xl-10">
-          <hr>
-          <div class="h5 text-primary">รายละเอียดการดำเนินการ</div>
-          <div class="table-responsive">
-            <table class="table table-sm table-bordered table-hover">
-              <thead>
-                <tr>
-                  <th width="10%">#</th>
-                  <th width="20%">ผู้ดำเนินการ</th>
-                  <th width="60%">รายละเอียดการ</th>
-                  <th width="10%">วันที่</th>
-                </tr>
-              </thead>
-              <?php
-              foreach ($remarks as $remark) :
-              ?>
-                <tr>
-                  <td class="text-center">
-                    <span class="badge badge-<?php echo $remark['status_color'] ?> font-weight-light">
-                      <?php echo $remark['status_name'] ?>
-                    </span>
-                  </td>
-                  <td class="text-center"><?php echo $remark['username'] ?></td>
-                  <td class="text-left"><?php echo str_replace("\r\n", "<br>", $remark['text']) ?></td>
-                  <td class="text-center"><?php echo $remark['created'] ?></td>
-                </tr>
-              <?php endforeach; ?>
-            </table>
+        <div class="row justify-content-center mb-2">
+          <div class="col-xl-10">
+            <hr>
+            <div class="h5 text-primary">รายละเอียดการดำเนินการ</div>
+            <div class="table-responsive">
+              <table class="table table-sm table-bordered table-hover">
+                <thead>
+                  <tr>
+                    <th width="10%">#</th>
+                    <th width="20%">ผู้ดำเนินการ</th>
+                    <th width="60%">รายละเอียดการ</th>
+                    <th width="10%">วันที่</th>
+                  </tr>
+                </thead>
+                <?php
+                foreach ($remarks as $remark) :
+                ?>
+                  <tr>
+                    <td class="text-center">
+                      <span class="badge badge-<?php echo $remark['status_color'] ?> font-weight-light">
+                        <?php echo $remark['status_name'] ?>
+                      </span>
+                    </td>
+                    <td class="text-center"><?php echo $remark['username'] ?></td>
+                    <td class="text-left"><?php echo str_replace("\r\n", "<br>", $remark['text']) ?></td>
+                    <td class="text-center"><?php echo $remark['created'] ?></td>
+                  </tr>
+                <?php endforeach; ?>
+              </table>
+            </div>
           </div>
         </div>
-      </div>
       <?php endif; ?>
 
       <div class="row justify-content-center">
@@ -243,6 +298,25 @@ $remarks = $ESTIMATE->estimate_remark_view([$uuid]);
 <?php include_once(__DIR__ . "/../layout/footer.php"); ?>
 <script>
   initializeSelect2(".customer-select", "/estimate/customer-select", "-- รายชื่อลูกค้า --");
+  initializeSelect2(".expense-select", "/estimate/expense-select", "-- รายชื่อรายจ่าย --");
+
+  $(".item-decrease").hide();
+  $(document).on("click", ".item-increase", function() {
+    $(".expense-select").select2('destroy');
+    let row = $(".item-tr:last");
+    let clone = row.clone();
+    clone.find("input, select").val("");
+    clone.find("span").text("");
+    clone.find(".item-increase").hide();
+    clone.find(".item-decrease").show();
+    clone.find(".item-decrease").on("click", function() {
+      $(this).closest("tr").remove();
+    });
+
+    row.after(clone);
+    clone.show();
+    initializeSelect2(".expense-select", "/estimate/expense-select", "-- รายชื่อรายจ่าย --");
+  });
 
   $(".file-decrease").hide();
   $(document).on("click", ".file-increase", function() {
@@ -278,6 +352,50 @@ $remarks = $ESTIMATE->estimate_remark_view([$uuid]);
       })
       $(this).val("");
     }
+  });
+
+  $(document).on("click", ".item-delete", function(e) {
+    let id = $(this).prop("id");
+    e.preventDefault();
+    Swal.fire({
+      title: "ยืนยันที่จะลบ?",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "ยืนยัน",
+      cancelButtonText: "ปิด",
+    }).then((result) => {
+      if (result.value) {
+        axios.post("/estimate/item-delete", {
+          id: id
+        }).then((res) => {
+          let result = res.data;
+          console.log(result)
+          if (result === 200) {
+            Swal.fire({
+              title: "ดำเนินการเรียบร้อย!",
+              text: "",
+              icon: "success"
+            }).then((result) => {
+              location.reload()
+            });
+          } else {
+            Swal.fire({
+              title: "ระบบมีปัญหา\nกรุณาลองใหม่อีกครั้ง!",
+              text: "",
+              icon: "error"
+            }).then((result) => {
+              location.reload()
+            });
+          }
+        }).catch((error) => {
+          console.log(error);
+        });
+      } else {
+        return false;
+      }
+    })
   });
 
   $(document).on("click", ".file-delete", function(e) {
