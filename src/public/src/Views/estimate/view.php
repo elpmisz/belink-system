@@ -284,6 +284,11 @@ $remarks = $ESTIMATE->estimate_remark_view([$uuid]);
           </button>
         </div>
         <div class="col-sm-6 col-xl-3 mb-2">
+          <a class="btn btn-primary btn-sm btn-block" href="/estimate/print/<?php echo $row['uuid'] ?>" target="_blank">
+            <i class="fas fa-print pr-2"></i>พิมพ์
+          </a>
+        </div>
+        <div class="col-sm-6 col-xl-3 mb-2">
           <a class="btn btn-danger btn-sm btn-block" href="/estimate">
             <i class="fas fa-arrow-left pr-2"></i>หน้าหลัก
           </a>
