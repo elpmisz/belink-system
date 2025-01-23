@@ -305,57 +305,38 @@ $remarks = $ESTIMATE->estimate_remark_view([$uuid]);
   initializeSelect2(".customer-select", "/estimate/customer-select", "-- รายชื่อลูกค้า --");
   initializeSelect2(".expense-select", "/estimate/expense-select", "-- รายชื่อรายจ่าย --");
 
-  $(".item-decrease").hide();
+  $(".item-decrease, .file-decrease").hide();
+
   $(document).on("click", ".item-increase", function() {
     $(".expense-select").select2('destroy');
-    let row = $(".item-tr:last");
-    let clone = row.clone();
-    clone.find("input, select").val("");
-    clone.find("span").text("");
-    clone.find(".item-increase").hide();
-    clone.find(".item-decrease").show();
-    clone.find(".item-decrease").on("click", function() {
-      $(this).closest("tr").remove();
-    });
-
-    row.after(clone);
-    clone.show();
+    cloneRow(".item-tr", "input, select, span", ".item-increase", ".item-decrease");
     initializeSelect2(".expense-select", "/estimate/expense-select", "-- รายชื่อรายจ่าย --");
   });
 
-  $(".file-decrease").hide();
   $(document).on("click", ".file-increase", function() {
-    let row = $(".tr-file:last");
-    let clone = row.clone();
-    clone.find("input").val("");
-    clone.find(".file-increase").hide();
-    clone.find(".file-decrease").show();
-    clone.find(".file-decrease").on("click", function() {
-      $(this).closest("tr").remove();
-    });
-    row.after(clone);
-    clone.show();
+    cloneRow(".tr-file", "input", ".file-increase", ".file-decrease");
   });
 
   $(document).on("change", "input[name='file[]']", function() {
-    let file = $(this).val();
-    let size = ($(this)[0].files[0].size / (1024 * 1024)).toFixed(2);
-    let extension = file.split(".").pop().toLowerCase();
-    let allow = ["png", "jpeg", "jpg", "pdf", "doc", "docx", "xls", "xlsx"];
+    const file = $(this).val();
+    const size = ($(this)[0].files[0].size / (1024 * 1024)).toFixed(2);
+    const extension = file.split(".").pop().toLowerCase();
+    const allowedExtensions = ["png", "jpeg", "jpg", "pdf", "doc", "docx", "xls", "xlsx"];
+
     if (size > 5) {
       Swal.fire({
         icon: "error",
         title: "ไฟล์เอกสารไม่เกิน 5 Mb!",
-      })
-      $(this).val("");
+      });
+      return $(this).val("");
     }
 
-    if ($.inArray(extension, allow) === -1) {
+    if (!allowedExtensions.includes(extension)) {
       Swal.fire({
         icon: "error",
         title: "เฉพาะไฟล์นามสกุล JPG, PNG, WORD และ EXCEL เท่านั้น",
-      })
-      $(this).val("");
+      });
+      return $(this).val("");
     }
   });
 
@@ -373,10 +354,9 @@ $remarks = $ESTIMATE->estimate_remark_view([$uuid]);
     }).then((result) => {
       if (result.value) {
         axios.post("/estimate/item-delete", {
-          id: id
+          id
         }).then((res) => {
           let result = res.data;
-          console.log(result)
           if (result === 200) {
             Swal.fire({
               title: "ดำเนินการเรียบร้อย!",
@@ -417,10 +397,9 @@ $remarks = $ESTIMATE->estimate_remark_view([$uuid]);
     }).then((result) => {
       if (result.value) {
         axios.post("/estimate/file-delete", {
-          id: id
+          id
         }).then((res) => {
           let result = res.data;
-          console.log(result)
           if (result === 200) {
             Swal.fire({
               title: "ดำเนินการเรียบร้อย!",

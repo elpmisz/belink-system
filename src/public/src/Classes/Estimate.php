@@ -310,7 +310,8 @@ class Estimate
     $sql = "SELECT a.id,
       CONCAT('[',a.`code`,'] ',a.`name`) `text`
     FROM belink.expense a
-    WHERE a.`status` = 1 ";
+    WHERE a.`status` = 1
+    AND a.type = 2 ";
     if (!empty($keyword)) {
       $sql .= " AND (a.code LIKE '%{$keyword}%' OR a.name LIKE '%{$keyword}%') ";
     }
