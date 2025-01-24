@@ -122,14 +122,14 @@ include_once(__DIR__ . "/../layout/header.php");
                         <button type="button" class="btn btn-sm btn-success item-increase">+</button>
                         <button type="button" class="btn btn-sm btn-danger item-decrease">-</button>
                       </td>
-                      <td class="text-left">
+                      <td>
                         <select class="form-control form-control-sm expense-select" name="item_expense[]" required></select>
                         <div class="invalid-feedback">
                           กรุณากรอกข้อมูล!
                         </div>
                       </td>
-                      <td class="text-left">
-                        <input type="number" class="form-control form-control-sm" name="item_estimate[]" min="1" required>
+                      <td>
+                        <input type="number" class="form-control form-control-sm text-right" name="item_estimate[]" min="1" required>
                         <div class="invalid-feedback">
                           กรุณากรอกข้อมูล!
                         </div>
@@ -145,7 +145,7 @@ include_once(__DIR__ . "/../layout/header.php");
             <label class="col-xl-2 offset-xl-2 col-form-label">เอกสารแนบ</label>
             <div class="col-xl-6">
               <table class="table-sm">
-                <tr class="tr-file">
+                <tr class="file-tr">
                   <td>
                     <a href="javascript:void(0)" class="btn btn-success btn-sm file-increase">+</a>
                     <a href="javascript:void(0)" class="btn btn-danger btn-sm file-decrease">-</a>
@@ -193,15 +193,37 @@ include_once(__DIR__ . "/../layout/header.php");
   initializeSelect2(".expense-select", "/estimate/expense-select", "-- รายชื่อรายจ่าย --");
 
   $(".item-decrease, .file-decrease").hide();
-
   $(document).on("click", ".item-increase", function() {
     $(".expense-select").select2('destroy');
-    cloneRow(".item-tr", "input, select, span", ".item-increase", ".item-decrease");
+
+    let row = $(".item-tr:last");
+    let clone = row.clone();
+    clone.find("input, select").val("").empty();
+    clone.find("span").text("");
+    clone.find(".item-increase").hide();
+    clone.find(".item-decrease").show();
+
+    clone.find(".item-decrease").off("click").on("click", function() {
+      $(this).closest("tr").remove();
+    });
+
+    row.after(clone);
     initializeSelect2(".expense-select", "/estimate/expense-select", "-- รายชื่อรายจ่าย --");
   });
 
   $(document).on("click", ".file-increase", function() {
-    cloneRow(".tr-file", "input", ".file-increase", ".file-decrease");
+    let row = $(".file-tr:last");
+    let clone = row.clone();
+    clone.find("input, select").val("").empty();
+    clone.find("span").text("");
+    clone.find(".file-increase").hide();
+    clone.find(".file-decrease").show();
+
+    clone.find(".file-decrease").off("click").on("click", function() {
+      $(this).closest("tr").remove();
+    });
+
+    row.after(clone);
   });
 
   $(document).on("change", "input[name='file[]']", function() {

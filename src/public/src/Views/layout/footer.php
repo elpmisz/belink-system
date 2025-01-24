@@ -84,18 +84,6 @@ unset($_SESSION['alert'], $_SESSION['text']);
       }
     });
   }
-
-  function cloneRow(selector, inputSelector, increaseClass, decreaseClass) {
-    let row = $(selector + ":last");
-    let clone = row.clone();
-    clone.find(inputSelector).val("");
-    clone.find(increaseClass).hide();
-    clone.find(decreaseClass).show().off("click").on("click", function() {
-      $(this).closest("tr").remove();
-    });
-    row.after(clone);
-    clone.show();
-  }
 </script>
 </body>
 

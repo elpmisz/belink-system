@@ -20,7 +20,7 @@ include_once(__DIR__ . "/../layout/header.php");
           <div class="row mb-2">
             <label class="col-xl-2 offset-xl-2 col-form-label">เลขที่สัญญา</label>
             <div class="col-xl-4">
-              <select class="form-control form-control-sm order-select" name="order_number" required></select>
+              <select class="form-control form-control-sm order-select" name="order_number"></select>
               <div class="invalid-feedback">
                 กรุณากรอกข้อมูล!
               </div>
@@ -133,40 +133,48 @@ include_once(__DIR__ . "/../layout/header.php");
                         </div>
                       </td>
                       <td>
-                        <input type="text" class="form-control form-control-sm text-right">
+                        <input type="text" class="form-control form-control-sm text-left" required>
                         <div class="invalid-feedback">
-                          กรุณา กรอกข้อมูล!
+                          กรุณากรอกข้อมูล!
                         </div>
                       </td>
                       <td>
-                        <input type="text" class="form-control form-control-sm text-right">
+                        <input type="text" class="form-control form-control-sm text-left" required>
                         <div class="invalid-feedback">
-                          กรุณา กรอกข้อมูล!
+                          กรุณากรอกข้อมูล!
                         </div>
                       </td>
-                      <td>
-                        <input type="text" class="form-control form-control-sm text-right">
-                        <div class="invalid-feedback">
-                          กรุณา กรอกข้อมูล!
-                        </div>
                       </td>
                       <td>
-                        <input type="text" class="form-control form-control-sm text-right">
+                        <input type="number" class="form-control form-control-sm text-right amount-item" min="1" step="0.01" required>
                         <div class="invalid-feedback">
-                          กรุณา กรอกข้อมูล!
+                          กรุณากรอกข้อมูล!
                         </div>
                       </td>
-                      <td>
-                        <input type="text" class="form-control form-control-sm text-right">
-                        <div class="invalid-feedback">
-                          กรุณา กรอกข้อมูล!
-                        </div>
                       </td>
                       <td>
-                        <input type="text" class="form-control form-control-sm text-right" required>
-                        <div class="invalid-feedback">
-                          กรุณา กรอกข้อมูล!
-                        </div>
+                        <input type="number" class="form-control form-control-sm text-right vat-item" min="1" step="0.01">
+                      </td>
+                      <td>
+                        <input type="number" class="form-control form-control-sm text-right wt-item" min="1" step="0.01">
+                      </td>
+                      <td class="text-right">
+                        <span class="total-item"></span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td colspan="4" class="text-right">รวมทั้งสิ้น</td>
+                      <td class="text-right">
+                        <span class=" amount-total"></span>
+                      </td>
+                      <td class="text-right">
+                        <span class=" vat-total"></span>
+                      </td>
+                      <td class="text-right">
+                        <span class=" wt-total"></span>
+                      </td>
+                      <td class="text-right">
+                        <span class=" all-total"></span>
                       </td>
                     </tr>
                   </tbody>
@@ -203,8 +211,22 @@ include_once(__DIR__ . "/../layout/header.php");
   $(".item-decrease").hide();
   $(document).on("click", ".item-increase", function() {
     $(".expense-select").select2('destroy');
-    cloneRow(".item-tr", "input, select, span", ".item-increase", ".item-decrease");
+
+    let row = $(".item-tr:last");
+    let clone = row.clone();
+    clone.find("input, select").val("").empty();
+    clone.find("span").text("");
+    clone.find(".item-increase").hide();
+    clone.find(".item-decrease").show();
+
+    clone.find(".item-decrease").off("click").on("click", function() {
+      $(this).closest("tr").remove();
+      updateTotal();
+    });
+
+    row.after(clone);
     initializeSelect2(".expense-select", "/estimate/expense-select", "-- รายชื่อรายจ่าย --");
+    updateTotal();
   });
 
   $(document).on("click", "input[name='type']", function() {
@@ -248,18 +270,40 @@ include_once(__DIR__ . "/../layout/header.php");
 
           items.forEach((item, index) => {
             tableContent += `
-            <tr>
+            <tr class="item-tr">
               <td class="text-center">${index + 1}</td>
               <td class="text-left">${item.expense_name}</td>
-              <td class="text-center"></td>
-              <td class="text-center"></td>
-              <td class="text-center"></td>
-              <td class="text-center"></td>
-              <td class="text-center"></td>
-              <td class="text-center"></td>
+              <td>
+                <input type="text" class="form-control form-control-sm text-left" required>
+                <div class="invalid-feedback">กรุณากรอกข้อมูล!</div>
+              </td>
+              <td>
+                <input type="text" class="form-control form-control-sm text-left" required>
+                <div class="invalid-feedback">กรุณากรอกข้อมูล!</div>
+              </td>
+              <td>
+                <input type="number" class="form-control form-control-sm text-right amount-item" min="1" step="0.01" required><div class="invalid-feedback">กรุณากรอกข้อมูล!</div>
+              </td>
+              <td>
+                <input type="number" class="form-control form-control-sm text-right vat-item" min="1" step="0.01">
+              </td>
+              <td>
+                <input type="number" class="form-control form-control-sm text-right wt-item" min="1" step="0.01">
+              </td>
+              <td class="text-right"><span class="total-item"></span></td>
             </tr>
           `;
           });
+
+          tableContent += `
+            <tr>
+              <td colspan="4" class="text-right">รวมทั้งสิ้น</td>
+              <td class="text-right"><span class="amount-total"></span></td>
+              <td class="text-right"><span class="vat-total"></span></td>
+              <td class="text-right"><span class="wt-total"></span></td>
+              <td class="text-right"><span class="all-total"></span></td>
+            </tr>
+          `;
 
           $(".items-div").show();
         } else {
@@ -272,4 +316,37 @@ include_once(__DIR__ . "/../layout/header.php");
         console.error(error);
       });
   });
+
+  $(document).on("blur", ".amount-item, .vat-item, .wt-item", function() {
+    const row = $(this).closest("tr");
+    const amount = parseFloat(row.find(".amount-item").val() || 0);
+    const vat = parseFloat(row.find(".vat-item").val() || 0);
+    const wt = parseFloat(row.find(".wt-item").val() || 0);
+
+    const total = (amount + vat + wt).toFixed(2);
+    row.find(".total-item").text(total);
+
+    updateTotal();
+  });
+
+  function updateTotal() {
+    let totalAmount = 0;
+    let totalVat = 0;
+    let totalWt = 0;
+
+    $("tr.item-tr").each(function() {
+      const amount = parseFloat($(this).find(".amount-item").val() || 0);
+      const vat = parseFloat($(this).find(".vat-item").val() || 0);
+      const wt = parseFloat($(this).find(".wt-item").val() || 0);
+
+      totalAmount += amount;
+      totalVat += vat;
+      totalWt += wt;
+    });
+
+    $(".amount-total").text(totalAmount.toFixed(2));
+    $(".vat-total").text(totalVat.toFixed(2));
+    $(".wt-total").text(totalWt.toFixed(2));
+    $(".all-total").text((totalAmount + totalVat + totalWt).toFixed(2));
+  }
 </script>
