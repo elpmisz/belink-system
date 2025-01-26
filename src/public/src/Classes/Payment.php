@@ -16,7 +16,7 @@ class Payment
 
   public function order_view($data)
   {
-    $sql = "SELECT 
+    $sql = "SELECT b.expense_id,
       CONCAT('[',c.`code`,'] ',c.`name`) expense_name,
       b.estimate
     FROM belink.estimate_request a

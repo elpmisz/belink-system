@@ -8,7 +8,7 @@ include_once(__DIR__ . "/../layout/header.php");
   <h4 class="card-header text-center">Payment Order</h4>
   <div class="card-body">
 
-    <form action="/payment/create" method="POST" class="needs-validation" novalidate>
+    <form action="/payment/create" method="POST" class="needs-validation" novalidate enctype="multipart/form-data">
       <div class="row">
         <div class="col-xl-12">
           <div class="row mb-2">
@@ -102,9 +102,6 @@ include_once(__DIR__ . "/../layout/header.php");
           </div>
 
           <div class="row mb-2 items-custom-div">
-          </div>
-
-          <div class="row mb-2 items-custom-div">
             <div class="col-xl-12">
               <div class="table-responsive">
                 <table class="table table-bordered">
@@ -127,36 +124,36 @@ include_once(__DIR__ . "/../layout/header.php");
                         <button type="button" class="btn btn-sm btn-danger item-decrease">-</button>
                       </td>
                       <td>
-                        <select class="form-control form-control-sm expense-select" name="item_expense[]"></select>
+                        <select class="form-control form-control-sm expense-select" name="expense_id[]"></select>
                         <div class="invalid-feedback">
                           กรุณากรอกข้อมูล!
                         </div>
                       </td>
                       <td>
-                        <input type="text" class="form-control form-control-sm text-left" required>
+                        <input type="text" class="form-control form-control-sm text-left" name="item_text[]">
                         <div class="invalid-feedback">
                           กรุณากรอกข้อมูล!
                         </div>
                       </td>
                       <td>
-                        <input type="text" class="form-control form-control-sm text-left" required>
-                        <div class="invalid-feedback">
-                          กรุณากรอกข้อมูล!
-                        </div>
-                      </td>
-                      </td>
-                      <td>
-                        <input type="number" class="form-control form-control-sm text-right amount-item" min="1" step="0.01" required>
+                        <input type="text" class="form-control form-control-sm text-left" name="item_text2[]">
                         <div class="invalid-feedback">
                           กรุณากรอกข้อมูล!
                         </div>
                       </td>
                       </td>
                       <td>
-                        <input type="number" class="form-control form-control-sm text-right vat-item" min="1" step="0.01">
+                        <input type="number" class="form-control form-control-sm text-right amount-item" min="1" step="0.01" name="item_amount[]">
+                        <div class="invalid-feedback">
+                          กรุณากรอกข้อมูล!
+                        </div>
+                      </td>
                       </td>
                       <td>
-                        <input type="number" class="form-control form-control-sm text-right wt-item" min="1" step="0.01">
+                        <input type="number" class="form-control form-control-sm text-right vat-item" min="1" step="0.01" name="item_vat[]">
+                      </td>
+                      <td>
+                        <input type="number" class="form-control form-control-sm text-right wt-item" min="1" step="0.01" name="item_wt">
                       </td>
                       <td class="text-right">
                         <span class="total-item"></span>
@@ -185,6 +182,23 @@ include_once(__DIR__ . "/../layout/header.php");
         </div>
       </div>
 
+      <div class="row mb-2">
+        <label class="col-xl-2 offset-xl-2 col-form-label">เอกสารแนบ</label>
+        <div class="col-xl-6">
+          <table class="table-sm">
+            <tr class="file-tr">
+              <td>
+                <a href="javascript:void(0)" class="btn btn-success btn-sm file-increase">+</a>
+                <a href="javascript:void(0)" class="btn btn-danger btn-sm file-decrease">-</a>
+              </td>
+              <td>
+                <input type="file" class="form-control" name="file[]" accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png">
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+
       <div class="row justify-content-center">
         <div class="col-sm-6 col-xl-3 mb-2">
           <button type="submit" class="btn btn-success btn-sm btn-block">
@@ -208,7 +222,7 @@ include_once(__DIR__ . "/../layout/header.php");
   initializeSelect2(".order-select", "/payment/order-select", "-- รายชื่อเลขที่สัญญา --");
   initializeSelect2(".expense-select", "/estimate/expense-select", "-- รายชื่อรายจ่าย --");
 
-  $(".item-decrease").hide();
+  $(".item-decrease, .file-decrease").hide();
   $(document).on("click", ".item-increase", function() {
     $(".expense-select").select2('destroy');
 
@@ -239,12 +253,43 @@ include_once(__DIR__ . "/../layout/header.php");
       .val(isCheque ? "" : "");
   });
 
+  $(document).on("click", ".file-increase", function() {
+    let row = $(".file-tr:last");
+    let clone = row.clone();
+    clone.find("input, select").val("").empty();
+    clone.find("span").text("");
+    clone.find(".file-increase").hide();
+    clone.find(".file-decrease").show();
+
+    clone.find(".file-decrease").off("click").on("click", function() {
+      $(this).closest("tr").remove();
+    });
+
+    row.after(clone);
+  });
+
   $(document).on("change", ".order-select", function() {
     const order = $(this).val() || 0;
+    const row = $(this).closest("tr");
+
     if (order === 0) {
       $(".items-custom-div").show();
+      $(".expense-select").prop("required", true);
+      $("input[name='item_text[]'], input[name='item_text2[]'], input[name='item_amount[]']").prop("required", true);
+
+      initializeSelect2(".expense-select", "/estimate/expense-select", "-- รายชื่อรายจ่าย --");
     } else {
       $(".items-custom-div").hide();
+      $(".expense-select").prop("required", false);
+      $(".item-tr").each(function() {
+        $(this).find("input").val("");
+        $(this).find("span").text("");
+        $(this).find("select").val(null).trigger('change');
+      });
+      $("tr:last").find(".amount-total, .vat-total, .wt-total, .all-total").text("");
+
+      $(".expense-select").prop("required", false);
+      $("input[name='item_text[]'], input[name='item_text2[]'], input[name='item_amount[]']").prop("required", false);
     }
 
     axios.post("/payment/order-view", {
@@ -253,7 +298,6 @@ include_once(__DIR__ . "/../layout/header.php");
       .then((res) => {
         const items = res.data;
         let tableContent = '';
-
         if (items.length > 0) {
           tableContent = `
           <tr>
@@ -272,23 +316,27 @@ include_once(__DIR__ . "/../layout/header.php");
             tableContent += `
             <tr class="item-tr">
               <td class="text-center">${index + 1}</td>
-              <td class="text-left">${item.expense_name}</td>
-              <td>
-                <input type="text" class="form-control form-control-sm text-left" required>
+              <td class="text-left">
+              ${item.expense_name}
+              <input type="hidden" class="form-control form-control-sm text-left" name="expense_id[]" value="${item.expense_id}" readonly>
                 <div class="invalid-feedback">กรุณากรอกข้อมูล!</div>
               </td>
               <td>
-                <input type="text" class="form-control form-control-sm text-left" required>
+                <input type="text" class="form-control form-control-sm text-left" name="item_text[]" required>
                 <div class="invalid-feedback">กรุณากรอกข้อมูล!</div>
               </td>
               <td>
-                <input type="number" class="form-control form-control-sm text-right amount-item" min="1" step="0.01" required><div class="invalid-feedback">กรุณากรอกข้อมูล!</div>
+                <input type="text" class="form-control form-control-sm text-left" name="item_text2[]" required>
+                <div class="invalid-feedback">กรุณากรอกข้อมูล!</div>
               </td>
               <td>
-                <input type="number" class="form-control form-control-sm text-right vat-item" min="1" step="0.01">
+                <input type="number" class="form-control form-control-sm text-right amount-item" min="1" step="0.01" name="item_amount[]" required><div class="invalid-feedback">กรุณากรอกข้อมูล!</div>
               </td>
               <td>
-                <input type="number" class="form-control form-control-sm text-right wt-item" min="1" step="0.01">
+                <input type="number" class="form-control form-control-sm text-right vat-item" min="1" step="0.01" name="item_vat[]">
+              </td>
+              <td>
+                <input type="number" class="form-control form-control-sm text-right wt-item" min="1" step="0.01" name="item_wt[]">
               </td>
               <td class="text-right"><span class="total-item"></span></td>
             </tr>
@@ -349,4 +397,27 @@ include_once(__DIR__ . "/../layout/header.php");
     $(".wt-total").text(totalWt.toFixed(2));
     $(".all-total").text((totalAmount + totalVat + totalWt).toFixed(2));
   }
+
+  $(document).on("change", "input[name='file[]']", function() {
+    const file = $(this).val();
+    const size = ($(this)[0].files[0].size / (1024 * 1024)).toFixed(2);
+    const extension = file.split(".").pop().toLowerCase();
+    const allowedExtensions = ["png", "jpeg", "jpg", "pdf", "doc", "docx", "xls", "xlsx"];
+
+    if (size > 5) {
+      Swal.fire({
+        icon: "error",
+        title: "ไฟล์เอกสารไม่เกิน 5 Mb!",
+      });
+      return $(this).val("");
+    }
+
+    if (!allowedExtensions.includes(extension)) {
+      Swal.fire({
+        icon: "error",
+        title: "เฉพาะไฟล์นามสกุล JPG, PNG, WORD และ EXCEL เท่านั้น",
+      });
+      return $(this).val("");
+    }
+  });
 </script>
