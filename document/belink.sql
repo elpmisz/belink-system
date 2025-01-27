@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: database
--- Generation Time: Jan 19, 2025 at 01:47 PM
+-- Generation Time: Jan 27, 2025 at 02:21 PM
 -- Server version: 11.6.2-MariaDB-ubu2404
 -- PHP Version: 8.2.27
 
@@ -151,7 +151,7 @@ CREATE TABLE `estimate_request` (
 --
 
 INSERT INTO `estimate_request` (`id`, `uuid`, `last`, `login_id`, `customer_id`, `order_number`, `product_name`, `title_name`, `sales_name`, `budget`, `type`, `remark`, `action`, `status`, `updated`, `created`) VALUES
-(1, '2916f3d7-d65b-11ef-8f0b-0242ac120005', 1, 1, 1, 'SO07010001', 'Breeze', 'Unilever-Breeze Esan', 'Esan Caravan', 3.00, 1, 'TESTTEST\r\nTESTTEST', 1, 4, '2025-01-19 20:05:17', '2025-01-19 18:47:25');
+(1, '2916f3d7-d65b-11ef-8f0b-0242ac120005', 1, 1, 1, 'SO07010001', 'Breeze', 'Unilever-Breeze Esan', 'Esan Caravan', 1000000.00, 1, 'TESTTEST\r\nTESTTEST', 1, 4, '2025-01-19 20:05:17', '2025-01-19 18:47:25');
 
 -- --------------------------------------------------------
 
@@ -180,8 +180,8 @@ INSERT INTO `expense` (`id`, `uuid`, `code`, `name`, `type`, `reference`, `statu
 (1, '17d4fc50-d0ad-11ef-91c3-0242ac120002', 'A001', 'ประเภทค่าใช้จ่ายเกิดขึ้นตามจริงแต่ละครั้ง', 1, 0, 1, NULL, NULL, '2025-01-11 13:36:00'),
 (2, '17d4fd92-d0ad-11ef-91c3-0242ac120002', 'B001', 'ประเภทค่าจ้างทีมงาน จ้างเหมาทั้งโครงการ', 1, 0, 1, NULL, NULL, '2025-01-11 13:36:23'),
 (3, '17d4fddf-d0ad-11ef-91c3-0242ac120002', 'A002', 'ค่าสถานที่ (Roadshow)', 2, 1, 1, 1, '2025-01-15 15:02:39', '2025-01-11 14:13:02'),
-(4, '17d4fe1e-d0ad-11ef-91c3-0242ac120002', 'A003', 'ค่าสถานที่ (Troop ยืนแจกผลิตภัณฑ์)', 2, 1, 1, 1, '2025-01-15 15:03:07', '2025-01-11 14:13:21'),
-(5, '17d4fe54-d0ad-11ef-91c3-0242ac120002', 'A004', 'งานโครงสร้าง บูธ Backdrop / Standee / เกมส์ / สะพายหลัง ด่าง ๆ', 2, 1, 1, 1, '2025-01-15 15:03:20', '2025-01-11 14:13:37'),
+(4, '17d4fe1e-d0ad-11ef-91c3-0242ac120002', 'A003', 'ค่าสถานที่ (Troop)', 2, 1, 1, 1, '2025-01-23 19:15:48', '2025-01-11 14:13:21'),
+(5, '17d4fe54-d0ad-11ef-91c3-0242ac120002', 'A004', 'งานโครงสร้าง', 2, 1, 1, 1, '2025-01-23 19:15:35', '2025-01-11 14:13:37'),
 (6, '17d4fe90-d0ad-11ef-91c3-0242ac120002', 'A005', 'ค่าเดินทาง', 2, 1, 1, 1, '2025-01-15 15:03:29', '2025-01-11 14:13:55'),
 (7, '17d4feca-d0ad-11ef-91c3-0242ac120002', 'A006', 'ค่าเสื้อ', 2, 1, 1, 1, '2025-01-15 15:03:38', '2025-01-11 14:14:10'),
 (8, '17d4ff04-d0ad-11ef-91c3-0242ac120002', 'B002', 'Project (เหมา)', 2, 2, 1, 1, '2025-01-15 15:05:25', '2025-01-11 14:14:35'),
@@ -218,6 +218,113 @@ CREATE TABLE `login` (
 INSERT INTO `login` (`id`, `uuid`, `email`, `password`, `level`, `status`, `updated`, `created`) VALUES
 (1, '8578263a-d0ae-11ef-91c3-0242ac120002', 'admin@test.com', '$2y$10$W08w.crPDLXzroZDNFirJObaHK91H.0D7ZszaRR6iQQi9W32.tnci', 9, 1, '2025-01-12 13:39:05', '2023-11-23 09:42:54'),
 (2, '857827b5-d0ae-11ef-91c3-0242ac120002', 'user@test.com', '$2y$10$jwAmc2BoS2EwrzfL2LkYOel9FZHc9LSbRn4sge.SvmPiOyjoSgLVq', 1, 1, '2025-01-03 09:10:45', '2025-01-03 08:42:52');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `payment_file`
+--
+
+CREATE TABLE `payment_file` (
+  `id` int(11) NOT NULL,
+  `request_id` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `status` int(1) NOT NULL DEFAULT 1,
+  `updated` datetime DEFAULT NULL,
+  `created` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `payment_file`
+--
+
+INSERT INTO `payment_file` (`id`, `request_id`, `name`, `status`, `updated`, `created`) VALUES
+(1, 1, '53ecc23d211e27d14537146092d4cfef.pdf', 1, NULL, '2025-01-27 21:17:04'),
+(2, 1, '7983e8df7de803df81cb2f7718e9375f.webp', 1, NULL, '2025-01-27 21:17:04'),
+(3, 2, '89f1094f12883e924557cfeb6e6be3a3.pdf', 1, NULL, '2025-01-27 21:20:43'),
+(4, 2, '747c9079c2c49d29150c3711938b362d.pdf', 1, NULL, '2025-01-27 21:20:43');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `payment_item`
+--
+
+CREATE TABLE `payment_item` (
+  `id` int(11) NOT NULL,
+  `request_id` int(11) NOT NULL,
+  `expense_id` int(11) NOT NULL,
+  `text` varchar(100) NOT NULL,
+  `text2` varchar(100) NOT NULL,
+  `amount` decimal(20,2) NOT NULL,
+  `vat` decimal(20,2) NOT NULL,
+  `wt` decimal(20,2) NOT NULL,
+  `status` int(1) NOT NULL DEFAULT 1,
+  `updated` datetime DEFAULT NULL,
+  `created` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `payment_item`
+--
+
+INSERT INTO `payment_item` (`id`, `request_id`, `expense_id`, `text`, `text2`, `amount`, `vat`, `wt`, `status`, `updated`, `created`) VALUES
+(1, 1, 5, 'aa', '11', 2000.00, 140.00, 0.00, 1, NULL, '2025-01-27 21:17:04'),
+(2, 1, 3, 'aa', '11', 4000.00, 280.00, 0.00, 1, NULL, '2025-01-27 21:17:04'),
+(3, 1, 6, 'aa', '11', 2000.00, 0.00, 0.00, 1, NULL, '2025-01-27 21:17:04'),
+(4, 1, 8, 'bb', '22', 4000.00, 0.00, 0.00, 1, NULL, '2025-01-27 21:17:04'),
+(5, 1, 9, 'bb', '22', 2000.00, 140.00, 0.00, 1, NULL, '2025-01-27 21:17:04'),
+(6, 1, 16, 'bb', '22', 4000.00, 280.00, 0.00, 1, NULL, '2025-01-27 21:17:04'),
+(7, 2, 3, 'aaa', '111', 3000.00, 210.00, 6.00, 1, NULL, '2025-01-27 21:20:43'),
+(8, 2, 4, 'aaa', '111', 2000.00, 140.00, 0.00, 1, NULL, '2025-01-27 21:20:43'),
+(9, 2, 8, 'bbb', '222', 3000.00, 0.00, 0.00, 1, NULL, '2025-01-27 21:20:43'),
+(10, 2, 14, 'bbb', '222', 2000.00, 0.00, 0.00, 1, NULL, '2025-01-27 21:20:43');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `payment_remark`
+--
+
+CREATE TABLE `payment_remark` (
+  `id` int(11) NOT NULL,
+  `request_id` int(11) NOT NULL,
+  `login_id` int(11) NOT NULL,
+  `text` varchar(200) NOT NULL,
+  `status` int(1) NOT NULL,
+  `created` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `payment_request`
+--
+
+CREATE TABLE `payment_request` (
+  `id` int(11) NOT NULL,
+  `uuid` varchar(36) NOT NULL,
+  `last` int(11) NOT NULL,
+  `login_id` int(11) NOT NULL,
+  `order_number` varchar(20) NOT NULL,
+  `receiver` varchar(100) NOT NULL,
+  `type` int(1) NOT NULL,
+  `cheque_bank` varchar(100) DEFAULT NULL,
+  `cheque_branch` varchar(100) DEFAULT NULL,
+  `cheque_number` varchar(100) DEFAULT NULL,
+  `cheque_date` date DEFAULT NULL,
+  `status` int(1) NOT NULL DEFAULT 1,
+  `updated` datetime DEFAULT NULL,
+  `created` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `payment_request`
+--
+
+INSERT INTO `payment_request` (`id`, `uuid`, `last`, `login_id`, `order_number`, `receiver`, `type`, `cheque_bank`, `cheque_branch`, `cheque_number`, `cheque_date`, `status`, `updated`, `created`) VALUES
+(1, '64b637e7-dcb9-11ef-8d5e-0242ac120004', 1, 1, 'SO07010001', 'BBB', 1, '', '', '', '0000-00-00', 1, NULL, '2025-01-27 21:17:04'),
+(2, 'e7af6974-dcb9-11ef-8d5e-0242ac120004', 2, 1, '', 'AAA', 2, 'AAA', 'BBB', 'AAA', '2025-01-27', 1, NULL, '2025-01-27 21:20:43');
 
 -- --------------------------------------------------------
 
@@ -312,6 +419,30 @@ ALTER TABLE `login`
   ADD UNIQUE KEY `uuid` (`uuid`);
 
 --
+-- Indexes for table `payment_file`
+--
+ALTER TABLE `payment_file`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `payment_item`
+--
+ALTER TABLE `payment_item`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `payment_remark`
+--
+ALTER TABLE `payment_remark`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `payment_request`
+--
+ALTER TABLE `payment_request`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `system`
 --
 ALTER TABLE `system`
@@ -367,6 +498,30 @@ ALTER TABLE `expense`
 -- AUTO_INCREMENT for table `login`
 --
 ALTER TABLE `login`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `payment_file`
+--
+ALTER TABLE `payment_file`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `payment_item`
+--
+ALTER TABLE `payment_item`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
+-- AUTO_INCREMENT for table `payment_remark`
+--
+ALTER TABLE `payment_remark`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `payment_request`
+--
+ALTER TABLE `payment_request`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --

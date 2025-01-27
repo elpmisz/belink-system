@@ -29,7 +29,7 @@ include_once(__DIR__ . "/../layout/header.php");
           <div class="row mb-2">
             <label class="col-xl-2 offset-xl-2 col-form-label">จ่ายให้</label>
             <div class="col-xl-4">
-              <input type="text" class="form-control form-control-sm" name="order_number" required>
+              <input type="text" class="form-control form-control-sm" name="receiver" required>
               <div class="invalid-feedback">
                 กรุณากรอกข้อมูล!
               </div>
@@ -85,7 +85,7 @@ include_once(__DIR__ . "/../layout/header.php");
             <div class="row mb-2">
               <label class="col-xl-2 offset-xl-2 col-form-label">ลงวันที่</label>
               <div class="col-xl-4">
-                <input type="text" class="form-control form-control-sm" name="cheque_date">
+                <input type="text" class="form-control form-control-sm date-select" name="cheque_date">
                 <div class="invalid-feedback">
                   กรุณากรอกข้อมูล!
                 </div>
@@ -419,5 +419,31 @@ include_once(__DIR__ . "/../layout/header.php");
       });
       return $(this).val("");
     }
+  });
+
+  $(".date-select").daterangepicker({
+    singleDatePicker: true,
+    showDropdowns: true,
+    minDate: new Date(),
+    locale: {
+      "format": "DD/MM/YYYY",
+      "daysOfWeek": [
+        "อา", "จ", "อ", "พ", "พฤ", "ศ", "ส"
+      ],
+      "monthNames": [
+        "มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน",
+        "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"
+      ]
+    },
+    "applyButtonClasses": "btn-success",
+    "cancelClass": "btn-danger"
+  });
+
+  $(".date-select").on("apply.daterangepicker", function(ev, picker) {
+    $(this).val(picker.startDate.format('DD/MM/YYYY'));
+  });
+
+  $(".date-select").on("keydown paste", function(e) {
+    e.preventDefault();
   });
 </script>

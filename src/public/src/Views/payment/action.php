@@ -41,9 +41,67 @@ $VALIDATION = new Validation();
 
 if ($action === "create") {
   try {
-    echo "<pre>";
-    print_r($_POST);
-    print_r($_FILES);
+    $login_id = (isset($user['login_id']) ? $VALIDATION->input($user['login_id']) : "");
+    $order_number = (isset($_POST['order_number']) ? $VALIDATION->input($_POST['order_number']) : "");
+    $receiver = (isset($_POST['receiver']) ? $VALIDATION->input($_POST['receiver']) : "");
+    $type = (isset($_POST['type']) ? $VALIDATION->input($_POST['type']) : "");
+    $cheque_bank = (isset($_POST['cheque_bank']) ? $VALIDATION->input($_POST['cheque_bank']) : "");
+    $cheque_branch = (isset($_POST['cheque_branch']) ? $VALIDATION->input($_POST['cheque_branch']) : "");
+    $cheque_number = (isset($_POST['cheque_number']) ? $VALIDATION->input($_POST['cheque_number']) : "");
+    $cheque_date = (isset($_POST['cheque_date']) ? $VALIDATION->input($_POST['cheque_date']) : "");
+    $cheque_date = (!empty($cheque_date) ? date("Y-m-d", strtotime(str_replace("/", "-", $cheque_date))) : "");
+    $payment_last = $PAYMENT->payment_last();
+
+    $payment_count = $PAYMENT->payment_count([$login_id, $order_number, $receiver, $type, $cheque_bank, $cheque_branch, $cheque_number, $cheque_date]);
+    if (intval($payment_count) === 0) {
+      $PAYMENT->payment_insert([$payment_last, $login_id, $order_number, $receiver, $type, $cheque_bank, $cheque_branch, $cheque_number, $cheque_date]);
+      $request_id = $PAYMENT->last_insert_id();
+
+      foreach ($_POST['expense_id'] as $key => $row) {
+        $expense_id = (isset($_POST['expense_id'][$key]) ? $VALIDATION->input($_POST['expense_id'][$key]) : "");
+        $item_text = (isset($_POST['item_text'][$key]) ? $VALIDATION->input($_POST['item_text'][$key]) : "");
+        $item_text2 = (isset($_POST['item_text2'][$key]) ? $VALIDATION->input($_POST['item_text2'][$key]) : "");
+        $item_amount = (isset($_POST['item_amount'][$key]) ? $VALIDATION->input($_POST['item_amount'][$key]) : "");
+        $item_vat = (isset($_POST['item_vat'][$key]) ? $VALIDATION->input($_POST['item_vat'][$key]) : "");
+        $item_wt = (isset($_POST['item_wt'][$key]) ? $VALIDATION->input($_POST['item_wt'][$key]) : "");
+
+        $payment_item_count = $PAYMENT->payment_item_count([$request_id, $expense_id, $item_text, $item_text2, $item_amount, $item_vat, $item_wt]);
+        if (intval($payment_item_count) === 0) {
+          $PAYMENT->payment_item_insert([$request_id, $expense_id, $item_text, $item_text2, $item_amount, $item_vat, $item_wt]);
+        }
+      }
+
+      foreach ($_FILES['file']['name'] as $key => $row) {
+        $file_name = (isset($_FILES['file']['name']) ? $_FILES['file']['name'][$key] : "");
+        $file_tmp = (isset($_FILES['file']['tmp_name']) ? $_FILES['file']['tmp_name'][$key] : "");
+        $file_random = md5(microtime());
+        $file_image = ["png", "jpeg", "jpg"];
+        $file_document = ["pdf", "doc", "docx", "xls", "xlsx"];
+        $file_allow = array_merge($file_image, $file_document);
+        $file_extension = pathinfo(strtolower($file_name), PATHINFO_EXTENSION);
+
+        if (!empty($file_name) && in_array($file_extension, $file_allow)) {
+          if (in_array($file_extension, $file_document)) {
+            $file_rename = "{$file_random}.{$file_extension}";
+            $file_path = (__DIR__ . "/../../Publics/payment/{$file_rename}");
+            move_uploaded_file($file_tmp, $file_path);
+          }
+          if (in_array($file_extension, $file_image)) {
+            $file_rename = "{$file_random}.webp";
+            $file_path = (__DIR__ . "/../../Publics/payment/{$file_rename}");
+            $VALIDATION->image_upload($file_tmp, $file_path);
+          }
+
+          $payment_file_count = $PAYMENT->payment_file_count([$request_id, $file_rename]);
+          if (intval($payment_file_count) === 0) {
+            $PAYMENT->payment_file_insert([$request_id, $file_rename]);
+          }
+        }
+      }
+      $VALIDATION->alert("success", "ดำเนินการเรียบร้อย!", "/payment");
+    } else {
+      $VALIDATION->alert("danger", "ข้อมูลซ้ำในระบบ!", "/payment");
+    }
   } catch (PDOException $e) {
     die($e->getMessage());
   }
