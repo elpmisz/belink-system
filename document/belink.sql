@@ -1,9 +1,9 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 5.2.2
 -- https://www.phpmyadmin.net/
 --
 -- Host: database
--- Generation Time: Jan 27, 2025 at 02:21 PM
+-- Generation Time: Jan 28, 2025 at 09:50 AM
 -- Server version: 11.6.2-MariaDB-ubu2404
 -- PHP Version: 8.2.27
 
@@ -271,10 +271,10 @@ CREATE TABLE `payment_item` (
 INSERT INTO `payment_item` (`id`, `request_id`, `expense_id`, `text`, `text2`, `amount`, `vat`, `wt`, `status`, `updated`, `created`) VALUES
 (1, 1, 5, 'aa', '11', 2000.00, 140.00, 0.00, 1, NULL, '2025-01-27 21:17:04'),
 (2, 1, 3, 'aa', '11', 4000.00, 280.00, 0.00, 1, NULL, '2025-01-27 21:17:04'),
-(3, 1, 6, 'aa', '11', 2000.00, 0.00, 0.00, 1, NULL, '2025-01-27 21:17:04'),
-(4, 1, 8, 'bb', '22', 4000.00, 0.00, 0.00, 1, NULL, '2025-01-27 21:17:04'),
-(5, 1, 9, 'bb', '22', 2000.00, 140.00, 0.00, 1, NULL, '2025-01-27 21:17:04'),
-(6, 1, 16, 'bb', '22', 4000.00, 280.00, 0.00, 1, NULL, '2025-01-27 21:17:04'),
+(3, 1, 6, 'aa', '11', 2000.00, 0.00, 60.00, 1, NULL, '2025-01-27 21:17:04'),
+(4, 1, 8, 'bb', '22', 4000.00, 0.00, 120.00, 1, NULL, '2025-01-27 21:17:04'),
+(5, 1, 9, 'bb', '22', 2000.00, 140.00, 60.00, 1, NULL, '2025-01-27 21:17:04'),
+(6, 1, 16, 'bb', '22', 4000.00, 280.00, 120.00, 1, NULL, '2025-01-27 21:17:04'),
 (7, 2, 3, 'aaa', '111', 3000.00, 210.00, 6.00, 1, NULL, '2025-01-27 21:20:43'),
 (8, 2, 4, 'aaa', '111', 2000.00, 140.00, 0.00, 1, NULL, '2025-01-27 21:20:43'),
 (9, 2, 8, 'bbb', '222', 3000.00, 0.00, 0.00, 1, NULL, '2025-01-27 21:20:43'),
@@ -313,6 +313,7 @@ CREATE TABLE `payment_request` (
   `cheque_branch` varchar(100) DEFAULT NULL,
   `cheque_number` varchar(100) DEFAULT NULL,
   `cheque_date` date DEFAULT NULL,
+  `action` int(1) NOT NULL DEFAULT 1,
   `status` int(1) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
   `created` datetime NOT NULL DEFAULT current_timestamp()
@@ -322,9 +323,9 @@ CREATE TABLE `payment_request` (
 -- Dumping data for table `payment_request`
 --
 
-INSERT INTO `payment_request` (`id`, `uuid`, `last`, `login_id`, `order_number`, `receiver`, `type`, `cheque_bank`, `cheque_branch`, `cheque_number`, `cheque_date`, `status`, `updated`, `created`) VALUES
-(1, '64b637e7-dcb9-11ef-8d5e-0242ac120004', 1, 1, 'SO07010001', 'BBB', 1, '', '', '', '0000-00-00', 1, NULL, '2025-01-27 21:17:04'),
-(2, 'e7af6974-dcb9-11ef-8d5e-0242ac120004', 2, 1, '', 'AAA', 2, 'AAA', 'BBB', 'AAA', '2025-01-27', 1, NULL, '2025-01-27 21:20:43');
+INSERT INTO `payment_request` (`id`, `uuid`, `last`, `login_id`, `order_number`, `receiver`, `type`, `cheque_bank`, `cheque_branch`, `cheque_number`, `cheque_date`, `action`, `status`, `updated`, `created`) VALUES
+(1, '64b637e7-dcb9-11ef-8d5e-0242ac120004', 1, 1, 'SO07010001', 'BBB', 1, '', '', '', '0000-00-00', 1, 1, NULL, '2025-01-27 21:17:04'),
+(2, 'e7af6974-dcb9-11ef-8d5e-0242ac120004', 2, 1, '', 'AAA', 2, 'AAA', 'BBB', 'AAA', '2025-01-27', 1, 1, NULL, '2025-01-27 21:20:43');
 
 -- --------------------------------------------------------
 

@@ -107,6 +107,66 @@ if ($action === "create") {
   }
 }
 
+if ($action === "request-data") {
+  try {
+    $result = $PAYMENT->request_data();
+
+    echo json_encode($result);
+  } catch (PDOException $e) {
+    die($e->getMessage());
+  }
+}
+
+if ($action === "account-data") {
+  try {
+    $result = $PAYMENT->account_data();
+
+    echo json_encode($result);
+  } catch (PDOException $e) {
+    die($e->getMessage());
+  }
+}
+
+if ($action === "approve-data") {
+  try {
+    $result = $PAYMENT->approve_data();
+
+    echo json_encode($result);
+  } catch (PDOException $e) {
+    die($e->getMessage());
+  }
+}
+
+if ($action === "item-delete") {
+  try {
+    $data = json_decode(file_get_contents("php://input"), true);
+    $id = $data['id'];
+    if (!empty($id)) {
+      $ESTIMATE->estimate_item_delete([$id]);
+      echo json_encode(200);
+    } else {
+      echo json_encode(500);
+    }
+  } catch (PDOException $e) {
+    die($e->getMessage());
+  }
+}
+
+if ($action === "file-delete") {
+  try {
+    $data = json_decode(file_get_contents("php://input"), true);
+    $id = $data['id'];
+    if (!empty($id)) {
+      $ESTIMATE->estimate_file_delete([$id]);
+      echo json_encode(200);
+    } else {
+      echo json_encode(500);
+    }
+  } catch (PDOException $e) {
+    die($e->getMessage());
+  }
+}
+
 if ($action === "order-view") {
   try {
     $data = json_decode(file_get_contents("php://input"), true);
@@ -118,7 +178,6 @@ if ($action === "order-view") {
     die($e->getMessage());
   }
 }
-
 
 if ($action === "order-select") {
   try {

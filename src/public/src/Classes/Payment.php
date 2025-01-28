@@ -54,6 +54,27 @@ class Payment
     return $stmt->execute($data);
   }
 
+  public function payment_view($data) {
+    $sql = "SELECT a.id,
+      a.`uuid`,
+      CONCAT(b.firstname,' ',b.lastname) username,
+      a.order_number,
+      a.receiver,
+      a.`type`,
+      a.cheque_bank,
+      a.cheque_branch,
+      a.cheque_number,
+      DATE_FORMAT(a.cheque_date, '%d/%m/%Y') cheque_date,
+      DATE_FORMAT(a.created, '%d/%m/%Y, %H:%i น.') created
+    FROM belink.payment_request a
+    LEFT JOIN belink.`user` b
+    ON a.login_id = b.login
+    WHERE a.`uuid` = ?";
+    $stmt = $this->dbcon->prepare($sql);
+    $stmt->execute($data);
+    return $stmt->fetch();
+  }
+
   public function payment_item_count($data)
   {
     $sql = "SELECT 
@@ -79,6 +100,54 @@ class Payment
     return $stmt->execute($data);
   }
 
+  public function payment_item_view($data)
+  {
+    $sql = "SELECT b.id,
+      b.expense_id,
+      CONCAT('[',c.`code`,'] ',c.`name`) expense_name,
+      b.text,
+      b.text2,
+      b.amount,
+      b.vat,
+      b.wt,
+      (b.amount + b.vat + b.wt) total,
+      d.usage,
+      d.estimate,
+      d.remain
+    FROM belink.payment_request a
+    LEFT JOIN belink.payment_item b
+    ON a.id = b.request_id
+    LEFT JOIN belink.expense c
+    ON b.expense_id = c.id
+    LEFT JOIN 
+    (
+      SELECT a.order_number,
+      b.expense_id,
+      b.estimate,
+      (SUM(c.amount) + SUM(c.vat) + SUM(c.wt)) `usage`,
+      (b.estimate - (SUM(c.amount) + SUM(c.vat) + SUM(c.wt))) remain
+      FROM belink.estimate_request a
+      LEFT JOIN belink.estimate_item b
+      ON a.id = b.request_id
+      LEFT JOIN belink.payment_item c
+      ON b.expense_id = c.expense_id
+      LEFT JOIN belink.payment_request d
+      ON c.request_id = d.id
+      WHERE a.order_number = d.order_number
+      and b.`status` = 1
+      AND c.`status` = 1
+      GROUP BY b.expense_id
+    ) d
+    ON a.order_number = d.order_number
+    AND b.expense_id = d.expense_id
+    WHERE a.`uuid` = ?
+    AND b.`status` = 1";
+    $stmt = $this->dbcon->prepare($sql);
+    $stmt->execute($data);
+    return $stmt->fetchAll();
+  }
+
+
   public function payment_file_count($data)
   {
     $sql = "SELECT 
@@ -99,19 +168,47 @@ class Payment
     return $stmt->execute($data);
   }
 
+  public function payment_file_view($data)
+  {
+    $sql = "SELECT 
+      a.id,
+      a.`name`
+    FROM belink.payment_file a
+    LEFT JOIN belink.payment_request b
+    ON a.request_id = b.id
+    WHERE a.`status` = 1
+    AND b.`uuid` = ?";
+    $stmt = $this->dbcon->prepare($sql);
+    $stmt->execute($data);
+    return $stmt->fetchAll();
+  }
+
   public function order_view($data)
   {
     $sql = "SELECT b.expense_id,
       CONCAT('[',c.`code`,'] ',c.`name`) expense_name,
-      b.estimate
+      b.estimate,
+      d.payment,
+      (b.estimate - d.payment) remain
     FROM belink.estimate_request a
     LEFT JOIN belink.estimate_item b
     ON a.id = b.request_id
     LEFT JOIN belink.expense c
     ON b.expense_id = c.id
+    LEFT JOIN 
+    (
+      SELECT a.order_number,b.expense_id,(SUM(b.amount) + SUM(b.vat) + SUM(b.wt)) payment
+      FROM belink.payment_request a
+      LEFT JOIN belink.payment_item b
+      ON a.id = b.request_id
+      WHERE b.status = 1
+      GROUP BY b.expense_id 
+    ) d
+    ON a.order_number = d.order_number
+    AND b.expense_id = d.expense_id
     WHERE a.order_number = ?
     AND b.`status` = 1
-    ORDER BY c.`reference` ASC, b.id ASC  ";
+    ORDER BY c.`reference` ASC, b.id ASC";
     $stmt = $this->dbcon->prepare($sql);
     $stmt->execute($data);
     return $stmt->fetchAll();
@@ -130,6 +227,321 @@ class Payment
     $stmt = $this->dbcon->prepare($sql);
     $stmt->execute();
     return $stmt->fetchAll();
+  }
+
+  public function request_data()
+  {
+    $sql = "SELECT COUNT(*) FROM belink.payment_request a WHERE a.status IN (1,2,3,4)";
+    $stmt = $this->dbcon->prepare($sql);
+    $stmt->execute();
+    $total = $stmt->fetchColumn();
+
+    $column = ["a.id", "a.last", "a.order_number", "a.product_name", "a.title_name", "a.budget"];
+
+    $keyword = (isset($_POST['search']['value']) ? trim($_POST['search']['value']) : "");
+    $filter_order = (isset($_POST['order']) ? $_POST['order'] : "");
+    $order_column = (isset($_POST['order']['0']['column']) ? $_POST['order']['0']['column'] : "");
+    $order_dir = (isset($_POST['order']['0']['dir']) ? $_POST['order']['0']['dir'] : "");
+    $limit_start = (isset($_POST['start']) ? $_POST['start'] : "");
+    $limit_length = (isset($_POST['length']) ? $_POST['length'] : "");
+    $draw = (isset($_REQUEST['draw']) ? $_REQUEST['draw'] : "");
+
+    $sql = "SELECT a.id,
+    a.`uuid`,
+    CONCAT('PO',YEAR(a.created),LPAD(a.`last`,4,'0')) ticket,
+    a.order_number,
+    a.receiver,
+    CONCAT(b.firstname,' ',b.lastname) username,
+    c.total,
+    a.`status`,
+      (
+      CASE
+        WHEN a.`status` = 1 AND a.action = 1 THEN 'รอฝ่ายบัญชีดำเนินการ'
+        WHEN a.`status` = 1 AND a.action = 2 THEN 'รอผู้ขอใช้บริการแก้ไข'
+        WHEN a.`status` = 2 THEN 'รอผู้อนุมัติดำเนินการ'
+        WHEN a.`status` = 3 THEN 'ดำเนินการเรียบร้อย'
+        WHEN a.`status` = 4 THEN 'รายการถูกยกเลิก'
+      END
+      ) status_name,
+      (
+      CASE
+        WHEN a.`status` = 1 AND a.action = 1 THEN 'primary'
+        WHEN a.`status` = 1 AND a.action = 2 THEN 'danger'
+        WHEN a.`status` = 2 THEN 'info'
+        WHEN a.`status` = 3 THEN 'success'
+        WHEN a.`status` = 4 THEN 'danger'
+      END
+      ) status_color,
+      (
+      CASE
+        WHEN a.`status` = 1 THEN 'view'
+        ELSE 'complete'
+      END
+      ) `page`,
+      DATE_FORMAT(a.created,'%d/%m/%Y, %H:%i น.') created
+    FROM belink.payment_request a
+    LEFT JOIN belink.`user` b
+    ON a.login_id = b.login
+    LEFT JOIN 
+    (
+      SELECT request_id,(SUM(amount) + SUM(vat) + SUM(wt)) total
+      FROM belink.payment_item
+      WHERE	`status` = 1
+      GROUP BY request_id
+    ) c
+    ON a.id = c.request_id
+    WHERE a.status IN (1,2,3,4) ";
+
+    if (!empty($keyword)) {
+      $sql .= " AND (b.name LIKE '%{$keyword}%' OR a.order_number LIKE '%{$keyword}%' OR a.receiver LIKE '%{$keyword}%') ";
+    }
+
+    if ($filter_order) {
+      $sql .= " ORDER BY {$column[$order_column]} {$order_dir} ";
+    } else {
+      $sql .= " ORDER BY a.status ASC, a.created DESC ";
+    }
+
+    $sql2 = "";
+    if ($limit_length) {
+      $sql2 .= "LIMIT {$limit_start}, {$limit_length}";
+    }
+
+    $stmt = $this->dbcon->prepare($sql);
+    $stmt->execute();
+    $filter = $stmt->rowCount();
+    $stmt = $this->dbcon->prepare($sql . $sql2);
+    $stmt->execute();
+    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    $data = [];
+    foreach ($result as $row) {
+      $action = "<a href='/payment/{$row['page']}/{$row['uuid']}' class='badge badge-{$row['status_color']} font-weight-light'>{$row['status_name']}</a>";
+
+      $data[] = [
+        $action,
+        $row['ticket'],
+        $row['username'],
+        $row['order_number'],
+        $row['receiver'],
+        number_format($row['total'], 2),
+        $row['created'],
+      ];
+    }
+
+    $output = [
+      "draw" => $draw,
+      "recordsTotal" =>  $total,
+      "recordsFiltered" => $filter,
+      "data" => $data
+    ];
+    return $output;
+  }
+
+  public function account_data()
+  {
+    $sql = "SELECT COUNT(*) FROM belink.payment_request a WHERE a.status = 1";
+    $stmt = $this->dbcon->prepare($sql);
+    $stmt->execute();
+    $total = $stmt->fetchColumn();
+
+    $column = ["a.id", "a.last", "a.order_number", "a.product_name", "a.title_name", "a.budget"];
+
+    $keyword = (isset($_POST['search']['value']) ? trim($_POST['search']['value']) : "");
+    $filter_order = (isset($_POST['order']) ? $_POST['order'] : "");
+    $order_column = (isset($_POST['order']['0']['column']) ? $_POST['order']['0']['column'] : "");
+    $order_dir = (isset($_POST['order']['0']['dir']) ? $_POST['order']['0']['dir'] : "");
+    $limit_start = (isset($_POST['start']) ? $_POST['start'] : "");
+    $limit_length = (isset($_POST['length']) ? $_POST['length'] : "");
+    $draw = (isset($_REQUEST['draw']) ? $_REQUEST['draw'] : "");
+
+    $sql = "SELECT a.id,
+    a.`uuid`,
+    CONCAT('PO',YEAR(a.created),LPAD(a.`last`,4,'0')) ticket,
+    a.order_number,
+    a.receiver,
+    CONCAT(b.firstname,' ',b.lastname) username,
+    c.total,
+    a.`status`,
+      (
+      CASE
+        WHEN a.`status` = 1 AND a.action = 1 THEN 'รอฝ่ายบัญชีดำเนินการ'
+        WHEN a.`status` = 1 AND a.action = 2 THEN 'รอผู้ขอใช้บริการแก้ไข'
+        WHEN a.`status` = 2 THEN 'รอผู้อนุมัติดำเนินการ'
+        WHEN a.`status` = 3 THEN 'ดำเนินการเรียบร้อย'
+        WHEN a.`status` = 4 THEN 'รายการถูกยกเลิก'
+      END
+      ) status_name,
+      (
+      CASE
+        WHEN a.`status` = 1 AND a.action = 1 THEN 'primary'
+        WHEN a.`status` = 1 AND a.action = 2 THEN 'danger'
+        WHEN a.`status` = 2 THEN 'info'
+        WHEN a.`status` = 3 THEN 'success'
+        WHEN a.`status` = 4 THEN 'danger'
+      END
+      ) status_color,
+      DATE_FORMAT(a.created,'%d/%m/%Y, %H:%i น.') created
+    FROM belink.payment_request a
+    LEFT JOIN belink.`user` b
+    ON a.login_id = b.login
+    LEFT JOIN 
+    (
+      SELECT request_id,(SUM(amount) + SUM(vat) + SUM(wt)) total
+      FROM belink.payment_item
+      WHERE	`status` = 1
+      GROUP BY request_id
+    ) c
+    ON a.id = c.request_id
+    WHERE a.status = 1 ";
+
+    if (!empty($keyword)) {
+      $sql .= " AND (b.name LIKE '%{$keyword}%' OR a.order_number LIKE '%{$keyword}%' OR a.receiver LIKE '%{$keyword}%') ";
+    }
+
+    if ($filter_order) {
+      $sql .= " ORDER BY {$column[$order_column]} {$order_dir} ";
+    } else {
+      $sql .= " ORDER BY a.status ASC, a.created DESC ";
+    }
+
+    $sql2 = "";
+    if ($limit_length) {
+      $sql2 .= "LIMIT {$limit_start}, {$limit_length}";
+    }
+
+    $stmt = $this->dbcon->prepare($sql);
+    $stmt->execute();
+    $filter = $stmt->rowCount();
+    $stmt = $this->dbcon->prepare($sql . $sql2);
+    $stmt->execute();
+    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    $data = [];
+    foreach ($result as $row) {
+      $action = "<a href='/payment/account/{$row['uuid']}' class='badge badge-{$row['status_color']} font-weight-light'>{$row['status_name']}</a>";
+
+      $data[] = [
+        $action,
+        $row['ticket'],
+        $row['username'],
+        $row['order_number'],
+        $row['receiver'],
+        number_format($row['total'], 2),
+        $row['created'],
+      ];
+    }
+
+    $output = [
+      "draw" => $draw,
+      "recordsTotal" =>  $total,
+      "recordsFiltered" => $filter,
+      "data" => $data
+    ];
+    return $output;
+  }
+
+  public function approve_data()
+  {
+    $sql = "SELECT COUNT(*) FROM belink.payment_request a WHERE a.status = 2";
+    $stmt = $this->dbcon->prepare($sql);
+    $stmt->execute();
+    $total = $stmt->fetchColumn();
+
+    $column = ["a.id", "a.last", "a.order_number", "a.product_name", "a.title_name", "a.budget"];
+
+    $keyword = (isset($_POST['search']['value']) ? trim($_POST['search']['value']) : "");
+    $filter_order = (isset($_POST['order']) ? $_POST['order'] : "");
+    $order_column = (isset($_POST['order']['0']['column']) ? $_POST['order']['0']['column'] : "");
+    $order_dir = (isset($_POST['order']['0']['dir']) ? $_POST['order']['0']['dir'] : "");
+    $limit_start = (isset($_POST['start']) ? $_POST['start'] : "");
+    $limit_length = (isset($_POST['length']) ? $_POST['length'] : "");
+    $draw = (isset($_REQUEST['draw']) ? $_REQUEST['draw'] : "");
+
+    $sql = "SELECT a.id,
+    a.`uuid`,
+    CONCAT('PO',YEAR(a.created),LPAD(a.`last`,4,'0')) ticket,
+    a.order_number,
+    a.receiver,
+    CONCAT(b.firstname,' ',b.lastname) username,
+    c.total,
+    a.`status`,
+      (
+      CASE
+        WHEN a.`status` = 1 AND a.action = 1 THEN 'รอฝ่ายบัญชีดำเนินการ'
+        WHEN a.`status` = 1 AND a.action = 2 THEN 'รอผู้ขอใช้บริการแก้ไข'
+        WHEN a.`status` = 2 THEN 'รอผู้อนุมัติดำเนินการ'
+        WHEN a.`status` = 3 THEN 'ดำเนินการเรียบร้อย'
+        WHEN a.`status` = 4 THEN 'รายการถูกยกเลิก'
+      END
+      ) status_name,
+      (
+      CASE
+        WHEN a.`status` = 1 AND a.action = 1 THEN 'primary'
+        WHEN a.`status` = 1 AND a.action = 2 THEN 'danger'
+        WHEN a.`status` = 2 THEN 'info'
+        WHEN a.`status` = 3 THEN 'success'
+        WHEN a.`status` = 4 THEN 'danger'
+      END
+      ) status_color,
+      DATE_FORMAT(a.created,'%d/%m/%Y, %H:%i น.') created
+    FROM belink.payment_request a
+    LEFT JOIN belink.`user` b
+    ON a.login_id = b.login
+    LEFT JOIN 
+    (
+      SELECT request_id,(SUM(amount) + SUM(vat) + SUM(wt)) total
+      FROM belink.payment_item
+      WHERE	`status` = 1
+      GROUP BY request_id
+    ) c
+    ON a.id = c.request_id
+    WHERE a.status = 2 ";
+
+    if (!empty($keyword)) {
+      $sql .= " AND (b.name LIKE '%{$keyword}%' OR a.order_number LIKE '%{$keyword}%' OR a.receiver LIKE '%{$keyword}%') ";
+    }
+
+    if ($filter_order) {
+      $sql .= " ORDER BY {$column[$order_column]} {$order_dir} ";
+    } else {
+      $sql .= " ORDER BY a.status ASC, a.created DESC ";
+    }
+
+    $sql2 = "";
+    if ($limit_length) {
+      $sql2 .= "LIMIT {$limit_start}, {$limit_length}";
+    }
+
+    $stmt = $this->dbcon->prepare($sql);
+    $stmt->execute();
+    $filter = $stmt->rowCount();
+    $stmt = $this->dbcon->prepare($sql . $sql2);
+    $stmt->execute();
+    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    $data = [];
+    foreach ($result as $row) {
+      $action = "<a href='/payment/approve/{$row['uuid']}' class='badge badge-{$row['status_color']} font-weight-light'>{$row['status_name']}</a>";
+
+      $data[] = [
+        $action,
+        $row['ticket'],
+        $row['username'],
+        $row['order_number'],
+        $row['receiver'],
+        number_format($row['total'], 2),
+        $row['created'],
+      ];
+    }
+
+    $output = [
+      "draw" => $draw,
+      "recordsTotal" =>  $total,
+      "recordsFiltered" => $filter,
+      "data" => $data
+    ];
+    return $output;
   }
 
   public function last_insert_id()
