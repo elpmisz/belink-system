@@ -92,11 +92,17 @@ $ROUTER->map("GET", "/payment/manage", function () {
 $ROUTER->map("GET", "/payment/view/[**:params]", function ($params) {
   require(__DIR__ . "/src/Views/payment/view.php");
 });
+$ROUTER->map("GET", "/payment/account/[**:params]", function ($params) {
+  require(__DIR__ . "/src/Views/payment/account.php");
+});
+$ROUTER->map("GET", "/payment/approve/[**:params]", function ($params) {
+  require(__DIR__ . "/src/Views/payment/approve.php");
+});
 $ROUTER->map("GET", "/payment/complete/[**:params]", function ($params) {
   require(__DIR__ . "/src/Views/payment/complete.php");
 });
-$ROUTER->map("GET", "/payment/edit/[**:params]", function ($params) {
-  require(__DIR__ . "/src/Views/payment/edit.php");
+$ROUTER->map("GET", "/payment/print/[**:params]", function ($params) {
+  require(__DIR__ . "/src/Views/payment/print.php");
 });
 $ROUTER->map("POST", "/payment/[**:params]", function ($params) {
   require(__DIR__ . "/src/Views/payment/action.php");

@@ -49,6 +49,19 @@ td {
   margin-bottom: 5px;
 }
 
+.text-underline-link {
+  width: 100%;
+  text-align: justify;
+  border: 0;
+  outline: 0;
+  white-space: normal;
+  background: transparent;
+  border-bottom: 1px solid black;
+  padding-top: 5px;
+  margin-bottom: 5px;
+  color:#007bff;
+}
+
 .card-header {
   background: #fff;
 }

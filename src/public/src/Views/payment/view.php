@@ -13,29 +13,39 @@ $uuid = (!empty($param[0]) ? $param[0] : "");
 $row = $PAYMENT->payment_view([$uuid]);
 $items = $PAYMENT->payment_item_view([$uuid]);
 $files = $PAYMENT->payment_file_view([$uuid]);
+$total = $PAYMENT->payment_item_total([$uuid]);
+$remarks = $PAYMENT->payment_remark_view([$uuid]);
 ?>
 
 <div class="card shadow">
   <h4 class="card-header text-center">Payment Order</h4>
   <div class="card-body">
 
-    <form action="/payment/create" method="POST" class="needs-validation" novalidate enctype="multipart/form-data">
-      <div class="row mb-2">
-        <label class="col-xl-2 offset-xl-2 col-form-label">ID</label>
-        <div class="col-xl-4">
-          <input type="text" class="form-control form-control-sm" name="id" value="<?php echo $row['id'] ?>" readonly>
+    <form action="/payment/update" method="POST" class="needs-validation" novalidate enctype="multipart/form-data">
+      <div style="display: none;">
+        <div class="row mb-2">
+          <label class="col-xl-2 offset-xl-2 col-form-label">ID</label>
+          <div class="col-xl-4">
+            <input type="text" class="form-control form-control-sm" name="id" value="<?php echo $row['id'] ?>" readonly>
+          </div>
+        </div>
+        <div class="row mb-2">
+          <label class="col-xl-2 offset-xl-2 col-form-label">UUID</label>
+          <div class="col-xl-4">
+            <input type="text" class="form-control form-control-sm" name="uuid" value="<?php echo $row['uuid'] ?>" readonly>
+          </div>
+        </div>
+        <div class="row mb-2">
+          <label class="col-xl-2 offset-xl-2 col-form-label">TYPE</label>
+          <div class="col-xl-4">
+            <input type="text" class="form-control form-control-sm type-select" value="<?php echo $row['type'] ?>" readonly>
+          </div>
         </div>
       </div>
       <div class="row mb-2">
-        <label class="col-xl-2 offset-xl-2 col-form-label">UUID</label>
-        <div class="col-xl-4">
-          <input type="text" class="form-control form-control-sm" name="uuid" value="<?php echo $row['uuid'] ?>" readonly>
-        </div>
-      </div>
-      <div class="row mb-2">
-        <label class="col-xl-2 offset-xl-2 col-form-label">TYPE</label>
-        <div class="col-xl-4">
-          <input type="text" class="form-control form-control-sm type-select" value="<?php echo $row['type'] ?>" readonly>
+        <label class="col-xl-2 offset-xl-2 col-form-label">เลขที่เอกสาร</label>
+        <div class="col-xl-4 text-underline">
+          <?php echo $row['ticket'] ?>
         </div>
       </div>
       <div class="row mb-2">
@@ -46,8 +56,8 @@ $files = $PAYMENT->payment_file_view([$uuid]);
       </div>
       <div class="row mb-2">
         <label class="col-xl-2 offset-xl-2 col-form-label">เลขที่สัญญา</label>
-        <div class="col-xl-4 text-underline">
-          <?php echo $row['order_number'] ?>
+        <div class="col-xl-4 text-underline-link">
+          <a href="/estimate/complete/<?php echo $row['estimate_uuid'] ?>" target="_blank"><?php echo $row['order_number'] ?></a>
         </div>
       </div>
       <div class="row mb-2">
@@ -117,14 +127,6 @@ $files = $PAYMENT->payment_file_view([$uuid]);
         </div>
       </div>
 
-      <div class="row mb-2 items-div" style="display: none;">
-        <div class="col-xl-12">
-          <div class="table-responsive">
-            <table class="table table-bordered items-table"></table>
-          </div>
-        </div>
-      </div>
-
       <div class="row mb-2 items-custom-div">
         <div class="col-xl-12">
           <div class="table-responsive">
@@ -149,13 +151,26 @@ $files = $PAYMENT->payment_file_view([$uuid]);
                       <input type="hidden" class="form-control form-control-sm text-center" name="item__id[]" value="<?php echo $item['id'] ?>" readonly>
                     </td>
                     <td class="text-left"><?php echo $item['expense_name'] ?></td>
-                    <td class="text-left"><?php echo $item['text'] ?></td>
-                    <td class="text-left"><?php echo $item['text2'] ?></td>
-                    <td class="text-right"><?php echo number_format($item['amount'],2) ?></td>
-                    <td class="text-right"><?php echo number_format($item['vat'],2) ?></td>
-                    <td class="text-right"><?php echo number_format($item['wt'],2) ?></td>
+                    <td class="text-left">
+                      <input type="text" class="form-control form-control-sm text-left" name="item__text[]" value="<?php echo $item['text'] ?>" required>
+                    </td>
+                    <td class="text-left">
+                      <input type="text" class="form-control form-control-sm text-left" name="item__text2[]" value="<?php echo $item['text2'] ?>" required>
+                    </td>
+                    <td>
+                      <input type="number" class="form-control form-control-sm text-right amount-item" name="item__amount[]" value="<?php echo $item['amount'] ?>" required>
+                      <div class="invalid-feedback">
+                        กรุณากรอกข้อมูล!
+                      </div>
+                    </td>
+                    <td>
+                      <input type="number" class="form-control form-control-sm text-right vat-item" name="item__vat[]" value="<?php echo $item['vat'] ?>">
+                    </td>
+                    <td>
+                      <input type="number" class="form-control form-control-sm text-right wt-item" name="item__wt[]" value="<?php echo $item['wt'] ?>">
+                    </td>
                     <td class="text-right">
-                      <?php echo number_format((!empty($row['order_number']) ? $item['usage'] : $item['total']),2) ?>
+                      <?php echo number_format((!empty($row['order_number']) ? $item['usage'] : $item['total']), 2) ?>
                     </td>
                   </tr>
                 <?php endforeach; ?>
@@ -195,7 +210,7 @@ $files = $PAYMENT->payment_file_view([$uuid]);
                       <input type="number" class="form-control form-control-sm text-right vat-item" min="1" step="0.01" name="item_vat[]">
                     </td>
                     <td>
-                      <input type="number" class="form-control form-control-sm text-right wt-item" min="1" step="0.01" name="item_wt">
+                      <input type="number" class="form-control form-control-sm text-right wt-item" min="1" step="0.01" name="item_wt[]">
                     </td>
                     <td class="text-right">
                       <span class="total-item"></span>
@@ -205,16 +220,16 @@ $files = $PAYMENT->payment_file_view([$uuid]);
                 <tr>
                   <td colspan="4" class="text-right">รวมทั้งสิ้น</td>
                   <td class="text-right">
-                    <span class=" amount-total"></span>
+                    <span class="amount-total"><?php echo number_format($total['amount'], 2) ?></span>
                   </td>
                   <td class="text-right">
-                    <span class=" vat-total"></span>
+                    <span class="vat-total"><?php echo number_format($total['vat'], 2) ?></span>
                   </td>
                   <td class="text-right">
-                    <span class=" wt-total"></span>
+                    <span class="wt-total"><?php echo number_format($total['wt'], 2) ?></span>
                   </td>
                   <td class="text-right">
-                    <span class=" all-total"></span>
+                    <span class="all-total"><?php echo number_format($total['total'], 2) ?></span>
                   </td>
                 </tr>
               </tbody>
@@ -260,13 +275,53 @@ $files = $PAYMENT->payment_file_view([$uuid]);
         </div>
       </div>
 
+      <?php if (COUNT($remarks) > 0) : ?>
+        <div class="row justify-content-center mb-2">
+          <div class="col-xl-10">
+            <hr>
+            <div class="h5 text-primary">รายละเอียดการดำเนินการ</div>
+            <div class="table-responsive">
+              <table class="table table-sm table-bordered table-hover">
+                <thead>
+                  <tr>
+                    <th width="10%">#</th>
+                    <th width="20%">ผู้ดำเนินการ</th>
+                    <th width="60%">รายละเอียดการ</th>
+                    <th width="10%">วันที่</th>
+                  </tr>
+                </thead>
+                <?php
+                foreach ($remarks as $remark) :
+                ?>
+                  <tr>
+                    <td class="text-center">
+                      <span class="badge badge-<?php echo $remark['status_color'] ?> font-weight-light">
+                        <?php echo $remark['status_name'] ?>
+                      </span>
+                    </td>
+                    <td class="text-center"><?php echo $remark['username'] ?></td>
+                    <td class="text-left"><?php echo str_replace("\r\n", "<br>", $remark['text']) ?></td>
+                    <td class="text-center"><?php echo $remark['created'] ?></td>
+                  </tr>
+                <?php endforeach; ?>
+              </table>
+            </div>
+          </div>
+        </div>
+      <?php endif; ?>
+
       <div class="row justify-content-center">
-        <div class="col-sm-6 col-xl-3 mb-2">
+        <div class="col-xl-3 mb-2">
           <button type="submit" class="btn btn-success btn-sm btn-block">
             <i class="fas fa-check pr-2"></i>ยืนยัน
           </button>
         </div>
-        <div class="col-sm-6 col-xl-3 mb-2">
+        <div class="col-xl-3 mb-2">
+          <a class="btn btn-primary btn-sm btn-block" href="/payment/print/<?php echo $row['uuid'] ?>" target="_blank">
+            <i class="fas fa-print pr-2"></i>พิมพ์
+          </a>
+        </div>
+        <div class="col-xl-3 mb-2">
           <a class="btn btn-danger btn-sm btn-block" href="/payment">
             <i class="fas fa-arrow-left pr-2"></i>หน้าหลัก
           </a>
@@ -319,6 +374,16 @@ $files = $PAYMENT->payment_file_view([$uuid]);
       .val(isCheque ? "" : "");
   });
 
+  $(document).on("change", ".expense-select", function() {
+    const expense = parseFloat($(this).val() || "");
+
+    if (expense) {
+      $("input[name='item_text[]'], input[name='item_text2[]'], input[name='item_amount[]']").prop("required", true);
+    } else {
+      $("input[name='item_text[]'], input[name='item_text2[]'], input[name='item_amount[]']").prop("required", false);
+    }
+  });
+
   $(document).on("click", ".file-increase", function() {
     let row = $(".file-tr:last");
     let clone = row.clone();
@@ -340,8 +405,11 @@ $files = $PAYMENT->payment_file_view([$uuid]);
     const vat = parseFloat(row.find(".vat-item").val() || 0);
     const wt = parseFloat(row.find(".wt-item").val() || 0);
 
-    const total = (amount + vat + wt).toFixed(2);
-    row.find(".total-item").text(total);
+    const total = (amount + vat + wt);
+    row.find(".total-item").text(total.toFixed(2).toLocaleString('th-TH', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    }));
 
     updateTotal();
   });
@@ -351,20 +419,39 @@ $files = $PAYMENT->payment_file_view([$uuid]);
     let totalVat = 0;
     let totalWt = 0;
 
-    $("tr.item-tr").each(function() {
-      const amount = parseFloat($(this).find(".amount-item").val() || 0);
-      const vat = parseFloat($(this).find(".vat-item").val() || 0);
-      const wt = parseFloat($(this).find(".wt-item").val() || 0);
-
+    $('.amount-item').each(function() {
+      var amount = parseFloat($(this).val()) || 0;
       totalAmount += amount;
+    });
+
+    $('.vat-item').each(function() {
+      var vat = parseFloat($(this).val()) || 0;
       totalVat += vat;
+    });
+
+    $('.wt-item').each(function() {
+      var wt = parseFloat($(this).val()) || 0;
       totalWt += wt;
     });
 
-    $(".amount-total").text(totalAmount.toFixed(2));
-    $(".vat-total").text(totalVat.toFixed(2));
-    $(".wt-total").text(totalWt.toFixed(2));
-    $(".all-total").text((totalAmount + totalVat + totalWt).toFixed(2));
+    grandTotal = totalAmount + totalVat + totalWt;
+
+    $(".amount-total").text(totalAmount.toFixed(2).toLocaleString('th-TH', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    }));
+    $(".vat-total").text(totalVat.toFixed(2).toLocaleString('th-TH', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    }));
+    $(".wt-total").text(totalWt.toFixed(2).toLocaleString('th-TH', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    }));
+    $(".all-total").text(grandTotal.toFixed(2).toLocaleString('th-TH', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    }));
   }
 
   $(document).on("change", "input[name='file[]']", function() {

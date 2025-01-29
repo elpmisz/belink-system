@@ -195,7 +195,6 @@ class Estimate
     return $stmt->execute($data);
   }
 
-
   public function estimate_item_delete($data)
   {
     $sql = "UPDATE belink.estimate_item SET
@@ -263,7 +262,8 @@ class Estimate
     $sql = "SELECT CONCAT(c.firstname,' ',c.lastname) username,a.text,
     (
     CASE
-      WHEN a.`status` = 1 AND b.action = 1 THEN 'ไม่ผ่านอนุมัติ รอผู้ใช้บริการแก้ไข'
+      WHEN a.`status` = 1 AND b.action = 1 THEN 'ดำเนินการแก้ไขเรียบร้อย'
+      WHEN a.`status` = 1 AND b.action = 2 THEN 'ไม่ผ่านอนุมัติ รอผู้ใช้บริการแก้ไข'
       WHEN a.`status` = 2 THEN 'ผ่านการอนุมัติจากฝ่ายขาย'
       WHEN a.`status` = 3 THEN 'ผ่านการอนุมัติจากฝ่ายงบประมาณ'
       WHEN a.`status` = 4 THEN 'ผ่านการอนุมัติจากฝ่ายการเงิน'

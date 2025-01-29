@@ -1,43 +1,44 @@
 <?php
 $menu = "Service";
-$page = "ServiceEstimate";
+$page = "ServicePayment";
 include_once(__DIR__ . "/../layout/header.php");
 
-use App\Classes\Estimate;
+use App\Classes\Payment;
 
-$ESTIMATE = new Estimate();
+$PAYMENT = new Payment();
 
 $param = (isset($params) ? explode("/", $params) : "");
 $uuid = (!empty($param[0]) ? $param[0] : "");
 
-$row = $ESTIMATE->estimate_view([$uuid]);
-$files = $ESTIMATE->estimate_file_view([$uuid]);
-$remarks = $ESTIMATE->estimate_remark_view([$uuid]);
-$reference = $ESTIMATE->estimate_item_reference([$uuid]);
+$row = $PAYMENT->payment_view([$uuid]);
+$items = $PAYMENT->payment_item_view([$uuid]);
+$files = $PAYMENT->payment_file_view([$uuid]);
+$total = $PAYMENT->payment_item_total([$uuid]);
+$remarks = $PAYMENT->payment_remark_view([$uuid]);
 ?>
 
 <div class="card shadow">
-  <h4 class="card-header text-center">Estimate Budget</h4>
+  <h4 class="card-header text-center">Payment Order</h4>
   <div class="card-body">
 
-    <form action="/estimate/approve" method="POST" class="needs-validation" novalidate>
+    <form action="/payment/approve" method="POST" class="needs-validation" novalidate enctype="multipart/form-data">
       <div style="display: none;">
         <div class="row mb-2">
           <label class="col-xl-2 offset-xl-2 col-form-label">ID</label>
-          <div class="col-xl-2">
+          <div class="col-xl-4">
             <input type="text" class="form-control form-control-sm" name="id" value="<?php echo $row['id'] ?>" readonly>
-            <div class="invalid-feedback">
-              กรุณากรอกข้อมูล!
-            </div>
           </div>
         </div>
         <div class="row mb-2">
           <label class="col-xl-2 offset-xl-2 col-form-label">UUID</label>
-          <div class="col-xl-2">
+          <div class="col-xl-4">
             <input type="text" class="form-control form-control-sm" name="uuid" value="<?php echo $row['uuid'] ?>" readonly>
-            <div class="invalid-feedback">
-              กรุณากรอกข้อมูล!
-            </div>
+          </div>
+        </div>
+        <div class="row mb-2">
+          <label class="col-xl-2 offset-xl-2 col-form-label">TYPE</label>
+          <div class="col-xl-4">
+            <input type="text" class="form-control form-control-sm type-select" value="<?php echo $row['type'] ?>" readonly>
           </div>
         </div>
       </div>
@@ -48,17 +49,9 @@ $reference = $ESTIMATE->estimate_item_reference([$uuid]);
         </div>
       </div>
       <div class="row mb-2">
-        <label class="col-xl-2 offset-xl-2 col-form-label">พนักงานขาย</label>
+        <label class="col-xl-2 offset-xl-2 col-form-label">ผู้ใช้บริการ</label>
         <div class="col-xl-4 text-underline">
           <?php echo $row['username'] ?>
-        </div>
-      </div>
-      <div class="old-customer">
-        <div class="row mb-2">
-          <label class="col-xl-2 offset-xl-2 col-form-label">ชื่อลูกค้า</label>
-          <div class="col-xl-4 text-underline">
-            <?php echo $row['customer_name'] ?>
-          </div>
         </div>
       </div>
       <div class="row mb-2">
@@ -68,27 +61,9 @@ $reference = $ESTIMATE->estimate_item_reference([$uuid]);
         </div>
       </div>
       <div class="row mb-2">
-        <label class="col-xl-2 offset-xl-2 col-form-label">สินค้า</label>
+        <label class="col-xl-2 offset-xl-2 col-form-label">จ่ายให้</label>
         <div class="col-xl-4 text-underline">
-          <?php echo $row['product_name'] ?>
-        </div>
-      </div>
-      <div class="row mb-2">
-        <label class="col-xl-2 offset-xl-2 col-form-label">หัวข้อเรื่อง</label>
-        <div class="col-xl-4 text-underline">
-          <?php echo $row['title_name'] ?>
-        </div>
-      </div>
-      <div class="row mb-2">
-        <label class="col-xl-2 offset-xl-2 col-form-label">ชื่อการขาย</label>
-        <div class="col-xl-4 text-underline">
-          <?php echo $row['sales_name'] ?>
-        </div>
-      </div>
-      <div class="row mb-2">
-        <label class="col-xl-2 offset-xl-2 col-form-label">งบประมาณ</label>
-        <div class="col-xl-4 text-underline">
-          <?php echo number_format($row['budget'], 2) ?>
+          <?php echo $row['receiver'] ?>
         </div>
       </div>
       <div class="row mb-2">
@@ -98,49 +73,86 @@ $reference = $ESTIMATE->estimate_item_reference([$uuid]);
         </div>
       </div>
 
-      <?php
-      if (COUNT($reference) > 0) :
-        foreach ($reference as $ref) :
-      ?>
-          <div class="row justify-content-center mb-2">
-            <div class="col-sm-12">
-              <div class="h5"><?php echo $ref['reference_name'] ?></div>
-              <div class="table-responsive">
-                <table class="table table-bordered table-sm item-table">
-                  <thead>
-                    <tr>
-                      <th width="10%">#</th>
-                      <th width="40%">รายจ่าย</th>
-                      <th width="20%">งบประมาณ</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <?php
-                    $items = $ESTIMATE->estimate_item_view([$uuid], $ref['reference']);
-                    $total = 0;
-                    foreach ($items as $key => $item) :
-                      $key++;
-                      $total += $item['estimate'];
-                    ?>
-                      <tr>
-                        <td class="text-center"><?php echo $key ?></td>
-                        <td class="text-left"><?php echo $item['expense_name'] ?></td>
-                        <td class="text-right"><?php echo number_format($item['estimate'], 2) ?></td>
-                      </tr>
-                    <?php endforeach; ?>
-                    <tr>
-                      <td class="text-center h5" colspan="2">รวม</td>
-                      <td class="text-right h5"><?php echo number_format($total, 2) ?></td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
+      <?php if (intval($row['type']) === 2) : ?>
+        <div>
+          <div class="row mb-2">
+            <label class="col-xl-2 offset-xl-2 col-form-label">ธนาคาร</label>
+            <div class="col-xl-4 text-underline">
+              <?php echo $row['cheque_bank'] ?>
             </div>
           </div>
-      <?php
-        endforeach;
-      endif;
-      ?>
+          <div class="row mb-2">
+            <label class="col-xl-2 offset-xl-2 col-form-label">สาขา</label>
+            <div class="col-xl-4 text-underline">
+              <?php echo $row['cheque_branch'] ?>
+            </div>
+          </div>
+          <div class="row mb-2">
+            <label class="col-xl-2 offset-xl-2 col-form-label">เลขที่เช็ค</label>
+            <div class="col-xl-4 text-underline">
+              <?php echo $row['cheque_number'] ?>
+            </div>
+          </div>
+          <div class="row mb-2">
+            <label class="col-xl-2 offset-xl-2 col-form-label">ลงวันที่</label>
+            <div class="col-xl-4 text-underline">
+              <?php echo $row['cheque_date'] ?>
+            </div>
+          </div>
+        </div>
+      <?php endif; ?>
+
+      <div class="row mb-2 items-custom-div">
+        <div class="col-xl-12">
+          <div class="table-responsive">
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th width="5%">#</th>
+                  <th width="15%">รายจ่าย</th>
+                  <th width="15%">รายละเอียด</th>
+                  <th width="15%">รายละเอียด</th>
+                  <th width="10%">จำนวนเงิน</th>
+                  <th width="10%">VAT 7%</th>
+                  <th width="10%">W/T</th>
+                  <th width="10%">ยอดสุทธิ</th>
+                </tr>
+              </thead>
+              <tbody>
+                <?php foreach ($items as $key => $item) : $key++; ?>
+                  <tr>
+                    <td class="text-center"><?php echo $key ?></td>
+                    <td class="text-left"><?php echo $item['expense_name'] ?></td>
+                    <td class="text-left"><?php echo $item['text'] ?></td>
+                    <td class="text-left"><?php echo $item['text2'] ?></td>
+                    <td class="text-right"><?php echo number_format($item['amount'], 2) ?></td>
+                    <td class="text-right"><?php echo number_format($item['vat'], 2) ?></td>
+                    <td class="text-right"><?php echo number_format($item['wt'], 2) ?></td>
+                    <td class="text-right">
+                      <?php echo number_format((!empty($row['order_number']) ? $item['usage'] : $item['total']), 2) ?>
+                    </td>
+                  </tr>
+                <?php endforeach; ?>
+                <tr>
+                  <td colspan="4" class="text-right">รวมทั้งสิ้น</td>
+                  <td class="text-right">
+                    <span class="amount-total"><?php echo number_format($total['amount'], 2) ?></span>
+                  </td>
+                  <td class="text-right">
+                    <span class="vat-total"><?php echo number_format($total['vat'], 2) ?></span>
+                  </td>
+                  <td class="text-right">
+                    <span class="wt-total"><?php echo number_format($total['wt'], 2) ?></span>
+                  </td>
+                  <td class="text-right">
+                    <span class="all-total"><?php echo number_format($total['total'], 2) ?></span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
 
       <div class="row mb-2">
         <label class="col-xl-2 offset-xl-2 col-form-label">เอกสารแนบ</label>
@@ -152,7 +164,7 @@ $reference = $ESTIMATE->estimate_item_reference([$uuid]);
             ?>
                 <tr>
                   <td>
-                    <a href="/src/Publics/estimate/<?php echo $file['name'] ?>" class="text-primary" target="_blank">
+                    <a href="/src/Publics/payment/<?php echo $file['name'] ?>" class="text-primary" target="_blank">
                       <span class="badge badge-primary font-weight-light">ดาวน์โหลด!</span>
                     </a>
                   </td>
@@ -162,12 +174,6 @@ $reference = $ESTIMATE->estimate_item_reference([$uuid]);
             endforeach;
             ?>
           </table>
-        </div>
-      </div>
-      <div class="row mb-2">
-        <label class="col-xl-2 offset-xl-2 col-form-label">หมายเหตุ</label>
-        <div class="col-xl-4 text-underline">
-          <?php echo str_replace("\n", "<br>", $row['remark']) ?>
         </div>
       </div>
 
@@ -238,12 +244,7 @@ $reference = $ESTIMATE->estimate_item_reference([$uuid]);
           </button>
         </div>
         <div class="col-xl-3 mb-2">
-          <a class="btn btn-primary btn-sm btn-block" href="/estimate/print/<?php echo $row['uuid'] ?>" target="_blank">
-            <i class="fas fa-print pr-2"></i>พิมพ์
-          </a>
-        </div>
-        <div class="col-xl-3 mb-2">
-          <a class="btn btn-danger btn-sm btn-block" href="/estimate">
+          <a class="btn btn-danger btn-sm btn-block" href="/payment">
             <i class="fas fa-arrow-left pr-2"></i>หน้าหลัก
           </a>
         </div>

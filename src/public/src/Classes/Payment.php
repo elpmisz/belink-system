@@ -54,13 +54,17 @@ class Payment
     return $stmt->execute($data);
   }
 
-  public function payment_view($data) {
+  public function payment_view($data)
+  {
     $sql = "SELECT a.id,
+      CONCAT('PO',YEAR(a.created),LPAD(a.`last`,4,'0')) ticket,
       a.`uuid`,
+      c.`uuid` estimate_uuid,
       CONCAT(b.firstname,' ',b.lastname) username,
       a.order_number,
       a.receiver,
       a.`type`,
+      IF(a.type = 1,'เงินสด / โอนเข้าบัญชี','เช็ค') type_name,
       a.cheque_bank,
       a.cheque_branch,
       a.cheque_number,
@@ -69,7 +73,40 @@ class Payment
     FROM belink.payment_request a
     LEFT JOIN belink.`user` b
     ON a.login_id = b.login
+    LEFT JOIN belink.estimate_request c
+    ON a.order_number = c.order_number
     WHERE a.`uuid` = ?";
+    $stmt = $this->dbcon->prepare($sql);
+    $stmt->execute($data);
+    return $stmt->fetch();
+  }
+
+  public function payment_update($data)
+  {
+    $sql = "UPDATE belink.payment_request SET
+    receiver = ?,
+    cheque_bank = ?,
+    cheque_branch = ?,
+    cheque_number = ?,
+    cheque_date = ?,
+    `action` = 1,
+    updated = NOW()
+    WHERE uuid = ?";
+    $stmt = $this->dbcon->prepare($sql);
+    return $stmt->execute($data);
+  }
+
+  public function payment_item_total($data)
+  {
+    $sql = "SELECT SUM(a.amount) amount, 
+      SUM(a.vat) vat, 
+      SUM(a.wt) wt,
+      (SUM(a.amount) + SUM(a.vat) + SUM(a.wt)) total
+    FROM belink.payment_item a
+    LEFT JOIN belink.payment_request b
+    ON a.request_id = b.id
+    WHERE b.`uuid` = ?
+    AND a.`status` = 1";
     $stmt = $this->dbcon->prepare($sql);
     $stmt->execute($data);
     return $stmt->fetch();
@@ -82,12 +119,7 @@ class Payment
     FROM belink.payment_item a
     WHERE a.status = 1
     AND a.request_id = ?
-    AND a.expense_id = ?
-    AND a.text = ?
-    AND a.text2 = ?
-    AND a.amount = ?
-    AND a.vat = ?
-    AND a.wt = ?";
+    AND a.expense_id = ?";
     $stmt = $this->dbcon->prepare($sql);
     $stmt->execute($data);
     return $stmt->fetchColumn();
@@ -141,12 +173,36 @@ class Payment
     ON a.order_number = d.order_number
     AND b.expense_id = d.expense_id
     WHERE a.`uuid` = ?
-    AND b.`status` = 1";
+    AND b.`status` = 1
+    ORDER BY c.reference ASC, c.code ASC";
     $stmt = $this->dbcon->prepare($sql);
     $stmt->execute($data);
     return $stmt->fetchAll();
   }
 
+  public function payment_item_update($data)
+  {
+    $sql = "UPDATE belink.payment_item SET
+    `text` = ?,
+    `text2` = ?,
+    `amount` = ?,
+    `vat` = ?,
+    `wt` = ?,
+    updated = NOW()
+    WHERE id = ?";
+    $stmt = $this->dbcon->prepare($sql);
+    return $stmt->execute($data);
+  }
+
+  public function payment_item_delete($data)
+  {
+    $sql = "UPDATE belink.payment_item SET
+    status = 0,
+    updated = NOW()
+    WHERE id = ?";
+    $stmt = $this->dbcon->prepare($sql);
+    return $stmt->execute($data);
+  }
 
   public function payment_file_count($data)
   {
@@ -178,6 +234,65 @@ class Payment
     ON a.request_id = b.id
     WHERE a.`status` = 1
     AND b.`uuid` = ?";
+    $stmt = $this->dbcon->prepare($sql);
+    $stmt->execute($data);
+    return $stmt->fetchAll();
+  }
+
+  public function payment_file_delete($data)
+  {
+    $sql = "UPDATE belink.payment_file SET
+    status = 0,
+    updated = NOW()
+    WHERE id = ?";
+    $stmt = $this->dbcon->prepare($sql);
+    return $stmt->execute($data);
+  }
+
+  public function payment_approve($data)
+  {
+    $sql = "UPDATE belink.payment_request SET
+    action = ?,
+    status = ?,
+    updated = NOW()
+    WHERE uuid = ?";
+    $stmt = $this->dbcon->prepare($sql);
+    return $stmt->execute($data);
+  }
+
+  public function payment_remark_insert($data)
+  {
+    $sql = "INSERT INTO belink.payment_remark(`request_id`, `login_id`, `text`, `status`) VALUES(?,?,?,?)";
+    $stmt = $this->dbcon->prepare($sql);
+    return $stmt->execute($data);
+  }
+
+  public function payment_remark_view($data)
+  {
+    $sql = "SELECT CONCAT(c.firstname,' ',c.lastname) username,a.text,
+    (
+    CASE
+      WHEN a.`status` = 1 AND b.action = 1 THEN 'ดำเนินการแก้ไขเรียบร้อย'
+      WHEN a.`status` = 1 AND b.action = 2 THEN 'ไม่ผ่านอนุมัติ รอผู้ใช้บริการแก้ไข'
+      WHEN a.`status` = 2 THEN 'ผ่านการอนุมัติจากฝ่ายบัญชี'
+      WHEN a.`status` = 3 THEN 'ผ่านการอนุมัติจากผู้อนุมัติ'
+    END
+    ) status_name,
+    (
+    CASE
+      WHEN a.`status` = 1 THEN 'danger'
+      WHEN a.`status` = 2 THEN 'primary'
+      WHEN a.`status` = 3 THEN 'info'
+    END
+    ) status_color,
+    DATE_FORMAT(a.created,'%d/%m/%Y, %H:%i น.') created
+    FROM belink.payment_remark a
+    LEFT JOIN belink.payment_request b
+    ON a.request_id = b.id
+    LEFT JOIN belink.`user` c
+    ON a.login_id = c.login
+    WHERE b.`uuid` = ?
+    ORDER BY a.created DESC";
     $stmt = $this->dbcon->prepare($sql);
     $stmt->execute($data);
     return $stmt->fetchAll();

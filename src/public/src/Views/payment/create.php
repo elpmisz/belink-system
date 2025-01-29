@@ -151,7 +151,7 @@ include_once(__DIR__ . "/../layout/header.php");
                     <input type="number" class="form-control form-control-sm text-right vat-item" min="1" step="0.01" name="item_vat[]">
                   </td>
                   <td>
-                    <input type="number" class="form-control form-control-sm text-right wt-item" min="1" step="0.01" name="item_wt">
+                    <input type="number" class="form-control form-control-sm text-right wt-item" min="1" step="0.01" name="item_wt[]">
                   </td>
                   <td class="text-right">
                     <span class="total-item"></span>
@@ -196,12 +196,12 @@ include_once(__DIR__ . "/../layout/header.php");
       </div>
 
       <div class="row justify-content-center">
-        <div class="col-sm-6 col-xl-3 mb-2">
+        <div class="col-xl-3 mb-2">
           <button type="submit" class="btn btn-success btn-sm btn-block">
             <i class="fas fa-check pr-2"></i>ยืนยัน
           </button>
         </div>
-        <div class="col-sm-6 col-xl-3 mb-2">
+        <div class="col-xl-3 mb-2">
           <a class="btn btn-danger btn-sm btn-block" href="/payment">
             <i class="fas fa-arrow-left pr-2"></i>หน้าหลัก
           </a>
@@ -311,7 +311,10 @@ include_once(__DIR__ . "/../layout/header.php");
 
           items.forEach((item, index) => {
             console.log(item)
-            const remain = parseFloat(item.remain).toLocaleString('th-TH', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            const remain = parseFloat(item.remain).toLocaleString('th-TH', {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2
+            });
             tableContent += `
             <tr class="item-tr">
               <td class="text-center">${index + 1}</td>
