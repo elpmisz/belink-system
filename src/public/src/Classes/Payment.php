@@ -101,7 +101,7 @@ class Payment
     $sql = "SELECT SUM(a.amount) amount, 
       SUM(a.vat) vat, 
       SUM(a.wt) wt,
-      (SUM(a.amount) + SUM(a.vat) + SUM(a.wt)) total
+      (SUM(a.amount) + SUM(a.vat) - SUM(a.wt)) total
     FROM belink.payment_item a
     LEFT JOIN belink.payment_request b
     ON a.request_id = b.id
@@ -142,7 +142,7 @@ class Payment
       b.amount,
       b.vat,
       b.wt,
-      (b.amount + b.vat + b.wt) total,
+      (b.amount + b.vat - b.wt) total,
       d.usage,
       d.estimate,
       d.remain
@@ -156,8 +156,8 @@ class Payment
       SELECT a.order_number,
       b.expense_id,
       b.estimate,
-      (SUM(c.amount) + SUM(c.vat) + SUM(c.wt)) `usage`,
-      (b.estimate - (SUM(c.amount) + SUM(c.vat) + SUM(c.wt))) remain
+      (SUM(c.amount) + SUM(c.vat) - SUM(c.wt)) `usage`,
+      (b.estimate - (SUM(c.amount) + SUM(c.vat) - SUM(c.wt))) remain
       FROM belink.estimate_request a
       LEFT JOIN belink.estimate_item b
       ON a.id = b.request_id
@@ -312,7 +312,7 @@ class Payment
     ON b.expense_id = c.id
     LEFT JOIN 
     (
-      SELECT a.order_number,b.expense_id,(SUM(b.amount) + SUM(b.vat) + SUM(b.wt)) payment
+      SELECT a.order_number,b.expense_id,(SUM(b.amount) + SUM(b.vat) - SUM(b.wt)) payment
       FROM belink.payment_request a
       LEFT JOIN belink.payment_item b
       ON a.id = b.request_id
@@ -399,7 +399,7 @@ class Payment
     ON a.login_id = b.login
     LEFT JOIN 
     (
-      SELECT request_id,(SUM(amount) + SUM(vat) + SUM(wt)) total
+      SELECT request_id,(SUM(amount) + SUM(vat) - SUM(wt)) total
       FROM belink.payment_item
       WHERE	`status` = 1
       GROUP BY request_id
@@ -502,7 +502,7 @@ class Payment
     ON a.login_id = b.login
     LEFT JOIN 
     (
-      SELECT request_id,(SUM(amount) + SUM(vat) + SUM(wt)) total
+      SELECT request_id,(SUM(amount) + SUM(vat) - SUM(wt)) total
       FROM belink.payment_item
       WHERE	`status` = 1
       GROUP BY request_id
@@ -605,7 +605,7 @@ class Payment
     ON a.login_id = b.login
     LEFT JOIN 
     (
-      SELECT request_id,(SUM(amount) + SUM(vat) + SUM(wt)) total
+      SELECT request_id,(SUM(amount) + SUM(vat) - SUM(wt)) total
       FROM belink.payment_item
       WHERE	`status` = 1
       GROUP BY request_id

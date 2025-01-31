@@ -129,7 +129,7 @@ $remarks = $PAYMENT->payment_remark_view([$uuid]);
                     <td class="text-right"><?php echo number_format($item['vat'], 2) ?></td>
                     <td class="text-right"><?php echo number_format($item['wt'], 2) ?></td>
                     <td class="text-right">
-                      <?php echo number_format((!empty($row['order_number']) ? $item['usage'] : $item['total']), 2) ?>
+                      <?php echo number_format($item['total'], 2) ?>
                     </td>
                   </tr>
                 <?php endforeach; ?>

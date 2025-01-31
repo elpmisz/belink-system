@@ -14,6 +14,7 @@ $row = $ESTIMATE->estimate_view([$uuid]);
 $files = $ESTIMATE->estimate_file_view([$uuid]);
 $remarks = $ESTIMATE->estimate_remark_view([$uuid]);
 $reference = $ESTIMATE->estimate_item_reference([$uuid]);
+$payments = $ESTIMATE->payment_order([$row['order_number']]);
 ?>
 
 <div class="card shadow">
@@ -112,25 +113,35 @@ $reference = $ESTIMATE->estimate_item_reference([$uuid]);
                       <th width="10%">#</th>
                       <th width="40%">รายจ่าย</th>
                       <th width="20%">งบประมาณ</th>
+                      <th width="10%">ยอดที่ใช้</th>
+                      <th width="10%">ยอดคงเหลือ</th>
                     </tr>
                   </thead>
                   <tbody>
                     <?php
                     $items = $ESTIMATE->estimate_item_view([$uuid], $ref['reference']);
-                    $total = 0;
+                    $totalEstimate = 0;
+                    $totalUsage = 0;
+                    $totalRemain = 0;
                     foreach ($items as $key => $item) :
                       $key++;
-                      $total += $item['estimate'];
+                      $totalEstimate += $item['estimate'];
+                      $totalUsage += $item['usage'];
+                      $totalRemain += $item['remain'];
                     ?>
                       <tr>
                         <td class="text-center"><?php echo $key ?></td>
                         <td class="text-left"><?php echo $item['expense_name'] ?></td>
                         <td class="text-right"><?php echo number_format($item['estimate'], 2) ?></td>
+                        <td class="text-right"><?php echo number_format($item['usage'], 2) ?></td>
+                        <td class="text-right"><?php echo number_format($item['remain'], 2) ?></td>
                       </tr>
                     <?php endforeach; ?>
                     <tr>
                       <td class="text-center h5" colspan="2">รวม</td>
-                      <td class="text-right h5"><?php echo number_format($total, 2) ?></td>
+                      <td class="text-right h5"><?php echo number_format($totalEstimate, 2) ?></td>
+                      <td class="text-right h5"><?php echo number_format($totalUsage, 2) ?></td>
+                      <td class="text-right h5"><?php echo number_format($totalRemain, 2) ?></td>
                     </tr>
                   </tbody>
                 </table>
@@ -170,6 +181,47 @@ $reference = $ESTIMATE->estimate_item_reference([$uuid]);
           <?php echo str_replace("\n", "<br>", $row['remark']) ?>
         </div>
       </div>
+
+      <?php if (COUNT($payments) > 0) : ?>
+        <div class="row justify-content-center mb-2">
+          <div class="col-xl-10">
+            <hr>
+            <div class="h5 text-primary">รายการใบอนุมัติสั่งจ่าย</div>
+            <div class="table-responsive">
+              <table class="table table-sm table-bordered table-hover">
+                <thead>
+                  <tr>
+                    <th width="10%">#</th>
+                    <th width="10%">เลขที่เอกสาร</th>
+                    <th width="10%">ผู้ใช้บริการ</th>
+                    <th width="10%">เลขที่สัญญา</th>
+                    <th width="10%">จ่ายให้</th>
+                    <th width="10%">ยอดรวม</th>
+                    <th width="10%">วันที่</th>
+                  </tr>
+                </thead>
+                <?php
+                foreach ($payments as $payment) :
+                ?>
+                  <tr>
+                    <td class="text-center">
+                      <a href="/payment/complete/<?php echo $payment['uuid'] ?>" class="badge badge-<?php echo $payment['status_color'] ?> font-weight-light" target="_blank">
+                        <?php echo $payment['status_name'] ?>
+                      </a>
+                    </td>
+                    <td class="text-center"><?php echo $payment['ticket'] ?></td>
+                    <td class="text-left"><?php echo $payment['username'] ?></td>
+                    <td class="text-center"><?php echo $payment['order_number'] ?></td>
+                    <td class="text-left"><?php echo $payment['receiver'] ?></td>
+                    <td class="text-right"><?php echo number_format($payment['total'], 2) ?></td>
+                    <td class="text-center"><?php echo $payment['created'] ?></td>
+                  </tr>
+                <?php endforeach; ?>
+              </table>
+            </div>
+          </div>
+        </div>
+      <?php endif; ?>
 
       <?php if (COUNT($remarks) > 0) : ?>
         <div class="row justify-content-center mb-2">

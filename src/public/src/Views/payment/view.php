@@ -141,6 +141,11 @@ $remarks = $PAYMENT->payment_remark_view([$uuid]);
                   <th width="10%">VAT 7%</th>
                   <th width="10%">W/T</th>
                   <th width="10%">ยอดสุทธิ</th>
+                  <?php
+                  if (intval($row['type']) === 2) {
+                    echo '<th width="10%">ยอดคงเหลือ</th>';
+                  }
+                  ?>
                 </tr>
               </thead>
               <tbody>
@@ -158,7 +163,7 @@ $remarks = $PAYMENT->payment_remark_view([$uuid]);
                       <input type="text" class="form-control form-control-sm text-left" name="item__text2[]" value="<?php echo $item['text2'] ?>" required>
                     </td>
                     <td>
-                      <input type="number" class="form-control form-control-sm text-right amount-item" name="item__amount[]" value="<?php echo $item['amount'] ?>" required>
+                      <input type="number" class="form-control form-control-sm text-right amount-item" name="item__amount[]" value="<?php echo $item['amount'] ?>" max="<?php echo $item['remain'] ?>" required>
                       <div class="invalid-feedback">
                         กรุณากรอกข้อมูล!
                       </div>
@@ -170,8 +175,13 @@ $remarks = $PAYMENT->payment_remark_view([$uuid]);
                       <input type="number" class="form-control form-control-sm text-right wt-item" name="item__wt[]" value="<?php echo $item['wt'] ?>">
                     </td>
                     <td class="text-right">
-                      <?php echo number_format((!empty($row['order_number']) ? $item['usage'] : $item['total']), 2) ?>
+                      <?php echo number_format($item['total'], 2) ?>
                     </td>
+                    <?php
+                    if (intval($row['type']) === 2) {
+                      echo '<td class="text-right">' . number_format($item['remain'], 2) . '</td>';
+                    }
+                    ?>
                   </tr>
                 <?php endforeach; ?>
                 <?php if (empty($row['order_number'])) : ?>
