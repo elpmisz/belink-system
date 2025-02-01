@@ -132,16 +132,16 @@ $payments = $ESTIMATE->payment_order([$row['order_number']]);
                       <tr>
                         <td class="text-center"><?php echo $key ?></td>
                         <td class="text-left"><?php echo $item['expense_name'] ?></td>
-                        <td class="text-right"><?php echo number_format($item['estimate'], 2) ?></td>
-                        <td class="text-right"><?php echo number_format($item['usage'], 2) ?></td>
-                        <td class="text-right"><?php echo number_format($item['remain'], 2) ?></td>
+                        <td class="text-primary text-right"><?php echo number_format($item['estimate'], 2) ?></td>
+                        <td class="text-danger text-right"><?php echo number_format($item['usage'], 2) ?></td>
+                        <td class="text-success text-right"><?php echo number_format($item['remain'], 2) ?></td>
                       </tr>
                     <?php endforeach; ?>
                     <tr>
                       <td class="text-center h5" colspan="2">รวม</td>
-                      <td class="text-right h5"><?php echo number_format($totalEstimate, 2) ?></td>
-                      <td class="text-right h5"><?php echo number_format($totalUsage, 2) ?></td>
-                      <td class="text-right h5"><?php echo number_format($totalRemain, 2) ?></td>
+                      <td class="text-primary text-right h5"><?php echo number_format($totalEstimate, 2) ?></td>
+                      <td class="text-danger text-right h5"><?php echo number_format($totalUsage, 2) ?></td>
+                      <td class="text-success text-right h5"><?php echo number_format($totalRemain, 2) ?></td>
                     </tr>
                   </tbody>
                 </table>

@@ -56,27 +56,27 @@ $ROUTER->map("POST", "/estimate/[**:params]", function ($params) {
   require(__DIR__ . "/src/Views/estimate/action.php");
 });
 
-##################### RECEIPT #####################
-$ROUTER->map("GET", "/receipt", function () {
-  require(__DIR__ . "/src/Views/receipt/index.php");
+##################### advance #####################
+$ROUTER->map("GET", "/advance", function () {
+  require(__DIR__ . "/src/Views/advance/index.php");
 });
-$ROUTER->map("GET", "/receipt/create", function () {
-  require(__DIR__ . "/src/Views/receipt/create.php");
+$ROUTER->map("GET", "/advance/create", function () {
+  require(__DIR__ . "/src/Views/advance/create.php");
 });
-$ROUTER->map("GET", "/receipt/manage", function () {
-  require(__DIR__ . "/src/Views/receipt/manage.php");
+$ROUTER->map("GET", "/advance/manage", function () {
+  require(__DIR__ . "/src/Views/advance/manage.php");
 });
-$ROUTER->map("GET", "/receipt/view/[**:params]", function ($params) {
-  require(__DIR__ . "/src/Views/receipt/view.php");
+$ROUTER->map("GET", "/advance/view/[**:params]", function ($params) {
+  require(__DIR__ . "/src/Views/advance/view.php");
 });
-$ROUTER->map("GET", "/receipt/complete/[**:params]", function ($params) {
-  require(__DIR__ . "/src/Views/receipt/complete.php");
+$ROUTER->map("GET", "/advance/approve/[**:params]", function ($params) {
+  require(__DIR__ . "/src/Views/advance/approve.php");
 });
-$ROUTER->map("GET", "/receipt/edit/[**:params]", function ($params) {
-  require(__DIR__ . "/src/Views/receipt/edit.php");
+$ROUTER->map("GET", "/advance/complete/[**:params]", function ($params) {
+  require(__DIR__ . "/src/Views/advance/complete.php");
 });
-$ROUTER->map("POST", "/receipt/[**:params]", function ($params) {
-  require(__DIR__ . "/src/Views/receipt/action.php");
+$ROUTER->map("POST", "/advance/[**:params]", function ($params) {
+  require(__DIR__ . "/src/Views/advance/action.php");
 });
 
 ##################### PAYMENT #####################

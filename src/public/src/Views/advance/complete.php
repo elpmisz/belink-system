@@ -1,27 +1,27 @@
 <?php
 $menu = "Service";
-$page = "ServicePayment";
+$page = "ServiceAdvance";
 include_once(__DIR__ . "/../layout/header.php");
 
-use App\Classes\Payment;
+use App\Classes\Advance;
 
-$PAYMENT = new Payment();
+$ADVANCE = new Advance();
 
 $param = (isset($params) ? explode("/", $params) : "");
 $uuid = (!empty($param[0]) ? $param[0] : "");
 
-$row = $PAYMENT->payment_view([$uuid]);
-$items = $PAYMENT->payment_item_view([$uuid]);
-$files = $PAYMENT->payment_file_view([$uuid]);
-$total = $PAYMENT->payment_item_total([$uuid]);
-$remarks = $PAYMENT->payment_remark_view([$uuid]);
+$row = $ADVANCE->advance_view([$uuid]);
+$items = $ADVANCE->advance_item_view([$uuid]);
+$total = $ADVANCE->advance_item_total([$uuid]);
+$files = $ADVANCE->advance_file_view([$uuid]);
+$remarks = $ADVANCE->advance_remark_view([$uuid]);
 ?>
 
 <div class="card shadow">
-  <h4 class="card-header text-center">Payment Order</h4>
+  <h4 class="card-header text-center">Advance Clearing Voucher</h4>
   <div class="card-body">
 
-    <form action="/payment/approve" method="POST" class="needs-validation" novalidate enctype="multipart/form-data">
+    <form action="/advance/approve" method="POST" class="needs-validation" novalidate enctype="multipart/form-data">
       <div style="display: none;">
         <div class="row mb-2">
           <label class="col-xl-2 offset-xl-2 col-form-label">ID</label>
@@ -34,18 +34,6 @@ $remarks = $PAYMENT->payment_remark_view([$uuid]);
           <div class="col-xl-4">
             <input type="text" class="form-control form-control-sm" name="uuid" value="<?php echo $row['uuid'] ?>" readonly>
           </div>
-        </div>
-        <div class="row mb-2">
-          <label class="col-xl-2 offset-xl-2 col-form-label">TYPE</label>
-          <div class="col-xl-4">
-            <input type="text" class="form-control form-control-sm type-select" value="<?php echo $row['type'] ?>" readonly>
-          </div>
-        </div>
-      </div>
-      <div class="row mb-2">
-        <label class="col-xl-2 offset-xl-2 col-form-label">เลขที่เอกสาร</label>
-        <div class="col-xl-4 text-underline">
-          <?php echo $row['ticket'] ?>
         </div>
       </div>
       <div class="row mb-2">
@@ -61,46 +49,29 @@ $remarks = $PAYMENT->payment_remark_view([$uuid]);
         </div>
       </div>
       <div class="row mb-2">
-        <label class="col-xl-2 offset-xl-2 col-form-label">จ่ายให้</label>
+        <label class="col-xl-2 offset-xl-2 col-form-label">ยอดเงินเบิก</label>
         <div class="col-xl-4 text-underline">
-          <?php echo $row['receiver'] ?>
+          <span class="amount"><?php echo number_format($row['amount'], 2) ?></span>
         </div>
       </div>
       <div class="row mb-2">
-        <label class="col-xl-2 offset-xl-2 col-form-label">ประเภท</label>
+        <label class="col-xl-2 offset-xl-2 col-form-label">ยอดเงินที่ใช้จริง</label>
         <div class="col-xl-4 text-underline">
-          <?php echo $row['type_name'] ?>
+          <span class="usage"><?php echo number_format($row['usage'], 2) ?></span>
         </div>
       </div>
-
-      <?php if (intval($row['type']) === 2) : ?>
-        <div>
-          <div class="row mb-2">
-            <label class="col-xl-2 offset-xl-2 col-form-label">ธนาคาร</label>
-            <div class="col-xl-4 text-underline">
-              <?php echo $row['cheque_bank'] ?>
-            </div>
-          </div>
-          <div class="row mb-2">
-            <label class="col-xl-2 offset-xl-2 col-form-label">สาขา</label>
-            <div class="col-xl-4 text-underline">
-              <?php echo $row['cheque_branch'] ?>
-            </div>
-          </div>
-          <div class="row mb-2">
-            <label class="col-xl-2 offset-xl-2 col-form-label">เลขที่เช็ค</label>
-            <div class="col-xl-4 text-underline">
-              <?php echo $row['cheque_number'] ?>
-            </div>
-          </div>
-          <div class="row mb-2">
-            <label class="col-xl-2 offset-xl-2 col-form-label">ลงวันที่</label>
-            <div class="col-xl-4 text-underline">
-              <?php echo $row['cheque_date'] ?>
-            </div>
-          </div>
+      <div class="row mb-2">
+        <label class="col-xl-2 offset-xl-2 col-form-label">ยอดเงินที่เหลือคืน</label>
+        <div class="col-xl-4 text-underline">
+          <span class="remain"><?php echo number_format($row['remain'], 2) ?></span>
         </div>
-      <?php endif; ?>
+      </div>
+      <div class="row mb-2">
+        <label class="col-xl-2 offset-xl-2 col-form-label">วัตถุประสงค์</label>
+        <div class="col-xl-6 text-underline">
+          <?php echo str_replace("\n", "<br>", $row['objective']) ?>
+        </div>
+      </div>
 
       <div class="row mb-2 items-custom-div">
         <div class="col-xl-12">
@@ -108,19 +79,13 @@ $remarks = $PAYMENT->payment_remark_view([$uuid]);
             <table class="table table-bordered">
               <thead>
                 <tr>
-                  <th width="5%">#</th>
-                  <th width="15%">รายจ่าย</th>
-                  <th width="15%">รายละเอียด</th>
-                  <th width="15%">รายละเอียด</th>
+                  <th width="10%">#</th>
+                  <th width="20%">รายจ่าย</th>
+                  <th width="20%">รายละเอียด</th>
                   <th width="10%">จำนวนเงิน</th>
                   <th width="10%">VAT 7%</th>
                   <th width="10%">W/T</th>
                   <th width="10%">ยอดสุทธิ</th>
-                  <?php
-                  if (!empty($row['order_number'])) {
-                    echo '<th width="10%">ยอดคงเหลือ</th>';
-                  }
-                  ?>
                 </tr>
               </thead>
               <tbody>
@@ -129,22 +94,14 @@ $remarks = $PAYMENT->payment_remark_view([$uuid]);
                     <td class="text-center"><?php echo $key ?></td>
                     <td class="text-left"><?php echo $item['expense_name'] ?></td>
                     <td class="text-left"><?php echo $item['text'] ?></td>
-                    <td class="text-left"><?php echo $item['text2'] ?></td>
                     <td class="text-right"><?php echo number_format($item['amount'], 2) ?></td>
                     <td class="text-right"><?php echo number_format($item['vat'], 2) ?></td>
-                    <td class="text-right"><?php echo number_format($item['wt'], 2) ?></td>
-                    <td class="text-right">
-                      <?php echo number_format($item['total'], 2) ?>
-                    </td>
-                    <?php
-                    if (!empty($row['order_number'])) {
-                      echo '<td class="text-right">' . number_format($item['remain'], 2) . '</td>';
-                    }
-                    ?>
+                    <td class="text-right"><?php echo $item['wt'] ?></td>
+                    <td class="text-right"><?php echo number_format($item['total'], 2) ?></td>
                   </tr>
                 <?php endforeach; ?>
                 <tr>
-                  <td colspan="4" class="text-right">รวมทั้งสิ้น</td>
+                  <td colspan="3" class="text-right">รวมทั้งสิ้น</td>
                   <td class="text-right">
                     <span class="amount-total"><?php echo number_format($total['amount'], 2) ?></span>
                   </td>
@@ -174,7 +131,7 @@ $remarks = $PAYMENT->payment_remark_view([$uuid]);
             ?>
                 <tr>
                   <td>
-                    <a href="/src/Publics/payment/<?php echo $file['name'] ?>" class="text-primary" target="_blank">
+                    <a href="/src/Publics/advance/<?php echo $file['name'] ?>" class="text-primary" target="_blank">
                       <span class="badge badge-primary font-weight-light">ดาวน์โหลด!</span>
                     </a>
                   </td>
@@ -222,39 +179,14 @@ $remarks = $PAYMENT->payment_remark_view([$uuid]);
         </div>
       <?php endif; ?>
 
-      <div class="row mb-2">
-        <label class="col-xl-2 offset-xl-2 col-form-label">สถานะ</label>
-        <div class="col-xl-8">
-          <div class="form-group pl-3 pt-2">
-            <label class="form-check-label px-3">
-              <input class="form-check-input" type="radio" name="status" value="3" required>
-              <span class="text-success">ผ่านอนุมัติ</span>
-            </label>
-            <label class="form-check-label px-3">
-              <input class="form-check-input" type="radio" name="status" value="1" required>
-              <span class="text-danger">ไม่ผ่านอนุมัติ</span>
-            </label>
-          </div>
-        </div>
-      </div>
-      <div class="row mb-2">
-        <label class="col-xl-2 offset-xl-2 col-form-label">เหตุผล</label>
-        <div class="col-sm-6">
-          <textarea class="form-control" name="reason" rows="4"></textarea>
-          <div class="invalid-feedback">
-            กรุณา กรอกข้อมูล!
-          </div>
-        </div>
-      </div>
-
       <div class="row justify-content-center">
         <div class="col-xl-3 mb-2">
-          <button type="submit" class="btn btn-success btn-sm btn-block">
-            <i class="fas fa-check pr-2"></i>ยืนยัน
-          </button>
+          <a class="btn btn-primary btn-sm btn-block" href="/payment/print/<?php echo $row['uuid'] ?>" target="_blank">
+            <i class="fas fa-print pr-2"></i>พิมพ์
+          </a>
         </div>
         <div class="col-xl-3 mb-2">
-          <a class="btn btn-danger btn-sm btn-block" href="/payment">
+          <a class="btn btn-danger btn-sm btn-block" href="/advance">
             <i class="fas fa-arrow-left pr-2"></i>หน้าหลัก
           </a>
         </div>
@@ -266,13 +198,3 @@ $remarks = $PAYMENT->payment_remark_view([$uuid]);
 </div>
 
 <?php include_once(__DIR__ . "/../layout/footer.php"); ?>
-<script>
-  $(document).on("click", "input[name='status']", function() {
-    let status = ($(this).val() ? parseInt($(this).val()) : "");
-    if (status === 1) {
-      $("textarea[name='reason']").prop("required", true);
-    } else {
-      $("textarea[name='reason']").prop("required", false);
-    }
-  });
-</script>

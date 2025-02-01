@@ -1,27 +1,26 @@
 <?php
 $menu = "Service";
-$page = "ServicePayment";
+$page = "ServiceAdvance";
 include_once(__DIR__ . "/../layout/header.php");
 
-use App\Classes\Payment;
+use App\Classes\Advance;
 
-$PAYMENT = new Payment();
+$ADVANCE = new Advance();
 
 $param = (isset($params) ? explode("/", $params) : "");
 $uuid = (!empty($param[0]) ? $param[0] : "");
 
-$row = $PAYMENT->payment_view([$uuid]);
-$items = $PAYMENT->payment_item_view([$uuid]);
-$files = $PAYMENT->payment_file_view([$uuid]);
-$total = $PAYMENT->payment_item_total([$uuid]);
-$remarks = $PAYMENT->payment_remark_view([$uuid]);
+$row = $ADVANCE->advance_view([$uuid]);
+$items = $ADVANCE->advance_item_view([$uuid]);
+$total = $ADVANCE->advance_item_total([$uuid]);
+$files = $ADVANCE->advance_file_view([$uuid]);
 ?>
 
 <div class="card shadow">
-  <h4 class="card-header text-center">Payment Order</h4>
+  <h4 class="card-header text-center">Advance Clearing Voucher</h4>
   <div class="card-body">
 
-    <form action="/payment/update" method="POST" class="needs-validation" novalidate enctype="multipart/form-data">
+    <form action="/advance/update" method="POST" class="needs-validation" novalidate enctype="multipart/form-data">
       <div style="display: none;">
         <div class="row mb-2">
           <label class="col-xl-2 offset-xl-2 col-form-label">ID</label>
@@ -35,18 +34,6 @@ $remarks = $PAYMENT->payment_remark_view([$uuid]);
             <input type="text" class="form-control form-control-sm" name="uuid" value="<?php echo $row['uuid'] ?>" readonly>
           </div>
         </div>
-        <div class="row mb-2">
-          <label class="col-xl-2 offset-xl-2 col-form-label">TYPE</label>
-          <div class="col-xl-4">
-            <input type="text" class="form-control form-control-sm type-select" value="<?php echo $row['type'] ?>" readonly>
-          </div>
-        </div>
-      </div>
-      <div class="row mb-2">
-        <label class="col-xl-2 offset-xl-2 col-form-label">เลขที่เอกสาร</label>
-        <div class="col-xl-4 text-underline">
-          <?php echo $row['ticket'] ?>
-        </div>
       </div>
       <div class="row mb-2">
         <label class="col-xl-2 offset-xl-2 col-form-label">ผู้ใช้บริการ</label>
@@ -56,73 +43,46 @@ $remarks = $PAYMENT->payment_remark_view([$uuid]);
       </div>
       <div class="row mb-2">
         <label class="col-xl-2 offset-xl-2 col-form-label">เลขที่สัญญา</label>
-        <div class="col-xl-4 text-underline-link">
-          <a href="/estimate/complete/<?php echo $row['estimate_uuid'] ?>" target="_blank"><?php echo $row['order_number'] ?></a>
-        </div>
-      </div>
-      <div class="row mb-2">
-        <label class="col-xl-2 offset-xl-2 col-form-label">จ่ายให้</label>
         <div class="col-xl-4">
-          <input type="text" class="form-control form-control-sm" name="receiver" value="<?php echo $row['receiver'] ?>" required>
+          <select class="form-control form-control-sm order-select" name="order_number">
+            <?php
+            if (!empty($row['order_number'])) {
+              echo "<option value='{$row['order_number']}'>{$row['order_number']}</option>";
+            }
+            ?>
+          </select>
           <div class="invalid-feedback">
             กรุณากรอกข้อมูล!
           </div>
         </div>
       </div>
       <div class="row mb-2">
-        <label class="col-xl-2 offset-xl-2 col-form-label">ประเภท</label>
-        <div class="col-xl-8">
-          <div class="row pb-2">
-            <div class="col-xl-4">
-              <label class="form-check-label px-3">
-                <input class="form-check-input" type="radio" name="type" value="1" <?php echo (intval($row['type']) === 1 ? "checked" : "") ?> required>
-                <span class="text-success">เงินสด / โอนเข้าบัญชี</span>
-              </label>
-            </div>
-            <div class="col-xl-4">
-              <label class="form-check-label px-3">
-                <input class="form-check-input" type="radio" name="type" value="2" <?php echo (intval($row['type']) === 2 ? "checked" : "") ?> required>
-                <span class="text-danger">เช็ค</span>
-              </label>
-            </div>
+        <label class="col-xl-2 offset-xl-2 col-form-label">ยอดเงินเบิก</label>
+        <div class="col-xl-4">
+          <input type="number" class="form-control form-control-sm amount" name="amount" value="<?php echo $row['amount'] ?>" min="1" step="0.01" required>
+          <div class="invalid-feedback">
+            กรุณากรอกข้อมูล!
           </div>
         </div>
       </div>
-      <div class="cheque-div" style="display: none;">
-        <div class="row mb-2">
-          <label class="col-xl-2 offset-xl-2 col-form-label">ธนาคาร</label>
-          <div class="col-xl-4">
-            <input type="text" class="form-control form-control-sm" name="cheque_bank" value="<?php echo $row['cheque_bank'] ?>">
-            <div class="invalid-feedback">
-              กรุณากรอกข้อมูล!
-            </div>
-          </div>
+      <div class="row mb-2">
+        <label class="col-xl-2 offset-xl-2 col-form-label">ยอดเงินที่ใช้จริง</label>
+        <div class="col-xl-4 text-underline">
+          <span class="usage"><?php echo number_format($row['usage'], 2) ?></span>
         </div>
-        <div class="row mb-2">
-          <label class="col-xl-2 offset-xl-2 col-form-label">สาขา</label>
-          <div class="col-xl-4">
-            <input type="text" class="form-control form-control-sm" name="cheque_branch" value="<?php echo $row['cheque_branch'] ?>">
-            <div class="invalid-feedback">
-              กรุณากรอกข้อมูล!
-            </div>
-          </div>
+      </div>
+      <div class="row mb-2">
+        <label class="col-xl-2 offset-xl-2 col-form-label">ยอดเงินที่เหลือคืน</label>
+        <div class="col-xl-4 text-underline">
+          <span class="remain"><?php echo number_format($row['remain'], 2) ?></span>
         </div>
-        <div class="row mb-2">
-          <label class="col-xl-2 offset-xl-2 col-form-label">เลขที่เช็ค</label>
-          <div class="col-xl-4">
-            <input type="text" class="form-control form-control-sm" name="cheque_number" value="<?php echo $row['cheque_number'] ?>">
-            <div class="invalid-feedback">
-              กรุณากรอกข้อมูล!
-            </div>
-          </div>
-        </div>
-        <div class="row mb-2">
-          <label class="col-xl-2 offset-xl-2 col-form-label">ลงวันที่</label>
-          <div class="col-xl-4">
-            <input type="text" class="form-control form-control-sm date-select" name="cheque_date" value="<?php echo $row['cheque_date'] ?>">
-            <div class="invalid-feedback">
-              กรุณากรอกข้อมูล!
-            </div>
+      </div>
+      <div class="row mb-2">
+        <label class="col-xl-2 offset-xl-2 col-form-label">วัตถุประสงค์</label>
+        <div class="col-xl-6">
+          <textarea class="form-control form-control-sm" rows="5" name="objective" required><?php echo $row['objective'] ?></textarea>
+          <div class="invalid-feedback">
+            กรุณา กรอกข้อมูล!
           </div>
         </div>
       </div>
@@ -133,19 +93,13 @@ $remarks = $PAYMENT->payment_remark_view([$uuid]);
             <table class="table table-bordered">
               <thead>
                 <tr>
-                  <th width="5%">#</th>
-                  <th width="15%">รายจ่าย</th>
-                  <th width="15%">รายละเอียด</th>
-                  <th width="15%">รายละเอียด</th>
+                  <th width="10%">#</th>
+                  <th width="20%">รายจ่าย</th>
+                  <th width="20%">รายละเอียด</th>
                   <th width="10%">จำนวนเงิน</th>
                   <th width="10%">VAT 7%</th>
                   <th width="10%">W/T</th>
                   <th width="10%">ยอดสุทธิ</th>
-                  <?php
-                  if (!empty($row['order_number'])) {
-                    echo '<th width="10%">ยอดคงเหลือ</th>';
-                  }
-                  ?>
                 </tr>
               </thead>
               <tbody>
@@ -158,9 +112,6 @@ $remarks = $PAYMENT->payment_remark_view([$uuid]);
                     <td class="text-left"><?php echo $item['expense_name'] ?></td>
                     <td class="text-left">
                       <input type="text" class="form-control form-control-sm text-left" name="item__text[]" value="<?php echo $item['text'] ?>" required>
-                    </td>
-                    <td class="text-left">
-                      <input type="text" class="form-control form-control-sm text-left" name="item__text2[]" value="<?php echo $item['text2'] ?>" required>
                     </td>
                     <td>
                       <input type="number" class="form-control form-control-sm text-right amount-item" name="item__amount[]" value="<?php echo $item['amount'] ?>" max="<?php echo $item['remain'] ?>" required>
@@ -177,58 +128,44 @@ $remarks = $PAYMENT->payment_remark_view([$uuid]);
                     <td class="text-right">
                       <?php echo number_format($item['total'], 2) ?>
                     </td>
-                    <?php
-                    if (!empty($row['order_number'])) {
-                      echo '<td class="text-right">' . number_format($item['remain'], 2) . '</td>';
-                    }
-                    ?>
                   </tr>
                 <?php endforeach; ?>
-                <?php if (empty($row['order_number'])) : ?>
-                  <tr class="item-tr">
-                    <td class="text-center">
-                      <button type="button" class="btn btn-sm btn-success item-increase">+</button>
-                      <button type="button" class="btn btn-sm btn-danger item-decrease">-</button>
-                    </td>
-                    <td>
-                      <select class="form-control form-control-sm expense-select" name="expense_id[]"></select>
-                      <div class="invalid-feedback">
-                        กรุณากรอกข้อมูล!
-                      </div>
-                    </td>
-                    <td>
-                      <input type="text" class="form-control form-control-sm text-left" name="item_text[]">
-                      <div class="invalid-feedback">
-                        กรุณากรอกข้อมูล!
-                      </div>
-                    </td>
-                    <td>
-                      <input type="text" class="form-control form-control-sm text-left" name="item_text2[]">
-                      <div class="invalid-feedback">
-                        กรุณากรอกข้อมูล!
-                      </div>
-                    </td>
-                    </td>
-                    <td>
-                      <input type="number" class="form-control form-control-sm text-right amount-item" min="1" step="0.01" name="item_amount[]">
-                      <div class="invalid-feedback">
-                        กรุณากรอกข้อมูล!
-                      </div>
-                    </td>
-                    </td>
-                    <td>
-                      <input type="number" class="form-control form-control-sm text-right vat-item" min="1" step="0.01" name="item_vat[]">
-                    </td>
-                    <td>
-                      <input type="number" class="form-control form-control-sm text-right wt-item" min="1" step="0.01" name="item_wt[]">
-                    </td>
-                    <td class="text-right">
-                      <span class="total-item"></span>
-                    </td>
-                  </tr>
-                <?php endif; ?>
+                <tr class="item-tr">
+                  <td class="text-center">
+                    <button type="button" class="btn btn-sm btn-success item-increase">+</button>
+                    <button type="button" class="btn btn-sm btn-danger item-decrease">-</button>
+                  </td>
+                  <td>
+                    <select class="form-control form-control-sm expense-select" name="expense_id[]"></select>
+                    <div class="invalid-feedback">
+                      กรุณากรอกข้อมูล!
+                    </div>
+                  </td>
+                  <td>
+                    <input type="text" class="form-control form-control-sm text-left" name="item_text[]">
+                    <div class="invalid-feedback">
+                      กรุณากรอกข้อมูล!
+                    </div>
+                  </td>
+                  <td>
+                    <input type="number" class="form-control form-control-sm text-right amount-item" min="1" step="0.01" name="item_amount[]">
+                    <div class="invalid-feedback">
+                      กรุณากรอกข้อมูล!
+                    </div>
+                  </td>
+                  </td>
+                  <td>
+                    <input type="number" class="form-control form-control-sm text-right vat-item" min="1" step="0.01" name="item_vat[]">
+                  </td>
+                  <td>
+                    <input type="number" class="form-control form-control-sm text-right wt-item" min="1" step="0.01" name="item_wt[]">
+                  </td>
+                  <td class="text-right">
+                    <span class="total-item"></span>
+                  </td>
+                </tr>
                 <tr>
-                  <td colspan="4" class="text-right">รวมทั้งสิ้น</td>
+                  <td colspan="3" class="text-right">รวมทั้งสิ้น</td>
                   <td class="text-right">
                     <span class="amount-total"><?php echo number_format($total['amount'], 2) ?></span>
                   </td>
@@ -258,7 +195,7 @@ $remarks = $PAYMENT->payment_remark_view([$uuid]);
             ?>
                 <tr>
                   <td>
-                    <a href="/src/Publics/payment/<?php echo $file['name'] ?>" class="text-primary" target="_blank">
+                    <a href="/src/Publics/advance/<?php echo $file['name'] ?>" class="text-primary" target="_blank">
                       <span class="badge badge-primary font-weight-light">ดาวน์โหลด!</span>
                     </a>
                   </td>
@@ -285,41 +222,6 @@ $remarks = $PAYMENT->payment_remark_view([$uuid]);
         </div>
       </div>
 
-      <?php if (COUNT($remarks) > 0) : ?>
-        <div class="row justify-content-center mb-2">
-          <div class="col-xl-10">
-            <hr>
-            <div class="h5 text-primary">รายละเอียดการดำเนินการ</div>
-            <div class="table-responsive">
-              <table class="table table-sm table-bordered table-hover">
-                <thead>
-                  <tr>
-                    <th width="10%">#</th>
-                    <th width="20%">ผู้ดำเนินการ</th>
-                    <th width="60%">รายละเอียดการ</th>
-                    <th width="10%">วันที่</th>
-                  </tr>
-                </thead>
-                <?php
-                foreach ($remarks as $remark) :
-                ?>
-                  <tr>
-                    <td class="text-center">
-                      <span class="badge badge-<?php echo $remark['status_color'] ?> font-weight-light">
-                        <?php echo $remark['status_name'] ?>
-                      </span>
-                    </td>
-                    <td class="text-center"><?php echo $remark['username'] ?></td>
-                    <td class="text-left"><?php echo str_replace("\r\n", "<br>", $remark['text']) ?></td>
-                    <td class="text-center"><?php echo $remark['created'] ?></td>
-                  </tr>
-                <?php endforeach; ?>
-              </table>
-            </div>
-          </div>
-        </div>
-      <?php endif; ?>
-
       <div class="row justify-content-center">
         <div class="col-xl-3 mb-2">
           <button type="submit" class="btn btn-success btn-sm btn-block">
@@ -327,12 +229,7 @@ $remarks = $PAYMENT->payment_remark_view([$uuid]);
           </button>
         </div>
         <div class="col-xl-3 mb-2">
-          <a class="btn btn-primary btn-sm btn-block" href="/payment/print/<?php echo $row['uuid'] ?>" target="_blank">
-            <i class="fas fa-print pr-2"></i>พิมพ์
-          </a>
-        </div>
-        <div class="col-xl-3 mb-2">
-          <a class="btn btn-danger btn-sm btn-block" href="/payment">
+          <a class="btn btn-danger btn-sm btn-block" href="/advance">
             <i class="fas fa-arrow-left pr-2"></i>หน้าหลัก
           </a>
         </div>
@@ -345,6 +242,7 @@ $remarks = $PAYMENT->payment_remark_view([$uuid]);
 
 <?php include_once(__DIR__ . "/../layout/footer.php"); ?>
 <script>
+  initializeSelect2(".order-select", "/payment/order-select", "-- รายชื่อเลขที่สัญญา --");
   initializeSelect2(".expense-select", "/estimate/expense-select", "-- รายชื่อรายจ่าย --");
 
   $(".item-decrease, .file-decrease").hide();
@@ -368,45 +266,13 @@ $remarks = $PAYMENT->payment_remark_view([$uuid]);
     updateTotal();
   });
 
-  const type = parseInt($(".type-select").val() || 0);
-  if (type === 2) {
-    $(".cheque-div").show();
-  } else {
-    $(".cheque-div").hide();
-  }
-  $(document).on("click", "input[name='type']", function() {
-    const type = parseInt($(this).val()) || 0;
-    const isCheque = type === 2;
-
-    $(".cheque-div").toggle(isCheque);
-    $("input[name='cheque_bank'], input[name='cheque_branch'], input[name='cheque_number'], input[name='cheque_date']")
-      .prop("required", isCheque)
-      .val(isCheque ? "" : "");
-  });
-
   $(document).on("change", ".expense-select", function() {
-    const expense = parseFloat($(this).val() || "");
-
+    const expense = ($(this).val() || "");
     if (expense) {
-      $("input[name='item_text[]'], input[name='item_text2[]'], input[name='item_amount[]']").prop("required", true);
+      $("input[name='item_text[]'], input[name='item_amount[]']").prop("required", true);
     } else {
-      $("input[name='item_text[]'], input[name='item_text2[]'], input[name='item_amount[]']").prop("required", false);
+      $("input[name='item_text[]'], input[name='item_amount[]']").prop("required", false);
     }
-  });
-
-  $(document).on("click", ".file-increase", function() {
-    let row = $(".file-tr:last");
-    let clone = row.clone();
-    clone.find("input, select").val("").empty();
-    clone.find("span").text("");
-    clone.find(".file-increase").hide();
-    clone.find(".file-decrease").show();
-
-    clone.find(".file-decrease").off("click").on("click", function() {
-      $(this).closest("tr").remove();
-    });
-
-    row.after(clone);
   });
 
   $(document).on("blur", ".amount-item, .vat-item, .wt-item", function() {
@@ -415,11 +281,8 @@ $remarks = $PAYMENT->payment_remark_view([$uuid]);
     const vat = parseFloat(row.find(".vat-item").val() || 0);
     const wt = parseFloat(row.find(".wt-item").val() || 0);
 
-    const total = (amount + vat - wt);
-    row.find(".total-item").text(total.toFixed(2).toLocaleString('th-TH', {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    }));
+    const total = (amount + vat - wt).toFixed(2);
+    row.find(".total-item").text(total);
 
     updateTotal();
   });
@@ -487,31 +350,6 @@ $remarks = $PAYMENT->payment_remark_view([$uuid]);
     }
   });
 
-  $(".date-select").daterangepicker({
-    singleDatePicker: true,
-    showDropdowns: true,
-    locale: {
-      "format": "DD/MM/YYYY",
-      "daysOfWeek": [
-        "อา", "จ", "อ", "พ", "พฤ", "ศ", "ส"
-      ],
-      "monthNames": [
-        "มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน",
-        "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"
-      ]
-    },
-    "applyButtonClasses": "btn-success",
-    "cancelClass": "btn-danger"
-  });
-
-  $(".date-select").on("apply.daterangepicker", function(ev, picker) {
-    $(this).val(picker.startDate.format('DD/MM/YYYY'));
-  });
-
-  $(".date-select").on("keydown paste", function(e) {
-    e.preventDefault();
-  });
-
   $(document).on("click", ".item-delete", function(e) {
     let id = $(this).prop("id");
     e.preventDefault();
@@ -525,7 +363,7 @@ $remarks = $PAYMENT->payment_remark_view([$uuid]);
       cancelButtonText: "ปิด",
     }).then((result) => {
       if (result.value) {
-        axios.post("/payment/item-delete", {
+        axios.post("/advance/item-delete", {
           id
         }).then((res) => {
           let result = res.data;
@@ -568,7 +406,7 @@ $remarks = $PAYMENT->payment_remark_view([$uuid]);
       cancelButtonText: "ปิด",
     }).then((result) => {
       if (result.value) {
-        axios.post("/payment/file-delete", {
+        axios.post("/advance/file-delete", {
           id
         }).then((res) => {
           let result = res.data;

@@ -117,7 +117,7 @@ $remarks = $PAYMENT->payment_remark_view([$uuid]);
                   <th width="10%">W/T</th>
                   <th width="10%">ยอดสุทธิ</th>
                   <?php
-                  if (intval($row['type']) === 2) {
+                  if (!empty($row['order_number'])) {
                     echo '<th width="10%">ยอดคงเหลือ</th>';
                   }
                   ?>
@@ -137,7 +137,7 @@ $remarks = $PAYMENT->payment_remark_view([$uuid]);
                       <?php echo number_format($item['total'], 2) ?>
                     </td>
                     <?php
-                    if (intval($row['type']) === 2) {
+                    if (!empty($row['order_number'])) {
                       echo '<td class="text-right">' . number_format($item['remain'], 2) . '</td>';
                     }
                     ?>

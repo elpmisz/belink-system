@@ -139,7 +139,6 @@ include_once(__DIR__ . "/../layout/header.php");
                       กรุณากรอกข้อมูล!
                     </div>
                   </td>
-                  </td>
                   <td>
                     <input type="number" class="form-control form-control-sm text-right amount-item" min="1" step="0.01" name="item_amount[]">
                     <div class="invalid-feedback">
@@ -247,6 +246,15 @@ include_once(__DIR__ . "/../layout/header.php");
     $("input[name='cheque_bank'], input[name='cheque_branch'], input[name='cheque_number'], input[name='cheque_date']")
       .prop("required", isCheque)
       .val(isCheque ? "" : "");
+  });
+
+  $(document).on("change", ".expense-select", function() {
+    const expense = ($(this).val() || "");
+    if (expense) {
+      $("input[name='item_text[]'], input[name='item_text2[]'], input[name='item_amount[]']").prop("required", true);
+    } else {
+      $("input[name='item_text[]'], input[name='item_text2[]'], input[name='item_amount[]']").prop("required", false);
+    }
   });
 
   $(document).on("click", ".file-increase", function() {
@@ -374,7 +382,7 @@ include_once(__DIR__ . "/../layout/header.php");
     const vat = parseFloat(row.find(".vat-item").val() || 0);
     const wt = parseFloat(row.find(".wt-item").val() || 0);
 
-    const total = (amount + vat + wt).toFixed(2);
+    const total = (amount + vat - wt).toFixed(2);
     row.find(".total-item").text(total);
 
     updateTotal();
@@ -398,7 +406,7 @@ include_once(__DIR__ . "/../layout/header.php");
     $(".amount-total").text(totalAmount.toFixed(2));
     $(".vat-total").text(totalVat.toFixed(2));
     $(".wt-total").text(totalWt.toFixed(2));
-    $(".all-total").text((totalAmount + totalVat + totalWt).toFixed(2));
+    $(".all-total").text((totalAmount + totalVat - totalWt).toFixed(2));
   }
 
   $(document).on("change", "input[name='file[]']", function() {

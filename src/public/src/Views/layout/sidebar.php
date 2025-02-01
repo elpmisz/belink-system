@@ -1,11 +1,11 @@
 <?php
-$Home = (isset($menu) && ($menu === "Home") ? "show" : "");
+$Home = (isset($menu) && ($menu === "home") ? "show" : "");
 $HomeIndex = ($page === "HomeIndex" ? 'class="active"' : "");
 
 $ServiceMenu = (isset($menu) && ($menu === "Service") ? "show" : "");
 $ServiceEstimate = ($page === "ServiceEstimate" ? 'class="active"' : "");
 $ServicePayment = ($page === "ServicePayment" ? 'class="active"' : "");
-$ServiceReceipt = ($page === "ServiceReceipt" ? 'class="active"' : "");
+$ServiceAdvance = ($page === "ServiceAdvance" ? 'class="active"' : "");
 
 $UserMenu = (isset($menu) && ($menu === "User") ? "show" : "");
 $UserProfile = ($page === "UserProfile" ? 'class="active"' : "");
@@ -18,7 +18,7 @@ $SettingExpense = ($page === "SettingExpense" ? 'class="active"' : "");
 $SettingCustomer = ($page === "SettingCustomer" ? 'class="active"' : "");
 ?>
 <nav id="sidebar">
-  <ul class="list-unstyled <?php echo $home ?>">
+  <ul class="list-unstyled">
     <li <?php echo $HomeIndex ?>>
       <a href="/home">หน้าหลัก</a>
     </li>
@@ -60,10 +60,10 @@ $SettingCustomer = ($page === "SettingCustomer" ? 'class="active"' : "");
         </li>
       </ul>
       <ul class="collapse list-unstyled <?php echo $ServiceMenu ?>" id="service-menu">
-        <li <?php echo $ServiceReceipt ?>>
-          <a href="/receipt">
+        <li <?php echo $ServiceAdvance ?>>
+          <a href="/advance">
             <i class="fa fa-bars pr-2"></i>
-            Receipt Order
+            Advance Clearing
           </a>
         </li>
       </ul>
