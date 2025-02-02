@@ -1,26 +1,26 @@
 <?php
 $menu = "Service";
-$page = "ServiceAdvance";
+$page = "ServicePurchase";
 include_once(__DIR__ . "/../layout/header.php");
 
-use App\Classes\Advance;
+use App\Classes\Purchase;
 
-$ADVANCE = new Advance();
+$PURCHASE = new Purchase();
 
 $param = (isset($params) ? explode("/", $params) : "");
 $uuid = (!empty($param[0]) ? $param[0] : "");
 
-$row = $ADVANCE->advance_view([$uuid]);
-$items = $ADVANCE->advance_item_view([$uuid]);
-$total = $ADVANCE->advance_item_total([$uuid]);
-$files = $ADVANCE->advance_file_view([$uuid]);
+$row = $PURCHASE->purchase_view([$uuid]);
+$items = $PURCHASE->purchase_item_view([$uuid]);
+$total = $PURCHASE->purchase_item_total([$uuid]);
+$files = $PURCHASE->purchase_file_view([$uuid]);
 ?>
 
 <div class="card shadow">
-  <h4 class="card-header text-center">Advance Clearing Voucher</h4>
+  <h4 class="card-header text-center">Purchase Requistion</h4>
   <div class="card-body">
 
-    <form action="/advance/update" method="POST" class="needs-validation" novalidate enctype="multipart/form-data">
+    <form action="/purchase/update" method="POST" class="needs-validation" novalidate enctype="multipart/form-data">
       <div style="display: none;">
         <div class="row mb-2">
           <label class="col-xl-2 offset-xl-2 col-form-label">ID</label>
@@ -38,7 +38,25 @@ $files = $ADVANCE->advance_file_view([$uuid]);
       <div class="row mb-2">
         <label class="col-xl-2 offset-xl-2 col-form-label">ผู้ใช้บริการ</label>
         <div class="col-xl-4 text-underline">
-          <?php echo $row['username'] ?>
+          <?php echo $user['fullname'] ?>
+        </div>
+      </div>
+      <div class="row mb-2">
+        <label class="col-xl-2 offset-xl-2 col-form-label">หน่วยงานที่ขอซื้อ</label>
+        <div class="col-xl-4">
+          <input type="text" class="form-control form-control-sm" name="department" value="<?php echo $row['department'] ?>" required>
+          <div class="invalid-feedback">
+            กรุณากรอกข้อมูล!
+          </div>
+        </div>
+      </div>
+      <div class="row mb-2">
+        <label class="col-xl-2 offset-xl-2 col-form-label">วันที่ต้องการใช้</label>
+        <div class="col-xl-4">
+          <input type="text" class="form-control form-control-sm date-select" name="date" value="<?php echo $row['date'] ?>">
+          <div class="invalid-feedback">
+            กรุณากรอกข้อมูล!
+          </div>
         </div>
       </div>
       <div class="row mb-2">
@@ -56,27 +74,22 @@ $files = $ADVANCE->advance_file_view([$uuid]);
           </div>
         </div>
       </div>
-      <div class="row mb-2">
-        <label class="col-xl-2 offset-xl-2 col-form-label">ยอดเงินเบิก</label>
-        <div class="col-xl-4">
-          <input type="number" class="form-control form-control-sm amount" name="amount" value="<?php echo $row['amount'] ?>" min="1" step="0.01" required>
-          <div class="invalid-feedback">
-            กรุณากรอกข้อมูล!
+      <?php if (!empty($row['order_number'])) : ?>
+        <div class="order-div">
+          <div class="row mb-2">
+            <label class="col-xl-2 offset-xl-2 col-form-label">ชื่อลูกค้า</label>
+            <div class="col-xl-4 text-underline">
+              <span class="order-customer"><?php echo $row['customer_name'] ?></span>
+            </div>
+          </div>
+          <div class="row mb-2">
+            <label class="col-xl-2 offset-xl-2 col-form-label">สินค้า</label>
+            <div class="col-xl-4 text-underline">
+              <span class="order-product"><?php echo $row['product_name'] ?></span>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="row mb-2">
-        <label class="col-xl-2 offset-xl-2 col-form-label">ยอดเงินที่ใช้จริง</label>
-        <div class="col-xl-4 text-underline">
-          <span class="usage"><?php echo number_format($row['usage'], 2) ?></span>
-        </div>
-      </div>
-      <div class="row mb-2">
-        <label class="col-xl-2 offset-xl-2 col-form-label">ยอดเงินที่เหลือคืน</label>
-        <div class="col-xl-4 text-underline">
-          <span class="remain"><?php echo number_format($row['remain'], 2) ?></span>
-        </div>
-      </div>
+      <?php endif; ?>
       <div class="row mb-2">
         <label class="col-xl-2 offset-xl-2 col-form-label">วัตถุประสงค์</label>
         <div class="col-xl-6">
@@ -94,12 +107,10 @@ $files = $ADVANCE->advance_file_view([$uuid]);
               <thead>
                 <tr>
                   <th width="10%">#</th>
-                  <th width="20%">รายจ่าย</th>
-                  <th width="20%">รายละเอียด</th>
-                  <th width="10%">จำนวนเงิน</th>
-                  <th width="10%">VAT 7%</th>
-                  <th width="10%">W/T</th>
-                  <th width="10%">ยอดสุทธิ</th>
+                  <th width="50%">รายการสินค้า/บริการ</th>
+                  <th width="10%">จำนวน</th>
+                  <th width="10%">หน่วย</th>
+                  <th width="10%">ราคา</th>
                 </tr>
               </thead>
               <tbody>
@@ -109,24 +120,29 @@ $files = $ADVANCE->advance_file_view([$uuid]);
                       <a href="javascript:void(0)" class="badge badge-danger font-weight-light item-delete" id="<?php echo $item['id'] ?>">ลบ</a>
                       <input type="hidden" class="form-control form-control-sm text-center" name="item__id[]" value="<?php echo $item['id'] ?>" readonly>
                     </td>
-                    <td class="text-left"><?php echo $item['expense_name'] ?></td>
                     <td class="text-left">
-                      <input type="text" class="form-control form-control-sm text-left" name="item__text[]" value="<?php echo $item['text'] ?>" required>
-                    </td>
-                    <td>
-                      <input type="number" class="form-control form-control-sm text-right amount-item" name="item__amount[]" value="<?php echo $item['amount'] ?>" max="<?php echo $item['remain'] ?>" required>
+                      <input type="text" class="form-control form-control-sm" name="item__name[]" value="<?php echo $item['name'] ?>" required>
                       <div class="invalid-feedback">
                         กรุณากรอกข้อมูล!
                       </div>
                     </td>
                     <td>
-                      <input type="number" class="form-control form-control-sm text-right vat-item" name="item__vat[]" value="<?php echo $item['vat'] ?>">
+                      <input type="number" class="form-control form-control-sm text-right amount-item" name="item__amount[]" value="<?php echo $item['amount'] ?>" required>
+                      <div class="invalid-feedback">
+                        กรุณากรอกข้อมูล!
+                      </div>
                     </td>
                     <td>
-                      <input type="number" class="form-control form-control-sm text-right wt-item" name="item__wt[]" value="<?php echo $item['wt'] ?>">
+                      <input type="text" class="form-control form-control-sm item-unit" name="item__unit[]" value="<?php echo $item['unit'] ?>" required>
+                      <div class="invalid-feedback">
+                        กรุณากรอกข้อมูล!
+                      </div>
                     </td>
-                    <td class="text-right">
-                      <?php echo number_format($item['total'], 2) ?>
+                    <td>
+                      <input type="number" class="form-control form-control-sm text-right item-estimate" value="<?php echo $item['estimate'] ?>" min="1" step="0.01" name="item__estimate[]" required>
+                      <div class="invalid-feedback">
+                        กรุณากรอกข้อมูล!
+                      </div>
                     </td>
                   </tr>
                 <?php endforeach; ?>
@@ -136,45 +152,32 @@ $files = $ADVANCE->advance_file_view([$uuid]);
                     <button type="button" class="btn btn-sm btn-danger item-decrease">-</button>
                   </td>
                   <td>
-                    <select class="form-control form-control-sm expense-select" name="expense_id[]"></select>
+                    <input type="text" class="form-control form-control-sm text-left item-name" name="item_name[]">
                     <div class="invalid-feedback">
                       กรุณากรอกข้อมูล!
                     </div>
                   </td>
                   <td>
-                    <input type="text" class="form-control form-control-sm text-left" name="item_text[]">
+                    <input type="number" class="form-control form-control-sm text-right item-amount" min="1" step="0.01" name="item_amount[]">
                     <div class="invalid-feedback">
                       กรุณากรอกข้อมูล!
                     </div>
                   </td>
                   <td>
-                    <input type="number" class="form-control form-control-sm text-right amount-item" min="1" step="0.01" name="item_amount[]">
+                    <input type="text" class="form-control form-control-sm item-unit" name="item_unit[]">
                     <div class="invalid-feedback">
                       กรุณากรอกข้อมูล!
                     </div>
                   </td>
-                  </td>
                   <td>
-                    <input type="number" class="form-control form-control-sm text-right vat-item" min="1" step="0.01" name="item_vat[]">
-                  </td>
-                  <td>
-                    <input type="number" class="form-control form-control-sm text-right wt-item" min="1" step="0.01" name="item_wt[]">
-                  </td>
-                  <td class="text-right">
-                    <span class="total-item"></span>
+                    <input type="number" class="form-control form-control-sm text-right item-estimate" min="1" step="0.01" name="item_estimate[]">
+                    <div class="invalid-feedback">
+                      กรุณากรอกข้อมูล!
+                    </div>
                   </td>
                 </tr>
                 <tr>
-                  <td colspan="3" class="text-right">รวมทั้งสิ้น</td>
-                  <td class="text-right">
-                    <span class="amount-total"><?php echo number_format($total['amount'], 2) ?></span>
-                  </td>
-                  <td class="text-right">
-                    <span class="vat-total"><?php echo number_format($total['vat'], 2) ?></span>
-                  </td>
-                  <td class="text-right">
-                    <span class="wt-total"><?php echo number_format($total['wt'], 2) ?></span>
-                  </td>
+                  <td colspan="4" class="text-right">รวมทั้งสิ้น</td>
                   <td class="text-right">
                     <span class="all-total"><?php echo number_format($total['total'], 2) ?></span>
                   </td>
@@ -195,7 +198,7 @@ $files = $ADVANCE->advance_file_view([$uuid]);
             ?>
                 <tr>
                   <td>
-                    <a href="/src/Publics/advance/<?php echo $file['name'] ?>" class="text-primary" target="_blank">
+                    <a href="/src/Publics/purchase/<?php echo $file['name'] ?>" class="text-primary" target="_blank">
                       <span class="badge badge-primary font-weight-light">ดาวน์โหลด!</span>
                     </a>
                   </td>
@@ -229,12 +232,12 @@ $files = $ADVANCE->advance_file_view([$uuid]);
           </button>
         </div>
         <div class="col-xl-3 mb-2">
-          <a class="btn btn-primary btn-sm btn-block" href="/advance/print/<?php echo $row['uuid'] ?>" target="_blank">
+          <a class="btn btn-primary btn-sm btn-block" href="/purchase/print/<?php echo $row['uuid'] ?>" target="_blank">
             <i class="fas fa-print pr-2"></i>พิมพ์
           </a>
         </div>
         <div class="col-xl-3 mb-2">
-          <a class="btn btn-danger btn-sm btn-block" href="/advance">
+          <a class="btn btn-danger btn-sm btn-block" href="/purchase">
             <i class="fas fa-arrow-left pr-2"></i>หน้าหลัก
           </a>
         </div>
@@ -248,12 +251,9 @@ $files = $ADVANCE->advance_file_view([$uuid]);
 <?php include_once(__DIR__ . "/../layout/footer.php"); ?>
 <script>
   initializeSelect2(".order-select", "/payment/order-select", "-- รายชื่อเลขที่สัญญา --");
-  initializeSelect2(".expense-select", "/estimate/expense-select", "-- รายชื่อรายจ่าย --");
 
   $(".item-decrease, .file-decrease").hide();
   $(document).on("click", ".item-increase", function() {
-    $(".expense-select").select2('destroy');
-
     let row = $(".item-tr:last");
     let clone = row.clone();
     clone.find("input, select").val("").empty();
@@ -267,66 +267,31 @@ $files = $ADVANCE->advance_file_view([$uuid]);
     });
 
     row.after(clone);
-    initializeSelect2(".expense-select", "/estimate/expense-select", "-- รายชื่อรายจ่าย --");
     updateTotal();
   });
 
-  $(document).on("change", ".expense-select", function() {
-    const expense = ($(this).val() || "");
-    if (expense) {
-      $("input[name='item_text[]'], input[name='item_amount[]']").prop("required", true);
+  $(document).on("blur", ".item-name", function() {
+    const name = ($(this).val() || "");
+    if (name) {
+      $(".item-amount, .item-unit, .item-estimate").prop("required", true);
     } else {
-      $("input[name='item_text[]'], input[name='item_amount[]']").prop("required", false);
+      $(".item-amount, .item-unit, .item-estimate").prop("required", false);
     }
   });
 
-  $(document).on("blur", ".amount-item, .vat-item, .wt-item", function() {
-    const row = $(this).closest("tr");
-    const amount = parseFloat(row.find(".amount-item").val() || 0);
-    const vat = parseFloat(row.find(".vat-item").val() || 0);
-    const wt = parseFloat(row.find(".wt-item").val() || 0);
-
-    const total = (amount + vat - wt).toFixed(2);
-    row.find(".total-item").text(total);
-
+  $(document).on("blur", ".item-estimate", function() {
     updateTotal();
-  });
+  })
 
   function updateTotal() {
-    let totalAmount = 0;
-    let totalVat = 0;
-    let totalWt = 0;
+    let totalEstimate = 0;
 
-    $('.amount-item').each(function() {
-      var amount = parseFloat($(this).val()) || 0;
-      totalAmount += amount;
+    $('.item-estimate').each(function() {
+      var estimate = parseFloat($(this).val()) || 0;
+      totalEstimate += estimate;
     });
 
-    $('.vat-item').each(function() {
-      var vat = parseFloat($(this).val()) || 0;
-      totalVat += vat;
-    });
-
-    $('.wt-item').each(function() {
-      var wt = parseFloat($(this).val()) || 0;
-      totalWt += wt;
-    });
-
-    grandTotal = totalAmount + totalVat - totalWt;
-
-    $(".amount-total").text(totalAmount.toFixed(2).toLocaleString('th-TH', {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    }));
-    $(".vat-total").text(totalVat.toFixed(2).toLocaleString('th-TH', {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    }));
-    $(".wt-total").text(totalWt.toFixed(2).toLocaleString('th-TH', {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    }));
-    $(".all-total").text(grandTotal.toFixed(2).toLocaleString('th-TH', {
+    $(".all-total").text(totalEstimate.toFixed(2).toLocaleString('th-TH', {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2
     }));
@@ -355,6 +320,55 @@ $files = $ADVANCE->advance_file_view([$uuid]);
     }
   });
 
+  $(".date-select").daterangepicker({
+    singleDatePicker: true,
+    showDropdowns: true,
+    minDate: new Date(),
+    locale: {
+      "format": "DD/MM/YYYY",
+      "daysOfWeek": [
+        "อา", "จ", "อ", "พ", "พฤ", "ศ", "ส"
+      ],
+      "monthNames": [
+        "มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน",
+        "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"
+      ]
+    },
+    "applyButtonClasses": "btn-success",
+    "cancelClass": "btn-danger"
+  });
+
+  $(".date-select").on("apply.daterangepicker", function(ev, picker) {
+    $(this).val(picker.startDate.format('DD/MM/YYYY'));
+  });
+
+  $(".date-select").on("keydown paste", function(e) {
+    e.preventDefault();
+  });
+
+  $(document).on("change", ".order-select", function() {
+    const order = $(this).val() || 0;
+
+    if (order) {
+      $(".order-div").show();
+      axios.post("/purchase/order-view", {
+          order
+        })
+        .then((res) => {
+          const result = res.data;
+          if (result) {
+            $(".order-customer").text(result.customer_name);
+            $(".order-product").text(result.product_name);
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    } else {
+      $(".order-div").hide();
+    }
+  });
+
   $(document).on("click", ".item-delete", function(e) {
     let id = $(this).prop("id");
     e.preventDefault();
@@ -368,7 +382,7 @@ $files = $ADVANCE->advance_file_view([$uuid]);
       cancelButtonText: "ปิด",
     }).then((result) => {
       if (result.value) {
-        axios.post("/advance/item-delete", {
+        axios.post("/purchase/item-delete", {
           id
         }).then((res) => {
           let result = res.data;
@@ -411,7 +425,7 @@ $files = $ADVANCE->advance_file_view([$uuid]);
       cancelButtonText: "ปิด",
     }).then((result) => {
       if (result.value) {
-        axios.post("/advance/file-delete", {
+        axios.post("/purchase/file-delete", {
           id
         }).then((res) => {
           let result = res.data;

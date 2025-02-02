@@ -56,7 +56,33 @@ $ROUTER->map("POST", "/estimate/[**:params]", function ($params) {
   require(__DIR__ . "/src/Views/estimate/action.php");
 });
 
-##################### advance #####################
+##################### PURCHASE #####################
+$ROUTER->map("GET", "/purchase", function () {
+  require(__DIR__ . "/src/Views/purchase/index.php");
+});
+$ROUTER->map("GET", "/purchase/create", function () {
+  require(__DIR__ . "/src/Views/purchase/create.php");
+});
+$ROUTER->map("GET", "/purchase/manage", function () {
+  require(__DIR__ . "/src/Views/purchase/manage.php");
+});
+$ROUTER->map("GET", "/purchase/view/[**:params]", function ($params) {
+  require(__DIR__ . "/src/Views/purchase/view.php");
+});
+$ROUTER->map("GET", "/purchase/approve/[**:params]", function ($params) {
+  require(__DIR__ . "/src/Views/purchase/approve.php");
+});
+$ROUTER->map("GET", "/purchase/complete/[**:params]", function ($params) {
+  require(__DIR__ . "/src/Views/purchase/complete.php");
+});
+$ROUTER->map("GET", "/purchase/print/[**:params]", function ($params) {
+  require(__DIR__ . "/src/Views/purchase/print.php");
+});
+$ROUTER->map("POST", "/purchase/[**:params]", function ($params) {
+  require(__DIR__ . "/src/Views/purchase/action.php");
+});
+
+##################### ADVANCE #####################
 $ROUTER->map("GET", "/advance", function () {
   require(__DIR__ . "/src/Views/advance/index.php");
 });
@@ -74,6 +100,9 @@ $ROUTER->map("GET", "/advance/approve/[**:params]", function ($params) {
 });
 $ROUTER->map("GET", "/advance/complete/[**:params]", function ($params) {
   require(__DIR__ . "/src/Views/advance/complete.php");
+});
+$ROUTER->map("GET", "/advance/print/[**:params]", function ($params) {
+  require(__DIR__ . "/src/Views/advance/print.php");
 });
 $ROUTER->map("POST", "/advance/[**:params]", function ($params) {
   require(__DIR__ . "/src/Views/advance/action.php");

@@ -11,7 +11,6 @@ $uuid = (!empty($param[0]) ? $param[0] : "");
 
 $row = $ESTIMATE->estimate_view([$uuid]);
 $reference = $ESTIMATE->estimate_item_reference([$uuid]);
-
 ob_start();
 ?>
 <!DOCTYPE html>
@@ -175,6 +174,7 @@ ob_start();
   endif;
   ?>
 
+
   <!-- Information Section -->
   <table style="margin-top: 10px;">
     <tr>
@@ -184,17 +184,32 @@ ob_start();
       </td>
       <td class="no-border" width="10%"></td>
       <td class="no-border" width="10%">Budget A</td>
-      <td class="text-right no-border" width="10%">AAA</td>
+      <td class="text-right no-border" width="10%">
+        <?php
+        $totalA = $ESTIMATE->estimate_item_total([$uuid, 1]);
+        echo number_format($totalA, 2);
+        ?>
+      </td>
     </tr>
     <tr>
       <td class="no-border" width="10%"></td>
       <td class="bottom-border" width="10%">Budget B</td>
-      <td class="text-right bottom-border" width="10%">BBB</td>
+      <td class="text-right bottom-border" width="10%">
+        <?php
+        $totalB = $ESTIMATE->estimate_item_total([$uuid, 2]);
+        echo number_format($totalB, 2);
+        ?>
+      </td>
     </tr>
     <tr>
       <td class="no-border" width="10%"></td>
       <td class="bottom-border" width="10%">Total</td>
-      <td class="text-right bottom-border" width="10%">CCC</td>
+      <td class="text-right bottom-border" width="10%">
+        <?php
+        $total = ($totalA + $totalB);
+        echo number_format($total, 2);
+        ?>
+      </td>
     </tr>
     <tr>
       <td class="no-border" width="10%"></td>
@@ -204,22 +219,36 @@ ob_start();
     <tr>
       <td class="no-border" width="10%"></td>
       <td class="no-border" width="10%">Sales</td>
-      <td class="text-right no-border" width="10%">DDD</td>
+      <td class="text-right no-border" width="10%">
+        <?php echo number_format($row['budget'], 2) ?>
+      </td>
     </tr>
     <tr>
       <td class="no-border" width="10%"></td>
       <td class="bottom-border" width="10%">Cost</td>
-      <td class="text-right bottom-border" width="10%">EEE</td>
+      <td class="text-right bottom-border" width="10%">
+        <?php echo number_format($total, 2) ?>
+      </td>
     </tr>
     <tr>
       <td class="no-border" width="10%"></td>
       <td class="bottom-border" width="10%">GP</td>
-      <td class="text-right bottom-border" width="10%">FFF</td>
+      <td class="text-right bottom-border" width="10%">
+        <?php
+        $gp = ($row['budget'] - $total);
+        echo number_format($gp, 2);
+        ?>
+      </td>
     </tr>
     <tr>
       <td class="no-border" width="10%"></td>
       <td class="no-border" width="10%">%GP</td>
-      <td class="text-right no-border" width="10%">GGG</td>
+      <td class="text-right no-border" width="10%">
+        <?php
+        $gpPer = (($row['budget'] - $total) * 100) / $row['budget'];
+        echo number_format($gpPer, 2) . "%";
+        ?>
+      </td>
     </tr>
   </table>
 
@@ -238,7 +267,6 @@ ob_start();
 
 </html>
 <?php
-// รับข้อมูล HTML และล้าง buffer
 $html = ob_get_contents();
 ob_end_clean();
 

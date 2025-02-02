@@ -6,6 +6,7 @@ $ServiceMenu = (isset($menu) && ($menu === "Service") ? "show" : "");
 $ServiceEstimate = ($page === "ServiceEstimate" ? 'class="active"' : "");
 $ServicePayment = ($page === "ServicePayment" ? 'class="active"' : "");
 $ServiceAdvance = ($page === "ServiceAdvance" ? 'class="active"' : "");
+$ServicePurchase = ($page === "ServicePurchase" ? 'class="active"' : "");
 
 $UserMenu = (isset($menu) && ($menu === "User") ? "show" : "");
 $UserProfile = ($page === "UserProfile" ? 'class="active"' : "");
@@ -64,6 +65,14 @@ $SettingCustomer = ($page === "SettingCustomer" ? 'class="active"' : "");
           <a href="/advance">
             <i class="fa fa-bars pr-2"></i>
             Advance Clearing
+          </a>
+        </li>
+      </ul>
+      <ul class="collapse list-unstyled <?php echo $ServiceMenu ?>" id="service-menu">
+        <li <?php echo $ServicePurchase ?>>
+          <a href="/purchase">
+            <i class="fa fa-bars pr-2"></i>
+            Purchase Requisition
           </a>
         </li>
       </ul>

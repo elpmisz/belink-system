@@ -1,18 +1,18 @@
 <?php
 $menu = "Service";
-$page = "ServicePayment";
+$page = "ServiceAdvance";
 
-use App\Classes\Payment;
+use App\Classes\Advance;
 use App\Classes\Validation;
 
-$PAYMENT = new Payment();
+$ADVANCE = new Advance();
 $VALIDATION = new Validation();
 
 $param = (isset($params) ? explode("/", $params) : "");
 $uuid = (!empty($param[0]) ? $param[0] : "");
 
-$row = $PAYMENT->payment_view([$uuid]);
-$total = $PAYMENT->payment_item_total([$uuid]);
+$row = $ADVANCE->advance_view([$uuid]);
+$total = $ADVANCE->advance_item_total([$uuid]);
 
 ob_start();
 ?>
@@ -21,7 +21,7 @@ ob_start();
 
 <head>
   <meta charset="utf-8">
-  <title>ใบอนุมัติสั่งจ่าย (Payment Order)</title>
+  <title>ใบเคลียร์เงินทดรองจ่าย (Advance Clearing Voucher)</title>
   <style>
     table {
       width: 100%;
@@ -71,31 +71,68 @@ ob_start();
   <table>
     <tr>
       <td class="text-left no-border" width="10%"></td>
-      <td class="text-center no-border" width="50%">
+      <td class="text-center no-border" width="60%">
         <h2>บริษัท บีลิงค์ มีเดีย จำกัด</h2>
       </td>
       <td class="no-border" width="10%">เลขที่เอกสาร</td>
-      <td class="bottom-border" width="30%">
+      <td class="bottom-border" width="20%">
         <?php echo htmlspecialchars($row['ticket'], ENT_QUOTES, 'UTF-8'); ?>
       </td>
     </tr>
     <tr>
       <td class="text-left no-border" width="10%"></td>
-      <td class="text-center no-border" width="50%">
-        <h2>ใบอนุมัติสั่งจ่าย (Payment Order)</h2>
+      <td class="text-center no-border" width="60%">
+        <h3>ใบเคลียร์เงินทดรองจ่าย (Advance Clearing Voucher)</h3>
       </td>
       <td class="no-border" width="10%">วันที่</td>
-      <td class="bottom-border" width="30%">
+      <td class="bottom-border" width="20%">
         <?php echo htmlspecialchars($row['created'], ENT_QUOTES, 'UTF-8'); ?>
       </td>
     </tr>
     <tr>
       <td class="text-left no-border" width="10%"></td>
-      <td class="text-center no-border" width="50%"></td>
+      <td class="text-center no-border" width="60%"></td>
       <td class="no-border" width="10%">เลขที่สัญญา</td>
-      <td class="bottom-border" width="30%">
+      <td class="bottom-border" width="20%">
         <?php echo htmlspecialchars($row['order_number'], ENT_QUOTES, 'UTF-8'); ?>
       </td>
+    </tr>
+  </table>
+
+  <table>
+    <tr>
+      <td class="no-border" width="20%">ผู้เบิกเงิน</td>
+      <td class="bottom-border" width="30%">
+        <?php echo htmlspecialchars($row['username'], ENT_QUOTES, 'UTF-8'); ?>
+      </td>
+      <td class="no-border" width="20%"></td>
+      <td class="no-border" width="30%"></td>
+    </tr>
+    <tr>
+      <td class="no-border" width="20%">วัตถุประสงค์</td>
+      <td class="bottom-border" width="30%">
+        <?php echo str_replace("\n", "<br>", $row['objective']) ?>
+      </td>
+      <td class="no-border" width="20%"></td>
+      <td class="no-border" width="30%"></td>
+    </tr>
+    <tr>
+      <td class="no-border" width="20%">ยอดเงินเบิก</td>
+      <td class="bottom-border" width="30%">
+        <?php echo htmlspecialchars(number_format($row['amount'], 2), ENT_QUOTES, 'UTF-8'); ?>
+      </td>
+      <td class="no-border" width="20%">ยอดเงินที่ใช้จริง</td>
+      <td class="bottom-border" width="30%">
+        <?php echo htmlspecialchars(number_format($row['usage'], 2), ENT_QUOTES, 'UTF-8'); ?>
+      </td>
+    </tr>
+    <tr>
+      <td class="no-border" width="20%">ยอดเงินที่เหลือคืน</td>
+      <td class="bottom-border" width="30%">
+        <?php echo htmlspecialchars(number_format($row['remain'], 2), ENT_QUOTES, 'UTF-8'); ?>
+      </td>
+      <td class="no-border" width="20%">ยอดเงินที่คืน</td>
+      <td class="bottom-border" width="30%"></td>
     </tr>
   </table>
 
@@ -105,14 +142,13 @@ ob_start();
       <th width="5%">#</th>
       <th width="15%">รายจ่าย</th>
       <th width="15%">รายละเอียด</th>
-      <th width="15%">รายละเอียด</th>
       <th width="10%">จำนวนเงิน</th>
       <th width="10%">VAT 7%</th>
       <th width="10%">W/T</th>
       <th width="10%">ยอดสุทธิ</th>
     </tr>
     <?php
-    $items = $PAYMENT->payment_item_view([$uuid]);
+    $items = $ADVANCE->advance_item_view([$uuid]);
     foreach ($items as $key => $item) :
       $key++;
     ?>
@@ -120,7 +156,6 @@ ob_start();
         <td class="text-center"><?php echo $key ?></td>
         <td class="text-left"><?php echo $item['expense_name'] ?></td>
         <td class="text-left"><?php echo $item['text'] ?></td>
-        <td class="text-left"><?php echo $item['text2'] ?></td>
         <td class="text-right"><?php echo number_format($item['amount'], 2) ?></td>
         <td class="text-right"><?php echo number_format($item['vat'], 2) ?></td>
         <td class="text-right"><?php echo number_format($item['wt'], 2) ?></td>
@@ -138,11 +173,10 @@ ob_start();
         <td></td>
         <td></td>
         <td></td>
-        <td></td>
       </tr>
     <?php endfor; ?>
     <tr>
-      <td colspan="3" class="text-center"><?php echo $VALIDATION->bathformat($total['total']) ?></td>
+      <td colspan="2" class="text-center"><?php echo $VALIDATION->bathformat($total['total']) ?></td>
       <td class="text-right">รวมทั้งสิ้น</td>
       <td class="text-right"><?php echo number_format($total['amount'], 2) ?></td>
       <td class="text-right"><?php echo number_format($total['vat'], 2) ?></td>
@@ -155,9 +189,7 @@ ob_start();
   <table style="margin-top: 10px;">
     <tr>
       <td rowspan="2" class="text-center" width="20%"><br><br>____________<br>ผู้ขอเบิก<br><br>วันที่____________</td>
-      <td rowspan="2" class="text-center" width="20%"><br><br>____________<br>ฝ่ายบัญชี<br><br>วันที่____________</td>
       <td rowspan="2" class="text-center" width="20%"><br><br>____________<br>ผู้อนุมัติ<br><br>วันที่____________</td>
-      <td rowspan="2" class="text-center" width="20%"><br><br>____________<br>ผู้รับเงิน<br><br>วันที่____________</td>
     </tr>
   </table>
 

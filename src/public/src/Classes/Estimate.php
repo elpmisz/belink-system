@@ -212,6 +212,27 @@ class Estimate
     return $stmt->fetchAll();
   }
 
+  public function estimate_item_total($data)
+  {
+    $sql = "SELECT SUM(b.estimate) total
+    FROM belink.estimate_request a
+    LEFT JOIN belink.estimate_item b
+    ON a.id = b.request_id
+    LEFT JOIN belink.expense c
+    ON b.expense_id = c.id
+    LEFT JOIN belink.expense d
+    ON c.`reference` = d.id
+    WHERE b.`status` = 1
+    AND a.uuid = ?
+    AND c.reference = ?
+    GROUP BY c.`reference`
+    ORDER BY c.reference ASC";
+    $stmt = $this->dbcon->prepare($sql);
+    $stmt->execute($data);
+    $row = $stmt->fetch();
+    return (isset($row['total']) ? $row['total'] : "");
+  }
+
   public function estimate_item_update($data)
   {
     $sql = "UPDATE belink.estimate_item SET

@@ -254,6 +254,11 @@ $remarks = $PAYMENT->payment_remark_view([$uuid]);
           </button>
         </div>
         <div class="col-xl-3 mb-2">
+          <a class="btn btn-primary btn-sm btn-block" href="/payment/print/<?php echo $row['uuid'] ?>" target="_blank">
+            <i class="fas fa-print pr-2"></i>พิมพ์
+          </a>
+        </div>
+        <div class="col-xl-3 mb-2">
           <a class="btn btn-danger btn-sm btn-block" href="/payment">
             <i class="fas fa-arrow-left pr-2"></i>หน้าหลัก
           </a>

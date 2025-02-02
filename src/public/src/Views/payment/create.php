@@ -318,11 +318,15 @@ include_once(__DIR__ . "/../layout/header.php");
         `;
 
           items.forEach((item, index) => {
-            console.log(item)
-            const remain = parseFloat(item.remain).toLocaleString('th-TH', {
+            let remain = parseFloat(item.remain).toLocaleString('th-TH', {
               minimumFractionDigits: 2,
               maximumFractionDigits: 2
             });
+            const estimate = parseFloat(item.estimate).toLocaleString('th-TH', {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2
+            });
+            remain = parseInt(item.payment) === 0 ? estimate : remain;
             tableContent += `
             <tr class="item-tr">
               <td class="text-center">${index + 1}</td>
@@ -340,7 +344,7 @@ include_once(__DIR__ . "/../layout/header.php");
                 <div class="invalid-feedback">กรุณากรอกข้อมูล!</div>
               </td>
               <td>
-                <input type="number" class="form-control form-control-sm text-right amount-item" min="1" max="${item.remain}" step="0.01" name="item_amount[]" required><div class="invalid-feedback">กรุณากรอกข้อมูล!</div>
+                <input type="number" class="form-control form-control-sm text-right amount-item" min="1" max="${item.estimate}" step="0.01" name="item_amount[]" required><div class="invalid-feedback">กรุณากรอกข้อมูล!</div>
               </td>
               <td>
                 <input type="number" class="form-control form-control-sm text-right vat-item" min="1" step="0.01" name="item_vat[]">

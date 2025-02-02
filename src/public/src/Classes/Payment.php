@@ -303,8 +303,8 @@ class Payment
     $sql = "SELECT b.expense_id,
       CONCAT('[',c.`code`,'] ',c.`name`) expense_name,
       b.estimate,
-      d.payment,
-      (b.estimate - d.payment) remain
+      IFNULL(d.payment,0) payment,
+      IFNULL((b.estimate - d.payment),0) remain
     FROM belink.estimate_request a
     LEFT JOIN belink.estimate_item b
     ON a.id = b.request_id
