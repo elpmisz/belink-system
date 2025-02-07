@@ -159,6 +159,48 @@ $ROUTER->map("POST", "/customer/[**:params]", function ($params) {
   require(__DIR__ . "/src/Views/customer/action.php");
 });
 
+##################### PRODUCT #####################
+$ROUTER->map("GET", "/product", function () {
+  require(__DIR__ . "/src/Views/product/index.php");
+});
+$ROUTER->map("GET", "/product/create", function () {
+  require(__DIR__ . "/src/Views/product/create.php");
+});
+$ROUTER->map("GET", "/product/view/[**:params]", function ($params) {
+  require(__DIR__ . "/src/Views/product/view.php");
+});
+$ROUTER->map("POST", "/product/[**:params]", function ($params) {
+  require(__DIR__ . "/src/Views/product/action.php");
+});
+
+##################### ASSET WAREHOUSE #####################
+$ROUTER->map("GET", "/asset-warehouse", function () {
+  require(__DIR__ . "/src/Views/asset-warehouse/index.php");
+});
+$ROUTER->map("GET", "/asset-warehouse/create", function () {
+  require(__DIR__ . "/src/Views/asset-warehouse/create.php");
+});
+$ROUTER->map("GET", "/asset-warehouse/view/[**:params]", function ($params) {
+  require(__DIR__ . "/src/Views/asset-warehouse/view.php");
+});
+$ROUTER->map("POST", "/asset-warehouse/[**:params]", function ($params) {
+  require(__DIR__ . "/src/Views/asset-warehouse/action.php");
+});
+
+##################### ASSET #####################
+$ROUTER->map("GET", "/asset", function () {
+  require(__DIR__ . "/src/Views/asset/index.php");
+});
+$ROUTER->map("GET", "/asset/create", function () {
+  require(__DIR__ . "/src/Views/asset/create.php");
+});
+$ROUTER->map("GET", "/asset/view/[**:params]", function ($params) {
+  require(__DIR__ . "/src/Views/asset/view.php");
+});
+$ROUTER->map("POST", "/asset/[**:params]", function ($params) {
+  require(__DIR__ . "/src/Views/asset/action.php");
+});
+
 ##################### EXPENSE #####################
 $ROUTER->map("GET", "/expense", function () {
   require(__DIR__ . "/src/Views/expense/index.php");

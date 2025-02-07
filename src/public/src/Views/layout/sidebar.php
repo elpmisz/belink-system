@@ -7,6 +7,8 @@ $ServiceEstimate = ($page === "ServiceEstimate" ? 'class="active"' : "");
 $ServicePayment = ($page === "ServicePayment" ? 'class="active"' : "");
 $ServiceAdvance = ($page === "ServiceAdvance" ? 'class="active"' : "");
 $ServicePurchase = ($page === "ServicePurchase" ? 'class="active"' : "");
+$ServiceBorrow = ($page === "ServiceBorrow" ? 'class="active"' : "");
+$ServiceIssue = ($page === "ServiceIssue" ? 'class="active"' : "");
 
 $UserMenu = (isset($menu) && ($menu === "User") ? "show" : "");
 $UserProfile = ($page === "UserProfile" ? 'class="active"' : "");
@@ -17,6 +19,8 @@ $SettingSystem = ($page === "SettingSystem" ? 'class="active"' : "");
 $SettingUser = ($page === "SettingUser" ? 'class="active"' : "");
 $SettingExpense = ($page === "SettingExpense" ? 'class="active"' : "");
 $SettingCustomer = ($page === "SettingCustomer" ? 'class="active"' : "");
+$SettingAsset = ($page === "SettingAsset" ? 'class="active"' : "");
+$SettingProduct = ($page === "SettingProduct" ? 'class="active"' : "");
 ?>
 <nav id="sidebar">
   <ul class="list-unstyled">
@@ -76,6 +80,22 @@ $SettingCustomer = ($page === "SettingCustomer" ? 'class="active"' : "");
           </a>
         </li>
       </ul>
+      <ul class="collapse list-unstyled <?php echo $ServiceMenu ?>" id="service-menu">
+        <li <?php echo $ServiceBorrow ?>>
+          <a href="/borrow">
+            <i class="fa fa-bars pr-2"></i>
+            ระบบยืม - คืน
+          </a>
+        </li>
+      </ul>
+      <ul class="collapse list-unstyled <?php echo $ServiceMenu ?>" id="service-menu">
+        <li <?php echo $ServiceIssue ?>>
+          <a href="/isset">
+            <i class="fa fa-bars pr-2"></i>
+            ระบบนำสินค้าเข้า-ออก
+          </a>
+        </li>
+      </ul>
     </li>
     <?php if (intval($user['level']) === 9) : ?>
       <li>
@@ -103,6 +123,18 @@ $SettingCustomer = ($page === "SettingCustomer" ? 'class="active"' : "");
             <a href="/customer">
               <i class="fa fa-gear pr-2"></i>
               ข้อมูลลูกค้า
+            </a>
+          </li>
+          <li <?php echo $SettingAsset ?>>
+            <a href="/asset">
+              <i class="fa fa-gear pr-2"></i>
+              ข้อมูลทรัพย์สิน
+            </a>
+          </li>
+          <li <?php echo $SettingProduct ?>>
+            <a href="/product">
+              <i class="fa fa-gear pr-2"></i>
+              ข้อมูลสินค้า
             </a>
           </li>
         </ul>

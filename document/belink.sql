@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: database
--- Generation Time: Feb 02, 2025 at 01:51 PM
+-- Generation Time: Feb 07, 2025 at 09:48 AM
 -- Server version: 11.6.2-MariaDB-ubu2404
 -- PHP Version: 8.2.27
 
@@ -117,6 +117,27 @@ CREATE TABLE `advance_request` (
 
 INSERT INTO `advance_request` (`id`, `uuid`, `last`, `login_id`, `order_number`, `amount`, `objective`, `action`, `status`, `updated`, `created`) VALUES
 (1, 'c5f0d78a-e16b-11ef-8d4c-0242ac120003', 1, 1, 'SO07010001', 10000.00, 'XXXXXX\r\nXXXXXX', 1, 2, '2025-02-02 20:45:00', '2025-02-02 20:44:00');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `asset_warehouse`
+--
+
+CREATE TABLE `asset_warehouse` (
+  `id` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `status` int(1) NOT NULL DEFAULT 1,
+  `updated` datetime DEFAULT NULL,
+  `created` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+--
+-- Dumping data for table `asset_warehouse`
+--
+
+INSERT INTO `asset_warehouse` (`id`, `name`, `status`, `updated`, `created`) VALUES
+(1, 'สาทร', 1, '2025-02-07 16:47:35', '2025-02-07 16:39:34');
 
 -- --------------------------------------------------------
 
@@ -600,6 +621,12 @@ ALTER TABLE `advance_request`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `asset_warehouse`
+--
+ALTER TABLE `asset_warehouse`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `customer`
 --
 ALTER TABLE `customer`
@@ -728,6 +755,12 @@ ALTER TABLE `advance_remark`
 -- AUTO_INCREMENT for table `advance_request`
 --
 ALTER TABLE `advance_request`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `asset_warehouse`
+--
+ALTER TABLE `asset_warehouse`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
