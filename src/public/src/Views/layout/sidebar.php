@@ -57,6 +57,14 @@ $SettingProduct = ($page === "SettingProduct" ? 'class="active"' : "");
         </li>
       </ul>
       <ul class="collapse list-unstyled <?php echo $ServiceMenu ?>" id="service-menu">
+        <li <?php echo $ServicePurchase ?>>
+          <a href="/purchase">
+            <i class="fa fa-bars pr-2"></i>
+            Purchase Requisition
+          </a>
+        </li>
+      </ul>
+      <ul class="collapse list-unstyled <?php echo $ServiceMenu ?>" id="service-menu">
         <li <?php echo $ServicePayment ?>>
           <a href="/payment">
             <i class="fa fa-bars pr-2"></i>
@@ -73,26 +81,18 @@ $SettingProduct = ($page === "SettingProduct" ? 'class="active"' : "");
         </li>
       </ul>
       <ul class="collapse list-unstyled <?php echo $ServiceMenu ?>" id="service-menu">
-        <li <?php echo $ServicePurchase ?>>
-          <a href="/purchase">
-            <i class="fa fa-bars pr-2"></i>
-            Purchase Requisition
-          </a>
-        </li>
-      </ul>
-      <ul class="collapse list-unstyled <?php echo $ServiceMenu ?>" id="service-menu">
         <li <?php echo $ServiceBorrow ?>>
           <a href="/borrow">
             <i class="fa fa-bars pr-2"></i>
-            ระบบยืม - คืน
+            ระบบยืมทรัพย์สิน
           </a>
         </li>
       </ul>
       <ul class="collapse list-unstyled <?php echo $ServiceMenu ?>" id="service-menu">
         <li <?php echo $ServiceIssue ?>>
-          <a href="/isset">
+          <a href="/issue">
             <i class="fa fa-bars pr-2"></i>
-            ระบบนำสินค้าเข้า-ออก
+            ระบบนำเข้า-เบิกออก
           </a>
         </li>
       </ul>

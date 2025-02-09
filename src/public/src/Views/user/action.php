@@ -96,3 +96,13 @@ if ($action === "user-data") {
     die($e->getMessage());
   }
 }
+
+if ($action === "user-select") {
+  try {
+    $keyword = (isset($_POST['q']) ? $VALIDATION->input($_POST['q']) : "");
+    $result = $USER->user_select($keyword);
+    echo json_encode($result);
+  } catch (PDOException $e) {
+    die($e->getMessage());
+  }
+}

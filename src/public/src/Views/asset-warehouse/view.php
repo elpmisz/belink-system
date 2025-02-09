@@ -14,7 +14,7 @@ $row = $ASSET->asset_warehouse_view([$id]);
 ?>
 
 <div class="card shadow">
-  <h4 class="card-header text-center">ข้อมูลคลังทรัพย์สิน</h4>
+  <h4 class="card-header text-center">ข้อมูลคลัง</h4>
   <div class="card-body">
 
     <form action="/asset-warehouse/update" method="POST" class="needs-validation" novalidate>

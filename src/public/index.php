@@ -4,6 +4,70 @@ require_once(__DIR__ . "/vendor/autoload.php");
 $ROUTER = new AltoRouter();
 
 ##################### SERVICE #####################
+##################### ISSUE #####################
+$ROUTER->map("GET", "/issue", function () {
+  require(__DIR__ . "/src/Views/issue/index.php");
+});
+$ROUTER->map("GET", "/issue/income", function () {
+  require(__DIR__ . "/src/Views/issue/income.php");
+});
+$ROUTER->map("GET", "/issue/outcome", function () {
+  require(__DIR__ . "/src/Views/issue/outcome.php");
+});
+$ROUTER->map("GET", "/issue/manage", function () {
+  require(__DIR__ . "/src/Views/issue/manage.php");
+});
+$ROUTER->map("GET", "/issue/view/[**:params]", function ($params) {
+  require(__DIR__ . "/src/Views/issue/view.php");
+});
+$ROUTER->map("GET", "/issue/approve/[**:params]", function ($params) {
+  require(__DIR__ . "/src/Views/issue/approve.php");
+});
+$ROUTER->map("GET", "/issue/complete/[**:params]", function ($params) {
+  require(__DIR__ . "/src/Views/issue/complete.php");
+});
+$ROUTER->map("GET", "/issue/edit/[**:params]", function ($params) {
+  require(__DIR__ . "/src/Views/issue/edit.php");
+});
+$ROUTER->map("GET", "/issue/print/[**:params]", function ($params) {
+  require(__DIR__ . "/src/Views/issue/print.php");
+});
+$ROUTER->map("POST", "/issue/[**:params]", function ($params) {
+  require(__DIR__ . "/src/Views/issue/action.php");
+});
+
+##################### BORROW #####################
+$ROUTER->map("GET", "/borrow", function () {
+  require(__DIR__ . "/src/Views/borrow/index.php");
+});
+$ROUTER->map("GET", "/borrow/create", function () {
+  require(__DIR__ . "/src/Views/borrow/create.php");
+});
+$ROUTER->map("GET", "/borrow/manage", function () {
+  require(__DIR__ . "/src/Views/borrow/manage.php");
+});
+$ROUTER->map("GET", "/borrow/view/[**:params]", function ($params) {
+  require(__DIR__ . "/src/Views/borrow/view.php");
+});
+$ROUTER->map("GET", "/borrow/send/[**:params]", function ($params) {
+  require(__DIR__ . "/src/Views/borrow/send.php");
+});
+$ROUTER->map("GET", "/borrow/receive/[**:params]", function ($params) {
+  require(__DIR__ . "/src/Views/borrow/receive.php");
+});
+$ROUTER->map("GET", "/borrow/complete/[**:params]", function ($params) {
+  require(__DIR__ . "/src/Views/borrow/complete.php");
+});
+$ROUTER->map("GET", "/borrow/edit/[**:params]", function ($params) {
+  require(__DIR__ . "/src/Views/borrow/edit.php");
+});
+$ROUTER->map("GET", "/borrow/print/[**:params]", function ($params) {
+  require(__DIR__ . "/src/Views/borrow/print.php");
+});
+$ROUTER->map("POST", "/borrow/[**:params]", function ($params) {
+  require(__DIR__ . "/src/Views/borrow/action.php");
+});
+
 ##################### ESTIMATE-TYPE #####################
 $ROUTER->map("GET", "/estimate/type", function () {
   require(__DIR__ . "/src/Views/estimate-type/index.php");
@@ -159,6 +223,76 @@ $ROUTER->map("POST", "/customer/[**:params]", function ($params) {
   require(__DIR__ . "/src/Views/customer/action.php");
 });
 
+##################### PRODUCT BRAND #####################
+$ROUTER->map("GET", "/product-brand", function () {
+  require(__DIR__ . "/src/Views/product-brand/index.php");
+});
+$ROUTER->map("GET", "/product-brand/create", function () {
+  require(__DIR__ . "/src/Views/product-brand/create.php");
+});
+$ROUTER->map("GET", "/product-brand/view/[**:params]", function ($params) {
+  require(__DIR__ . "/src/Views/product-brand/view.php");
+});
+$ROUTER->map("POST", "/product-brand/[**:params]", function ($params) {
+  require(__DIR__ . "/src/Views/product-brand/action.php");
+});
+
+##################### PRODUCT UNIT #####################
+$ROUTER->map("GET", "/product-unit", function () {
+  require(__DIR__ . "/src/Views/product-unit/index.php");
+});
+$ROUTER->map("GET", "/product-unit/create", function () {
+  require(__DIR__ . "/src/Views/product-unit/create.php");
+});
+$ROUTER->map("GET", "/product-unit/view/[**:params]", function ($params) {
+  require(__DIR__ . "/src/Views/product-unit/view.php");
+});
+$ROUTER->map("POST", "/product-unit/[**:params]", function ($params) {
+  require(__DIR__ . "/src/Views/product-unit/action.php");
+});
+
+##################### PRODUCT TYPE #####################
+$ROUTER->map("GET", "/product-type", function () {
+  require(__DIR__ . "/src/Views/product-type/index.php");
+});
+$ROUTER->map("GET", "/product-type/create", function () {
+  require(__DIR__ . "/src/Views/product-type/create.php");
+});
+$ROUTER->map("GET", "/product-type/view/[**:params]", function ($params) {
+  require(__DIR__ . "/src/Views/product-type/view.php");
+});
+$ROUTER->map("POST", "/product-type/[**:params]", function ($params) {
+  require(__DIR__ . "/src/Views/product-type/action.php");
+});
+
+##################### PRODUCT LOCATION #####################
+$ROUTER->map("GET", "/product-location", function () {
+  require(__DIR__ . "/src/Views/product-location/index.php");
+});
+$ROUTER->map("GET", "/product-location/create", function () {
+  require(__DIR__ . "/src/Views/product-location/create.php");
+});
+$ROUTER->map("GET", "/product-location/view/[**:params]", function ($params) {
+  require(__DIR__ . "/src/Views/product-location/view.php");
+});
+$ROUTER->map("POST", "/product-location/[**:params]", function ($params) {
+  require(__DIR__ . "/src/Views/product-location/action.php");
+});
+
+##################### PRODUCT WAREHOUSE #####################
+$ROUTER->map("GET", "/product-warehouse", function () {
+  require(__DIR__ . "/src/Views/product-warehouse/index.php");
+});
+$ROUTER->map("GET", "/product-warehouse/create", function () {
+  require(__DIR__ . "/src/Views/product-warehouse/create.php");
+});
+$ROUTER->map("GET", "/product-warehouse/view/[**:params]", function ($params) {
+  require(__DIR__ . "/src/Views/product-warehouse/view.php");
+});
+$ROUTER->map("POST", "/product-warehouse/[**:params]", function ($params) {
+  require(__DIR__ . "/src/Views/product-warehouse/action.php");
+});
+
 ##################### PRODUCT #####################
 $ROUTER->map("GET", "/product", function () {
   require(__DIR__ . "/src/Views/product/index.php");
@@ -169,8 +303,67 @@ $ROUTER->map("GET", "/product/create", function () {
 $ROUTER->map("GET", "/product/view/[**:params]", function ($params) {
   require(__DIR__ . "/src/Views/product/view.php");
 });
+$ROUTER->map("GET", "/product/download/[**:params]", function ($params) {
+  require(__DIR__ . "/src/Views/product/download.php");
+});
 $ROUTER->map("POST", "/product/[**:params]", function ($params) {
   require(__DIR__ . "/src/Views/product/action.php");
+});
+
+##################### ASSET BRAND #####################
+$ROUTER->map("GET", "/asset-brand", function () {
+  require(__DIR__ . "/src/Views/asset-brand/index.php");
+});
+$ROUTER->map("GET", "/asset-brand/create", function () {
+  require(__DIR__ . "/src/Views/asset-brand/create.php");
+});
+$ROUTER->map("GET", "/asset-brand/view/[**:params]", function ($params) {
+  require(__DIR__ . "/src/Views/asset-brand/view.php");
+});
+$ROUTER->map("POST", "/asset-brand/[**:params]", function ($params) {
+  require(__DIR__ . "/src/Views/asset-brand/action.php");
+});
+
+##################### ASSET UNIT #####################
+$ROUTER->map("GET", "/asset-unit", function () {
+  require(__DIR__ . "/src/Views/asset-unit/index.php");
+});
+$ROUTER->map("GET", "/asset-unit/create", function () {
+  require(__DIR__ . "/src/Views/asset-unit/create.php");
+});
+$ROUTER->map("GET", "/asset-unit/view/[**:params]", function ($params) {
+  require(__DIR__ . "/src/Views/asset-unit/view.php");
+});
+$ROUTER->map("POST", "/asset-unit/[**:params]", function ($params) {
+  require(__DIR__ . "/src/Views/asset-unit/action.php");
+});
+
+##################### ASSET TYPE #####################
+$ROUTER->map("GET", "/asset-type", function () {
+  require(__DIR__ . "/src/Views/asset-type/index.php");
+});
+$ROUTER->map("GET", "/asset-type/create", function () {
+  require(__DIR__ . "/src/Views/asset-type/create.php");
+});
+$ROUTER->map("GET", "/asset-type/view/[**:params]", function ($params) {
+  require(__DIR__ . "/src/Views/asset-type/view.php");
+});
+$ROUTER->map("POST", "/asset-type/[**:params]", function ($params) {
+  require(__DIR__ . "/src/Views/asset-type/action.php");
+});
+
+##################### ASSET LOCATION #####################
+$ROUTER->map("GET", "/asset-location", function () {
+  require(__DIR__ . "/src/Views/asset-location/index.php");
+});
+$ROUTER->map("GET", "/asset-location/create", function () {
+  require(__DIR__ . "/src/Views/asset-location/create.php");
+});
+$ROUTER->map("GET", "/asset-location/view/[**:params]", function ($params) {
+  require(__DIR__ . "/src/Views/asset-location/view.php");
+});
+$ROUTER->map("POST", "/asset-location/[**:params]", function ($params) {
+  require(__DIR__ . "/src/Views/asset-location/action.php");
 });
 
 ##################### ASSET WAREHOUSE #####################
@@ -196,6 +389,9 @@ $ROUTER->map("GET", "/asset/create", function () {
 });
 $ROUTER->map("GET", "/asset/view/[**:params]", function ($params) {
   require(__DIR__ . "/src/Views/asset/view.php");
+});
+$ROUTER->map("GET", "/asset/download/[**:params]", function ($params) {
+  require(__DIR__ . "/src/Views/asset/download.php");
 });
 $ROUTER->map("POST", "/asset/[**:params]", function ($params) {
   require(__DIR__ . "/src/Views/asset/action.php");
