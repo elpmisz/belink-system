@@ -125,7 +125,7 @@ include_once(__DIR__ . "/../layout/header.php");
 
 <?php include_once(__DIR__ . "/../layout/footer.php"); ?>
 <script>
-  initializeSelect2(".product-select", "/issue/product-select", "-- สินค้า --");
+  initializeSelect2(".product-select", "/issue/product-stock-select", "-- สินค้า --");
   initializeSelect2(".warehouse-select", "/issue/warehouse-select", "-- คลัง --");
 
   $(".item-decrease, .file-decrease").hide();
@@ -141,7 +141,7 @@ include_once(__DIR__ . "/../layout/header.php");
     });
 
     row.after(clone);
-    initializeSelect2(".product-select", "/issue/product-select", "-- สินค้า --");
+    initializeSelect2(".product-select", "/issue/product-stock-select", "-- สินค้า --");
     initializeSelect2(".warehouse-select", "/issue/warehouse-select", "-- คลัง --");
   });
 

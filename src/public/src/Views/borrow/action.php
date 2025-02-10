@@ -46,7 +46,7 @@ if ($action === "create") {
     $start = (!empty($date[0]) ? date("Y-m-d", strtotime(str_replace("/", "-", trim($date[0])))) : "");
     $end = (!empty($date[1]) ? date("Y-m-d", strtotime(str_replace("/", "-", trim($date[1])))) : "");
     $objective = (isset($_POST['objective']) ? $VALIDATION->input($_POST['objective']) : "");
-    $borrow_last = $PURCHASE->purchase_last();
+    $borrow_last = $BORROW->$borrow_last();
 
     $borrow_count = $BORROW->borrow_count([$login_id, $start, $end, $objective]);
     if (intval($borrow_count) > 0) {

@@ -174,7 +174,7 @@ class Issue
 
   public function product_remain($data)
   {
-    $sql = "SELECT a.id,a.`name` product_name,(b.income - b.outcome) remain
+    $sql = "SELECT a.id,a.`name` product_name,IFNULL((b.income - b.outcome),0) remain
     FROM belink.product a
     LEFT JOIN 
     (
@@ -609,6 +609,27 @@ class Issue
       $sql .= " AND (name LIKE '%{$keyword}%') ";
     }
     $sql .= " ORDER BY name ASC LIMIT 20";
+    $stmt = $this->dbcon->prepare($sql);
+    $stmt->execute();
+    return $stmt->fetchAll();
+  }
+
+  public function product_stock_select($keyword)
+  {
+    $sql = "SELECT b.product_id `id`,CONCAT(IF(c.`code` = '','',CONCAT('[',c.`code`,'] ')),c.name) `text`
+    FROM belink.issue_request a
+    LEFT JOIN belink.issue_item b
+    ON a.id = b.request_id
+    LEFT JOIN belink.product c
+    ON b.product_id = c.id
+    WHERE a.`status` = 2
+    AND b.`status` = 1 ";
+    if (!empty($keyword)) {
+      $sql .= " AND (c.name LIKE '%{$keyword}%') ";
+    }
+    $sql .= "  GROUP BY b.product_id
+    HAVING (SUM(IF(b.`type` = 1,b.confirm,0)) - SUM(IF(b.`type` = 2,b.confirm,0))) > 0
+    ORDER BY c.`name` ASC LIMIT 20";
     $stmt = $this->dbcon->prepare($sql);
     $stmt->execute();
     return $stmt->fetchAll();
