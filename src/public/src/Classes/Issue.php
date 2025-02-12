@@ -649,6 +649,22 @@ class Issue
     return $stmt->fetchAll();
   }
 
+  public function outcome_select($keyword)
+  {
+    $sql = "SELECT id, `text`
+    FROM belink.issue_request
+    WHERE type = 2
+    AND status = 2 ";
+    if (!empty($keyword)) {
+      $sql .= " AND (`text` LIKE '%{$keyword}%') ";
+    }
+    $sql .= " ORDER BY id ASC LIMIT 20";
+    $stmt = $this->dbcon->prepare($sql);
+    $stmt->execute();
+    return $stmt->fetchAll();
+  }
+
+
   public function last_insert_id()
   {
     return $this->dbcon->lastInsertId();

@@ -33,6 +33,15 @@ include_once(__DIR__ . "/../layout/header.php");
           </div>
         </div>
       </div>
+      <!-- <div class="row mb-2">
+        <label class="col-xl-2 offset-xl-2 col-form-label">เลขอ้างอิง</label>
+        <div class="col-xl-4">
+          <select class="form-control form-control-sm outcome-select" name="outcome"></select>
+          <div class="invalid-feedback">
+            กรุณากรอกข้อมูล!
+          </div>
+        </div>
+      </div> -->
       <div class="row mb-2">
         <label class="col-xl-2 offset-xl-2 col-form-label">รายละเอียด</label>
         <div class="col-xl-6">
@@ -125,6 +134,7 @@ include_once(__DIR__ . "/../layout/header.php");
 
 <?php include_once(__DIR__ . "/../layout/footer.php"); ?>
 <script>
+  initializeSelect2(".outcome-select", "/issue/outcome-select", "-- ใบเบิกออก --");
   initializeSelect2(".product-select", "/issue/product-select", "-- สินค้า --");
   initializeSelect2(".warehouse-select", "/issue/warehouse-select", "-- คลัง --");
 

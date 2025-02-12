@@ -36,6 +36,16 @@ $ROUTER->map("POST", "/issue/[**:params]", function ($params) {
   require(__DIR__ . "/src/Views/issue/action.php");
 });
 
+##################### BORROW-AUTHORIZE #####################
+$ROUTER->map("GET", "/borrow/authorize", function () {
+  require(__DIR__ . "/src/Views/borrow-authorize/index.php");
+});
+$ROUTER->map("GET", "/borrow/authorize/create", function () {
+  require(__DIR__ . "/src/Views/borrow-authorize/create.php");
+});
+$ROUTER->map("POST", "/borrow/authorize/[**:params]", function ($params) {
+  require(__DIR__ . "/src/Views/borrow-authorize/action.php");
+});
 ##################### BORROW #####################
 $ROUTER->map("GET", "/borrow", function () {
   require(__DIR__ . "/src/Views/borrow/index.php");
@@ -429,6 +439,22 @@ $ROUTER->map("GET", "/user/view/[**:params]", function ($params) {
 });
 $ROUTER->map("POST", "/user/[**:params]", function ($params) {
   require(__DIR__ . "/src/Views/user/action.php");
+});
+
+##################### AUTHORIZE #####################
+$ROUTER->map("GET", "/authorize", function () {
+  require(__DIR__ . "/src/Views/authorize/index.php");
+});
+$ROUTER->map("POST", "/authorize/[**:params]", function ($params) {
+  require(__DIR__ . "/src/Views/authorize/action.php");
+});
+
+##################### SERVICE #####################
+$ROUTER->map("GET", "/service", function () {
+  require(__DIR__ . "/src/Views/service/index.php");
+});
+$ROUTER->map("POST", "/service/[**:params]", function ($params) {
+  require(__DIR__ . "/src/Views/service/action.php");
 });
 
 ##################### AUTH #####################

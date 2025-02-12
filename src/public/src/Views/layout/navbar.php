@@ -44,10 +44,12 @@
             <i class="fas fa-caret-down pl-2"></i>
           </a>
           <div class="dropdown-menu">
-            <a class="dropdown-item" href="/cash">
-              <i class="fa fa-phone pr-2"></i>
-              <span class="font-weight-bold">ระบบเบิกสำรองจ่าย</span>
-            </a>
+            <?php foreach ($services as $key => $service) : ?>
+              <a class="dropdown-item" href="<?php echo $service['url']  ?>">
+                <i class="fa fa-bars pr-2"></i>
+                <span class="font-weight-bold"><?php echo $service['name'] ?></span>
+              </a>
+            <?php endforeach; ?>
           </div>
         </li>
         <li class=" nav-item dropdown">

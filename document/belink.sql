@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: database
--- Generation Time: Feb 09, 2025 at 04:05 PM
+-- Generation Time: Feb 12, 2025 at 01:27 PM
 -- Server version: 11.6.2-MariaDB-ubu2404
 -- PHP Version: 8.2.27
 
@@ -31,7 +31,7 @@ CREATE TABLE `advance_file` (
   `id` int(11) NOT NULL,
   `request_id` int(11) NOT NULL,
   `name` varchar(100) NOT NULL,
-  `status` int(1) NOT NULL DEFAULT 1,
+  `status` int(11) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
   `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -57,7 +57,7 @@ CREATE TABLE `advance_item` (
   `amount` decimal(20,2) NOT NULL,
   `vat` decimal(20,2) NOT NULL,
   `wt` decimal(20,2) NOT NULL,
-  `status` int(1) NOT NULL DEFAULT 1,
+  `status` int(11) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
   `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -80,7 +80,7 @@ CREATE TABLE `advance_remark` (
   `request_id` int(11) NOT NULL,
   `login_id` int(11) NOT NULL,
   `text` varchar(200) NOT NULL,
-  `status` int(1) NOT NULL,
+  `status` int(11) NOT NULL,
   `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -105,8 +105,8 @@ CREATE TABLE `advance_request` (
   `order_number` varchar(20) NOT NULL,
   `amount` decimal(20,2) NOT NULL,
   `objective` text NOT NULL,
-  `action` int(1) NOT NULL DEFAULT 1,
-  `status` int(1) NOT NULL DEFAULT 1,
+  `action` int(11) NOT NULL DEFAULT 1,
+  `status` int(11) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
   `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -137,7 +137,7 @@ CREATE TABLE `asset` (
   `size` varchar(100) NOT NULL,
   `material` varchar(100) NOT NULL,
   `text` text NOT NULL,
-  `status` int(1) NOT NULL DEFAULT 1,
+  `status` int(11) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
   `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -270,7 +270,8 @@ INSERT INTO `asset` (`id`, `uuid`, `name`, `code`, `type_id`, `warehouse_id`, `l
 (121, '91ba4d01-e62f-11ef-92b2-0242ac120002', 'Game หมุนวงล้อ', '', 2, 1, 0, 5, 1, '', 'เหล็ก', '', 1, NULL, '2025-02-08 22:15:44'),
 (122, '91ba9c1a-e62f-11ef-92b2-0242ac120002', 'Standee', '', 2, 1, 0, 5, 1, '0.40 x 1.70 m', 'PP BORAD', '', 1, NULL, '2025-02-08 22:15:44'),
 (123, '91bae7d8-e62f-11ef-92b2-0242ac120002', 'พื้นไม้ติดสติกเกอร์', '', 2, 1, 0, 5, 1, '3.00 x 3.00 x 0.15 m', 'HMR', '', 1, NULL, '2025-02-08 22:15:44'),
-(124, '91bb3160-e62f-11ef-92b2-0242ac120002', 'Standee', '', 2, 1, 0, 5, 1, '0.40 x 1.20 m', 'PP BORAD', '', 1, NULL, '2025-02-08 22:15:44');
+(124, '91bb3160-e62f-11ef-92b2-0242ac120002', 'Standee', '', 2, 1, 0, 5, 1, '0.40 x 1.20 m', 'PP BORAD', '', 1, NULL, '2025-02-08 22:15:44'),
+(125, '6b0ed8e3-e91b-11ef-8583-2ad6c30b0fff', 'ddd', 'ddd', 3, 1, 1, 0, 0, '', '', 'ddd', 2, '2025-02-12 08:29:16', '2025-02-12 08:29:04');
 
 -- --------------------------------------------------------
 
@@ -281,7 +282,7 @@ INSERT INTO `asset` (`id`, `uuid`, `name`, `code`, `type_id`, `warehouse_id`, `l
 CREATE TABLE `asset_brand` (
   `id` int(11) NOT NULL,
   `name` varchar(100) NOT NULL,
-  `status` int(1) NOT NULL DEFAULT 1,
+  `status` int(11) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
   `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -307,7 +308,7 @@ CREATE TABLE `asset_file` (
   `id` int(11) NOT NULL,
   `asset_id` int(11) NOT NULL,
   `name` varchar(100) NOT NULL,
-  `status` int(1) NOT NULL DEFAULT 1,
+  `status` int(11) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
   `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -321,7 +322,7 @@ CREATE TABLE `asset_file` (
 CREATE TABLE `asset_location` (
   `id` int(11) NOT NULL,
   `name` varchar(100) NOT NULL,
-  `status` int(1) NOT NULL DEFAULT 1,
+  `status` int(11) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
   `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -342,7 +343,7 @@ INSERT INTO `asset_location` (`id`, `name`, `status`, `updated`, `created`) VALU
 CREATE TABLE `asset_type` (
   `id` int(11) NOT NULL,
   `name` varchar(100) NOT NULL,
-  `status` int(1) NOT NULL DEFAULT 1,
+  `status` int(11) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
   `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -368,7 +369,7 @@ INSERT INTO `asset_type` (`id`, `name`, `status`, `updated`, `created`) VALUES
 CREATE TABLE `asset_unit` (
   `id` int(11) NOT NULL,
   `name` varchar(100) NOT NULL,
-  `status` int(1) NOT NULL DEFAULT 1,
+  `status` int(11) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
   `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -391,7 +392,7 @@ INSERT INTO `asset_unit` (`id`, `name`, `status`, `updated`, `created`) VALUES
 CREATE TABLE `asset_warehouse` (
   `id` int(11) NOT NULL,
   `name` varchar(100) NOT NULL,
-  `status` int(1) NOT NULL DEFAULT 1,
+  `status` int(11) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
   `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -414,7 +415,7 @@ CREATE TABLE `borrow_file` (
   `id` int(11) NOT NULL,
   `request_id` int(11) NOT NULL,
   `name` varchar(100) NOT NULL,
-  `status` int(1) NOT NULL DEFAULT 1,
+  `status` int(11) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
   `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -426,7 +427,8 @@ CREATE TABLE `borrow_file` (
 INSERT INTO `borrow_file` (`id`, `request_id`, `name`, `status`, `updated`, `created`) VALUES
 (1, 1, '5a67671e7599b1e07574ae347ccc1662.webp', 1, NULL, '2025-02-09 14:11:07'),
 (2, 1, 'f4b31e44db967880248c8423094b2fcd.pdf', 1, NULL, '2025-02-09 14:11:07'),
-(3, 1, 'cb4afb0c1ffbfb97ab62611b18d84f1a.webp', 0, '2025-02-09 15:10:24', '2025-02-09 15:06:24');
+(3, 1, 'cb4afb0c1ffbfb97ab62611b18d84f1a.webp', 0, '2025-02-09 15:10:24', '2025-02-09 15:06:24'),
+(4, 3, 'e4ffc2b3ae8df2b61f76f48fe0f603f0.webp', 1, NULL, '2025-02-11 10:12:11');
 
 -- --------------------------------------------------------
 
@@ -439,7 +441,7 @@ CREATE TABLE `borrow_item` (
   `request_id` int(11) NOT NULL,
   `asset_id` int(11) NOT NULL,
   `text` varchar(100) NOT NULL,
-  `status` int(1) NOT NULL DEFAULT 1,
+  `status` int(11) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
   `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -451,7 +453,12 @@ CREATE TABLE `borrow_item` (
 INSERT INTO `borrow_item` (`id`, `request_id`, `asset_id`, `text`, `status`, `updated`, `created`) VALUES
 (1, 1, 83, 'xxx', 1, '2025-02-09 15:06:50', '2025-02-09 14:11:07'),
 (2, 1, 121, 'yyy', 1, '2025-02-09 15:06:50', '2025-02-09 14:11:07'),
-(3, 1, 91, 'zzz', 0, '2025-02-09 15:10:30', '2025-02-09 15:06:24');
+(3, 1, 91, 'zzz', 0, '2025-02-09 15:10:30', '2025-02-09 15:06:24'),
+(4, 2, 63, 'EVENT SO 3344343', 1, NULL, '2025-02-10 05:01:09'),
+(5, 2, 56, '23', 1, NULL, '2025-02-10 05:01:09'),
+(6, 3, 19, 'EVENT SO 3344343', 1, NULL, '2025-02-11 10:12:11'),
+(7, 3, 2, 'EVENT SO 3344343', 1, NULL, '2025-02-11 10:12:11'),
+(8, 4, 2, 'EVENT SO 3344343', 1, NULL, '2025-02-12 05:02:44');
 
 -- --------------------------------------------------------
 
@@ -465,7 +472,7 @@ CREATE TABLE `borrow_remark` (
   `login_id` int(11) NOT NULL,
   `date` date NOT NULL,
   `text` varchar(200) NOT NULL,
-  `status` int(1) NOT NULL,
+  `status` int(11) NOT NULL,
   `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -475,7 +482,13 @@ CREATE TABLE `borrow_remark` (
 
 INSERT INTO `borrow_remark` (`id`, `request_id`, `login_id`, `date`, `text`, `status`, `created`) VALUES
 (1, 1, 1, '2025-02-03', 'TESTETST', 2, '2025-02-09 15:32:23'),
-(2, 1, 1, '2025-02-28', 'XXXX', 3, '2025-02-09 15:38:07');
+(2, 1, 1, '2025-02-28', 'XXXX', 3, '2025-02-09 15:38:07'),
+(3, 2, 5, '2025-02-12', 'รับ', 2, '2025-02-11 10:14:32'),
+(4, 2, 5, '2025-04-01', 'รับคืนเรียบร้อย', 3, '2025-02-11 10:16:10'),
+(5, 3, 5, '2025-02-11', 'กดก', 2, '2025-02-11 10:16:27'),
+(6, 3, 1, '2025-04-01', 'gdfg', 3, '2025-02-11 10:17:48'),
+(7, 4, 5, '2025-02-14', 'check already', 2, '2025-02-12 05:05:03'),
+(8, 4, 5, '2025-04-01', 'ขอครบ ไม่มีเสียหาย', 3, '2025-02-12 05:06:54');
 
 -- --------------------------------------------------------
 
@@ -491,7 +504,7 @@ CREATE TABLE `borrow_request` (
   `start` date NOT NULL,
   `end` date NOT NULL,
   `objective` varchar(200) NOT NULL,
-  `status` int(1) NOT NULL DEFAULT 1,
+  `status` int(11) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
   `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -501,7 +514,10 @@ CREATE TABLE `borrow_request` (
 --
 
 INSERT INTO `borrow_request` (`id`, `uuid`, `last`, `login_id`, `start`, `end`, `objective`, `status`, `updated`, `created`) VALUES
-(1, '08c7f165-e6b5-11ef-8e45-0242ac120003', 1, 1, '2025-02-03', '2025-02-28', 'aaaabbb\r\naaaabbb', 3, '2025-02-09 15:38:07', '2025-02-09 14:11:07');
+(1, '08c7f165-e6b5-11ef-8e45-0242ac120003', 1, 1, '2025-02-03', '2025-02-28', 'aaaabbb\r\naaaabbb', 3, '2025-02-09 15:38:07', '2025-02-09 14:11:07'),
+(2, '0ad0e25f-e76c-11ef-8583-2ad6c30b0fff', 2, 1, '2025-02-10', '2025-02-28', 'EVENT SO 3344343', 3, '2025-02-11 10:16:10', '2025-02-10 05:01:09'),
+(3, 'a8a77862-e860-11ef-8583-2ad6c30b0fff', 3, 2, '2025-02-13', '2025-03-31', 'ไปจัดงาน Event SO232323232', 3, '2025-02-11 10:17:48', '2025-02-11 10:12:11'),
+(4, '98636cde-e8fe-11ef-8583-2ad6c30b0fff', 4, 2, '2025-03-01', '2025-03-31', 'sdsaaassda', 3, '2025-02-12 05:06:54', '2025-02-12 05:02:44');
 
 -- --------------------------------------------------------
 
@@ -515,7 +531,7 @@ CREATE TABLE `customer` (
   `code` varchar(10) NOT NULL,
   `name` varchar(200) NOT NULL,
   `contact` varchar(100) NOT NULL,
-  `status` int(1) NOT NULL DEFAULT 1,
+  `status` int(11) NOT NULL DEFAULT 1,
   `login_id` int(11) DEFAULT NULL,
   `updated` datetime DEFAULT NULL,
   `created` datetime NOT NULL DEFAULT current_timestamp()
@@ -539,7 +555,7 @@ CREATE TABLE `estimate_file` (
   `id` int(11) NOT NULL,
   `request_id` int(11) NOT NULL,
   `name` varchar(100) NOT NULL,
-  `status` int(1) NOT NULL DEFAULT 1,
+  `status` int(11) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
   `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -562,7 +578,7 @@ CREATE TABLE `estimate_item` (
   `request_id` int(11) NOT NULL,
   `expense_id` int(11) NOT NULL,
   `estimate` decimal(20,2) NOT NULL,
-  `status` int(1) NOT NULL DEFAULT 1,
+  `status` int(11) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
   `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -588,7 +604,7 @@ CREATE TABLE `estimate_remark` (
   `request_id` int(11) NOT NULL,
   `login_id` int(11) NOT NULL,
   `text` varchar(200) NOT NULL,
-  `status` int(1) NOT NULL,
+  `status` int(11) NOT NULL,
   `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -620,8 +636,8 @@ CREATE TABLE `estimate_request` (
   `budget` decimal(20,2) NOT NULL,
   `type` int(11) NOT NULL,
   `remark` varchar(200) NOT NULL,
-  `action` int(1) NOT NULL DEFAULT 1,
-  `status` int(1) NOT NULL DEFAULT 1,
+  `action` int(11) NOT NULL DEFAULT 1,
+  `status` int(11) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
   `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -644,9 +660,9 @@ CREATE TABLE `expense` (
   `uuid` varchar(36) NOT NULL,
   `code` varchar(10) NOT NULL,
   `name` varchar(200) NOT NULL,
-  `type` int(1) NOT NULL,
+  `type` int(11) NOT NULL,
   `reference` int(11) DEFAULT NULL,
-  `status` int(1) NOT NULL DEFAULT 1,
+  `status` int(11) NOT NULL DEFAULT 1,
   `login_id` int(11) DEFAULT NULL,
   `updated` datetime DEFAULT NULL,
   `created` datetime NOT NULL DEFAULT current_timestamp()
@@ -684,7 +700,7 @@ CREATE TABLE `issue_file` (
   `id` int(11) NOT NULL,
   `request_id` int(11) NOT NULL,
   `name` varchar(100) NOT NULL,
-  `status` int(1) NOT NULL DEFAULT 1,
+  `status` int(11) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
   `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -708,10 +724,10 @@ CREATE TABLE `issue_item` (
   `request_id` int(11) NOT NULL,
   `product_id` int(11) NOT NULL,
   `warehouse_id` int(11) NOT NULL,
-  `type` int(1) NOT NULL,
+  `type` int(11) NOT NULL,
   `amount` decimal(20,2) NOT NULL,
   `confirm` decimal(20,2) NOT NULL,
-  `status` int(1) NOT NULL DEFAULT 1,
+  `status` int(11) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
   `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -728,7 +744,29 @@ INSERT INTO `issue_item` (`id`, `request_id`, `product_id`, `warehouse_id`, `typ
 (5, 2, 4, 1, 1, 120.00, 120.00, 1, '2025-02-09 21:22:42', '2025-02-09 20:49:06'),
 (6, 1, 4, 2, 1, 100.00, 100.00, 1, '2025-02-09 21:18:35', '2025-02-09 20:59:09'),
 (7, 3, 4, 2, 2, 100.00, 100.00, 1, '2025-02-09 21:47:23', '2025-02-09 21:46:59'),
-(8, 3, 4, 1, 2, 100.00, 100.00, 1, '2025-02-09 21:47:23', '2025-02-09 21:46:59');
+(8, 3, 4, 1, 2, 100.00, 100.00, 1, '2025-02-09 21:47:23', '2025-02-09 21:46:59'),
+(9, 4, 8, 1, 2, 400.00, 0.00, 1, NULL, '2025-02-10 04:48:20'),
+(10, 5, 17, 2, 1, 10.00, 0.00, 1, NULL, '2025-02-10 04:49:28'),
+(11, 6, 19, 2, 2, 200.00, 200.00, 1, '2025-02-10 04:52:17', '2025-02-10 04:52:00'),
+(12, 7, 8, 2, 2, 300.00, 0.00, 1, NULL, '2025-02-10 04:56:27'),
+(13, 7, 5, 2, 2, 300.00, 0.00, 1, NULL, '2025-02-10 04:56:27'),
+(14, 8, 35, 2, 2, 300.00, 0.00, 1, NULL, '2025-02-10 04:59:50'),
+(15, 8, 15, 2, 2, 200.00, 0.00, 1, NULL, '2025-02-10 04:59:50'),
+(16, 9, 39, 2, 1, 200.00, 200.00, 1, '2025-02-10 05:12:45', '2025-02-10 05:03:23'),
+(17, 10, 30, 2, 2, 200.00, 0.00, 1, NULL, '2025-02-10 05:05:05'),
+(18, 10, 4, 2, 2, 120.00, 0.00, 1, NULL, '2025-02-10 05:05:05'),
+(19, 11, 39, 2, 2, 50.00, 50.00, 1, '2025-02-10 05:14:35', '2025-02-10 05:13:53'),
+(20, 12, 8, 2, 1, 100.00, 100.00, 1, '2025-02-11 00:33:16', '2025-02-10 05:40:14'),
+(21, 12, 8, 1, 1, 100.00, 100.00, 1, '2025-02-11 00:33:16', '2025-02-10 05:40:14'),
+(22, 13, 5, 2, 1, 100.00, 100.00, 1, '2025-02-11 00:33:11', '2025-02-10 05:44:14'),
+(23, 13, 5, 1, 1, 100.00, 100.00, 1, '2025-02-11 00:33:11', '2025-02-10 05:44:14'),
+(24, 14, 4, 2, 2, 20.00, 20.00, 1, '2025-02-11 00:26:44', '2025-02-11 00:26:19'),
+(25, 14, 39, 2, 2, 50.00, 50.00, 1, '2025-02-11 00:26:44', '2025-02-11 00:26:19'),
+(26, 15, 3, 2, 1, 150.00, 0.00, 1, NULL, '2025-02-11 00:35:42'),
+(27, 16, 4, 2, 2, 50.00, 50.00, 1, '2025-02-11 10:24:28', '2025-02-11 10:23:50'),
+(28, 16, 3, 1, 2, 50.00, 50.00, 1, '2025-02-11 10:24:28', '2025-02-11 10:23:50'),
+(29, 17, 8, 2, 2, 50.00, 50.00, 1, '2025-02-11 10:26:45', '2025-02-11 10:25:59'),
+(30, 17, 5, 2, 2, 50.00, 50.00, 1, '2025-02-11 10:26:45', '2025-02-11 10:25:59');
 
 -- --------------------------------------------------------
 
@@ -741,7 +779,7 @@ CREATE TABLE `issue_remark` (
   `request_id` int(11) NOT NULL,
   `login_id` int(11) NOT NULL,
   `text` varchar(200) NOT NULL,
-  `status` int(1) NOT NULL,
+  `status` int(11) NOT NULL,
   `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -752,7 +790,15 @@ CREATE TABLE `issue_remark` (
 INSERT INTO `issue_remark` (`id`, `request_id`, `login_id`, `text`, `status`, `created`) VALUES
 (1, 1, 1, 'ผ่านการตรวจสอบ', 2, '2025-02-09 21:18:35'),
 (2, 2, 1, 'ผ่านการตรวจสอบ', 2, '2025-02-09 21:22:42'),
-(3, 3, 1, 'ผ่านการตรวจสอบ', 2, '2025-02-09 21:47:23');
+(3, 3, 1, 'ผ่านการตรวจสอบ', 2, '2025-02-09 21:47:23'),
+(4, 6, 1, 'ผ่านการตรวจสอบ', 2, '2025-02-10 04:52:17'),
+(5, 9, 1, 'ผ่านการตรวจสอบ', 2, '2025-02-10 05:12:45'),
+(6, 11, 1, 'ผ่านการตรวจสอบ', 2, '2025-02-10 05:14:35'),
+(7, 14, 1, 'ผ่านการตรวจสอบ', 2, '2025-02-11 00:26:44'),
+(8, 13, 4, 'ผ่านการตรวจสอบ', 2, '2025-02-11 00:33:11'),
+(9, 12, 4, 'ผ่านการตรวจสอบ', 2, '2025-02-11 00:33:16'),
+(10, 16, 2, 'ผ่านการตรวจสอบ', 2, '2025-02-11 10:24:28'),
+(11, 17, 5, 'ผ่านการตรวจสอบ', 2, '2025-02-11 10:26:45');
 
 -- --------------------------------------------------------
 
@@ -765,10 +811,11 @@ CREATE TABLE `issue_request` (
   `uuid` varchar(36) NOT NULL,
   `last` int(11) NOT NULL,
   `login_id` int(11) NOT NULL,
-  `type` int(1) NOT NULL,
+  `type` int(11) NOT NULL,
   `date` date NOT NULL,
+  `outcome` int(11) NOT NULL,
   `text` varchar(200) NOT NULL,
-  `status` int(1) NOT NULL DEFAULT 1,
+  `status` int(11) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
   `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -777,10 +824,24 @@ CREATE TABLE `issue_request` (
 -- Dumping data for table `issue_request`
 --
 
-INSERT INTO `issue_request` (`id`, `uuid`, `last`, `login_id`, `type`, `date`, `text`, `status`, `updated`, `created`) VALUES
-(1, '0d4e7225-e6e1-11ef-8e45-0242ac120003', 1, 1, 1, '2025-02-09', 'ยอดยกมา\r\nยอดยกมา', 2, '2025-02-09 21:18:35', '2025-02-09 19:26:12'),
-(2, 'a216c3de-e6ec-11ef-8e45-0242ac120003', 2, 1, 1, '2025-02-09', 'ยอดยกมา', 2, '2025-02-09 21:22:42', '2025-02-09 20:49:06'),
-(3, 'b871a565-e6f4-11ef-8e45-0242ac120003', 3, 1, 2, '2025-02-09', 'กิจกรรม\r\nกิจกรรม', 2, '2025-02-09 21:47:23', '2025-02-09 21:46:59');
+INSERT INTO `issue_request` (`id`, `uuid`, `last`, `login_id`, `type`, `date`, `outcome`, `text`, `status`, `updated`, `created`) VALUES
+(1, '0d4e7225-e6e1-11ef-8e45-0242ac120003', 1, 1, 1, '2025-02-09', 0, 'ยอดยกมา\r\nยอดยกมา', 2, '2025-02-09 21:18:35', '2025-02-09 19:26:12'),
+(2, 'a216c3de-e6ec-11ef-8e45-0242ac120003', 2, 1, 1, '2025-02-09', 0, 'ยอดยกมา', 2, '2025-02-09 21:22:42', '2025-02-09 20:49:06'),
+(3, 'b871a565-e6f4-11ef-8e45-0242ac120003', 3, 1, 2, '2025-02-09', 0, 'กิจกรรม\r\nกิจกรรม', 2, '2025-02-09 21:47:23', '2025-02-09 21:46:59'),
+(4, '403a2779-e76a-11ef-8583-2ad6c30b0fff', 4, 1, 2, '2025-02-10', 0, 'งาน Event วันหยุด', 1, NULL, '2025-02-10 04:48:20'),
+(5, '6935145b-e76a-11ef-8583-2ad6c30b0fff', 5, 1, 1, '2025-02-10', 0, 'test', 1, NULL, '2025-02-10 04:49:28'),
+(6, 'c3460b2c-e76a-11ef-8583-2ad6c30b0fff', 6, 1, 2, '2025-02-10', 0, 'Event งานวันเกิด', 2, '2025-02-10 04:52:17', '2025-02-10 04:52:00'),
+(7, '62ca9076-e76b-11ef-8583-2ad6c30b0fff', 7, 1, 2, '2025-02-10', 0, 'Event งานทำบุญ บริษัท', 1, NULL, '2025-02-10 04:56:27'),
+(8, 'dba9b79d-e76b-11ef-8583-2ad6c30b0fff', 8, 1, 2, '2025-02-10', 0, 'งานทำบุญบริษัท ช้าช้างช้าง จำกัด', 1, NULL, '2025-02-10 04:59:50'),
+(9, '5a5d4ed1-e76c-11ef-8583-2ad6c30b0fff', 9, 1, 1, '2025-02-10', 0, 'แอคโนไฟท์', 2, '2025-02-10 05:12:45', '2025-02-10 05:03:23'),
+(10, '974328c3-e76c-11ef-8583-2ad6c30b0fff', 10, 1, 2, '2025-02-10', 0, 'Event SO 3332222', 1, NULL, '2025-02-10 05:05:05'),
+(11, 'd21d9048-e76d-11ef-8583-2ad6c30b0fff', 11, 1, 2, '2025-02-10', 0, 'Event SO332323', 2, '2025-02-10 05:14:35', '2025-02-10 05:13:53'),
+(12, '803b0831-e771-11ef-8583-2ad6c30b0fff', 12, 1, 1, '2025-02-10', 0, 'TEST\r\nTEST', 2, '2025-02-11 00:33:16', '2025-02-10 05:40:14'),
+(13, '0f511843-e772-11ef-8583-2ad6c30b0fff', 13, 1, 1, '2025-02-10', 0, 'DDDD', 2, '2025-02-11 00:33:11', '2025-02-10 05:44:14'),
+(14, 'd09befcb-e80e-11ef-8583-2ad6c30b0fff', 14, 1, 2, '2025-02-11', 0, 'งาน Event SO 447747700', 2, '2025-02-11 00:26:44', '2025-02-11 00:26:19'),
+(15, '1fcbf5f7-e810-11ef-8583-2ad6c30b0fff', 15, 2, 1, '2025-02-11', 0, 'งานทดสอบ', 1, NULL, '2025-02-11 00:35:42'),
+(16, '48f4add3-e862-11ef-8583-2ad6c30b0fff', 16, 2, 2, '2025-02-11', 0, 'Event ทำบุญบริษัท zzzzz', 2, '2025-02-11 10:24:28', '2025-02-11 10:23:50'),
+(17, '9667d864-e862-11ef-8583-2ad6c30b0fff', 17, 2, 2, '2025-02-11', 0, 'Event วันเกิด SO --545454545', 2, '2025-02-11 10:26:45', '2025-02-11 10:25:59');
 
 -- --------------------------------------------------------
 
@@ -793,8 +854,8 @@ CREATE TABLE `login` (
   `uuid` varchar(36) DEFAULT NULL,
   `email` varchar(100) NOT NULL,
   `password` varchar(200) NOT NULL,
-  `level` int(1) NOT NULL DEFAULT 1,
-  `status` int(1) NOT NULL DEFAULT 1,
+  `level` int(11) NOT NULL DEFAULT 1,
+  `status` int(11) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
   `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -805,7 +866,21 @@ CREATE TABLE `login` (
 
 INSERT INTO `login` (`id`, `uuid`, `email`, `password`, `level`, `status`, `updated`, `created`) VALUES
 (1, '8578263a-d0ae-11ef-91c3-0242ac120002', 'admin@test.com', '$2y$10$W08w.crPDLXzroZDNFirJObaHK91H.0D7ZszaRR6iQQi9W32.tnci', 9, 1, '2025-01-12 13:39:05', '2023-11-23 09:42:54'),
-(2, '857827b5-d0ae-11ef-91c3-0242ac120002', 'user@test.com', '$2y$10$jwAmc2BoS2EwrzfL2LkYOel9FZHc9LSbRn4sge.SvmPiOyjoSgLVq', 1, 1, '2025-01-03 09:10:45', '2025-01-03 08:42:52');
+(2, '857827b5-d0ae-11ef-91c3-0242ac120002', 'user@test.com', '$2y$10$jwAmc2BoS2EwrzfL2LkYOel9FZHc9LSbRn4sge.SvmPiOyjoSgLVq', 1, 1, '2025-02-11 00:38:49', '2025-01-03 08:42:52'),
+(3, '088ace55-e80f-11ef-8583-2ad6c30b0fff', 'n0866881414@gmail.com', '$2y$10$wH1zRiGz7/.zwlccIxlKoOW2Ph2g061zMc5PBs9a.5zaYhOCH9XpO', 1, 1, '2025-02-11 00:39:00', '2025-02-11 00:27:53'),
+(4, '333f7a89-e80f-11ef-8583-2ad6c30b0fff', 'acount@test.com', '$2y$10$PWvUBBWbA.X8Z6sK1.g9jOAesSlGUgIVUMGaJQwY3yYiBnGsUKRre', 1, 1, '2025-02-11 00:39:21', '2025-02-11 00:29:05'),
+(5, '7313af95-e810-11ef-8583-2ad6c30b0fff', 'store@test.com', '$2y$10$AFRyl5Hh9/sGPXMbyuA/Bum78re.OqMxnWPS2J8Rn.ca4R9ppm4da', 9, 1, '2025-02-11 00:39:42', '2025-02-11 00:38:01'),
+(6, '7bc14cfa-e868-11ef-8583-2ad6c30b0fff', 'eventmanager@belinkmedia.com', '$2y$10$RlzJAiuhr0uZmr3XEC/unuuP5bKENxpuqeOfZ408S3qey60si.e72', 1, 1, NULL, '2025-02-11 11:08:12'),
+(7, '967c4eaf-e868-11ef-8583-2ad6c30b0fff', 'Event11@belinkmedia.com', '$2y$10$pkvurqhgZowu8eCRfcURE.XDkj4nkWXezT8cqxCQ66WwYbDyzo5t.', 1, 1, NULL, '2025-02-11 11:08:57'),
+(8, 'a6193884-e868-11ef-8583-2ad6c30b0fff', 'Event2@belinkmedia.com', '$2y$10$1aGNo1ks0dU5m2l03oPzouqrVcAbfUx4XNbUkYxb/aY2D37QAgXEi', 1, 1, NULL, '2025-02-11 11:09:23'),
+(9, 'b3949d98-e868-11ef-8583-2ad6c30b0fff', 'event9@belinkmedia.com', '$2y$10$1aGlCnD4SlcGCwzU2TmGHuYbKmLWPlaQCEcvtRjFNrl.nWXOd1JFW', 1, 1, NULL, '2025-02-11 11:09:45'),
+(10, 'c1ce63be-e868-11ef-8583-2ad6c30b0fff', 'Event14@belinkmedia.com', '$2y$10$Llt0pQir12QrHQpltgF2ku8MXTUesrf22NHHMBTLKxLZ2JU7iRe6K', 1, 1, NULL, '2025-02-11 11:10:09'),
+(11, 'ce2f3f16-e868-11ef-8583-2ad6c30b0fff', 'event@belinkmedia.com', '$2y$10$1LqOGFQM9pq30NKOLEGrkeM./Fs3bXwIIkMakjY74n2HurC60ioCy', 1, 1, NULL, '2025-02-11 11:10:30'),
+(12, 'db468f94-e868-11ef-8583-2ad6c30b0fff', 'Event1@belinkmedia.com', '$2y$10$NC8VzY9CASqGXiARh0Mi8Ounm94eo4hZQlhwzoqqCSg5Mh3rbgvai', 1, 1, NULL, '2025-02-11 11:10:52'),
+(13, 'e83837b7-e868-11ef-8583-2ad6c30b0fff', 'Event8@belinkmedia.com', '$2y$10$79bMKkJjjIH8R6Gg7VzlT.q1jhCyJz0lnFOnwUPK6sHc7F1TUR6jK', 1, 1, NULL, '2025-02-11 11:11:14'),
+(14, 'fd5dd5d9-e868-11ef-8583-2ad6c30b0fff', 'Warehouse@belinkmedia.com', '$2y$10$gu8aJrkKzbYCaSfkg7DiU.slJeeUr2/JUUXVvgyVGOzrUvJlA8vHG', 1, 1, '2025-02-11 11:13:04', '2025-02-11 11:11:49'),
+(15, 'd06a19f1-e869-11ef-8583-2ad6c30b0fff', 'warehouse1@belinkmedia.com', '$2y$10$3NX/iG6sF.FzCSo1112X0O0klBPtfhsqe4bqKWt7aAe9gVkZ3Tbsi', 1, 1, NULL, '2025-02-11 11:17:43'),
+(16, 'ef7d1fc6-e869-11ef-8583-2ad6c30b0fff', 'warehouse2@belinkmedia.com', '$2y$10$3e22V5VHB0yjDFO8pF8Rgusw3R/OSsuv3dzR1ZE2jCCGvztpeyIKK', 1, 1, NULL, '2025-02-11 11:18:35');
 
 -- --------------------------------------------------------
 
@@ -817,7 +892,7 @@ CREATE TABLE `payment_file` (
   `id` int(11) NOT NULL,
   `request_id` int(11) NOT NULL,
   `name` varchar(100) NOT NULL,
-  `status` int(1) NOT NULL DEFAULT 1,
+  `status` int(11) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
   `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -845,7 +920,7 @@ CREATE TABLE `payment_item` (
   `amount` decimal(20,2) NOT NULL,
   `vat` decimal(20,2) NOT NULL,
   `wt` decimal(20,2) NOT NULL,
-  `status` int(1) NOT NULL DEFAULT 1,
+  `status` int(11) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
   `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -875,7 +950,7 @@ CREATE TABLE `payment_remark` (
   `request_id` int(11) NOT NULL,
   `login_id` int(11) NOT NULL,
   `text` varchar(200) NOT NULL,
-  `status` int(1) NOT NULL,
+  `status` int(11) NOT NULL,
   `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -902,13 +977,13 @@ CREATE TABLE `payment_request` (
   `login_id` int(11) NOT NULL,
   `order_number` varchar(20) NOT NULL,
   `receiver` varchar(100) NOT NULL,
-  `type` int(1) NOT NULL,
+  `type` int(11) NOT NULL,
   `cheque_bank` varchar(100) DEFAULT NULL,
   `cheque_branch` varchar(100) DEFAULT NULL,
   `cheque_number` varchar(100) DEFAULT NULL,
   `cheque_date` date DEFAULT NULL,
-  `action` int(1) NOT NULL DEFAULT 1,
-  `status` int(1) NOT NULL DEFAULT 1,
+  `action` int(11) NOT NULL DEFAULT 1,
+  `status` int(11) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
   `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -938,7 +1013,7 @@ CREATE TABLE `product` (
   `brand_id` int(11) NOT NULL,
   `unit_id` int(11) NOT NULL,
   `text` text NOT NULL,
-  `status` int(1) NOT NULL DEFAULT 1,
+  `status` int(11) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
   `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -987,7 +1062,9 @@ INSERT INTO `product` (`id`, `uuid`, `name`, `code`, `type_id`, `warehouse_id`, 
 (37, 'e6a6ca40-e69d-11ef-8e45-0242ac120003', 'แพ็ค 3 แอคโนไฟท์ โฟม 50มล.', '', 0, 0, 0, 7, 0, '', 1, NULL, '2025-02-09 11:25:32'),
 (38, 'e6a6f893-e69d-11ef-8e45-0242ac120003', 'บอม 6 เมน แอคโนไฟท์ โฟมสครับ 15มล', '', 0, 0, 0, 7, 0, '', 1, NULL, '2025-02-09 11:25:32'),
 (39, 'e6a73d9e-e69d-11ef-8e45-0242ac120003', 'แอคโนไฟท์ ซูเปอร์ เซรั่ม 7มล.', '', 0, 0, 0, 7, 0, '', 1, NULL, '2025-02-09 11:25:32'),
-(40, 'e6a781a3-e69d-11ef-8e45-0242ac120003', 'แอคโนไฟท์ โฟมสครับ 100มล.', '', 0, 0, 0, 7, 0, '', 1, NULL, '2025-02-09 11:25:32');
+(40, 'e6a781a3-e69d-11ef-8e45-0242ac120003', 'แอคโนไฟท์ โฟมสครับ 100มล.', '', 0, 0, 0, 7, 0, '', 1, NULL, '2025-02-09 11:25:32'),
+(41, '273a242b-e77f-11ef-8583-2ad6c30b0fff', 'Mansome คอลาเจน', '8888888888', 1, 1, 1, 2, 1, '', 2, '2025-02-10 07:24:53', '2025-02-10 07:17:57'),
+(42, '53c66a45-e91b-11ef-8583-2ad6c30b0fff', 'aa', 'aa', 2, 1, 1, 5, 1, '', 2, '2025-02-12 08:28:52', '2025-02-12 08:28:25');
 
 -- --------------------------------------------------------
 
@@ -998,7 +1075,7 @@ INSERT INTO `product` (`id`, `uuid`, `name`, `code`, `type_id`, `warehouse_id`, 
 CREATE TABLE `product_brand` (
   `id` int(11) NOT NULL,
   `name` varchar(100) NOT NULL,
-  `status` int(1) NOT NULL DEFAULT 1,
+  `status` int(11) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
   `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -1027,10 +1104,17 @@ CREATE TABLE `product_file` (
   `id` int(11) NOT NULL,
   `product_id` int(11) NOT NULL,
   `name` varchar(100) NOT NULL,
-  `status` int(1) NOT NULL DEFAULT 1,
+  `status` int(11) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
   `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `product_file`
+--
+
+INSERT INTO `product_file` (`id`, `product_id`, `name`, `status`, `updated`, `created`) VALUES
+(1, 41, '82e96bf322dbcf7be63b2cc47c5c9a08.webp', 1, NULL, '2025-02-10 07:17:57');
 
 -- --------------------------------------------------------
 
@@ -1041,7 +1125,7 @@ CREATE TABLE `product_file` (
 CREATE TABLE `product_location` (
   `id` int(11) NOT NULL,
   `name` varchar(100) NOT NULL,
-  `status` int(1) NOT NULL DEFAULT 1,
+  `status` int(11) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
   `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -1071,7 +1155,7 @@ INSERT INTO `product_location` (`id`, `name`, `status`, `updated`, `created`) VA
 CREATE TABLE `product_type` (
   `id` int(11) NOT NULL,
   `name` varchar(100) NOT NULL,
-  `status` int(1) NOT NULL DEFAULT 1,
+  `status` int(11) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
   `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -1094,7 +1178,7 @@ INSERT INTO `product_type` (`id`, `name`, `status`, `updated`, `created`) VALUES
 CREATE TABLE `product_unit` (
   `id` int(11) NOT NULL,
   `name` varchar(100) NOT NULL,
-  `status` int(1) NOT NULL DEFAULT 1,
+  `status` int(11) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
   `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -1115,7 +1199,7 @@ INSERT INTO `product_unit` (`id`, `name`, `status`, `updated`, `created`) VALUES
 CREATE TABLE `product_warehouse` (
   `id` int(11) NOT NULL,
   `name` varchar(100) NOT NULL,
-  `status` int(1) NOT NULL DEFAULT 1,
+  `status` int(11) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
   `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -1138,7 +1222,7 @@ CREATE TABLE `purchase_file` (
   `id` int(11) NOT NULL,
   `request_id` int(11) NOT NULL,
   `name` varchar(100) NOT NULL,
-  `status` int(1) NOT NULL DEFAULT 1,
+  `status` int(11) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
   `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -1163,7 +1247,7 @@ CREATE TABLE `purchase_item` (
   `amount` int(11) NOT NULL,
   `unit` varchar(50) NOT NULL,
   `estimate` decimal(20,2) NOT NULL,
-  `status` int(1) NOT NULL DEFAULT 1,
+  `status` int(11) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
   `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -1187,7 +1271,7 @@ CREATE TABLE `purchase_remark` (
   `request_id` int(11) NOT NULL,
   `login_id` int(11) NOT NULL,
   `text` varchar(200) NOT NULL,
-  `status` int(1) NOT NULL,
+  `status` int(11) NOT NULL,
   `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -1213,8 +1297,8 @@ CREATE TABLE `purchase_request` (
   `date` date NOT NULL,
   `order_number` varchar(20) NOT NULL,
   `objective` text NOT NULL,
-  `action` int(1) NOT NULL DEFAULT 1,
-  `status` int(1) NOT NULL DEFAULT 1,
+  `action` int(11) NOT NULL DEFAULT 1,
+  `status` int(11) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
   `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -1225,6 +1309,57 @@ CREATE TABLE `purchase_request` (
 
 INSERT INTO `purchase_request` (`id`, `uuid`, `last`, `login_id`, `department`, `date`, `order_number`, `objective`, `action`, `status`, `updated`, `created`) VALUES
 (1, '1a7ecf4a-e16c-11ef-8d4c-0242ac120003', 1, 1, 'YYYY', '2025-02-10', '', 'YYYYY\r\nYYYYY', 1, 2, '2025-02-02 20:46:58', '2025-02-02 20:46:22');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `service`
+--
+
+CREATE TABLE `service` (
+  `id` int(11) NOT NULL,
+  `uuid` varchar(36) NOT NULL,
+  `sequence` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `url` varchar(200) NOT NULL,
+  `status` int(1) NOT NULL DEFAULT 1,
+  `updated` datetime DEFAULT NULL,
+  `created` decimal(10,0) NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+--
+-- Dumping data for table `service`
+--
+
+INSERT INTO `service` (`id`, `uuid`, `sequence`, `name`, `url`, `status`, `updated`, `created`) VALUES
+(1, 'cf1bf169-e929-11ef-9523-0242ac120005', 1, 'Estimate Budget', '/estimate', 1, '2025-02-12 17:42:03', 9999999999),
+(2, 'cf1c7170-e929-11ef-9523-0242ac120005', 2, 'Purchase Request', '/purchase', 1, '2025-02-12 17:42:03', 9999999999),
+(3, 'cf1cfac9-e929-11ef-9523-0242ac120005', 3, 'Payment Order', '/payment', 1, '2025-02-12 17:42:03', 9999999999),
+(4, 'cf1d4709-e929-11ef-9523-0242ac120005', 4, 'Advance Clearing', '/advance', 1, '2025-02-12 17:42:03', 9999999999),
+(5, 'cf1d9368-e929-11ef-9523-0242ac120005', 5, 'ระบบยืมทรัพย์สิน', '/borrow', 1, '2025-02-12 17:42:03', 9999999999),
+(6, 'cf1ddb6a-e929-11ef-9523-0242ac120005', 6, 'ระบบนำเข้า-เบิกออก', '/issue', 1, '2025-02-12 17:42:03', 9999999999);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `service_authorize`
+--
+
+CREATE TABLE `service_authorize` (
+  `id` int(11) NOT NULL,
+  `login_id` int(11) NOT NULL,
+  `service` varchar(50) NOT NULL,
+  `updated` datetime DEFAULT NULL,
+  `created` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+--
+-- Dumping data for table `service_authorize`
+--
+
+INSERT INTO `service_authorize` (`id`, `login_id`, `service`, `updated`, `created`) VALUES
+(1, 1, '1,1,1,1,1,1', '2025-02-12 18:43:58', '2025-02-12 18:37:02'),
+(2, 2, '0,0,0,0,1,1', NULL, '2025-02-12 18:53:10');
 
 -- --------------------------------------------------------
 
@@ -1269,7 +1404,21 @@ CREATE TABLE `user` (
 
 INSERT INTO `user` (`id`, `login`, `firstname`, `lastname`, `manager_id`, `contact`) VALUES
 (1, 1, 'Admin', 'System', NULL, ''),
-(2, 2, 'User', 'System', 1, '');
+(2, 2, 'User', 'System', 5, ''),
+(3, 3, 'ธีรพัฒน์', 'ทองสุโชติ', 5, 'Admin'),
+(4, 4, 'บัญชี', 'บัญชี', 5, '044444'),
+(5, 5, 'คลังสินค้า', 'คลังสินค้า', 1, 'คลังสินค้า'),
+(6, 6, 'จุฑามาศ', 'พันธุ์สกุล', 2, ''),
+(7, 7, 'สุภนิดา', 'จันทร์หอม', 2, ''),
+(8, 8, 'กมลวรรณ', 'สุขสำราญ', 2, ''),
+(9, 9, 'ไธพัตย์', 'เมฆจรัสวิทย์', 2, ''),
+(10, 10, 'เอมิกา', 'อรุณสิคะพันธ์', 2, ''),
+(11, 11, 'พิชญาภา', 'บุญมา', 2, ''),
+(12, 12, 'จารุวรรณ', 'บุญยาน', 2, ''),
+(13, 13, 'บุญญากร', 'เบ็ญสตาล', 2, ''),
+(14, 14, 'จักรวาล', 'จันทร์นุช', 5, ''),
+(15, 15, 'อาทิตย์', 'นาพรม', 5, ''),
+(16, 16, 'ผดุง', 'บุญส่ง', 5, '');
 
 --
 -- Indexes for dumped tables
@@ -1523,6 +1672,18 @@ ALTER TABLE `purchase_request`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `service`
+--
+ALTER TABLE `service`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `service_authorize`
+--
+ALTER TABLE `service_authorize`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `system`
 --
 ALTER TABLE `system`
@@ -1566,7 +1727,7 @@ ALTER TABLE `advance_request`
 -- AUTO_INCREMENT for table `asset`
 --
 ALTER TABLE `asset`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=125;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=126;
 
 --
 -- AUTO_INCREMENT for table `asset_brand`
@@ -1608,25 +1769,25 @@ ALTER TABLE `asset_warehouse`
 -- AUTO_INCREMENT for table `borrow_file`
 --
 ALTER TABLE `borrow_file`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `borrow_item`
 --
 ALTER TABLE `borrow_item`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `borrow_remark`
 --
 ALTER TABLE `borrow_remark`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `borrow_request`
 --
 ALTER TABLE `borrow_request`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `customer`
@@ -1674,25 +1835,25 @@ ALTER TABLE `issue_file`
 -- AUTO_INCREMENT for table `issue_item`
 --
 ALTER TABLE `issue_item`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
 --
 -- AUTO_INCREMENT for table `issue_remark`
 --
 ALTER TABLE `issue_remark`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `issue_request`
 --
 ALTER TABLE `issue_request`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `login`
 --
 ALTER TABLE `login`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `payment_file`
@@ -1722,7 +1883,7 @@ ALTER TABLE `payment_request`
 -- AUTO_INCREMENT for table `product`
 --
 ALTER TABLE `product`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
 
 --
 -- AUTO_INCREMENT for table `product_brand`
@@ -1734,7 +1895,7 @@ ALTER TABLE `product_brand`
 -- AUTO_INCREMENT for table `product_file`
 --
 ALTER TABLE `product_file`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `product_location`
@@ -1785,6 +1946,18 @@ ALTER TABLE `purchase_request`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
+-- AUTO_INCREMENT for table `service`
+--
+ALTER TABLE `service`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- AUTO_INCREMENT for table `service_authorize`
+--
+ALTER TABLE `service_authorize`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT for table `system`
 --
 ALTER TABLE `system`
@@ -1794,7 +1967,7 @@ ALTER TABLE `system`
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

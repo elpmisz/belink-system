@@ -67,18 +67,50 @@ class User
 
   public function user_view($data)
   {
-    $sql = "select a.id login_id,a.uuid,a.email,a.`level`,a.status,b.firstname,b.lastname,
-    CONCAT(b.firstname,' ',b.lastname) fullname,b.contact,b.contact,
-    b.manager_id,CONCAT(c.firstname,' ',c.lastname) manager_name 
-    from belink.login a
-    left join belink.user b
+    $sql = "SELECT a.id login_id,
+    a.uuid,
+    a.email,
+    a.`level`,
+    a.status,
+    b.firstname,
+    b.lastname,
+    CONCAT(b.firstname,' ',b.lastname) fullname,
+    b.contact,
+    b.manager_id,
+    CONCAT(c.firstname,' ',c.lastname) manager_name ,
+    d.service
+    FROM belink.login a
+    LEFT JOIN belink.user b
     on a.id = b.login
-    left join belink.user c 
+    LEFT JOIN belink.user c 
     on b.manager_id = c.login 
-    where (a.uuid = ? OR a.email = ?)";
+    LEFT JOIN belink.service_authorize d
+    ON a.id = d.login_id
+    WHERE (a.uuid = ? OR a.email = ?)";
     $stmt = $this->dbcon->prepare($sql);
     $stmt->execute($data);
     return $stmt->fetch(PDO::FETCH_ASSOC);
+  }
+
+  public function user_read()
+  {
+    $sql = "SELECT 
+    a.id login_id,
+    a.`uuid`,
+    b.firstname,b.lastname,
+    CONCAT(b.firstname,' ',b.lastname) fullname,
+    a.email,
+    b.contact,
+    c.service
+    FROM belink.login a
+    LEFT JOIN belink.`user` b
+    ON a.id = b.login
+    LEFT JOIN belink.service_authorize c
+    ON a.id = c.login_id
+    WHERE a.status = 1";
+    $stmt = $this->dbcon->prepare($sql);
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
   }
 
   public function forgot_password($data)
@@ -136,7 +168,7 @@ class User
     $sql = "select a.id `id`,
     concat(b.firstname,' ',b.lastname) `text`
     from belink.login a 
-    left join belink.`user` b
+    LEFT JOIN belink.`user` b
     on a.id = b.login 
     where a.status = 1";
     if (!empty($keyword)) {

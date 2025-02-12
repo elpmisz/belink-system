@@ -17,6 +17,8 @@ $UserChange = ($page === "UserChange" ? 'class="active"' : "");
 $SettingMenu = (isset($menu) && ($menu === "Setting") ? "show" : "");
 $SettingSystem = ($page === "SettingSystem" ? 'class="active"' : "");
 $SettingUser = ($page === "SettingUser" ? 'class="active"' : "");
+$SettingService = ($page === "SettingService" ? 'class="active"' : "");
+$SettingAuthorize = ($page === "SettingAuthorize" ? 'class="active"' : "");
 $SettingExpense = ($page === "SettingExpense" ? 'class="active"' : "");
 $SettingCustomer = ($page === "SettingCustomer" ? 'class="active"' : "");
 $SettingAsset = ($page === "SettingAsset" ? 'class="active"' : "");
@@ -49,52 +51,21 @@ $SettingProduct = ($page === "SettingProduct" ? 'class="active"' : "");
         บริการ
       </a>
       <ul class="collapse list-unstyled <?php echo $ServiceMenu ?>" id="service-menu">
-        <li <?php echo $ServiceEstimate ?>>
-          <a href="/estimate">
-            <i class="fa fa-bars pr-2"></i>
-            Estimate Budget
-          </a>
-        </li>
-      </ul>
-      <ul class="collapse list-unstyled <?php echo $ServiceMenu ?>" id="service-menu">
-        <li <?php echo $ServicePurchase ?>>
-          <a href="/purchase">
-            <i class="fa fa-bars pr-2"></i>
-            Purchase Requisition
-          </a>
-        </li>
-      </ul>
-      <ul class="collapse list-unstyled <?php echo $ServiceMenu ?>" id="service-menu">
-        <li <?php echo $ServicePayment ?>>
-          <a href="/payment">
-            <i class="fa fa-bars pr-2"></i>
-            Payment Order
-          </a>
-        </li>
-      </ul>
-      <ul class="collapse list-unstyled <?php echo $ServiceMenu ?>" id="service-menu">
-        <li <?php echo $ServiceAdvance ?>>
-          <a href="/advance">
-            <i class="fa fa-bars pr-2"></i>
-            Advance Clearing
-          </a>
-        </li>
-      </ul>
-      <ul class="collapse list-unstyled <?php echo $ServiceMenu ?>" id="service-menu">
-        <li <?php echo $ServiceBorrow ?>>
-          <a href="/borrow">
-            <i class="fa fa-bars pr-2"></i>
-            ระบบยืมทรัพย์สิน
-          </a>
-        </li>
-      </ul>
-      <ul class="collapse list-unstyled <?php echo $ServiceMenu ?>" id="service-menu">
-        <li <?php echo $ServiceIssue ?>>
-          <a href="/issue">
-            <i class="fa fa-bars pr-2"></i>
-            ระบบนำเข้า-เบิกออก
-          </a>
-        </li>
+        <?php
+        foreach ($services as $key => $service) :
+          $authorize_check = (isset($user_authorize[$key]) ? intval($user_authorize[$key]) : "");
+          if ($authorize_check === 1) :
+        ?>
+            <li <?php echo ($page === "Service" . ucfirst(str_replace("/", "", $service['url'])) ? 'class="active"' : "") ?>>
+              <a href="<?php echo $service['url']  ?>">
+                <i class="fa fa-bars pr-2"></i>
+                <?php echo $service['name'] ?>
+              </a>
+            </li>
+        <?php
+          endif;
+        endforeach;
+        ?>
       </ul>
     </li>
     <?php if (intval($user['level']) === 9) : ?>
@@ -111,6 +82,18 @@ $SettingProduct = ($page === "SettingProduct" ? 'class="active"' : "");
             <a href="/user">
               <i class="fa fa-gear pr-2"></i>
               ข้อมูลผู้ใช้งาน
+            </a>
+          </li>
+          <li <?php echo $SettingService ?>>
+            <a href="/service">
+              <i class="fa fa-gear pr-2"></i>
+              ข้อมูลบริการ
+            </a>
+          </li>
+          <li <?php echo $SettingAuthorize ?>>
+            <a href="/authorize">
+              <i class="fa fa-gear pr-2"></i>
+              ข้อมูลสิทธิ์
             </a>
           </li>
           <li <?php echo $SettingExpense ?>>

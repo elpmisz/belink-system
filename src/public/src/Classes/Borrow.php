@@ -293,6 +293,8 @@ class Borrow
       $sql .= " AND (a.objective LIKE '%{$keyword}%') ";
     }
 
+    $sql .= "GROUP BY a.id ";
+
     if ($filter_order) {
       $sql .= " ORDER BY {$column[$order_column]} {$order_dir} ";
     } else {
@@ -397,6 +399,8 @@ class Borrow
       $sql .= " AND (a.objective LIKE '%{$keyword}%') ";
     }
 
+    $sql .= "GROUP BY a.id ";
+
     if ($filter_order) {
       $sql .= " ORDER BY {$column[$order_column]} {$order_dir} ";
     } else {
@@ -494,6 +498,8 @@ class Borrow
     if (!empty($keyword)) {
       $sql .= " AND (a.objective LIKE '%{$keyword}%') ";
     }
+
+    $sql .= "GROUP BY a.id ";
 
     if ($filter_order) {
       $sql .= " ORDER BY {$column[$order_column]} {$order_dir} ";

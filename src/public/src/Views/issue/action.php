@@ -259,3 +259,13 @@ if ($action === "warehouse-select") {
     die($e->getMessage());
   }
 }
+
+if ($action === "outcome-select") {
+  try {
+    $keyword = (isset($_POST['q']) ? $VALIDATION->input($_POST['q']) : "");
+    $result = $ISSUE->outcome_select($keyword);
+    echo json_encode($result);
+  } catch (PDOException $e) {
+    die($e->getMessage());
+  }
+}

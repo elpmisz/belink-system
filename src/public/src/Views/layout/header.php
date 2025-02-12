@@ -5,6 +5,7 @@ error_reporting(E_ALL);
 date_default_timezone_set("Asia/Bangkok");
 include_once(__DIR__ . "/../../../vendor/autoload.php");
 
+use App\Classes\Service;
 use App\Classes\System;
 use App\Classes\User;
 use Firebase\JWT\JWT;
@@ -30,9 +31,12 @@ try {
 
 $USER = new User();
 $SYSTEM = new System();
+$SERVICE = new Service();
 $system = $SYSTEM->read();
 $user = $USER->user_view([$email, $email]);
 $SystemName = (isset($system['name']) ? $system['name'] : "");
+$services = $SERVICE->service_read();
+$user_authorize = (isset($user['service']) ? explode(",", $user['service']) : "");
 ?>
 <!DOCTYPE html>
 <html lang="en">
