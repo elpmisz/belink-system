@@ -69,7 +69,9 @@ include_once(__DIR__ . "/../layout/header.php");
                     </div>
                   </td>
                   <td>
-                    <select class="form-control form-control-sm warehouse-select" name="warehouse_id[]" required></select>
+                    <select class="form-control form-control-sm warehouse-select" name="warehouse_id[]" required>
+                      <option value="1" selected>สาทร</option>
+                    </select>
                     <div class="invalid-feedback">
                       กรุณากรอกข้อมูล!
                     </div>

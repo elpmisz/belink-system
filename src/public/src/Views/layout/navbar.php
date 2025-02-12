@@ -44,12 +44,19 @@
             <i class="fas fa-caret-down pl-2"></i>
           </a>
           <div class="dropdown-menu">
-            <?php foreach ($services as $key => $service) : ?>
-              <a class="dropdown-item" href="<?php echo $service['url']  ?>">
-                <i class="fa fa-bars pr-2"></i>
-                <span class="font-weight-bold"><?php echo $service['name'] ?></span>
-              </a>
-            <?php endforeach; ?>
+            <?php
+            foreach ($services as $key => $service) :
+              $authorize_check = (isset($user_authorize[$key]) ? intval($user_authorize[$key]) : "");
+              if ($authorize_check === 1) :
+            ?>
+                <a class="dropdown-item" href="<?php echo $service['url']  ?>">
+                  <i class="fa fa-bars pr-2"></i>
+                  <span class="font-weight-bold"><?php echo $service['name'] ?></span>
+                </a>
+            <?php
+              endif;
+            endforeach;
+            ?>
           </div>
         </li>
         <li class=" nav-item dropdown">

@@ -102,9 +102,9 @@ $files = $ISSUE->file_view([$uuid]);
                     </td>
                     <td class="text-left"><?php echo $item['product_name'] ?></td>
                     <td class="text-left"><?php echo $item['warehouse_name'] ?></td>
-                    <td class="text-right"><?php echo $item['confirm'] ?></td>
+                    <td class="text-right"><?php echo $item['remain'] ?></td>
                     <td>
-                      <input type="number" class="form-control form-control-sm text-right" value="<?php echo $item['amount'] ?>" min="1" step="0.01" name="item__amount[]" required>
+                      <input type="number" class="form-control form-control-sm text-right" value="<?php echo $item['amount'] ?>" min="1" max="<?php echo $item['remain'] ?>" step="0.01" name="item__amount[]" required>
                       <div class="invalid-feedback">
                         กรุณากรอกข้อมูล!
                       </div>
@@ -304,5 +304,91 @@ $files = $ISSUE->file_view([$uuid]);
 
   $(".date-select").on("keydown paste", function(e) {
     e.preventDefault();
+  });
+
+  $(document).on("click", ".item-delete", function(e) {
+    let id = $(this).prop("id");
+    e.preventDefault();
+    Swal.fire({
+      title: "ยืนยันที่จะลบ?",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "ยืนยัน",
+      cancelButtonText: "ปิด",
+    }).then((result) => {
+      if (result.value) {
+        axios.post("/issue/item-delete", {
+          id
+        }).then((res) => {
+          let result = res.data;
+          if (result === 200) {
+            Swal.fire({
+              title: "ดำเนินการเรียบร้อย!",
+              text: "",
+              icon: "success"
+            }).then((result) => {
+              location.reload()
+            });
+          } else {
+            Swal.fire({
+              title: "ระบบมีปัญหา\nกรุณาลองใหม่อีกครั้ง!",
+              text: "",
+              icon: "error"
+            }).then((result) => {
+              location.reload()
+            });
+          }
+        }).catch((error) => {
+          console.log(error);
+        });
+      } else {
+        return false;
+      }
+    })
+  });
+
+  $(document).on("click", ".file-delete", function(e) {
+    let id = $(this).prop("id");
+    e.preventDefault();
+    Swal.fire({
+      title: "ยืนยันที่จะลบ?",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "ยืนยัน",
+      cancelButtonText: "ปิด",
+    }).then((result) => {
+      if (result.value) {
+        axios.post("/issue/file-delete", {
+          id
+        }).then((res) => {
+          let result = res.data;
+          if (result === 200) {
+            Swal.fire({
+              title: "ดำเนินการเรียบร้อย!",
+              text: "",
+              icon: "success"
+            }).then((result) => {
+              location.reload()
+            });
+          } else {
+            Swal.fire({
+              title: "ระบบมีปัญหา\nกรุณาลองใหม่อีกครั้ง!",
+              text: "",
+              icon: "error"
+            }).then((result) => {
+              location.reload()
+            });
+          }
+        }).catch((error) => {
+          console.log(error);
+        });
+      } else {
+        return false;
+      }
+    })
   });
 </script>

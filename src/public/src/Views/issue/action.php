@@ -185,6 +185,35 @@ if ($action === "approve") {
   }
 }
 
+if ($action === "item-delete") {
+  try {
+    $data = json_decode(file_get_contents("php://input"), true);
+    $id = $data['id'];
+    if (!empty($id)) {
+      $ISSUE->item_delete([$id]);
+      echo json_encode(200);
+    } else {
+      echo json_encode(500);
+    }
+  } catch (PDOException $e) {
+    die($e->getMessage());
+  }
+}
+
+if ($action === "file-delete") {
+  try {
+    $data = json_decode(file_get_contents("php://input"), true);
+    $id = $data['id'];
+    if (!empty($id)) {
+      $ISSUE->file_delete([$id]);
+      echo json_encode(200);
+    } else {
+      echo json_encode(500);
+    }
+  } catch (PDOException $e) {
+    die($e->getMessage());
+  }
+}
 
 if ($action === "request-data") {
   try {

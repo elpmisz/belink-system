@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: database
--- Generation Time: Feb 12, 2025 at 01:27 PM
+-- Generation Time: Feb 12, 2025 at 01:37 PM
 -- Server version: 11.6.2-MariaDB-ubu2404
 -- PHP Version: 8.2.27
 
@@ -1324,20 +1324,20 @@ CREATE TABLE `service` (
   `url` varchar(200) NOT NULL,
   `status` int(1) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
-  `created` decimal(10,0) NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+  `created` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `service`
 --
 
 INSERT INTO `service` (`id`, `uuid`, `sequence`, `name`, `url`, `status`, `updated`, `created`) VALUES
-(1, 'cf1bf169-e929-11ef-9523-0242ac120005', 1, 'Estimate Budget', '/estimate', 1, '2025-02-12 17:42:03', 9999999999),
-(2, 'cf1c7170-e929-11ef-9523-0242ac120005', 2, 'Purchase Request', '/purchase', 1, '2025-02-12 17:42:03', 9999999999),
-(3, 'cf1cfac9-e929-11ef-9523-0242ac120005', 3, 'Payment Order', '/payment', 1, '2025-02-12 17:42:03', 9999999999),
-(4, 'cf1d4709-e929-11ef-9523-0242ac120005', 4, 'Advance Clearing', '/advance', 1, '2025-02-12 17:42:03', 9999999999),
-(5, 'cf1d9368-e929-11ef-9523-0242ac120005', 5, 'ระบบยืมทรัพย์สิน', '/borrow', 1, '2025-02-12 17:42:03', 9999999999),
-(6, 'cf1ddb6a-e929-11ef-9523-0242ac120005', 6, 'ระบบนำเข้า-เบิกออก', '/issue', 1, '2025-02-12 17:42:03', 9999999999);
+(1, 'cf1bf169-e929-11ef-9523-0242ac120005', 1, 'Estimate Budget', '/estimate', 1, '2025-02-12 17:42:03', '2025-02-12 20:37:08'),
+(2, 'cf1c7170-e929-11ef-9523-0242ac120005', 2, 'Purchase Request', '/purchase', 1, '2025-02-12 17:42:03', '2025-02-12 20:37:08'),
+(3, 'cf1cfac9-e929-11ef-9523-0242ac120005', 3, 'Payment Order', '/payment', 1, '2025-02-12 17:42:03', '2025-02-12 20:37:08'),
+(4, 'cf1d4709-e929-11ef-9523-0242ac120005', 4, 'Advance Clearing', '/advance', 1, '2025-02-12 17:42:03', '2025-02-12 20:37:08'),
+(5, 'cf1d9368-e929-11ef-9523-0242ac120005', 5, 'ระบบยืมทรัพย์สิน', '/borrow', 1, '2025-02-12 17:42:03', '2025-02-12 20:37:08'),
+(6, 'cf1ddb6a-e929-11ef-9523-0242ac120005', 6, 'ระบบนำเข้า-เบิกออก', '/issue', 1, '2025-02-12 17:42:03', '2025-02-12 20:37:08');
 
 -- --------------------------------------------------------
 
@@ -1351,7 +1351,7 @@ CREATE TABLE `service_authorize` (
   `service` varchar(50) NOT NULL,
   `updated` datetime DEFAULT NULL,
   `created` datetime NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `service_authorize`
