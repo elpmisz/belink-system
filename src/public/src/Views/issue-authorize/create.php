@@ -1,6 +1,6 @@
 <?php
 $menu = "Service";
-$page = "ServiceBorrow";
+$page = "ServiceIssue";
 include_once(__DIR__ . "/../layout/header.php");
 ?>
 
@@ -15,7 +15,7 @@ include_once(__DIR__ . "/../layout/header.php");
 
         <div class="row justify-content-end mb-2">
           <div class="col-xl-12">
-            <form action="/borrow/authorize/create" method="POST" class="needs-validation" novalidate enctype="multipart/form-data">
+            <form action="/issue/authorize/create" method="POST" class="needs-validation" novalidate enctype="multipart/form-data">
 
               <div class="row mb-2">
                 <label class="col-xl-2 offset-xl-2 col-form-label">รายชื่อ</label>
@@ -53,7 +53,7 @@ include_once(__DIR__ . "/../layout/header.php");
                   </button>
                 </div>
                 <div class="col-xl-3 mb-2">
-                  <a href="/borrow/authorize" class="btn btn-sm btn-danger btn-block">
+                  <a href="/issue/authorize" class="btn btn-sm btn-danger btn-block">
                     <i class="fa fa-arrow-left pr-2"></i>กลับ
                   </a>
                 </div>

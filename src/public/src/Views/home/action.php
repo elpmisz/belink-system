@@ -53,10 +53,10 @@ if ($action === "login") {
     $email = (isset($_POST['email']) ? $VALIDATION->input($_POST['email']) : "");
     $password = (isset($_POST['password']) ? $VALIDATION->input($_POST['password']) : "");
 
-    $count = $USER->user_count([$email]);
+    $user_count = $USER->user_count([$email]);
     $verify = $USER->user_verify([$email], $password);
 
-    if (intval($count) === 0 || intval($verify) === 0) {
+    if (intval($user_count) === 0 || intval($verify) === 0) {
       $VALIDATION->alert("danger", "อีเมล หรือรหัสผ่านไม่ถูกต้อง!", "/");
     }
 

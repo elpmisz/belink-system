@@ -70,6 +70,23 @@ $files = $ISSUE->file_view([$uuid]);
           </div>
         </div>
       </div>
+      <?php if (intval($row['type']) === 1) : ?>
+      <div class="row mb-2">
+        <label class="col-xl-2 offset-xl-2 col-form-label">เลขอ้างอิง</label>
+        <div class="col-xl-4">
+          <select class="form-control form-control-sm outcome-select" name="outcome">
+            <?php 
+            if (!empty($row['outcome'])) {
+              echo "<option value='{$row['outcome']}' selected>{$row['outcome_name']}</option>";
+            } 
+            ?>
+          </select>
+          <div class="invalid-feedback">
+            กรุณากรอกข้อมูล!
+          </div>
+        </div>
+      </div>
+      <?php endif; ?>
       <div class="row mb-2">
         <label class="col-xl-2 offset-xl-2 col-form-label">รายละเอียด</label>
         <div class="col-xl-6">
@@ -88,7 +105,8 @@ $files = $ISSUE->file_view([$uuid]);
                 <tr>
                   <th width="10%">#</th>
                   <th width="20%">สินค้า</th>
-                  <th width="20%">คลัง</th>
+                  <th width="10%">คลัง</th>
+                  <th width="10%">ตำแหน่ง</th>
                   <th width="20%">ปริมาณ (คงเหลือ)</th>
                   <th width="20%">ปริมาณ (นำเข้า)</th>
                 </tr>
@@ -101,7 +119,8 @@ $files = $ISSUE->file_view([$uuid]);
                       <input type="hidden" class="form-control form-control-sm text-center" name="item__id[]" value="<?php echo $item['id'] ?>" readonly>
                     </td>
                     <td class="text-left"><?php echo $item['product_name'] ?></td>
-                    <td class="text-left"><?php echo $item['warehouse_name'] ?></td>
+                    <td class="text-center"><?php echo $item['warehouse_name'] ?></td>
+                    <td class="text-center"><?php echo $item['location_name'] ?></td>
                     <td class="text-right"><?php echo $item['remain'] ?></td>
                     <td>
                       <input type="number" class="form-control form-control-sm text-right" value="<?php echo $item['amount'] ?>" min="1" max="<?php echo $item['remain'] ?>" step="0.01" name="item__amount[]" required>
@@ -123,12 +142,15 @@ $files = $ISSUE->file_view([$uuid]);
                     </div>
                   </td>
                   <td>
-                    <select class="form-control form-control-sm warehouse-select" name="warehouse_id[]"></select>
+                    <select class="form-control form-control-sm warehouse-select" name="warehouse_id[]">
+                      <option value="1" selected>สาทร</option>
+                    </select>
                     <div class="invalid-feedback">
                       กรุณากรอกข้อมูล!
                     </div>
                   </td>
-                  <td class="text-right"><span class="product-remain"></span></td>
+                  <td class="text-center product-location">
+                  <td class="text-right product-remain">
                   <td>
                     <input type="number" class="form-control form-control-sm text-right item-amount" name="item_amount[]" min="1">
                     <div class="invalid-feedback">
@@ -199,6 +221,7 @@ $files = $ISSUE->file_view([$uuid]);
 
 <?php include_once(__DIR__ . "/../layout/footer.php"); ?>
 <script>
+  initializeSelect2(".outcome-select", "/issue/outcome-select", "-- ใบเบิกออก --");
   initializeSelect2(".product-select", "/issue/product-select", "-- สินค้า --");
   initializeSelect2(".warehouse-select", "/issue/warehouse-select", "-- คลัง --");
 
@@ -233,7 +256,7 @@ $files = $ISSUE->file_view([$uuid]);
         })
         .then((res) => {
           let result = res.data;
-          console.log(result)
+          row.find(".product-location").text(result.location_name);
           row.find(".product-remain").text(result.remain);
         }).catch((error) => {
           console.log(error);

@@ -38,6 +38,15 @@ $row = $USER->user_view([$uuid, $uuid]);
             </div>
           </div>
           <div class="row mb-2">
+            <label class="col-xl-2 offset-xl-2 col-form-label">ชื่อใช้งานระบบ</label>
+            <div class="col-xl-4">
+              <input type="text" class="form-control form-control-sm" name="username" value="<?php echo $row['username'] ?>" required>
+              <div class="invalid-feedback">
+                กรุณากรอกข้อมูล!
+              </div>
+            </div>
+          </div>
+          <div class="row mb-2">
             <label class="col-xl-2 offset-xl-2 col-form-label">ชื่อ</label>
             <div class="col-xl-4">
               <input type="text" class="form-control form-control-sm" name="firstname" value="<?php echo $row['firstname'] ?>" required>

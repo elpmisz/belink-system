@@ -66,7 +66,8 @@ $files = $BORROW->file_view([$uuid]);
               <thead>
                 <tr>
                   <th width="10%">#</th>
-                  <th width="30%">ทรัพย์สิน</th>
+                  <th width="20%">ทรัพย์สิน</th>
+                  <th width="20%">สถานที่</th>
                   <th width="60%">รายละเอียด</th>
                 </tr>
               </thead>
@@ -75,6 +76,7 @@ $files = $BORROW->file_view([$uuid]);
                   <tr>
                     <td class="text-center"><?php echo $key ?></td>
                     <td><?php echo $item['asset_name'] ?></td>
+                    <td><?php echo $item['location_name'] ?></td>
                     <td><?php echo $item['text'] ?></td>
                   </tr>
                 <?php endforeach; ?>

@@ -243,6 +243,18 @@ if ($action === "file-delete") {
   }
 }
 
+if ($action === "item-view") {
+  try {
+    $data = json_decode(file_get_contents("php://input"), true);
+    $asset = (isset($data['asset']) ? $data['asset'] : "");
+    $result = $BORROW->asset_view([$asset]);
+
+    echo json_encode($result);
+  } catch (PDOException $e) {
+    die($e->getMessage());
+  }
+}
+
 if ($action === "asset-select") {
   try {
     $keyword = (isset($_POST['q']) ? $VALIDATION->input($_POST['q']) : "");

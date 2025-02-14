@@ -1,9 +1,24 @@
 <?php
 require_once(__DIR__ . "/vendor/autoload.php");
 
+if ($_SERVER['REQUEST_URI'] === '/phpmyadmin') {
+  header('Location: /phpmyadmin');
+  exit();
+}
+
 $ROUTER = new AltoRouter();
 
 ##################### SERVICE #####################
+##################### ISSUE-AUTHORIZE #####################
+$ROUTER->map("GET", "/issue/authorize", function () {
+  require(__DIR__ . "/src/Views/issue-authorize/index.php");
+});
+$ROUTER->map("GET", "/issue/authorize/create", function () {
+  require(__DIR__ . "/src/Views/issue-authorize/create.php");
+});
+$ROUTER->map("POST", "/issue/authorize/[**:params]", function ($params) {
+  require(__DIR__ . "/src/Views/issue-authorize/action.php");
+});
 ##################### ISSUE #####################
 $ROUTER->map("GET", "/issue", function () {
   require(__DIR__ . "/src/Views/issue/index.php");
@@ -476,9 +491,9 @@ $ROUTER->map("GET", "/error", function () {
 $ROUTER->map("POST", "/[**:params]", function ($params) {
   require(__DIR__ . "/src/Views/home/action.php");
 });
-$ROUTER->map("GET", "/[**:params]", function ($params) {
-  require(__DIR__ . "/src/Views/home/action.php");
-});
+// $ROUTER->map("GET", "/[**:params]", function ($params) {
+//   require(__DIR__ . "/src/Views/home/action.php");
+// });
 
 
 $MATCH = $ROUTER->match();

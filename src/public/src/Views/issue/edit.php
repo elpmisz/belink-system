@@ -83,7 +83,8 @@ $remarks = $ISSUE->remark_view([$uuid]);
                 <tr>
                   <th width="10%">#</th>
                   <th width="20%">สินค้า</th>
-                  <th width="20%">คลัง</th>
+                  <th width="10%">คลัง</th>
+                  <th width="10%">ตำแหน่ง</th>
                   <th width="20%">ปริมาณ (<?php echo $row['type_name'] ?>)</th>
                   <th width="20%">ปริมาณ (ตรวจสอบ)</th>
                 </tr>
@@ -96,7 +97,8 @@ $remarks = $ISSUE->remark_view([$uuid]);
                       <input type="hidden" class="form-control form-control-sm text-center" name="item__id[]" value="<?php echo $item['id'] ?>" readonly>
                     </td>
                     <td class="text-left"><?php echo $item['product_name'] ?></td>
-                    <td class="text-left"><?php echo $item['warehouse_name'] ?></td>
+                    <td class="text-center"><?php echo $item['warehouse_name'] ?></td>
+                    <td class="text-center"><?php echo $item['location_name'] ?></td>
                     <td class="text-right"><?php echo $item['amount'] ?></td>
                     <td class="text-right"><?php echo $item['confirm'] ?></td>
                   </tr>

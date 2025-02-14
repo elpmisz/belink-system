@@ -72,8 +72,9 @@ $files = $BORROW->file_view([$uuid]);
               <thead>
                 <tr>
                   <th width="10%">#</th>
-                  <th width="30%">ทรัพย์สิน</th>
-                  <th width="60%">รายละเอียด</th>
+                  <th width="20%">ทรัพย์สิน</th>
+                  <th width="20%">สถานที่</th>
+                  <th width="50%">รายละเอียด</th>
                 </tr>
               </thead>
               <tbody>
@@ -83,9 +84,8 @@ $files = $BORROW->file_view([$uuid]);
                       <a href="javascript:void(0)" class="badge badge-danger font-weight-light item-delete" id="<?php echo $item['id'] ?>">ลบ</a>
                       <input type="hidden" class="form-control form-control-sm text-center" name="item__id[]" value="<?php echo $item['id'] ?>" readonly>
                     </td>
-                    <td>
-                      <?php echo $item['asset_name'] ?>
-                    </td>
+                    <td><?php echo $item['asset_name'] ?></td>
+                    <td><?php echo $item['location_name'] ?></td>
                     <td>
                       <input type="text" class="form-control form-control-sm text-left" name="item__text[]" value="<?php echo $item['text'] ?>">
                     </td>

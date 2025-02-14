@@ -5,6 +5,8 @@ error_reporting(E_ALL);
 date_default_timezone_set("Asia/Bangkok");
 include_once(__DIR__ . "/../../../vendor/autoload.php");
 
+use App\Classes\Issue;
+use App\Classes\Borrow;
 use App\Classes\Service;
 use App\Classes\System;
 use App\Classes\User;
@@ -32,6 +34,8 @@ try {
 $USER = new User();
 $SYSTEM = new System();
 $SERVICE = new Service();
+$BORROW = new Borrow();
+$ISSUE = new Issue();
 $system = $SYSTEM->read();
 $user = $USER->user_view([$email, $email]);
 $SystemName = (isset($system['name']) ? $system['name'] : "");

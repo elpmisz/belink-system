@@ -14,6 +14,17 @@ class Issue
     $this->dbcon = $db->getConnection();
   }
 
+  public function issue_authorize($data)
+  {
+    $sql = "SELECT a.`type`
+    FROM belink.issue_authorize a
+    WHERE a.`status` = 1
+    AND login_id = ?";
+    $stmt = $this->dbcon->prepare($sql);
+    $stmt->execute($data);
+    return $row = $stmt->fetchColumn();
+  }
+
   public function issue_last()
   {
     $sql = "SELECT 
@@ -45,7 +56,7 @@ class Issue
 
   public function issue_insert($data)
   {
-    $sql = "INSERT INTO belink.issue_request(`uuid`, `last`, `login_id`, `type`, `date`, `text`) VALUES(uuid(),?,?,?,?,?)";
+    $sql = "INSERT INTO belink.issue_request(`uuid`, `last`, `login_id`, `type`, `date`, `outcome`, `text`) VALUES(uuid(),?,?,?,?,?,?)";
     $stmt = $this->dbcon->prepare($sql);
     return $stmt->execute($data);
   }
@@ -58,11 +69,15 @@ class Issue
     CONCAT(b.firstname,' ',b.lastname) username,
     a.type,IF(a.type = 1,'นำเข้า','เบิกออก') type_name,
     DATE_FORMAT(a.date,'%d/%m/%Y') `date`,
+    a.outcome,
+    CONCAT('[',CONCAT('IS',YEAR(c.created),LPAD(c.`last`,4,'0')),'] ',c.text) outcome_name,
     a.text,
     DATE_FORMAT(a.created, '%d/%m/%Y, %H:%i น.') created
     FROM belink.issue_request a
     LEFT JOIN belink.`user` b
     ON a.login_id = b.login
+    LEFT JOIN belink.issue_request c
+    ON a.outcome = c.id
     WHERE a.uuid = ?";
     $stmt = $this->dbcon->prepare($sql);
     $stmt->execute($data);
@@ -110,6 +125,7 @@ class Issue
     c.uuid,
     a.product_id,c.`name` product_name,
     a.warehouse_id,d.`name` warehouse_name,
+    c.location_id,f.`name` location_name,
     a.amount,
     a.confirm,
     (e.income - e.outcome) remain
@@ -134,6 +150,8 @@ class Issue
     ) e
     ON a.product_id = e.product_id
     AND a.warehouse_id = e.warehouse_id 
+    LEFT JOIN belink.product_location f
+    ON c.location_id = f.id
     WHERE a.`status` = 1
     AND b.`uuid` = ?
     ORDER BY a.id ASC";
@@ -174,7 +192,10 @@ class Issue
 
   public function product_remain($data)
   {
-    $sql = "SELECT a.id,a.`name` product_name,IFNULL((b.income - b.outcome),0) remain
+    $sql = "SELECT a.id,
+    a.`name` product_name,
+    c.`name` location_name,
+    IFNULL((b.income - b.outcome),0) remain
     FROM belink.product a
     LEFT JOIN 
     (
@@ -190,6 +211,8 @@ class Issue
       GROUP BY b.product_id,b.warehouse_id
     ) b
     ON a.id = b.product_id
+    LEFT JOIN belink.product_location c
+    ON a.location_id = c.id
     WHERE a.id = ?";
     $stmt = $this->dbcon->prepare($sql);
     $stmt->execute($data);
@@ -498,7 +521,7 @@ class Issue
     return $output;
   }
 
-  public function manage_data()
+  public function manage_data($start,$end,$user,$type)
   {
     $sql = "SELECT COUNT(*) FROM belink.issue_request a WHERE a.status IN (1,2,3)";
     $stmt = $this->dbcon->prepare($sql);
@@ -550,6 +573,15 @@ class Issue
     WHERE a.status IN (1,2,3)
     AND c.status = 1 ";
 
+    if (!empty($start)) {
+      $sql .= " AND (a.date BETWEEN '{$start}' AND '{$end}') ";
+    }
+    if (!empty($user)) {
+      $sql .= " AND (a.login_id = '{$user}') ";
+    }
+    if (!empty($type)) {
+      $sql .= " AND (a.type = '{$type}') ";
+    }
     if (!empty($keyword)) {
       $sql .= " AND (a.text LIKE '%{$keyword}%') ";
     }
@@ -595,7 +627,8 @@ class Issue
       "draw" => $draw,
       "recordsTotal" =>  $total,
       "recordsFiltered" => $filter,
-      "data" => $data
+      "data" => $data,
+      "sql" => $sql
     ];
     return $output;
   }
@@ -651,7 +684,7 @@ class Issue
 
   public function outcome_select($keyword)
   {
-    $sql = "SELECT id, `text`
+    $sql = "SELECT id, CONCAT('[',CONCAT('IS',YEAR(created),LPAD(`last`,4,'0')),'] ',`text`) `text`
     FROM belink.issue_request
     WHERE type = 2
     AND status = 2 ";
@@ -664,6 +697,38 @@ class Issue
     return $stmt->fetchAll();
   }
 
+  public function type_select($keyword)
+  {
+    $data = [
+      1 => "นำเข้า", 
+      2 => "เบิกออก"
+    ];
+
+    $result = [];
+    foreach ($data as $key => $value) {
+      $result[] = [
+        "id" => $key,
+        "text" => $value,
+      ];
+    }
+    return $result;
+  }
+
+  public function user_select($keyword)
+  {
+    $sql = "SELECT a.login_id `id`,CONCAT(b.firstname,' ',b.lastname) `text`
+    FROM belink.issue_request a
+    LEFT JOIN belink.`user` b
+    ON a.login_id = b.login ";
+    if (!empty($keyword)) {
+      $sql .= " WHERE (b.firstname LIKE '%{$keyword}%' OR b.lastname LIKE '%{$keyword}%') ";
+    }
+    $sql .= " GROUP BY a.login_id
+    ORDER BY b.firstname ASC LIMIT 20";
+    $stmt = $this->dbcon->prepare($sql);
+    $stmt->execute();
+    return $stmt->fetchAll();
+  }
 
   public function last_insert_id()
   {

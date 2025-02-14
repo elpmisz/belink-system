@@ -2,6 +2,8 @@
 $menu = "Service";
 $page = "ServiceIssue";
 include_once(__DIR__ . "/../layout/header.php");
+
+$issue_authorize = $ISSUE->issue_authorize([$user['login_id']]);
 ?>
 
 <div class="row">
@@ -13,11 +15,13 @@ include_once(__DIR__ . "/../layout/header.php");
       <div class="card-body">
 
         <div class="row justify-content-end mb-2">
+          <?php if (intval($user['level']) === 9 || intval($issue_authorize) > 0) : ?>
           <div class="col-xl-3 mb-2">
             <a href="/issue/manage" class="btn btn-primary btn-sm btn-block">
               <i class="fas fa-bars pr-2"></i>จัดการระบบ
             </a>
           </div>
+          <?php endif; ?>
           <div class="col-xl-3 mb-2">
             <a href="/issue/income" class="btn btn-success btn-sm btn-block">
               <i class="fas fa-plus pr-2"></i>นำเข้าสินค้า
@@ -30,6 +34,7 @@ include_once(__DIR__ . "/../layout/header.php");
           </div>
         </div>
 
+        <?php if (intval($user['level']) === 9 || intval($issue_authorize) === 1) : ?>
         <div class="row my-3">
           <div class="col-sm-12">
             <div class="card shadow">
@@ -57,6 +62,7 @@ include_once(__DIR__ . "/../layout/header.php");
             </div>
           </div>
         </div>
+        <?php endif; ?>
 
         <div class="row my-3">
           <div class="col-sm-12">

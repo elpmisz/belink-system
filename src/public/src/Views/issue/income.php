@@ -33,7 +33,7 @@ include_once(__DIR__ . "/../layout/header.php");
           </div>
         </div>
       </div>
-      <!-- <div class="row mb-2">
+      <div class="row mb-2">
         <label class="col-xl-2 offset-xl-2 col-form-label">เลขอ้างอิง</label>
         <div class="col-xl-4">
           <select class="form-control form-control-sm outcome-select" name="outcome"></select>
@@ -41,7 +41,7 @@ include_once(__DIR__ . "/../layout/header.php");
             กรุณากรอกข้อมูล!
           </div>
         </div>
-      </div> -->
+      </div>
       <div class="row mb-2">
         <label class="col-xl-2 offset-xl-2 col-form-label">รายละเอียด</label>
         <div class="col-xl-6">
@@ -60,7 +60,8 @@ include_once(__DIR__ . "/../layout/header.php");
                 <tr>
                   <th width="10%">#</th>
                   <th width="20%">สินค้า</th>
-                  <th width="20%">คลัง</th>
+                  <th width="10%">คลัง</th>
+                  <th width="10%">ตำแหน่ง</th>
                   <th width="20%">ปริมาณ (คงเหลือ)</th>
                   <th width="20%">ปริมาณ (นำเข้า)</th>
                 </tr>
@@ -85,7 +86,8 @@ include_once(__DIR__ . "/../layout/header.php");
                       กรุณากรอกข้อมูล!
                     </div>
                   </td>
-                  <td class="text-right"><span class="product-remain"></span></td>
+                  <td class="text-center product-location">
+                  <td class="text-right product-remain">
                   <td>
                     <input type="number" class="form-control form-control-sm text-right item-amount" name="item_amount[]" min="1" required>
                     <div class="invalid-feedback">
@@ -171,7 +173,7 @@ include_once(__DIR__ . "/../layout/header.php");
         })
         .then((res) => {
           let result = res.data;
-          console.log(result)
+          row.find(".product-location").text(result.location_name);
           row.find(".product-remain").text(result.remain);
         }).catch((error) => {
           console.log(error);

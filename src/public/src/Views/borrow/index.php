@@ -2,6 +2,8 @@
 $menu = "Service";
 $page = "ServiceBorrow";
 include_once(__DIR__ . "/../layout/header.php");
+
+$borrow_authorize = $BORROW->borrow_authorize([$user['login_id']]);
 ?>
 
 <div class="row">
@@ -11,13 +13,14 @@ include_once(__DIR__ . "/../layout/header.php");
         <h4 class="text-center">ระบบยืมทรัพย์สิน</h4>
       </div>
       <div class="card-body">
-
         <div class="row justify-content-end mb-2">
+          <?php if (intval($user['level']) === 9 || intval($borrow_authorize) > 0) : ?>
           <div class="col-xl-3 mb-2">
             <a href="/borrow/manage" class="btn btn-primary btn-sm btn-block">
               <i class="fas fa-bars pr-2"></i>จัดการระบบ
             </a>
           </div>
+          <?php endif; ?>
           <div class="col-xl-3 mb-2">
             <a href="/borrow/create" class="btn btn-success btn-sm btn-block">
               <i class="fas fa-plus pr-2"></i>เพิ่ม
@@ -25,6 +28,7 @@ include_once(__DIR__ . "/../layout/header.php");
           </div>
         </div>
 
+        <?php if (intval($user['level']) === 9 || intval($borrow_authorize) === 1) : ?>
         <div class="row my-3">
           <div class="col-sm-12">
             <div class="card shadow">
@@ -51,6 +55,7 @@ include_once(__DIR__ . "/../layout/header.php");
             </div>
           </div>
         </div>
+        <?php endif; ?>
 
         <div class="row my-3">
           <div class="col-sm-12">

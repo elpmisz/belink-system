@@ -4,7 +4,7 @@ namespace App\Classes;
 
 use PDO;
 
-class BorrowAuthorize
+class IssueAuthorize
 {
   private $dbcon;
 
@@ -18,7 +18,7 @@ class BorrowAuthorize
   {
     $sql = "SELECT 
       COUNT(*)
-    FROM belink.borrow_authorize a
+    FROM belink.issue_authorize a
     WHERE a.status = 1
     AND a.login_id = ?
     AND a.type = ?";
@@ -29,14 +29,14 @@ class BorrowAuthorize
 
   public function authorize_insert($data)
   {
-    $sql = "INSERT INTO belink.borrow_authorize(`login_id`, `type`) VALUES(?,?)";
+    $sql = "INSERT INTO belink.issue_authorize(`login_id`, `type`) VALUES(?,?)";
     $stmt = $this->dbcon->prepare($sql);
     return $stmt->execute($data);
   }
 
   public function authorize_delete($data)
   {
-    $sql = "UPDATE belink.borrow_authorize SET
+    $sql = "UPDATE belink.issue_authorize SET
     status = 0,
     updated = NOW()
     WHERE id = ?";
@@ -46,7 +46,7 @@ class BorrowAuthorize
 
   public function request_data()
   {
-    $sql = "SELECT COUNT(*) FROM belink.borrow_authorize a";
+    $sql = "SELECT COUNT(*) FROM belink.issue_authorize a";
     $stmt = $this->dbcon->prepare($sql);
     $stmt->execute();
     $total = $stmt->fetchColumn();
@@ -66,7 +66,7 @@ class BorrowAuthorize
     a.`type`,
     IF(a.`type` = 1,'ผู้อนุมัติ','ผู้จัดการระบบ') type_name,
     IF(a.`type` = 1,'success','danger') type_color
-    FROM belink.borrow_authorize a
+    FROM belink.issue_authorize a
     LEFT JOIN belink.`user` b
     ON a.login_id = b.login
     WHERE a.`status` = 1 ";

@@ -1,6 +1,6 @@
 <?php
 $menu = "Service";
-$page = "ServiceBorrow";
+$page = "ServiceIssue";
 include_once(__DIR__ . "/../layout/header.php");
 ?>
 
@@ -14,7 +14,7 @@ include_once(__DIR__ . "/../layout/header.php");
 
         <div class="row justify-content-end mb-2">
           <div class="col-xl-3 mb-2">
-            <a href="/borrow/authorize/create" class="btn btn-sm btn-primary btn-block">
+            <a href="/issue/authorize/create" class="btn btn-sm btn-primary btn-block">
               <i class="fa fa-plus pr-2"></i>เพิ่ม
             </a>
           </div>
@@ -38,7 +38,7 @@ include_once(__DIR__ . "/../layout/header.php");
 
         <div class="row justify-content-center mb-2">
           <div class="col-xl-3">
-            <a href="/borrow/manage" class="btn btn-sm btn-danger btn-block">
+            <a href="/issue/manage" class="btn btn-sm btn-danger btn-block">
               <i class="fa fa-arrow-left pr-2"></i>กลับ
             </a>
           </div>
@@ -60,7 +60,7 @@ include_once(__DIR__ . "/../layout/header.php");
       scrollX: true,
       order: [],
       ajax: {
-        url: "/borrow/authorize/request-data",
+        url: "/issue/authorize/request-data",
         type: "POST",
       },
       columnDefs: [{
@@ -97,7 +97,7 @@ include_once(__DIR__ . "/../layout/header.php");
       cancelButtonText: "ปิด",
     }).then((result) => {
       if (result.value) {
-        axios.post("/borrow/authorize/delete", {
+        axios.post("/issue/authorize/delete", {
           id: id
         }).then((res) => {
           let result = parseInt(res.data);

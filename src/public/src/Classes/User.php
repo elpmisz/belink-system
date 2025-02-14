@@ -52,7 +52,7 @@ class User
   public function login_insert($data)
   {
 
-    $sql = "INSERT INTO belink.login(uuid,email,password) VALUES(uuid(),?,?)";
+    $sql = "INSERT INTO belink.login(uuid,username,email,password) VALUES(uuid(),?,?,?)";
     $stmt = $this->dbcon->prepare($sql);
     return $stmt->execute($data);
   }
@@ -70,6 +70,7 @@ class User
     $sql = "SELECT a.id login_id,
     a.uuid,
     a.email,
+    a.username,
     a.`level`,
     a.status,
     b.firstname,
@@ -137,6 +138,7 @@ class User
     LEFT JOIN belink.user b
     ON a.id = b.login SET
     a.email = ?,
+    a.username = ?,
     a.level = ?,
     a.status = ?,
     a.updated = NOW(),
@@ -197,7 +199,7 @@ class User
     $limit_length = (isset($_POST['length']) ? $_POST['length'] : "");
     $draw = (isset($_POST['draw']) ? $_POST['draw'] : "");
 
-    $sql = "SELECT a.uuid,a.email,b.firstname,b.lastname,b.contact,
+    $sql = "SELECT a.uuid,a.email,a.username,b.firstname,b.lastname,b.contact,
     (
       CASE
         WHEN a.status = 1 THEN 'ใช้งาน'
@@ -261,6 +263,7 @@ class User
         $status,
         $level,
         $row['email'],
+        $row['username'],
         ucfirst($row['firstname']),
         ucfirst($row['lastname']),
         $row['contact']

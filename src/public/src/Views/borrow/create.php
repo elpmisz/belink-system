@@ -41,8 +41,9 @@ include_once(__DIR__ . "/../layout/header.php");
               <thead>
                 <tr>
                   <th width="10%">#</th>
-                  <th width="30%">ทรัพย์สิน</th>
-                  <th width="60%">รายละเอียด</th>
+                  <th width="20%">ทรัพย์สิน</th>
+                  <th width="20%">สถานที่</th>
+                  <th width="50%">รายละเอียด</th>
                 </tr>
               </thead>
               <tbody>
@@ -57,6 +58,7 @@ include_once(__DIR__ . "/../layout/header.php");
                       กรุณากรอกข้อมูล!
                     </div>
                   </td>
+                  <td class="item-location"></td>
                   <td>
                     <input type="text" class="form-control form-control-sm text-left" name="item_text[]">
                     <div class="invalid-feedback">
@@ -123,6 +125,32 @@ include_once(__DIR__ . "/../layout/header.php");
 
     row.after(clone);
     initializeSelect2(".asset-select", "/borrow/asset-select", "-- ทรัพย์สิน --");
+  });
+
+  $(document).on("change", ".asset-select", function(){
+    const asset = ($(this).val() || "");
+    const row = $(this).closest("tr");
+
+    if (asset) {
+      axios.post("/borrow/item-view", {
+          asset,
+        })
+        .then((res) => {
+          let result = res.data;
+          let location = '';
+          
+          if (result.location_name !== null) {
+            location = `คลัง${result.warehouse_name} ${result.location_name}`;
+          } else {
+            location = `คลัง${result.warehouse_name}`;
+          }
+          row.find(".item-location").text(location);
+        }).catch((error) => {
+          console.log(error);
+        });
+    } else {
+      row.find(".item-location").text("");
+    }
   });
 
   $(document).on("click", ".file-increase", function() {

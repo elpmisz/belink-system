@@ -51,7 +51,8 @@ include_once(__DIR__ . "/../layout/header.php");
                 <tr>
                   <th width="10%">#</th>
                   <th width="20%">สินค้า</th>
-                  <th width="20%">คลัง</th>
+                  <th width="10%">คลัง</th>
+                  <th width="10%">ตำแหน่ง</th>
                   <th width="20%">ปริมาณ (คงเหลือ)</th>
                   <th width="20%">ปริมาณ (เบิกออก)</th>
                 </tr>
@@ -76,7 +77,8 @@ include_once(__DIR__ . "/../layout/header.php");
                       กรุณากรอกข้อมูล!
                     </div>
                   </td>
-                  <td class="text-right"><span class="product-remain"></span></td>
+                  <td class="text-right product-location"></td>
+                  <td class="text-right product-remain"></td>
                   <td>
                     <input type="number" class="form-control form-control-sm text-right item-amount" name="item_amount[]" min="1" required>
                     <div class="invalid-feedback">
@@ -161,6 +163,7 @@ include_once(__DIR__ . "/../layout/header.php");
         })
         .then((res) => {
           let result = res.data;
+          row.find(".product-location").text(result.location_name);
           row.find(".product-remain").text(result.remain);
           row.find(".item-amount").prop("max", result.remain);
         }).catch((error) => {

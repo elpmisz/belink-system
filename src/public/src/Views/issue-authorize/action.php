@@ -9,7 +9,7 @@ $action = (isset($param[0]) ? $param[0] : die(header("Location: /error")));
 $param1 = (isset($param[1]) ? $param[1] : "");
 $param2 = (isset($param[2]) ? $param[2] : "");
 
-use App\Classes\BorrowAuthorize;
+use App\Classes\IssueAuthorize;
 use App\Classes\Validation;
 use App\Classes\User;
 use Firebase\JWT\JWT;
@@ -36,7 +36,7 @@ try {
 $USER = new User();
 $user = $USER->user_view([$email, $email]);
 
-$AUTHORIZE = new BorrowAuthorize();
+$AUTHORIZE = new IssueAuthorize();
 $VALIDATION = new Validation();
 
 if ($action === "create") {
@@ -46,11 +46,11 @@ if ($action === "create") {
 
     $authorize_count = $AUTHORIZE->authorize_count([$login_id, $type]);
     if (intval($authorize_count) > 0) {
-      $VALIDATION->alert("danger", "ข้อมูลซ้ำในระบบ!", "/borrow/authorize");
+      $VALIDATION->alert("danger", "ข้อมูลซ้ำในระบบ!", "/issue/authorize");
     }
 
     $AUTHORIZE->authorize_insert([$login_id, $type]);
-    $VALIDATION->alert("success", "ดำเนินการเรียบร้อย!", "/borrow/authorize");
+    $VALIDATION->alert("success", "ดำเนินการเรียบร้อย!", "/issue/authorize");
   } catch (PDOException $e) {
     die($e->getMessage());
   }

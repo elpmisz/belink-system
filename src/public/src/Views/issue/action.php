@@ -44,6 +44,7 @@ if ($action === "create") {
   $type = (isset($_POST['type']) ? $VALIDATION->input($_POST['type']) : "");
   $date = (isset($_POST['date']) ? $VALIDATION->input($_POST['date']) : "");
   $date = (!empty($date) ? date("Y-m-d", strtotime(str_replace("/", "-", trim($date)))) : "");
+  $outcome = (isset($_POST['outcome']) ? $VALIDATION->input($_POST['outcome']) : "");
   $text = (isset($_POST['text']) ? $VALIDATION->input($_POST['text']) : "");
   $issue_last = $ISSUE->issue_last();
 
@@ -52,7 +53,7 @@ if ($action === "create") {
     $VALIDATION->alert("danger", "ข้อมูลซ้ำในระบบ!", "/issue");
   }
 
-  $ISSUE->issue_insert([$issue_last, $login_id, $type, $date, $text]);
+  $ISSUE->issue_insert([$issue_last, $login_id, $type, $date, $outcome, $text]);
   $request_id = $ISSUE->last_insert_id();
 
   foreach ($_POST['product_id'] as $key => $row) {
@@ -238,7 +239,12 @@ if ($action === "approve-data") {
 
 if ($action === "manage-data") {
   try {
-    $result = $ISSUE->manage_data();
+    $date = (isset($_POST['date']) ? explode(" - ", $_POST['date']) : '');
+    $start = (!empty($date[0]) ? DateTime::createFromFormat('d/m/Y', trim($date[0]))->format('Y-m-d') : "");
+    $end = (!empty($date[1]) ? DateTime::createFromFormat('d/m/Y', trim($date[1]))->format('Y-m-d') : "");
+    $user = (isset($_POST['user']) ? $_POST['user'] : '');
+    $type = (isset($_POST['type']) ? $_POST['type'] : '');
+    $result = $ISSUE->manage_data($start,$end,$user,$type);
 
     echo json_encode($result);
   } catch (PDOException $e) {
@@ -293,6 +299,26 @@ if ($action === "outcome-select") {
   try {
     $keyword = (isset($_POST['q']) ? $VALIDATION->input($_POST['q']) : "");
     $result = $ISSUE->outcome_select($keyword);
+    echo json_encode($result);
+  } catch (PDOException $e) {
+    die($e->getMessage());
+  }
+}
+
+if ($action === "user-select") {
+  try {
+    $keyword = (isset($_POST['q']) ? $VALIDATION->input($_POST['q']) : "");
+    $result = $ISSUE->user_select($keyword);
+    echo json_encode($result);
+  } catch (PDOException $e) {
+    die($e->getMessage());
+  }
+}
+
+if ($action === "type-select") {
+  try {
+    $keyword = (isset($_POST['q']) ? $VALIDATION->input($_POST['q']) : "");
+    $result = $ISSUE->type_select($keyword);
     echo json_encode($result);
   } catch (PDOException $e) {
     die($e->getMessage());

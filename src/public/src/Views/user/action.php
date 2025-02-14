@@ -19,6 +19,7 @@ $param2 = (isset($param[2]) ? $param[2] : "");
 if ($action === "create") {
   try {
     $email = (isset($_POST['email']) ? $VALIDATION->input($_POST['email']) : "");
+    $username = (isset($_POST['username']) ? $VALIDATION->input($_POST['username']) : "");
     $firstname = (isset($_POST['firstname']) ? $VALIDATION->input($_POST['firstname']) : "");
     $lastname = (isset($_POST['lastname']) ? $VALIDATION->input($_POST['lastname']) : "");
     $contact = (isset($_POST['contact']) ? $VALIDATION->input($_POST['contact']) : "");
@@ -27,7 +28,7 @@ if ($action === "create") {
     $default_password = $USER->default_password();
     $hash_password = password_hash($default_password, PASSWORD_DEFAULT);
 
-    $USER->login_insert([$email, $hash_password]);
+    $USER->login_insert([$email, $username, $hash_password]);
     $login = $USER->last_insert_id();
     $USER->user_insert([$login, $firstname, $lastname, $manager_id, $contact]);
 
@@ -41,6 +42,7 @@ if ($action === "update") {
   try {
     $uuid = (isset($_POST['uuid']) ? $VALIDATION->input($_POST['uuid']) : "");
     $email = (isset($_POST['email']) ? $VALIDATION->input($_POST['email']) : "");
+    $username = (isset($_POST['username']) ? $VALIDATION->input($_POST['username']) : "");
     $firstname = (isset($_POST['firstname']) ? $VALIDATION->input($_POST['firstname']) : "");
     $lastname = (isset($_POST['lastname']) ? $VALIDATION->input($_POST['lastname']) : "");
     $contact = (isset($_POST['contact']) ? $VALIDATION->input($_POST['contact']) : "");
@@ -48,7 +50,7 @@ if ($action === "update") {
     $level = (isset($_POST['level']) ? $VALIDATION->input($_POST['level']) : "");
     $status = (isset($_POST['status']) ? $VALIDATION->input($_POST['status']) : "");
 
-    $USER->admin_update([$email, $level, $status, $firstname, $lastname, $manager_id, $contact, $uuid]);
+    $USER->admin_update([$email, $username, $level, $status, $firstname, $lastname, $manager_id, $contact, $uuid]);
     $VALIDATION->alert("success", "ดำเนินการเรียบร้อย!", "/user/view/{$uuid}");
   } catch (PDOException $e) {
     die($e->getMessage());

@@ -68,6 +68,14 @@ $remarks = $ISSUE->remark_view([$uuid]);
           <?php echo $row['date'] ?>
         </div>
       </div>
+      <?php if (intval($row['type']) === 1) : ?>
+      <div class="row mb-2">
+        <label class="col-xl-2 offset-xl-2 col-form-label">เลขอ้างอิง</label>
+        <div class="col-xl-4 text-underline">
+          <?php echo $row['outcome_name'] ?>
+        </div>
+      </div>
+      <?php endif; ?>
       <div class="row mb-2">
         <label class="col-xl-2 offset-xl-2 col-form-label">รายละเอียด</label>
         <div class="col-xl-6 text-underline">
@@ -83,7 +91,8 @@ $remarks = $ISSUE->remark_view([$uuid]);
                 <tr>
                   <th width="10%">#</th>
                   <th width="20%">สินค้า</th>
-                  <th width="20%">คลัง</th>
+                  <th width="10%">คลัง</th>
+                  <th width="10%">ตำแหน่ง</th>
                   <th width="20%">ปริมาณ (<?php echo $row['type_name'] ?>)</th>
                   <th width="20%">ปริมาณ (ตรวจสอบ)</th>
                 </tr>
@@ -98,7 +107,8 @@ $remarks = $ISSUE->remark_view([$uuid]);
                     <td class="text-left">
                       <a href="/product/view/<?php echo $item['uuid'] ?>" target="_blank"><?php echo $item['product_name'] ?></a>
                     </td>
-                    <td class="text-left"><?php echo $item['warehouse_name'] ?></td>
+                    <td class="text-center"><?php echo $item['warehouse_name'] ?></td>
+                    <td class="text-center"><?php echo $item['location_name'] ?></td>
                     <td class="text-right"><?php echo $item['amount'] ?></td>
                     <td class="text-right"><?php echo $item['confirm'] ?></td>
                   </tr>

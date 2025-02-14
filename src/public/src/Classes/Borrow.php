@@ -14,6 +14,17 @@ class Borrow
     $this->dbcon = $db->getConnection();
   }
 
+  public function borrow_authorize($data)
+  {
+    $sql = "SELECT a.`type`
+    FROM belink.borrow_authorize a
+    WHERE a.`status` = 1
+    AND login_id = ?";
+    $stmt = $this->dbcon->prepare($sql);
+    $stmt->execute($data);
+    return $row = $stmt->fetchColumn();
+  }
+
   public function borrow_last()
   {
     $sql = "SELECT 
@@ -103,12 +114,20 @@ class Borrow
 
   public function item_view($data)
   {
-    $sql = "SELECT a.id,CONCAT(IF(c.`code` = '','',CONCAT('[',c.`code`,'] ')),c.`name`) asset_name,a.text
+    $sql = "SELECT a.id,
+    CONCAT(IF(c.`code` = '','',CONCAT('[',c.`code`,'] ')),c.`name`) asset_name,
+    c.warehouse_id,d.`name` ddd,c.location_id,e.`name` eeee,
+    CONCAT('คลัง',d.`name`,IF(e.`name` != '',CONCAT(' ตำแหน่ง',e.`name`),'')) location_name,
+    a.text
     FROM belink.borrow_item a
     LEFT JOIN belink.borrow_request b
     ON a.request_id = b.id
     LEFT JOIN belink.asset c
     ON a.asset_id = c.id
+    LEFT JOIN belink.asset_warehouse d
+    ON c.warehouse_id = d.id
+    LEFT JOIN belink.asset_location e
+    ON c.location_id = e.id
     WHERE a.`status` = 1
     AND b.`uuid` = ?
     ORDER BY a.id ASC";
@@ -543,6 +562,41 @@ class Borrow
       "data" => $data
     ];
     return $output;
+  }
+
+  public function asset_view($data)
+  {
+    $sql = "SELECT a.id,
+    a.`uuid`,
+    a.`code`,
+    a.`name`,
+    a.type_id,b.`name` type_name,
+    a.warehouse_id,c.`name` warehouse_name,
+    a.location_id,d.`name` location_name,
+    a.brand_id,e.`name` brand_name,
+    a.unit_id,f.`name` unit_name,
+    a.size,
+    a.material,
+    a.text,
+    a.`status`,
+    IF(a.`status` = 1,'ใช้งาน','ระงับการใช้งาน') status_name,
+    IF(a.`status` = 1,'success','danger') status_color,
+    DATE_FORMAT(a.created, '%d/%m/%Y, %H:%i น.') created
+    FROM belink.asset a
+    LEFT JOIN belink.asset_type b
+    ON a.type_id = b.id
+    LEFT JOIN belink.asset_warehouse c
+    ON a.warehouse_id = c.id
+    LEFT JOIN belink.asset_location d
+    ON a.location_id = d.id
+    LEFT JOIN belink.asset_brand e
+    ON a.brand_id = e.id
+    LEFT JOIN belink.asset_unit f
+    ON a.unit_id = f.id
+    WHERE a.id = ?";
+    $stmt = $this->dbcon->prepare($sql);
+    $stmt->execute($data);
+    return $stmt->fetch();
   }
 
   public function asset_select($keyword)

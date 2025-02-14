@@ -32,6 +32,12 @@ $row = $USER->user_view([$email, $email]);
             </div>
           </div>
           <div class="row mb-2">
+            <label class="col-xl-2 offset-xl-2 col-form-label">ชื่อใช้งานระบบ</label>
+            <div class="col-xl-4 text-underline">
+              <?php echo $row['username'] ?>
+            </div>
+          </div>
+          <div class="row mb-2">
             <label class="col-xl-2 offset-xl-2 col-form-label">ชื่อ</label>
             <div class="col-xl-4">
               <input type="text" class="form-control form-control-sm" name="firstname" value="<?php echo $row['firstname'] ?>" required>
