@@ -56,7 +56,7 @@ class Issue
 
   public function issue_insert($data)
   {
-    $sql = "INSERT INTO belink.issue_request(`uuid`, `last`, `login_id`, `type`, `date`, `outcome`, `text`) VALUES(uuid(),?,?,?,?,?,?)";
+    $sql = "INSERT INTO belink.issue_request(`uuid`, `last`, `login_id`, `type`, `date`, `event_date`, `event_start`, `event_end`, `event_name`, `sale`, `location_start`, `location_end`, `outcome`, `text`) VALUES(uuid(),?,?,?,?,?,?,?,?,?,?,?,?,?)";
     $stmt = $this->dbcon->prepare($sql);
     return $stmt->execute($data);
   }
@@ -71,6 +71,11 @@ class Issue
     DATE_FORMAT(a.date,'%d/%m/%Y') `date`,
     a.outcome,
     CONCAT('[',CONCAT('IS',YEAR(c.created),LPAD(c.`last`,4,'0')),'] ',c.text) outcome_name,
+    a.event_date,
+    a.event_name,
+    a.sale,
+    a.location_start,
+    a.location_end,
     a.text,
     DATE_FORMAT(a.created, '%d/%m/%Y, %H:%i น.') created
     FROM belink.issue_request a
@@ -87,9 +92,16 @@ class Issue
   public function issue_update($data)
   {
     $sql = "UPDATE belink.issue_request SET
-    `start` = ?,
-    `end` = ?,
-    objective = ?,
+    `date` = ?,
+    event_date = ?,
+    event_start = ?,
+    event_end = ?,
+    event_name = ?,
+    sale = ?,
+    location_start = ?,
+    location_end = ?,
+    outcome = ?,
+    `text` = ?,
     updated = NOW()
     WHERE uuid = ?";
     $stmt = $this->dbcon->prepare($sql);
@@ -521,7 +533,7 @@ class Issue
     return $output;
   }
 
-  public function manage_data($start,$end,$user,$type)
+  public function manage_data($start, $end, $user, $type)
   {
     $sql = "SELECT COUNT(*) FROM belink.issue_request a WHERE a.status IN (1,2,3)";
     $stmt = $this->dbcon->prepare($sql);
@@ -700,7 +712,7 @@ class Issue
   public function type_select($keyword)
   {
     $data = [
-      1 => "นำเข้า", 
+      1 => "นำเข้า",
       2 => "เบิกออก"
     ];
 

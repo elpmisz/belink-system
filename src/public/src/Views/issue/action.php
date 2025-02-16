@@ -44,6 +44,14 @@ if ($action === "create") {
   $type = (isset($_POST['type']) ? $VALIDATION->input($_POST['type']) : "");
   $date = (isset($_POST['date']) ? $VALIDATION->input($_POST['date']) : "");
   $date = (!empty($date) ? date("Y-m-d", strtotime(str_replace("/", "-", trim($date)))) : "");
+  $event_date = (isset($_POST['event_date']) ? $VALIDATION->input($_POST['event_date']) : "");
+  $event_date_array = (!empty($event_date) ? explode(" - ", $event_date) : "");
+  $event_start = (!empty($event_date) ? DateTime::createFromFormat('d/m/Y', $event_date_array[0])->format('Y-m-d') : "");
+  $event_end = (!empty($event_date) ? DateTime::createFromFormat('d/m/Y', $event_date_array[1])->format('Y-m-d') : "");
+  $event_name = (isset($_POST['event_name']) ? $VALIDATION->input($_POST['event_name']) : "");
+  $sale = (isset($_POST['sale']) ? $VALIDATION->input($_POST['sale']) : "");
+  $location_start = (isset($_POST['location_start']) ? $VALIDATION->input($_POST['location_start']) : "");
+  $location_end = (isset($_POST['location_end']) ? $VALIDATION->input($_POST['location_end']) : "");
   $outcome = (isset($_POST['outcome']) ? $VALIDATION->input($_POST['outcome']) : "");
   $text = (isset($_POST['text']) ? $VALIDATION->input($_POST['text']) : "");
   $issue_last = $ISSUE->issue_last();
@@ -53,7 +61,7 @@ if ($action === "create") {
     $VALIDATION->alert("danger", "ข้อมูลซ้ำในระบบ!", "/issue");
   }
 
-  $ISSUE->issue_insert([$issue_last, $login_id, $type, $date, $outcome, $text]);
+  $ISSUE->issue_insert([$issue_last, $login_id, $type, $date, $event_date, $event_start, $event_end, $event_name, $sale, $location_start, $location_end, $outcome, $text]);
   $request_id = $ISSUE->last_insert_id();
 
   foreach ($_POST['product_id'] as $key => $row) {
@@ -105,7 +113,18 @@ if ($action === "update") {
     $type = (isset($_POST['type']) ? $VALIDATION->input($_POST['type']) : "");
     $date = (isset($_POST['date']) ? $VALIDATION->input($_POST['date']) : "");
     $date = (!empty($date) ? date("Y-m-d", strtotime(str_replace("/", "-", trim($date)))) : "");
+    $event_date = (isset($_POST['event_date']) ? $VALIDATION->input($_POST['event_date']) : "");
+    $event_date_array = (!empty($event_date) ? explode(" - ", $event_date) : "");
+    $event_start = (!empty($event_date) ? DateTime::createFromFormat('d/m/Y', $event_date_array[0])->format('Y-m-d') : "");
+    $event_end = (!empty($event_date) ? DateTime::createFromFormat('d/m/Y', $event_date_array[1])->format('Y-m-d') : "");
+    $event_name = (isset($_POST['event_name']) ? $VALIDATION->input($_POST['event_name']) : "");
+    $sale = (isset($_POST['sale']) ? $VALIDATION->input($_POST['sale']) : "");
+    $location_start = (isset($_POST['location_start']) ? $VALIDATION->input($_POST['location_start']) : "");
+    $location_end = (isset($_POST['location_end']) ? $VALIDATION->input($_POST['location_end']) : "");
+    $outcome = (isset($_POST['outcome']) ? $VALIDATION->input($_POST['outcome']) : "");
     $text = (isset($_POST['text']) ? $VALIDATION->input($_POST['text']) : "");
+
+    $ISSUE->issue_update([$date, $event_date, $event_start, $event_end, $event_name, $sale, $location_start, $location_end, $outcome, $text, $uuid]);
 
     foreach ($_POST['item__id'] as $key => $row) {
       $item__id = (isset($_POST['item__id'][$key]) ? $VALIDATION->input($_POST['item__id'][$key]) : "");
@@ -244,7 +263,7 @@ if ($action === "manage-data") {
     $end = (!empty($date[1]) ? DateTime::createFromFormat('d/m/Y', trim($date[1]))->format('Y-m-d') : "");
     $user = (isset($_POST['user']) ? $_POST['user'] : '');
     $type = (isset($_POST['type']) ? $_POST['type'] : '');
-    $result = $ISSUE->manage_data($start,$end,$user,$type);
+    $result = $ISSUE->manage_data($start, $end, $user, $type);
 
     echo json_encode($result);
   } catch (PDOException $e) {

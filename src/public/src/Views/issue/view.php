@@ -62,7 +62,7 @@ $files = $ISSUE->file_view([$uuid]);
         </div>
       </div>
       <div class="row mb-2">
-        <label class="col-xl-2 offset-xl-2 col-form-label">วันที่</label>
+        <label class="col-xl-2 offset-xl-2 col-form-label">วันที่ขึ้นของ</label>
         <div class="col-xl-4">
           <input type="text" class="form-control form-control-sm date-select" name="date" value="<?php echo $row['date'] ?>" required>
           <div class="invalid-feedback">
@@ -71,21 +71,71 @@ $files = $ISSUE->file_view([$uuid]);
         </div>
       </div>
       <?php if (intval($row['type']) === 1) : ?>
-      <div class="row mb-2">
-        <label class="col-xl-2 offset-xl-2 col-form-label">เลขอ้างอิง</label>
-        <div class="col-xl-4">
-          <select class="form-control form-control-sm outcome-select" name="outcome">
-            <?php 
-            if (!empty($row['outcome'])) {
-              echo "<option value='{$row['outcome']}' selected>{$row['outcome_name']}</option>";
-            } 
-            ?>
-          </select>
-          <div class="invalid-feedback">
-            กรุณากรอกข้อมูล!
+        <div class="row mb-2">
+          <label class="col-xl-2 offset-xl-2 col-form-label">เลขอ้างอิง</label>
+          <div class="col-xl-4">
+            <select class="form-control form-control-sm outcome-select" name="outcome">
+              <?php
+              if (!empty($row['outcome'])) {
+                echo "<option value='{$row['outcome']}' selected>{$row['outcome_name']}</option>";
+              }
+              ?>
+            </select>
+            <div class="invalid-feedback">
+              กรุณากรอกข้อมูล!
+            </div>
           </div>
         </div>
-      </div>
+      <?php
+      endif;
+
+      if (intval($row['type']) === 2) :
+      ?>
+        <div class="row mb-2">
+          <label class="col-xl-2 offset-xl-2 col-form-label">วันที่จัดงาน</label>
+          <div class="col-xl-4">
+            <input type="text" class="form-control form-control-sm date-between-select" name="event_date" value="<?php echo $row['event_date'] ?>" required>
+            <div class="invalid-feedback">
+              กรุณากรอกข้อมูล!
+            </div>
+          </div>
+        </div>
+        <div class="row mb-2">
+          <label class="col-xl-2 offset-xl-2 col-form-label">ชื่องาน</label>
+          <div class="col-xl-4">
+            <input type="text" class="form-control form-control-sm" name="event_name" value="<?php echo $row['event_name'] ?>" required>
+            <div class="invalid-feedback">
+              กรุณากรอกข้อมูล!
+            </div>
+          </div>
+        </div>
+        <div class="row mb-2">
+          <label class="col-xl-2 offset-xl-2 col-form-label">พนักงานขาย</label>
+          <div class="col-xl-4">
+            <input type="text" class="form-control form-control-sm" name="sale" value="<?php echo $row['sale'] ?>" required>
+            <div class="invalid-feedback">
+              กรุณากรอกข้อมูล!
+            </div>
+          </div>
+        </div>
+        <div class="row mb-2">
+          <label class="col-xl-2 offset-xl-2 col-form-label">สถานที่ต้นทาง</label>
+          <div class="col-xl-4">
+            <input type="text" class="form-control form-control-sm" name="location_start" value="<?php echo $row['location_start'] ?>" required>
+            <div class="invalid-feedback">
+              กรุณากรอกข้อมูล!
+            </div>
+          </div>
+        </div>
+        <div class="row mb-2">
+          <label class="col-xl-2 offset-xl-2 col-form-label">สถานที่ปลายทาง</label>
+          <div class="col-xl-4">
+            <input type="text" class="form-control form-control-sm" name="location_end" value="<?php echo $row['location_end'] ?>" required>
+            <div class="invalid-feedback">
+              กรุณากรอกข้อมูล!
+            </div>
+          </div>
+        </div>
       <?php endif; ?>
       <div class="row mb-2">
         <label class="col-xl-2 offset-xl-2 col-form-label">รายละเอียด</label>

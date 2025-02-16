@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: database
--- Generation Time: Feb 14, 2025 at 09:50 AM
+-- Generation Time: Feb 16, 2025 at 04:49 PM
 -- Server version: 11.6.2-MariaDB-ubu2404
 -- PHP Version: 8.2.27
 
@@ -418,7 +418,7 @@ CREATE TABLE `borrow_authorize` (
   `status` int(1) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
   `created` datetime NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `borrow_authorize`
@@ -755,7 +755,7 @@ CREATE TABLE `issue_authorize` (
   `status` int(1) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
   `created` datetime NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `issue_authorize`
@@ -861,7 +861,9 @@ INSERT INTO `issue_item` (`id`, `request_id`, `product_id`, `warehouse_id`, `typ
 (44, 26, 4, 1, 1, 20.00, 20.00, 1, '2025-02-14 14:34:52', '2025-02-14 14:16:35'),
 (45, 26, 2, 1, 1, 20.00, 20.00, 1, '2025-02-14 14:34:52', '2025-02-14 14:33:23'),
 (46, 27, 4, 1, 2, 20.00, 20.00, 1, '2025-02-14 14:38:44', '2025-02-14 14:38:31'),
-(47, 27, 2, 1, 2, 20.00, 20.00, 1, '2025-02-14 14:38:44', '2025-02-14 14:38:31');
+(47, 27, 2, 1, 2, 20.00, 20.00, 1, '2025-02-14 14:38:44', '2025-02-14 14:38:31'),
+(50, 29, 4, 1, 2, 20.00, 20.00, 1, '2025-02-16 23:12:52', '2025-02-16 20:58:36'),
+(51, 29, 2, 1, 2, 20.00, 20.00, 1, '2025-02-16 23:12:52', '2025-02-16 20:58:36');
 
 -- --------------------------------------------------------
 
@@ -909,7 +911,8 @@ INSERT INTO `issue_remark` (`id`, `request_id`, `login_id`, `text`, `status`, `c
 (24, 24, 2, 'ผ่านการตรวจสอบ', 2, '2025-02-13 06:53:21'),
 (25, 25, 2, 'ผ่านการตรวจสอบ', 2, '2025-02-13 06:55:33'),
 (26, 26, 1, 'ผ่านการตรวจสอบ', 2, '2025-02-14 14:34:52'),
-(27, 27, 1, 'ผ่านการตรวจสอบ', 2, '2025-02-14 14:38:44');
+(27, 27, 1, 'ผ่านการตรวจสอบ', 2, '2025-02-14 14:38:44'),
+(28, 29, 1, 'ผ่านการตรวจสอบ', 2, '2025-02-16 23:12:52');
 
 -- --------------------------------------------------------
 
@@ -924,6 +927,13 @@ CREATE TABLE `issue_request` (
   `login_id` int(11) NOT NULL,
   `type` int(11) NOT NULL,
   `date` date NOT NULL,
+  `event_date` varchar(50) DEFAULT NULL,
+  `event_start` date DEFAULT NULL,
+  `event_end` date DEFAULT NULL,
+  `event_name` varchar(100) DEFAULT NULL,
+  `sale` varchar(50) DEFAULT NULL,
+  `location_start` varchar(50) DEFAULT NULL,
+  `location_end` varchar(50) DEFAULT NULL,
   `outcome` int(11) DEFAULT NULL,
   `text` varchar(200) NOT NULL,
   `status` int(11) NOT NULL DEFAULT 1,
@@ -935,34 +945,35 @@ CREATE TABLE `issue_request` (
 -- Dumping data for table `issue_request`
 --
 
-INSERT INTO `issue_request` (`id`, `uuid`, `last`, `login_id`, `type`, `date`, `outcome`, `text`, `status`, `updated`, `created`) VALUES
-(1, '0d4e7225-e6e1-11ef-8e45-0242ac120003', 1, 1, 1, '2025-02-09', NULL, 'ยอดยกมา\r\nยอดยกมา', 2, '2025-02-09 21:18:35', '2025-02-09 19:26:12'),
-(2, 'a216c3de-e6ec-11ef-8e45-0242ac120003', 2, 1, 1, '2025-02-09', NULL, 'ยอดยกมา', 2, '2025-02-09 21:22:42', '2025-02-09 20:49:06'),
-(3, 'b871a565-e6f4-11ef-8e45-0242ac120003', 3, 1, 2, '2025-02-09', NULL, 'กิจกรรม\r\nกิจกรรม', 2, '2025-02-09 21:47:23', '2025-02-09 21:46:59'),
-(4, '403a2779-e76a-11ef-8583-2ad6c30b0fff', 4, 1, 2, '2025-02-10', NULL, 'งาน Event วันหยุด', 2, '2025-02-13 02:55:54', '2025-02-10 04:48:20'),
-(5, '6935145b-e76a-11ef-8583-2ad6c30b0fff', 5, 1, 1, '2025-02-10', NULL, 'test', 2, '2025-02-13 02:55:52', '2025-02-10 04:49:28'),
-(6, 'c3460b2c-e76a-11ef-8583-2ad6c30b0fff', 6, 1, 2, '2025-02-10', NULL, 'Event งานวันเกิด', 2, '2025-02-10 04:52:17', '2025-02-10 04:52:00'),
-(7, '62ca9076-e76b-11ef-8583-2ad6c30b0fff', 7, 1, 2, '2025-02-10', NULL, 'Event งานทำบุญ บริษัท', 2, '2025-02-13 02:55:50', '2025-02-10 04:56:27'),
-(8, 'dba9b79d-e76b-11ef-8583-2ad6c30b0fff', 8, 1, 2, '2025-02-10', NULL, 'งานทำบุญบริษัท ช้าช้างช้าง จำกัด', 2, '2025-02-13 02:55:48', '2025-02-10 04:59:50'),
-(9, '5a5d4ed1-e76c-11ef-8583-2ad6c30b0fff', 9, 1, 1, '2025-02-10', NULL, 'แอคโนไฟท์', 2, '2025-02-10 05:12:45', '2025-02-10 05:03:23'),
-(10, '974328c3-e76c-11ef-8583-2ad6c30b0fff', 10, 1, 2, '2025-02-10', NULL, 'Event SO 3332222', 2, '2025-02-13 02:55:45', '2025-02-10 05:05:05'),
-(11, 'd21d9048-e76d-11ef-8583-2ad6c30b0fff', 11, 1, 2, '2025-02-10', NULL, 'Event SO332323', 2, '2025-02-10 05:14:35', '2025-02-10 05:13:53'),
-(12, '803b0831-e771-11ef-8583-2ad6c30b0fff', 12, 1, 1, '2025-02-10', NULL, 'TEST\r\nTEST', 2, '2025-02-11 00:33:16', '2025-02-10 05:40:14'),
-(13, '0f511843-e772-11ef-8583-2ad6c30b0fff', 13, 1, 1, '2025-02-10', NULL, 'DDDD', 2, '2025-02-11 00:33:11', '2025-02-10 05:44:14'),
-(14, 'd09befcb-e80e-11ef-8583-2ad6c30b0fff', 14, 1, 2, '2025-02-11', NULL, 'งาน Event SO 447747700', 2, '2025-02-11 00:26:44', '2025-02-11 00:26:19'),
-(15, '1fcbf5f7-e810-11ef-8583-2ad6c30b0fff', 15, 2, 1, '2025-02-11', NULL, 'งานทดสอบ', 2, '2025-02-13 02:55:41', '2025-02-11 00:35:42'),
-(16, '48f4add3-e862-11ef-8583-2ad6c30b0fff', 16, 2, 2, '2025-02-11', NULL, 'Event ทำบุญบริษัท zzzzz', 2, '2025-02-11 10:24:28', '2025-02-11 10:23:50'),
-(17, '9667d864-e862-11ef-8583-2ad6c30b0fff', 17, 2, 2, '2025-02-11', NULL, 'Event วันเกิด SO --545454545', 2, '2025-02-11 10:26:45', '2025-02-11 10:25:59'),
-(18, 'bd178bdd-e948-11ef-8583-2ad6c30b0fff', 18, 1, 1, '2025-02-12', NULL, 'AAAA', 2, '2025-02-12 13:53:44', '2025-02-12 13:53:29'),
-(19, 'ebb61397-e948-11ef-8583-2ad6c30b0fff', 19, 1, 2, '2025-02-12', NULL, 'DDDD', 2, '2025-02-12 14:10:11', '2025-02-12 13:54:47'),
-(20, 'a0aa1b6b-e9b5-11ef-8583-2ad6c30b0fff', 20, 2, 2, '2025-02-13', NULL, 'งานบริษัท TTTTTTT ชุดงานแจกสินค้า', 2, '2025-02-13 02:55:29', '2025-02-13 02:52:56'),
-(21, '4609d2b5-e9c2-11ef-8583-2ad6c30b0fff', 21, 2, 2, '2025-02-13', NULL, 'กิจกรรม งานบริษัท 5555', 2, '2025-02-13 04:24:19', '2025-02-13 04:23:27'),
-(22, '9b49344c-e9c2-11ef-8583-2ad6c30b0fff', 22, 5, 1, '2025-02-13', NULL, 'IS20250021 เหลือจากรายการ', 2, '2025-02-13 04:26:09', '2025-02-13 04:25:50'),
-(23, '4b50f262-e9c3-11ef-8583-2ad6c30b0fff', 23, 2, 1, '2025-02-13', NULL, 'IS20250021 เหลือ', 2, '2025-02-13 04:31:43', '2025-02-13 04:30:46'),
-(24, '0385479d-e9d7-11ef-8583-2ad6c30b0fff', 24, 2, 2, '2025-02-13', NULL, 'ไปออกงาน Event บริษัท 8888', 2, '2025-02-13 06:53:21', '2025-02-13 06:51:55'),
-(25, '73d4757b-e9d7-11ef-8583-2ad6c30b0fff', 25, 2, 1, '2025-02-13', NULL, 'IS20250024 เหลือจากงาน บริษัท 8888', 2, '2025-02-13 06:55:33', '2025-02-13 06:55:04'),
-(26, 'a042a733-eaa3-11ef-a265-0242ac120005', 26, 1, 1, '2025-02-14', 20, 'dddddd', 2, '2025-02-14 14:34:52', '2025-02-14 14:16:35'),
-(27, 'b0959648-eaa6-11ef-a265-0242ac120005', 27, 1, 2, '2025-02-14', 0, 'ddddd', 2, '2025-02-14 14:38:44', '2025-02-14 14:38:31');
+INSERT INTO `issue_request` (`id`, `uuid`, `last`, `login_id`, `type`, `date`, `event_date`, `event_start`, `event_end`, `event_name`, `sale`, `location_start`, `location_end`, `outcome`, `text`, `status`, `updated`, `created`) VALUES
+(1, '0d4e7225-e6e1-11ef-8e45-0242ac120003', 1, 1, 1, '2025-02-09', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'ยอดยกมา\r\nยอดยกมา', 2, '2025-02-09 21:18:35', '2025-02-09 19:26:12'),
+(2, 'a216c3de-e6ec-11ef-8e45-0242ac120003', 2, 1, 1, '2025-02-09', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'ยอดยกมา', 2, '2025-02-09 21:22:42', '2025-02-09 20:49:06'),
+(3, 'b871a565-e6f4-11ef-8e45-0242ac120003', 3, 1, 2, '2025-02-09', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'กิจกรรม\r\nกิจกรรม', 2, '2025-02-09 21:47:23', '2025-02-09 21:46:59'),
+(4, '403a2779-e76a-11ef-8583-2ad6c30b0fff', 4, 1, 2, '2025-02-10', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'งาน Event วันหยุด', 2, '2025-02-13 02:55:54', '2025-02-10 04:48:20'),
+(5, '6935145b-e76a-11ef-8583-2ad6c30b0fff', 5, 1, 1, '2025-02-10', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'test', 2, '2025-02-13 02:55:52', '2025-02-10 04:49:28'),
+(6, 'c3460b2c-e76a-11ef-8583-2ad6c30b0fff', 6, 1, 2, '2025-02-10', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Event งานวันเกิด', 2, '2025-02-10 04:52:17', '2025-02-10 04:52:00'),
+(7, '62ca9076-e76b-11ef-8583-2ad6c30b0fff', 7, 1, 2, '2025-02-10', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Event งานทำบุญ บริษัท', 2, '2025-02-13 02:55:50', '2025-02-10 04:56:27'),
+(8, 'dba9b79d-e76b-11ef-8583-2ad6c30b0fff', 8, 1, 2, '2025-02-10', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'งานทำบุญบริษัท ช้าช้างช้าง จำกัด', 2, '2025-02-13 02:55:48', '2025-02-10 04:59:50'),
+(9, '5a5d4ed1-e76c-11ef-8583-2ad6c30b0fff', 9, 1, 1, '2025-02-10', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'แอคโนไฟท์', 2, '2025-02-10 05:12:45', '2025-02-10 05:03:23'),
+(10, '974328c3-e76c-11ef-8583-2ad6c30b0fff', 10, 1, 2, '2025-02-10', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Event SO 3332222', 2, '2025-02-13 02:55:45', '2025-02-10 05:05:05'),
+(11, 'd21d9048-e76d-11ef-8583-2ad6c30b0fff', 11, 1, 2, '2025-02-10', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Event SO332323', 2, '2025-02-10 05:14:35', '2025-02-10 05:13:53'),
+(12, '803b0831-e771-11ef-8583-2ad6c30b0fff', 12, 1, 1, '2025-02-10', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'TEST\r\nTEST', 2, '2025-02-11 00:33:16', '2025-02-10 05:40:14'),
+(13, '0f511843-e772-11ef-8583-2ad6c30b0fff', 13, 1, 1, '2025-02-10', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'DDDD', 2, '2025-02-11 00:33:11', '2025-02-10 05:44:14'),
+(14, 'd09befcb-e80e-11ef-8583-2ad6c30b0fff', 14, 1, 2, '2025-02-11', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'งาน Event SO 447747700', 2, '2025-02-11 00:26:44', '2025-02-11 00:26:19'),
+(15, '1fcbf5f7-e810-11ef-8583-2ad6c30b0fff', 15, 2, 1, '2025-02-11', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'งานทดสอบ', 2, '2025-02-13 02:55:41', '2025-02-11 00:35:42'),
+(16, '48f4add3-e862-11ef-8583-2ad6c30b0fff', 16, 2, 2, '2025-02-11', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Event ทำบุญบริษัท zzzzz', 2, '2025-02-11 10:24:28', '2025-02-11 10:23:50'),
+(17, '9667d864-e862-11ef-8583-2ad6c30b0fff', 17, 2, 2, '2025-02-11', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Event วันเกิด SO --545454545', 2, '2025-02-11 10:26:45', '2025-02-11 10:25:59'),
+(18, 'bd178bdd-e948-11ef-8583-2ad6c30b0fff', 18, 1, 1, '2025-02-12', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'AAAA', 2, '2025-02-12 13:53:44', '2025-02-12 13:53:29'),
+(19, 'ebb61397-e948-11ef-8583-2ad6c30b0fff', 19, 1, 2, '2025-02-12', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'DDDD', 2, '2025-02-12 14:10:11', '2025-02-12 13:54:47'),
+(20, 'a0aa1b6b-e9b5-11ef-8583-2ad6c30b0fff', 20, 2, 2, '2025-02-13', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'งานบริษัท TTTTTTT ชุดงานแจกสินค้า', 2, '2025-02-13 02:55:29', '2025-02-13 02:52:56'),
+(21, '4609d2b5-e9c2-11ef-8583-2ad6c30b0fff', 21, 2, 2, '2025-02-13', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'กิจกรรม งานบริษัท 5555', 2, '2025-02-13 04:24:19', '2025-02-13 04:23:27'),
+(22, '9b49344c-e9c2-11ef-8583-2ad6c30b0fff', 22, 5, 1, '2025-02-13', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'IS20250021 เหลือจากรายการ', 2, '2025-02-13 04:26:09', '2025-02-13 04:25:50'),
+(23, '4b50f262-e9c3-11ef-8583-2ad6c30b0fff', 23, 2, 1, '2025-02-13', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'IS20250021 เหลือ', 2, '2025-02-13 04:31:43', '2025-02-13 04:30:46'),
+(24, '0385479d-e9d7-11ef-8583-2ad6c30b0fff', 24, 2, 2, '2025-02-13', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'ไปออกงาน Event บริษัท 8888', 2, '2025-02-13 06:53:21', '2025-02-13 06:51:55'),
+(25, '73d4757b-e9d7-11ef-8583-2ad6c30b0fff', 25, 2, 1, '2025-02-13', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'IS20250024 เหลือจากงาน บริษัท 8888', 2, '2025-02-13 06:55:33', '2025-02-13 06:55:04'),
+(26, 'a042a733-eaa3-11ef-a265-0242ac120005', 26, 1, 1, '2025-02-14', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 20, 'dddddd', 2, '2025-02-14 14:34:52', '2025-02-14 14:16:35'),
+(27, 'b0959648-eaa6-11ef-a265-0242ac120005', 27, 1, 2, '2025-02-14', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 'ddddd', 2, '2025-02-14 14:38:44', '2025-02-14 14:38:31'),
+(29, 'c73f5174-ec6a-11ef-87cf-0242ac120002', 28, 1, 2, '2025-02-16', '17/02/2025 - 21/02/2025', '2025-02-17', '2025-02-21', 'xxxxx', 'yyyyy', 'zzzzz', 'qqqqq', 0, 'wwwww\r\nwwwww', 2, '2025-02-16 23:12:52', '2025-02-16 20:58:36');
 
 -- --------------------------------------------------------
 
@@ -1998,19 +2009,19 @@ ALTER TABLE `issue_file`
 -- AUTO_INCREMENT for table `issue_item`
 --
 ALTER TABLE `issue_item`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=48;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
 
 --
 -- AUTO_INCREMENT for table `issue_remark`
 --
 ALTER TABLE `issue_remark`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
 -- AUTO_INCREMENT for table `issue_request`
 --
 ALTER TABLE `issue_request`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 
 --
 -- AUTO_INCREMENT for table `login`

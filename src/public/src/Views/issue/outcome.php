@@ -25,9 +25,54 @@ include_once(__DIR__ . "/../layout/header.php");
         </div>
       </div>
       <div class="row mb-2">
-        <label class="col-xl-2 offset-xl-2 col-form-label">วันที่</label>
+        <label class="col-xl-2 offset-xl-2 col-form-label">วันที่ขึ้นของ</label>
         <div class="col-xl-4">
           <input type="text" class="form-control form-control-sm date-select" name="date" required>
+          <div class="invalid-feedback">
+            กรุณากรอกข้อมูล!
+          </div>
+        </div>
+      </div>
+      <div class="row mb-2">
+        <label class="col-xl-2 offset-xl-2 col-form-label">วันที่จัดงาน</label>
+        <div class="col-xl-4">
+          <input type="text" class="form-control form-control-sm date-between-select" name="event_date" required>
+          <div class="invalid-feedback">
+            กรุณากรอกข้อมูล!
+          </div>
+        </div>
+      </div>
+      <div class="row mb-2">
+        <label class="col-xl-2 offset-xl-2 col-form-label">ชื่องาน</label>
+        <div class="col-xl-4">
+          <input type="text" class="form-control form-control-sm" name="event_name" required>
+          <div class="invalid-feedback">
+            กรุณากรอกข้อมูล!
+          </div>
+        </div>
+      </div>
+      <div class="row mb-2">
+        <label class="col-xl-2 offset-xl-2 col-form-label">พนักงานขาย</label>
+        <div class="col-xl-4">
+          <input type="text" class="form-control form-control-sm" name="sale" required>
+          <div class="invalid-feedback">
+            กรุณากรอกข้อมูล!
+          </div>
+        </div>
+      </div>
+      <div class="row mb-2">
+        <label class="col-xl-2 offset-xl-2 col-form-label">สถานที่ต้นทาง</label>
+        <div class="col-xl-4">
+          <input type="text" class="form-control form-control-sm" name="location_start" required>
+          <div class="invalid-feedback">
+            กรุณากรอกข้อมูล!
+          </div>
+        </div>
+      </div>
+      <div class="row mb-2">
+        <label class="col-xl-2 offset-xl-2 col-form-label">สถานที่ปลายทาง</label>
+        <div class="col-xl-4">
+          <input type="text" class="form-control form-control-sm" name="location_end" required>
           <div class="invalid-feedback">
             กรุณากรอกข้อมูล!
           </div>
@@ -77,8 +122,8 @@ include_once(__DIR__ . "/../layout/header.php");
                       กรุณากรอกข้อมูล!
                     </div>
                   </td>
-                  <td class="text-right product-location"></td>
-                  <td class="text-right product-remain"></td>
+                  <td class="text-right"><span class="product-location"></span></td>
+                  <td class="text-right"><span class="product-remain"></span></td>
                   <td>
                     <input type="number" class="form-control form-control-sm text-right item-amount" name="item_amount[]" min="1" required>
                     <div class="invalid-feedback">
@@ -136,7 +181,7 @@ include_once(__DIR__ . "/../layout/header.php");
   $(document).on("click", ".item-increase", function() {
     let row = $(".item-tr:last");
     let clone = row.clone();
-    clone.find("input, select").val("").empty();
+    clone.find("input, select, span").val("").empty();
     clone.find("span").text("");
     clone.find(".item-increase").hide();
     clone.find(".item-decrease").show();
@@ -233,7 +278,27 @@ include_once(__DIR__ . "/../layout/header.php");
     $(this).val(picker.startDate.format('DD/MM/YYYY'));
   });
 
-  $(".date-select").on("keydown paste", function(e) {
+  $(".date-between-select").daterangepicker({
+    showDropdowns: true,
+    locale: {
+      "format": "DD/MM/YYYY",
+      "daysOfWeek": [
+        "อา", "จ", "อ", "พ", "พฤ", "ศ", "ส"
+      ],
+      "monthNames": [
+        "มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน",
+        "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"
+      ]
+    },
+    "applyButtonClasses": "btn-success",
+    "cancelClass": "btn-danger"
+  });
+
+  $(".date-between-select").on("apply.daterangepicker", function(ev, picker) {
+    $(this).val(picker.startDate.format('DD/MM/YYYY') + ' - ' + picker.endDate.format('DD/MM/YYYY'));
+  });
+
+  $(".date-select, .date-between").on("keydown paste", function(e) {
     e.preventDefault();
   });
 </script>

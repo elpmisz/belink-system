@@ -86,8 +86,8 @@ include_once(__DIR__ . "/../layout/header.php");
                       กรุณากรอกข้อมูล!
                     </div>
                   </td>
-                  <td class="text-center product-location">
-                  <td class="text-right product-remain">
+                  <td class="text-center"><span class="product-location"></span></td>
+                  <td class="text-right"><span class="product-remain"></span></td>
                   <td>
                     <input type="number" class="form-control form-control-sm text-right item-amount" name="item_amount[]" min="1" required>
                     <div class="invalid-feedback">
@@ -146,7 +146,7 @@ include_once(__DIR__ . "/../layout/header.php");
   $(document).on("click", ".item-increase", function() {
     let row = $(".item-tr:last");
     let clone = row.clone();
-    clone.find("input, select").val("").empty();
+    clone.find("input, select, span").val("").empty();
     clone.find("span").text("");
     clone.find(".item-increase").hide();
     clone.find(".item-decrease").show();
