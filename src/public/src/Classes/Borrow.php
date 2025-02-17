@@ -46,8 +46,9 @@ class Borrow
     FROM belink.borrow_request a
     WHERE a.status = 1
     AND a.login_id = ?
-    AND a.start = ?
-    AND a.end = ?
+    AND a.date = ?
+    AND a.event_date = ?
+    AND a.event_name = ?
     AND a.objective = ?";
     $stmt = $this->dbcon->prepare($sql);
     $stmt->execute($data);
@@ -56,7 +57,7 @@ class Borrow
 
   public function borrow_insert($data)
   {
-    $sql = "INSERT INTO belink.borrow_request(`uuid`, `last`, `login_id`, `start`, `end`, `objective`) VALUES(uuid(),?,?,?,?,?)";
+    $sql = "INSERT INTO belink.borrow_request( `uuid`, `last`, `login_id`, `date`, `event_date`, `event_start`, `event_end`, `event_name`, `sale`, `location_start`, `location_end`, `objective`) VALUES(uuid(),?,?,?,?,?,?,?,?,?,?,?)";
     $stmt = $this->dbcon->prepare($sql);
     return $stmt->execute($data);
   }
@@ -67,7 +68,12 @@ class Borrow
     a.`uuid`,
     CONCAT('BR',YEAR(a.created),LPAD(a.`last`,4,'0')) ticket,
     CONCAT(b.firstname,' ',b.lastname) username,
-    CONCAT(DATE_FORMAT(a.start,'%d/%m/%Y'),' - ',DATE_FORMAT(a.end,'%d/%m/%Y')) `date`,
+    DATE_FORMAT(a.date,'%d/%m/%Y') `date`,
+    a.event_date,
+    a.event_name,
+    a.sale,
+    a.location_start,
+    a.location_end,
     a.objective,
     DATE_FORMAT(a.created, '%d/%m/%Y, %H:%i น.') created
     FROM belink.borrow_request a
@@ -82,8 +88,14 @@ class Borrow
   public function borrow_update($data)
   {
     $sql = "UPDATE belink.borrow_request SET
-    `start` = ?,
-    `end` = ?,
+    `date` = ?,
+    event_date = ?,
+    event_start = ?,
+    event_end = ?,
+    event_name = ?,
+    sale = ?,
+    location_start = ?,
+    location_end = ?,
     objective = ?,
     updated = NOW()
     WHERE uuid = ?";
@@ -272,7 +284,7 @@ class Borrow
     CONCAT('BR',YEAR(a.created),LPAD(a.`last`,4,'0')) ticket,
     CONCAT(b.firstname,' ',b.lastname) username,
     GROUP_CONCAT(DISTINCT CONCAT(IF(d.`code` = '','',CONCAT('[',d.`code`,'] ')),d.name)) items,
-    CONCAT(DATE_FORMAT(a.start,'%d/%m/%Y'),' - ',DATE_FORMAT(a.end,'%d/%m/%Y')) `date`,
+    CONCAT(DATE_FORMAT(a.event_start,'%d/%m/%Y'),' - ',DATE_FORMAT(a.event_end,'%d/%m/%Y')) `date`,
     a.objective,
     (
       CASE
@@ -341,8 +353,8 @@ class Borrow
         $row['ticket'],
         $row['username'],
         str_replace(",", ",<br>", $row['items']),
-        str_replace("\n", "<br>", $row['objective']),
         str_replace("-", "-<br>", $row['date']),
+        str_replace("\n", "<br>", $row['objective']),
         $row['created'],
       ];
     }
@@ -378,7 +390,7 @@ class Borrow
     CONCAT('BR',YEAR(a.created),LPAD(a.`last`,4,'0')) ticket,
     CONCAT(b.firstname,' ',b.lastname) username,
     GROUP_CONCAT(DISTINCT CONCAT(IF(d.`code` = '','',CONCAT('[',d.`code`,'] ')),d.name)) items,
-    CONCAT(DATE_FORMAT(a.start,'%d/%m/%Y'),' - ',DATE_FORMAT(a.end,'%d/%m/%Y')) `date`,
+    CONCAT(DATE_FORMAT(a.event_start,'%d/%m/%Y'),' - ',DATE_FORMAT(a.event_end,'%d/%m/%Y')) `date`,
     a.objective,
     (
       CASE
@@ -448,8 +460,8 @@ class Borrow
           $row['ticket'],
           $row['username'],
           str_replace(",", ",<br>", $row['items']),
-          str_replace("\n", "<br>", $row['objective']),
           str_replace("-", "-<br>", $row['date']),
+          str_replace("\n", "<br>", $row['objective']),
           $row['created'],
         ];
       }
@@ -464,7 +476,7 @@ class Borrow
     return $output;
   }
 
-  public function manage_data()
+  public function manage_data($start, $end, $user)
   {
     $sql = "SELECT COUNT(*) FROM belink.borrow_request a";
     $stmt = $this->dbcon->prepare($sql);
@@ -486,7 +498,7 @@ class Borrow
     CONCAT('BR',YEAR(a.created),LPAD(a.`last`,4,'0')) ticket,
     CONCAT(b.firstname,' ',b.lastname) username,
     GROUP_CONCAT(DISTINCT CONCAT(IF(d.`code` = '','',CONCAT('[',d.`code`,'] ')),d.name)) items,
-    CONCAT(DATE_FORMAT(a.start,'%d/%m/%Y'),' - ',DATE_FORMAT(a.end,'%d/%m/%Y')) `date`,
+    CONCAT(DATE_FORMAT(a.event_start,'%d/%m/%Y'),' - ',DATE_FORMAT(a.event_end,'%d/%m/%Y')) `date`,
     a.objective,
     (
       CASE
@@ -514,6 +526,12 @@ class Borrow
     ON c.asset_id = d.id
     WHERE c.status = 1 ";
 
+    if (!empty($start)) {
+      $sql .= " AND (a.date BETWEEN '{$start}' AND '{$end}') ";
+    }
+    if (!empty($user)) {
+      $sql .= " AND (a.login_id = '{$user}') ";
+    }
     if (!empty($keyword)) {
       $sql .= " AND (a.objective LIKE '%{$keyword}%') ";
     }
@@ -548,8 +566,8 @@ class Borrow
           $row['ticket'],
           $row['username'],
           str_replace(",", ",<br>", $row['items']),
-          str_replace("\n", "<br>", $row['objective']),
           str_replace("-", "-<br>", $row['date']),
+          str_replace("\n", "<br>", $row['objective']),
           $row['created'],
         ];
       }
@@ -608,6 +626,22 @@ class Borrow
       $sql .= " AND (name LIKE '%{$keyword}%') ";
     }
     $sql .= " ORDER BY name ASC LIMIT 20";
+    $stmt = $this->dbcon->prepare($sql);
+    $stmt->execute();
+    return $stmt->fetchAll();
+  }
+
+  public function user_select($keyword)
+  {
+    $sql = "SELECT a.login_id `id`,CONCAT(b.firstname,' ',b.lastname) `text`
+    FROM belink.borrow_request a
+    LEFT JOIN belink.`user` b
+    ON a.login_id = b.login ";
+    if (!empty($keyword)) {
+      $sql .= " WHERE (b.firstname LIKE '%{$keyword}%' OR b.lastname LIKE '%{$keyword}%') ";
+    }
+    $sql .= " GROUP BY a.login_id
+    ORDER BY b.firstname ASC LIMIT 20";
     $stmt = $this->dbcon->prepare($sql);
     $stmt->execute();
     return $stmt->fetchAll();

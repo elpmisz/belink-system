@@ -12,6 +12,12 @@ include_once(__DIR__ . "/../layout/header.php");
 
     <div class="row justify-content-end mb-2">
       <div class="col-xl-3 mb-2">
+        <input type="text" class="form-control form-control-sm date-select" placeholder="-- วันที่ --">
+      </div>
+      <div class="col-xl-3 mb-2">
+        <select class="form-control form-control-sm user-select"></select>
+      </div>
+      <div class="col-xl-3 mb-2">
         <a href="/borrow/authorize" class="btn btn-primary btn-sm btn-block">
           <i class="fas fa-bars pr-2"></i>สิทธิ์
         </a>
@@ -28,8 +34,8 @@ include_once(__DIR__ . "/../layout/header.php");
                 <th width="10%">เลขที่เอกสาร</th>
                 <th width="10%">ผู้ใช้บริการ</th>
                 <th width="20%">ทรัพย์สิน</th>
-                <th width="20%">วัตถุประสงค์</th>
                 <th width="10%">ระยะเวลา</th>
+                <th width="20%">วัตถุประสงค์</th>
                 <th width="10%">วันที่</th>
               </tr>
             </thead>
@@ -51,9 +57,28 @@ include_once(__DIR__ . "/../layout/header.php");
 
 <?php include_once(__DIR__ . "/../layout/footer.php"); ?>
 <script>
+  initializeSelect2(".user-select", "/borrow/user-select", "-- ผู้ใช้บริการ --");
+
   filter_datatable();
 
-  function filter_datatable() {
+  $(document).on("change", ".date-select ,.user-select", function() {
+    filter();
+  });
+
+  function filter() {
+    let date = ($('.date-select').val() !== null ? $('.date-select').val() : '');
+    let user = ($('.user-select').val() !== null ? $('.user-select').val() : '');
+
+    if (date || user) {
+      $('.manage-data').DataTable().destroy();
+      filter_datatable(date, user);
+    } else {
+      $('.manage-data').DataTable().destroy();
+      filter_datatable();
+    }
+  }
+
+  function filter_datatable(date, user) {
     $(".manage-data").DataTable({
       serverSide: true,
       searching: true,
@@ -61,6 +86,10 @@ include_once(__DIR__ . "/../layout/header.php");
       ajax: {
         url: "/borrow/manage-data",
         type: "POST",
+        data: {
+          date,
+          user,
+        }
       },
       columnDefs: [{
         targets: [0, 1],
@@ -85,4 +114,39 @@ include_once(__DIR__ . "/../layout/header.php");
       },
     });
   };
+
+  $(".date-select").on("keydown paste", function(e) {
+    e.preventDefault();
+  });
+
+  $(".date-select").daterangepicker({
+    autoUpdateInput: false,
+    showDropdowns: true,
+    startDate: moment(),
+    endDate: moment().startOf("day").add(1, "day"),
+    locale: {
+      "format": "DD/MM/YYYY",
+      "applyLabel": "ยืนยัน",
+      "cancelLabel": "ยกเลิก",
+      "daysOfWeek": [
+        "อา", "จ", "อ", "พ", "พฤ", "ศ", "ส"
+      ],
+      "monthNames": [
+        "มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน",
+        "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"
+      ]
+    },
+    "applyButtonClasses": "btn-success",
+    "cancelClass": "btn-danger"
+  });
+
+  $(".date-select").on("apply.daterangepicker", function(ev, picker) {
+    $(this).val(picker.startDate.format("DD/MM/YYYY") + " - " + picker.endDate.format("DD/MM/YYYY"));
+    filter();
+  });
+
+  $(".date-select").on("cancel.daterangepicker", function(ev, picker) {
+    $(this).val("");
+    filter();
+  });
 </script>

@@ -347,7 +347,7 @@ class Issue
     IF(a.type = 1,'นำเข้า','เบิกออก') type_name,
     IF(a.type = 1,'success','danger') type_color,
     GROUP_CONCAT(DISTINCT CONCAT(IF(d.`code` = '','',CONCAT('[',d.`code`,'] ')),d.name)) items,
-    DATE_FORMAT(a.date,'%d/%m/%Y') `date`,
+    CONCAT(DATE_FORMAT(a.event_start,'%d/%m/%Y'),' - ',DATE_FORMAT(a.event_end,'%d/%m/%Y')) `date`,
     a.text,
     (
       CASE
@@ -416,7 +416,7 @@ class Issue
         $row['username'],
         $type,
         str_replace(",", ",<br>", $row['items']),
-        $row['date'],
+        str_replace("-", "-<br>", $row['date']),
         str_replace("\n", "<br>", $row['text']),
         $row['created'],
       ];
@@ -456,7 +456,7 @@ class Issue
     IF(a.type = 1,'นำเข้า','เบิกออก') type_name,
     IF(a.type = 1,'success','danger') type_color,
     GROUP_CONCAT(DISTINCT CONCAT(IF(d.`code` = '','',CONCAT('[',d.`code`,'] ')),d.name)) items,
-    DATE_FORMAT(a.date,'%d/%m/%Y') `date`,
+    CONCAT(DATE_FORMAT(a.event_start,'%d/%m/%Y'),' - ',DATE_FORMAT(a.event_end,'%d/%m/%Y')) `date`,
     a.text,
     (
       CASE
@@ -518,7 +518,7 @@ class Issue
         $row['username'],
         $type,
         str_replace(",", ",<br>", $row['items']),
-        $row['date'],
+        str_replace("-", "-<br>", $row['date']),
         str_replace("\n", "<br>", $row['text']),
         $row['created'],
       ];
@@ -558,7 +558,7 @@ class Issue
     IF(a.type = 1,'นำเข้า','เบิกออก') type_name,
     IF(a.type = 1,'success','danger') type_color,
     GROUP_CONCAT(DISTINCT CONCAT(IF(d.`code` = '','',CONCAT('[',d.`code`,'] ')),d.name)) items,
-    DATE_FORMAT(a.date,'%d/%m/%Y') `date`,
+    CONCAT(DATE_FORMAT(a.event_start,'%d/%m/%Y'),' - ',DATE_FORMAT(a.event_end,'%d/%m/%Y')) `date`,
     a.text,
     (
       CASE
@@ -629,7 +629,7 @@ class Issue
         $row['username'],
         $type,
         str_replace(",", ",<br>", $row['items']),
-        $row['date'],
+        str_replace("-", "-<br>", $row['date']),
         str_replace("\n", "<br>", $row['text']),
         $row['created'],
       ];

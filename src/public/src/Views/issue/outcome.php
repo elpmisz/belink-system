@@ -282,6 +282,8 @@ include_once(__DIR__ . "/../layout/header.php");
     showDropdowns: true,
     locale: {
       "format": "DD/MM/YYYY",
+      "applyLabel": "ยืนยัน",
+      "cancelLabel": "ยกเลิก",
       "daysOfWeek": [
         "อา", "จ", "อ", "พ", "พฤ", "ศ", "ส"
       ],

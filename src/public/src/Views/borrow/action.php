@@ -42,18 +42,25 @@ $VALIDATION = new Validation();
 if ($action === "create") {
   try {
     $login_id = (isset($user['login_id']) ? $VALIDATION->input($user['login_id']) : "");
-    $date = (isset($_POST['date']) ? explode("-", $_POST['date']) : "");
-    $start = (!empty($date[0]) ? date("Y-m-d", strtotime(str_replace("/", "-", trim($date[0])))) : "");
-    $end = (!empty($date[1]) ? date("Y-m-d", strtotime(str_replace("/", "-", trim($date[1])))) : "");
+    $date = (isset($_POST['date']) ? $VALIDATION->input($_POST['date']) : "");
+    $date = (!empty($date) ? date("Y-m-d", strtotime(str_replace("/", "-", trim($date)))) : "");
+    $event_date = (isset($_POST['event_date']) ? $VALIDATION->input($_POST['event_date']) : "");
+    $event_date_array = (!empty($event_date) ? explode(" - ", $event_date) : "");
+    $event_start = (!empty($event_date) ? DateTime::createFromFormat('d/m/Y', $event_date_array[0])->format('Y-m-d') : "");
+    $event_end = (!empty($event_date) ? DateTime::createFromFormat('d/m/Y', $event_date_array[1])->format('Y-m-d') : "");
+    $event_name = (isset($_POST['event_name']) ? $VALIDATION->input($_POST['event_name']) : "");
+    $sale = (isset($_POST['sale']) ? $VALIDATION->input($_POST['sale']) : "");
+    $location_start = (isset($_POST['location_start']) ? $VALIDATION->input($_POST['location_start']) : "");
+    $location_end = (isset($_POST['location_end']) ? $VALIDATION->input($_POST['location_end']) : "");
     $objective = (isset($_POST['objective']) ? $VALIDATION->input($_POST['objective']) : "");
     $borrow_last = $BORROW->borrow_last();
 
-    $borrow_count = $BORROW->borrow_count([$login_id, $start, $end, $objective]);
+    $borrow_count = $BORROW->borrow_count([$login_id, $date, $event_date, $event_name, $objective]);
     if (intval($borrow_count) > 0) {
       $VALIDATION->alert("danger", "ข้อมูลซ้ำในระบบ!", "/borrow");
     }
 
-    $BORROW->borrow_insert([$borrow_last, $login_id, $start, $end, $objective]);
+    $BORROW->borrow_insert([$borrow_last, $login_id, $date, $event_date, $event_start, $event_end, $event_name, $sale, $location_start, $location_end, $objective]);
     $request_id = $BORROW->last_insert_id();
 
     foreach ($_POST['asset_id'] as $key => $row) {
@@ -104,11 +111,18 @@ if ($action === "update") {
   try {
     $request_id = (isset($_POST['id']) ? $VALIDATION->input($_POST['id']) : "");
     $uuid = (isset($_POST['uuid']) ? $VALIDATION->input($_POST['uuid']) : "");
-    $date = (isset($_POST['date']) ? explode("-", $_POST['date']) : "");
-    $start = (!empty($date[0]) ? date("Y-m-d", strtotime(str_replace("/", "-", trim($date[0])))) : "");
-    $end = (!empty($date[1]) ? date("Y-m-d", strtotime(str_replace("/", "-", trim($date[1])))) : "");
+    $date = (isset($_POST['date']) ? $VALIDATION->input($_POST['date']) : "");
+    $date = (!empty($date) ? date("Y-m-d", strtotime(str_replace("/", "-", trim($date)))) : "");
+    $event_date = (isset($_POST['event_date']) ? $VALIDATION->input($_POST['event_date']) : "");
+    $event_date_array = (!empty($event_date) ? explode(" - ", $event_date) : "");
+    $event_start = (!empty($event_date) ? DateTime::createFromFormat('d/m/Y', $event_date_array[0])->format('Y-m-d') : "");
+    $event_end = (!empty($event_date) ? DateTime::createFromFormat('d/m/Y', $event_date_array[1])->format('Y-m-d') : "");
+    $event_name = (isset($_POST['event_name']) ? $VALIDATION->input($_POST['event_name']) : "");
+    $sale = (isset($_POST['sale']) ? $VALIDATION->input($_POST['sale']) : "");
+    $location_start = (isset($_POST['location_start']) ? $VALIDATION->input($_POST['location_start']) : "");
+    $location_end = (isset($_POST['location_end']) ? $VALIDATION->input($_POST['location_end']) : "");
     $objective = (isset($_POST['objective']) ? $VALIDATION->input($_POST['objective']) : "");
-    $BORROW->borrow_update([$start, $end, $objective, $uuid]);
+    $BORROW->borrow_update([$date, $event_date, $event_start, $event_end, $event_name, $sale, $location_start, $location_end, $objective, $uuid]);
 
     foreach ($_POST['item__id'] as $key => $row) {
       $item__id = (isset($_POST['item__id'][$key]) ? $VALIDATION->input($_POST['item__id'][$key]) : "");
@@ -205,7 +219,11 @@ if ($action === "process-data") {
 
 if ($action === "manage-data") {
   try {
-    $result = $BORROW->manage_data();
+    $date = (isset($_POST['date']) ? explode(" - ", $_POST['date']) : '');
+    $start = (!empty($date[0]) ? DateTime::createFromFormat('d/m/Y', trim($date[0]))->format('Y-m-d') : "");
+    $end = (!empty($date[1]) ? DateTime::createFromFormat('d/m/Y', trim($date[1]))->format('Y-m-d') : "");
+    $user = (isset($_POST['user']) ? $_POST['user'] : '');
+    $result = $BORROW->manage_data($start, $end, $user);
 
     echo json_encode($result);
   } catch (PDOException $e) {
@@ -259,6 +277,16 @@ if ($action === "asset-select") {
   try {
     $keyword = (isset($_POST['q']) ? $VALIDATION->input($_POST['q']) : "");
     $result = $BORROW->asset_select($keyword);
+    echo json_encode($result);
+  } catch (PDOException $e) {
+    die($e->getMessage());
+  }
+}
+
+if ($action === "user-select") {
+  try {
+    $keyword = (isset($_POST['q']) ? $VALIDATION->input($_POST['q']) : "");
+    $result = $BORROW->user_select($keyword);
     echo json_encode($result);
   } catch (PDOException $e) {
     die($e->getMessage());

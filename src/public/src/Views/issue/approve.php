@@ -62,7 +62,7 @@ $files = $ISSUE->file_view([$uuid]);
         </div>
       </div>
       <div class="row mb-2">
-        <label class="col-xl-2 offset-xl-2 col-form-label">วันที่</label>
+        <label class="col-xl-2 offset-xl-2 col-form-label">วันที่ขึ้นของ</label>
         <div class="col-xl-4 text-underline">
           <?php echo $row['date'] ?>
         </div>

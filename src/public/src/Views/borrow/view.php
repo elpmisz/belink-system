@@ -47,9 +47,54 @@ $files = $BORROW->file_view([$uuid]);
         </div>
       </div>
       <div class="row mb-2">
-        <label class="col-xl-2 offset-xl-2 col-form-label">ระยะเวลา</label>
+        <label class="col-xl-2 offset-xl-2 col-form-label">วันที่ขึ้นของ</label>
         <div class="col-xl-4">
           <input type="text" class="form-control form-control-sm date-select" name="date" value="<?php echo $row['date'] ?>" required>
+          <div class="invalid-feedback">
+            กรุณากรอกข้อมูล!
+          </div>
+        </div>
+      </div>
+      <div class="row mb-2">
+        <label class="col-xl-2 offset-xl-2 col-form-label">วันที่จัดงาน</label>
+        <div class="col-xl-4">
+          <input type="text" class="form-control form-control-sm date-between-select" name="event_date" value="<?php echo $row['event_date'] ?>" required>
+          <div class="invalid-feedback">
+            กรุณากรอกข้อมูล!
+          </div>
+        </div>
+      </div>
+      <div class="row mb-2">
+        <label class="col-xl-2 offset-xl-2 col-form-label">ชื่องาน</label>
+        <div class="col-xl-4">
+          <input type="text" class="form-control form-control-sm" name="event_name" value="<?php echo $row['event_name'] ?>" required>
+          <div class="invalid-feedback">
+            กรุณากรอกข้อมูล!
+          </div>
+        </div>
+      </div>
+      <div class="row mb-2">
+        <label class="col-xl-2 offset-xl-2 col-form-label">พนักงานขาย</label>
+        <div class="col-xl-4">
+          <input type="text" class="form-control form-control-sm" name="sale" value="<?php echo $row['sale'] ?>" required>
+          <div class="invalid-feedback">
+            กรุณากรอกข้อมูล!
+          </div>
+        </div>
+      </div>
+      <div class="row mb-2">
+        <label class="col-xl-2 offset-xl-2 col-form-label">สถานที่ต้นทาง</label>
+        <div class="col-xl-4">
+          <input type="text" class="form-control form-control-sm" name="location_start" value="<?php echo $row['location_start'] ?>" required>
+          <div class="invalid-feedback">
+            กรุณากรอกข้อมูล!
+          </div>
+        </div>
+      </div>
+      <div class="row mb-2">
+        <label class="col-xl-2 offset-xl-2 col-form-label">สถานที่ปลายทาง</label>
+        <div class="col-xl-4">
+          <input type="text" class="form-control form-control-sm" name="location_end" value="<?php echo $row['location_end'] ?>" required>
           <div class="invalid-feedback">
             กรุณากรอกข้อมูล!
           </div>
@@ -102,6 +147,7 @@ $files = $BORROW->file_view([$uuid]);
                       กรุณากรอกข้อมูล!
                     </div>
                   </td>
+                  <td><span class="item-location"></span></td>
                   <td>
                     <input type="text" class="form-control form-control-sm text-left" name="item_text[]">
                     <div class="invalid-feedback">
@@ -188,6 +234,32 @@ $files = $BORROW->file_view([$uuid]);
 
     row.after(clone);
     initializeSelect2(".asset-select", "/borrow/asset-select", "-- ทรัพย์สิน --");
+  });
+
+  $(document).on("change", ".asset-select", function() {
+    const asset = ($(this).val() || "");
+    const row = $(this).closest("tr");
+
+    if (asset) {
+      axios.post("/borrow/item-view", {
+          asset,
+        })
+        .then((res) => {
+          let result = res.data;
+          let location = '';
+
+          if (result.location_name !== null) {
+            location = `คลัง${result.warehouse_name} ${result.location_name}`;
+          } else {
+            location = `คลัง${result.warehouse_name}`;
+          }
+          row.find(".item-location").text(location);
+        }).catch((error) => {
+          console.log(error);
+        });
+    } else {
+      row.find(".item-location").text("");
+    }
   });
 
   $(document).on("click", ".file-increase", function() {

@@ -359,6 +359,8 @@ $files = $ISSUE->file_view([$uuid]);
     showDropdowns: true,
     locale: {
       "format": "DD/MM/YYYY",
+      "applyLabel": "ยืนยัน",
+      "cancelLabel": "ยกเลิก",
       "daysOfWeek": [
         "อา", "จ", "อ", "พ", "พฤ", "ศ", "ส"
       ],

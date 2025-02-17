@@ -48,9 +48,39 @@ $remarks = $BORROW->remark_view([$uuid]);
         </div>
       </div>
       <div class="row mb-2">
-        <label class="col-xl-2 offset-xl-2 col-form-label">ระยะเวลา</label>
+        <label class="col-xl-2 offset-xl-2 col-form-label">วันที่ขึ้นของ</label>
         <div class="col-xl-4 text-underline">
           <?php echo $row['date'] ?>
+        </div>
+      </div>
+      <div class="row mb-2">
+        <label class="col-xl-2 offset-xl-2 col-form-label">วันที่จัดงาน</label>
+        <div class="col-xl-4 text-underline">
+          <?php echo $row['event_date'] ?>
+        </div>
+      </div>
+      <div class="row mb-2">
+        <label class="col-xl-2 offset-xl-2 col-form-label">ชื่องาน</label>
+        <div class="col-xl-4 text-underline">
+          <?php echo $row['event_name'] ?>
+        </div>
+      </div>
+      <div class="row mb-2">
+        <label class="col-xl-2 offset-xl-2 col-form-label">พนักงานขาย</label>
+        <div class="col-xl-4 text-underline">
+          <?php echo $row['sale'] ?>
+        </div>
+      </div>
+      <div class="row mb-2">
+        <label class="col-xl-2 offset-xl-2 col-form-label">สถานที่ต้นทาง</label>
+        <div class="col-xl-4 text-underline">
+          <?php echo $row['location_start'] ?>
+        </div>
+      </div>
+      <div class="row mb-2">
+        <label class="col-xl-2 offset-xl-2 col-form-label">สถานที่ปลายทาง</label>
+        <div class="col-xl-4 text-underline">
+          <?php echo $row['location_end'] ?>
         </div>
       </div>
       <div class="row mb-2">
