@@ -19,10 +19,21 @@ $SettingSystem = ($page === "SettingSystem" ? 'class="active"' : "");
 $SettingUser = ($page === "SettingUser" ? 'class="active"' : "");
 $SettingService = ($page === "SettingService" ? 'class="active"' : "");
 $SettingAuthorize = ($page === "SettingAuthorize" ? 'class="active"' : "");
-$SettingExpense = ($page === "SettingExpense" ? 'class="active"' : "");
-$SettingCustomer = ($page === "SettingCustomer" ? 'class="active"' : "");
-$SettingAsset = ($page === "SettingAsset" ? 'class="active"' : "");
-$SettingProduct = ($page === "SettingProduct" ? 'class="active"' : "");
+
+function formatUrl($text)
+{
+  $text = ltrim($text, '/');
+
+  if (strpos($text, '-') !== false) {
+    $text = str_replace('-', ' ', $text);
+    $text = ucwords($text);
+    $text = str_replace(' ', '', $text);
+  } else {
+    $text = ucwords($text);
+  }
+
+  return $text;
+}
 ?>
 <nav id="sidebar">
   <ul class="list-unstyled">
@@ -56,7 +67,7 @@ $SettingProduct = ($page === "SettingProduct" ? 'class="active"' : "");
           $authorize_check = (isset($user_authorize[$key]) ? intval($user_authorize[$key]) : "");
           if ($authorize_check === 1) :
         ?>
-            <li <?php echo ($page === "Service" . ucfirst(str_replace("/", "", $service['url'])) ? 'class="active"' : "") ?>>
+            <li <?php echo ($page === "Service" . formatUrl($service['url']) ? 'class="active"' : "") ?>>
               <a href="<?php echo $service['url']  ?>">
                 <i class="fa fa-bars pr-2"></i>
                 <?php echo $service['name'] ?>
@@ -94,30 +105,6 @@ $SettingProduct = ($page === "SettingProduct" ? 'class="active"' : "");
             <a href="/authorize">
               <i class="fa fa-gear pr-2"></i>
               ข้อมูลสิทธิ์
-            </a>
-          </li>
-          <li <?php echo $SettingExpense ?>>
-            <a href="/expense">
-              <i class="fa fa-gear pr-2"></i>
-              ข้อมูลรายจ่าย
-            </a>
-          </li>
-          <li <?php echo $SettingCustomer ?>>
-            <a href="/customer">
-              <i class="fa fa-gear pr-2"></i>
-              ข้อมูลลูกค้า
-            </a>
-          </li>
-          <li <?php echo $SettingAsset ?>>
-            <a href="/asset">
-              <i class="fa fa-gear pr-2"></i>
-              ข้อมูลทรัพย์สิน
-            </a>
-          </li>
-          <li <?php echo $SettingProduct ?>>
-            <a href="/product">
-              <i class="fa fa-gear pr-2"></i>
-              ข้อมูลสินค้า
             </a>
           </li>
         </ul>

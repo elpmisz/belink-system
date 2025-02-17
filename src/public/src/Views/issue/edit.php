@@ -20,7 +20,7 @@ $remarks = $ISSUE->remark_view([$uuid]);
   <h4 class="card-header text-center"><?php echo "{$row['type_name']}สินค้า" ?></h4>
   <div class="card-body">
 
-    <form action="/issue/edit" method="POST" class="needs-validation" novalidate enctype="multipart/form-data">
+    <form action="/issue/approve" method="POST" class="needs-validation" novalidate enctype="multipart/form-data">
       <div style="display: none;">
         <div class="row mb-2">
           <label class="col-xl-2 offset-xl-2 col-form-label">ID</label>
@@ -68,6 +68,49 @@ $remarks = $ISSUE->remark_view([$uuid]);
           <?php echo $row['date'] ?>
         </div>
       </div>
+      <?php if (intval($row['type']) === 1) : ?>
+        <div class="row mb-2">
+          <label class="col-xl-2 offset-xl-2 col-form-label">เลขอ้างอิง</label>
+          <div class="col-xl-4 text-underline">
+            <?php echo $row['outcome_name'] ?>
+          </div>
+        </div>
+      <?php
+      endif;
+
+      if (intval($row['type']) === 2) :
+      ?>
+        <div class="row mb-2">
+          <label class="col-xl-2 offset-xl-2 col-form-label">วันที่จัดงาน</label>
+          <div class="col-xl-4 text-underline">
+            <?php echo $row['event_date'] ?>
+          </div>
+        </div>
+        <div class="row mb-2">
+          <label class="col-xl-2 offset-xl-2 col-form-label">ชื่องาน</label>
+          <div class="col-xl-4 text-underline">
+            <?php echo $row['event_name'] ?>
+          </div>
+        </div>
+        <div class="row mb-2">
+          <label class="col-xl-2 offset-xl-2 col-form-label">พนักงานขาย</label>
+          <div class="col-xl-4 text-underline">
+            <?php echo $row['sale'] ?>
+          </div>
+        </div>
+        <div class="row mb-2">
+          <label class="col-xl-2 offset-xl-2 col-form-label">สถานที่ต้นทาง</label>
+          <div class="col-xl-4 text-underline">
+            <?php echo $row['location_start'] ?>
+          </div>
+        </div>
+        <div class="row mb-2">
+          <label class="col-xl-2 offset-xl-2 col-form-label">สถานที่ปลายทาง</label>
+          <div class="col-xl-4 text-underline">
+            <?php echo $row['location_end'] ?>
+          </div>
+        </div>
+      <?php endif; ?>
       <div class="row mb-2">
         <label class="col-xl-2 offset-xl-2 col-form-label">รายละเอียด</label>
         <div class="col-xl-6 text-underline">
@@ -96,7 +139,9 @@ $remarks = $ISSUE->remark_view([$uuid]);
                       <?php echo $key ?>
                       <input type="hidden" class="form-control form-control-sm text-center" name="item__id[]" value="<?php echo $item['id'] ?>" readonly>
                     </td>
-                    <td class="text-left"><?php echo $item['product_name'] ?></td>
+                    <td class="text-left">
+                      <a href="/product/view/<?php echo $item['uuid'] ?>" target="_blank"><?php echo $item['product_name'] ?></a>
+                    </td>
                     <td class="text-center"><?php echo $item['warehouse_name'] ?></td>
                     <td class="text-center"><?php echo $item['location_name'] ?></td>
                     <td class="text-right"><?php echo $item['amount'] ?></td>
@@ -169,7 +214,7 @@ $remarks = $ISSUE->remark_view([$uuid]);
 
       <div class="row justify-content-center">
         <div class="col-xl-3 mb-2">
-          <a class="btn btn-danger btn-sm btn-block" href="/issue/manage">
+          <a class="btn btn-danger btn-sm btn-block" href="/issue">
             <i class="fas fa-arrow-left pr-2"></i>หน้าหลัก
           </a>
         </div>

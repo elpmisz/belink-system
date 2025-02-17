@@ -1,6 +1,6 @@
 <?php
-$menu = "Setting";
-$page = "SettingAsset";
+$menu = "Service";
+$page = "ServiceAsset";
 include_once(__DIR__ . "/../layout/header.php");
 
 use App\Classes\AssetLocation;

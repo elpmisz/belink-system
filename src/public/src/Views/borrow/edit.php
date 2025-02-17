@@ -20,7 +20,7 @@ $remarks = $BORROW->remark_view([$uuid]);
   <h4 class="card-header text-center">ระบบยืมทรัพย์สิน</h4>
   <div class="card-body">
 
-    <form action="/borrow/edit" method="POST" class="needs-validation" novalidate enctype="multipart/form-data">
+    <form action="/borrow/process" method="POST" class="needs-validation" novalidate enctype="multipart/form-data">
       <div style="display: none;">
         <div class="row mb-2">
           <label class="col-xl-2 offset-xl-2 col-form-label">ID</label>
@@ -48,9 +48,39 @@ $remarks = $BORROW->remark_view([$uuid]);
         </div>
       </div>
       <div class="row mb-2">
-        <label class="col-xl-2 offset-xl-2 col-form-label">ระยะเวลา</label>
+        <label class="col-xl-2 offset-xl-2 col-form-label">วันที่ขึ้นของ</label>
         <div class="col-xl-4 text-underline">
           <?php echo $row['date'] ?>
+        </div>
+      </div>
+      <div class="row mb-2">
+        <label class="col-xl-2 offset-xl-2 col-form-label">วันที่จัดงาน</label>
+        <div class="col-xl-4 text-underline">
+          <?php echo $row['event_date'] ?>
+        </div>
+      </div>
+      <div class="row mb-2">
+        <label class="col-xl-2 offset-xl-2 col-form-label">ชื่องาน</label>
+        <div class="col-xl-4 text-underline">
+          <?php echo $row['event_name'] ?>
+        </div>
+      </div>
+      <div class="row mb-2">
+        <label class="col-xl-2 offset-xl-2 col-form-label">พนักงานขาย</label>
+        <div class="col-xl-4 text-underline">
+          <?php echo $row['sale'] ?>
+        </div>
+      </div>
+      <div class="row mb-2">
+        <label class="col-xl-2 offset-xl-2 col-form-label">สถานที่ต้นทาง</label>
+        <div class="col-xl-4 text-underline">
+          <?php echo $row['location_start'] ?>
+        </div>
+      </div>
+      <div class="row mb-2">
+        <label class="col-xl-2 offset-xl-2 col-form-label">สถานที่ปลายทาง</label>
+        <div class="col-xl-4 text-underline">
+          <?php echo $row['location_end'] ?>
         </div>
       </div>
       <div class="row mb-2">
@@ -149,7 +179,7 @@ $remarks = $BORROW->remark_view([$uuid]);
 
       <div class="row justify-content-center">
         <div class="col-xl-3 mb-2">
-          <a class="btn btn-danger btn-sm btn-block" href="/borrow/manage">
+          <a class="btn btn-danger btn-sm btn-block" href="/borrow">
             <i class="fas fa-arrow-left pr-2"></i>หน้าหลัก
           </a>
         </div>

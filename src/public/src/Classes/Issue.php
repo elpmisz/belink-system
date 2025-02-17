@@ -416,7 +416,7 @@ class Issue
         $row['username'],
         $type,
         str_replace(",", ",<br>", $row['items']),
-        str_replace("-", "-<br>", $row['date']),
+        (intval($row['type']) === 1 ? "" : str_replace("-", "-<br>", $row['date'])),
         str_replace("\n", "<br>", $row['text']),
         $row['created'],
       ];
@@ -518,7 +518,7 @@ class Issue
         $row['username'],
         $type,
         str_replace(",", ",<br>", $row['items']),
-        str_replace("-", "-<br>", $row['date']),
+        (intval($row['type']) === 1 ? "" : str_replace("-", "-<br>", $row['date'])),
         str_replace("\n", "<br>", $row['text']),
         $row['created'],
       ];
@@ -629,7 +629,7 @@ class Issue
         $row['username'],
         $type,
         str_replace(",", ",<br>", $row['items']),
-        str_replace("-", "-<br>", $row['date']),
+        (intval($row['type']) === 1 ? "" : str_replace("-", "-<br>", $row['date'])),
         str_replace("\n", "<br>", $row['text']),
         $row['created'],
       ];
@@ -647,13 +647,15 @@ class Issue
 
   public function product_select($keyword)
   {
-    $sql = "SELECT id, CONCAT(IF(`code` = '','',CONCAT('[',`code`,'] ')),name) `text`
-    FROM belink.product
-    WHERE status = 1 ";
+    $sql = "SELECT a.id, CONCAT(IF(a.`code` = '','',CONCAT('[',a.`code`,'] ')),a.name) `text`
+    FROM belink.product a
+    LEFT JOIN belink.product_brand b
+    ON a.brand_id = b.id 
+    WHERE a.status = 1 ";
     if (!empty($keyword)) {
-      $sql .= " AND (name LIKE '%{$keyword}%') ";
+      $sql .= " AND (a.name LIKE '%{$keyword}%' OR b.name LIKE '%{$keyword}%') ";
     }
-    $sql .= " ORDER BY name ASC LIMIT 20";
+    $sql .= " ORDER BY b.name ASC, a.name ASC LIMIT 20";
     $stmt = $this->dbcon->prepare($sql);
     $stmt->execute();
     return $stmt->fetchAll();

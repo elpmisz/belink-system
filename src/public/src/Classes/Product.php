@@ -327,7 +327,7 @@ class Product
     if ($filter_order) {
       $sql .= " ORDER BY {$column[$order_column]} {$order_dir} ";
     } else {
-      $sql .= " ORDER BY a.`status` ASC, a.`code` ASC, a.`name` ASC  ";
+      $sql .= " ORDER BY a.`status` ASC, a.brand_id ASC, a.type_id ASC, a.`name` ASC  ";
     }
 
     $sql2 = "";

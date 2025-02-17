@@ -36,45 +36,33 @@ $files = $ADVANCE->advance_file_view([$uuid]);
         </div>
       </div>
       <div class="row mb-2">
+        <label class="col-xl-2 offset-xl-2 col-form-label">เลขที่เอกสาร</label>
+        <div class="col-xl-4 text-underline">
+          <?php echo $row['ticket'] ?>
+        </div>
+      </div>
+      <div class="row mb-2">
         <label class="col-xl-2 offset-xl-2 col-form-label">ผู้ใช้บริการ</label>
         <div class="col-xl-4 text-underline">
           <?php echo $row['username'] ?>
         </div>
       </div>
       <div class="row mb-2">
-        <label class="col-xl-2 offset-xl-2 col-form-label">เลขที่สัญญา</label>
+        <label class="col-xl-2 offset-xl-2 col-form-label">วันที่เอกสาร</label>
         <div class="col-xl-4">
-          <select class="form-control form-control-sm order-select" name="order_number">
-            <?php
-            if (!empty($row['order_number'])) {
-              echo "<option value='{$row['order_number']}'>{$row['order_number']}</option>";
-            }
-            ?>
-          </select>
+          <input type="text" class="form-control form-control-sm date-select" name="date" value="<?php echo $row['date'] ?>" required>
           <div class="invalid-feedback">
             กรุณากรอกข้อมูล!
           </div>
         </div>
       </div>
       <div class="row mb-2">
-        <label class="col-xl-2 offset-xl-2 col-form-label">ยอดเงินเบิก</label>
+        <label class="col-xl-2 offset-xl-2 col-form-label">วันที่ครบกำหนด</label>
         <div class="col-xl-4">
-          <input type="number" class="form-control form-control-sm amount" name="amount" value="<?php echo $row['amount'] ?>" min="1" step="0.01" required>
+          <input type="text" class="form-control form-control-sm date-select" name="finish" value="<?php echo $row['finish'] ?>" required>
           <div class="invalid-feedback">
             กรุณากรอกข้อมูล!
           </div>
-        </div>
-      </div>
-      <div class="row mb-2">
-        <label class="col-xl-2 offset-xl-2 col-form-label">ยอดเงินที่ใช้จริง</label>
-        <div class="col-xl-4 text-underline">
-          <span class="usage"><?php echo number_format($row['usage'], 2) ?></span>
-        </div>
-      </div>
-      <div class="row mb-2">
-        <label class="col-xl-2 offset-xl-2 col-form-label">ยอดเงินที่เหลือคืน</label>
-        <div class="col-xl-4 text-underline">
-          <span class="remain"><?php echo number_format($row['remain'], 2) ?></span>
         </div>
       </div>
       <div class="row mb-2">
@@ -95,11 +83,8 @@ $files = $ADVANCE->advance_file_view([$uuid]);
                 <tr>
                   <th width="10%">#</th>
                   <th width="20%">รายจ่าย</th>
-                  <th width="20%">รายละเอียด</th>
-                  <th width="10%">จำนวนเงิน</th>
-                  <th width="10%">VAT 7%</th>
-                  <th width="10%">W/T</th>
-                  <th width="10%">ยอดสุทธิ</th>
+                  <th width="40%">รายละเอียด</th>
+                  <th width="20%">จำนวนเงิน</th>
                 </tr>
               </thead>
               <tbody>
@@ -118,15 +103,6 @@ $files = $ADVANCE->advance_file_view([$uuid]);
                       <div class="invalid-feedback">
                         กรุณากรอกข้อมูล!
                       </div>
-                    </td>
-                    <td>
-                      <input type="number" class="form-control form-control-sm text-right vat-item" name="item__vat[]" value="<?php echo $item['vat'] ?>">
-                    </td>
-                    <td>
-                      <input type="number" class="form-control form-control-sm text-right wt-item" name="item__wt[]" value="<?php echo $item['wt'] ?>">
-                    </td>
-                    <td class="text-right">
-                      <?php echo number_format($item['total'], 2) ?>
                     </td>
                   </tr>
                 <?php endforeach; ?>
@@ -153,30 +129,11 @@ $files = $ADVANCE->advance_file_view([$uuid]);
                       กรุณากรอกข้อมูล!
                     </div>
                   </td>
-                  </td>
-                  <td>
-                    <input type="number" class="form-control form-control-sm text-right vat-item" min="1" step="0.01" name="item_vat[]">
-                  </td>
-                  <td>
-                    <input type="number" class="form-control form-control-sm text-right wt-item" min="1" step="0.01" name="item_wt[]">
-                  </td>
-                  <td class="text-right">
-                    <span class="total-item"></span>
-                  </td>
                 </tr>
                 <tr>
                   <td colspan="3" class="text-right">รวมทั้งสิ้น</td>
                   <td class="text-right">
-                    <span class="amount-total"><?php echo number_format($total['amount'], 2) ?></span>
-                  </td>
-                  <td class="text-right">
-                    <span class="vat-total"><?php echo number_format($total['vat'], 2) ?></span>
-                  </td>
-                  <td class="text-right">
-                    <span class="wt-total"><?php echo number_format($total['wt'], 2) ?></span>
-                  </td>
-                  <td class="text-right">
-                    <span class="all-total"><?php echo number_format($total['total'], 2) ?></span>
+                    <span class="amount-total"><?php echo number_format($total['total'], 2) ?></span>
                   </td>
                 </tr>
               </tbody>
@@ -280,53 +237,22 @@ $files = $ADVANCE->advance_file_view([$uuid]);
     }
   });
 
-  $(document).on("blur", ".amount-item, .vat-item, .wt-item", function() {
+  $(document).on("blur", ".amount-item", function() {
     const row = $(this).closest("tr");
     const amount = parseFloat(row.find(".amount-item").val() || 0);
-    const vat = parseFloat(row.find(".vat-item").val() || 0);
-    const wt = parseFloat(row.find(".wt-item").val() || 0);
-
-    const total = (amount + vat - wt).toFixed(2);
-    row.find(".total-item").text(total);
 
     updateTotal();
   });
 
   function updateTotal() {
     let totalAmount = 0;
-    let totalVat = 0;
-    let totalWt = 0;
 
     $('.amount-item').each(function() {
       var amount = parseFloat($(this).val()) || 0;
       totalAmount += amount;
     });
 
-    $('.vat-item').each(function() {
-      var vat = parseFloat($(this).val()) || 0;
-      totalVat += vat;
-    });
-
-    $('.wt-item').each(function() {
-      var wt = parseFloat($(this).val()) || 0;
-      totalWt += wt;
-    });
-
-    grandTotal = totalAmount + totalVat - totalWt;
-
     $(".amount-total").text(totalAmount.toFixed(2).toLocaleString('th-TH', {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    }));
-    $(".vat-total").text(totalVat.toFixed(2).toLocaleString('th-TH', {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    }));
-    $(".wt-total").text(totalWt.toFixed(2).toLocaleString('th-TH', {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    }));
-    $(".all-total").text(grandTotal.toFixed(2).toLocaleString('th-TH', {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2
     }));
@@ -353,6 +279,33 @@ $files = $ADVANCE->advance_file_view([$uuid]);
       });
       return $(this).val("");
     }
+  });
+
+  $(".date-select").daterangepicker({
+    singleDatePicker: true,
+    showDropdowns: true,
+    locale: {
+      "format": "DD/MM/YYYY",
+      "applyLabel": "ยืนยัน",
+      "cancelLabel": "ยกเลิก",
+      "daysOfWeek": [
+        "อา", "จ", "อ", "พ", "พฤ", "ศ", "ส"
+      ],
+      "monthNames": [
+        "มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน",
+        "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"
+      ]
+    },
+    "applyButtonClasses": "btn-success",
+    "cancelClass": "btn-danger"
+  });
+
+  $(".date-select").on("apply.daterangepicker", function(ev, picker) {
+    $(this).val(picker.startDate.format('DD/MM/YYYY'));
+  });
+
+  $(".date-select").on("keydown paste", function(e) {
+    e.preventDefault();
   });
 
   $(document).on("click", ".item-delete", function(e) {

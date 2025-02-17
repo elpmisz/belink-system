@@ -9,6 +9,26 @@ if ($_SERVER['REQUEST_URI'] === '/phpmyadmin') {
 $ROUTER = new AltoRouter();
 
 ##################### SERVICE #####################
+##################### JOB #####################
+$ROUTER->map("GET", "/job", function () {
+  require(__DIR__ . "/src/Views/job/index.php");
+});
+
+##################### QUOTATION #####################
+$ROUTER->map("GET", "/quotation", function () {
+  require(__DIR__ . "/src/Views/quotation/index.php");
+});
+
+##################### ACCRUED #####################
+$ROUTER->map("GET", "/accrued", function () {
+  require(__DIR__ . "/src/Views/accrued/index.php");
+});
+
+##################### PETTY #####################
+$ROUTER->map("GET", "/petty", function () {
+  require(__DIR__ . "/src/Views/petty/index.php");
+});
+
 ##################### ISSUE-AUTHORIZE #####################
 $ROUTER->map("GET", "/issue/authorize", function () {
   require(__DIR__ . "/src/Views/issue-authorize/index.php");
@@ -169,6 +189,32 @@ $ROUTER->map("GET", "/purchase/print/[**:params]", function ($params) {
 });
 $ROUTER->map("POST", "/purchase/[**:params]", function ($params) {
   require(__DIR__ . "/src/Views/purchase/action.php");
+});
+
+##################### ADVANCE-CLEAR #####################
+$ROUTER->map("GET", "/advance-clear", function () {
+  require(__DIR__ . "/src/Views/advance-clear/index.php");
+});
+$ROUTER->map("GET", "/advance-clear/create", function () {
+  require(__DIR__ . "/src/Views/advance-clear/create.php");
+});
+$ROUTER->map("GET", "/advance-clear/manage", function () {
+  require(__DIR__ . "/src/Views/advance-clear/manage.php");
+});
+$ROUTER->map("GET", "/advance-clear/view/[**:params]", function ($params) {
+  require(__DIR__ . "/src/Views/advance-clear/view.php");
+});
+$ROUTER->map("GET", "/advance-clear/approve/[**:params]", function ($params) {
+  require(__DIR__ . "/src/Views/advance-clear/approve.php");
+});
+$ROUTER->map("GET", "/advance-clear/complete/[**:params]", function ($params) {
+  require(__DIR__ . "/src/Views/advance-clear/complete.php");
+});
+$ROUTER->map("GET", "/advance-clear/print/[**:params]", function ($params) {
+  require(__DIR__ . "/src/Views/advance-clear/print.php");
+});
+$ROUTER->map("POST", "/advance-clear/[**:params]", function ($params) {
+  require(__DIR__ . "/src/Views/advance-clear/action.php");
 });
 
 ##################### ADVANCE #####################

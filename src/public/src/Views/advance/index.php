@@ -8,16 +8,11 @@ include_once(__DIR__ . "/../layout/header.php");
   <div class="col-xl-12">
     <div class="card shadow">
       <div class="card-header">
-        <h4 class="text-center">Advance Clearing Voucher</h4>
+        <h4 class="text-center">Advance Request</h4>
       </div>
       <div class="card-body">
 
         <div class="row justify-content-end mb-2">
-          <div class="col-xl-3 mb-2">
-            <a href="/advance/manage" class="btn btn-primary btn-sm btn-block">
-              <i class="fas fa-bars pr-2"></i>จัดการระบบ
-            </a>
-          </div>
           <div class="col-xl-3 mb-2">
             <a href="/advance/create" class="btn btn-success btn-sm btn-block">
               <i class="fas fa-plus pr-2"></i>เพิ่ม
@@ -39,10 +34,8 @@ include_once(__DIR__ . "/../layout/header.php");
                         <th width="10%">#</th>
                         <th width="10%">เลขที่เอกสาร</th>
                         <th width="10%">ผู้ใช้บริการ</th>
-                        <th width="10%">เลขที่สัญญา</th>
                         <th width="40%">วัตถุประสงค์</th>
                         <th width="10%">ยอดเงินเบิก</th>
-                        <th width="10%">ยอดเงินที่ใช้</th>
                         <th width="10%">วันที่</th>
                       </tr>
                     </thead>
@@ -67,10 +60,8 @@ include_once(__DIR__ . "/../layout/header.php");
                         <th width="10%">#</th>
                         <th width="10%">เลขที่เอกสาร</th>
                         <th width="10%">ผู้ใช้บริการ</th>
-                        <th width="10%">เลขที่สัญญา</th>
                         <th width="40%">วัตถุประสงค์</th>
                         <th width="10%">ยอดเงินเบิก</th>
-                        <th width="10%">ยอดเงินที่ใช้</th>
                         <th width="10%">วันที่</th>
                       </tr>
                     </thead>
@@ -104,10 +95,7 @@ include_once(__DIR__ . "/../layout/header.php");
         targets: [0, 1],
         className: "text-center",
       }, {
-        targets: [2, 3, 4],
-        className: "text-left",
-      }, {
-        targets: [5, 6],
+        targets: [4],
         className: "text-right",
       }],
       "oLanguage": {
@@ -138,10 +126,7 @@ include_once(__DIR__ . "/../layout/header.php");
         targets: [0, 1],
         className: "text-center",
       }, {
-        targets: [2, 3, 4],
-        className: "text-left",
-      }, {
-        targets: [5, 6],
+        targets: [4],
         className: "text-right",
       }],
       "oLanguage": {

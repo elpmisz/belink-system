@@ -17,7 +17,7 @@ $files = $PURCHASE->purchase_file_view([$uuid]);
 ?>
 
 <div class="card shadow">
-  <h4 class="card-header text-center">Purchase Requistion</h4>
+  <h4 class="card-header text-center">Purchase Request</h4>
   <div class="card-body">
 
     <form action="/purchase/approve" method="POST" class="needs-validation" novalidate enctype="multipart/form-data">

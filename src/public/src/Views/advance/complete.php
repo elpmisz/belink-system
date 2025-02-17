@@ -18,7 +18,7 @@ $remarks = $ADVANCE->advance_remark_view([$uuid]);
 ?>
 
 <div class="card shadow">
-  <h4 class="card-header text-center">Advance Clearing Voucher</h4>
+  <h4 class="card-header text-center">Advance Request</h4>
   <div class="card-body">
 
     <form action="/advance/approve" method="POST" class="needs-validation" novalidate enctype="multipart/form-data">
@@ -37,33 +37,27 @@ $remarks = $ADVANCE->advance_remark_view([$uuid]);
         </div>
       </div>
       <div class="row mb-2">
+        <label class="col-xl-2 offset-xl-2 col-form-label">เลขที่เอกสาร</label>
+        <div class="col-xl-4 text-underline">
+          <?php echo $row['ticket'] ?>
+        </div>
+      </div>
+      <div class="row mb-2">
         <label class="col-xl-2 offset-xl-2 col-form-label">ผู้ใช้บริการ</label>
         <div class="col-xl-4 text-underline">
           <?php echo $row['username'] ?>
         </div>
       </div>
       <div class="row mb-2">
-        <label class="col-xl-2 offset-xl-2 col-form-label">เลขที่สัญญา</label>
+        <label class="col-xl-2 offset-xl-2 col-form-label">วันที่เอกสาร</label>
         <div class="col-xl-4 text-underline">
-          <?php echo $row['order_number'] ?>
+          <?php echo $row['date'] ?>
         </div>
       </div>
       <div class="row mb-2">
-        <label class="col-xl-2 offset-xl-2 col-form-label">ยอดเงินเบิก</label>
+        <label class="col-xl-2 offset-xl-2 col-form-label">วันที่ครบกำหนด</label>
         <div class="col-xl-4 text-underline">
-          <span class="amount"><?php echo number_format($row['amount'], 2) ?></span>
-        </div>
-      </div>
-      <div class="row mb-2">
-        <label class="col-xl-2 offset-xl-2 col-form-label">ยอดเงินที่ใช้จริง</label>
-        <div class="col-xl-4 text-underline">
-          <span class="usage"><?php echo number_format($row['usage'], 2) ?></span>
-        </div>
-      </div>
-      <div class="row mb-2">
-        <label class="col-xl-2 offset-xl-2 col-form-label">ยอดเงินที่เหลือคืน</label>
-        <div class="col-xl-4 text-underline">
-          <span class="remain"><?php echo number_format($row['remain'], 2) ?></span>
+          <?php echo $row['finish'] ?>
         </div>
       </div>
       <div class="row mb-2">
@@ -81,11 +75,8 @@ $remarks = $ADVANCE->advance_remark_view([$uuid]);
                 <tr>
                   <th width="10%">#</th>
                   <th width="20%">รายจ่าย</th>
-                  <th width="20%">รายละเอียด</th>
-                  <th width="10%">จำนวนเงิน</th>
-                  <th width="10%">VAT 7%</th>
-                  <th width="10%">W/T</th>
-                  <th width="10%">ยอดสุทธิ</th>
+                  <th width="40%">รายละเอียด</th>
+                  <th width="20%">จำนวนเงิน</th>
                 </tr>
               </thead>
               <tbody>
@@ -95,24 +86,13 @@ $remarks = $ADVANCE->advance_remark_view([$uuid]);
                     <td class="text-left"><?php echo $item['expense_name'] ?></td>
                     <td class="text-left"><?php echo $item['text'] ?></td>
                     <td class="text-right"><?php echo number_format($item['amount'], 2) ?></td>
-                    <td class="text-right"><?php echo number_format($item['vat'], 2) ?></td>
-                    <td class="text-right"><?php echo $item['wt'] ?></td>
-                    <td class="text-right"><?php echo number_format($item['total'], 2) ?></td>
                   </tr>
                 <?php endforeach; ?>
                 <tr>
                   <td colspan="3" class="text-right">รวมทั้งสิ้น</td>
                   <td class="text-right">
-                    <span class="amount-total"><?php echo number_format($total['amount'], 2) ?></span>
+                    <span class="amount-total"><?php echo number_format($total['total'], 2) ?></span>
                   </td>
-                  <td class="text-right">
-                    <span class="vat-total"><?php echo number_format($total['vat'], 2) ?></span>
-                  </td>
-                  <td class="text-right">
-                    <span class="wt-total"><?php echo number_format($total['wt'], 2) ?></span>
-                  </td>
-                  <td class="text-right">
-                    <span class="all-total"><?php echo number_format($total['total'], 2) ?></span>
                   </td>
                 </tr>
               </tbody>

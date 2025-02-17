@@ -21,8 +21,8 @@ class Advance
     FROM belink.advance_request a
     WHERE a.status = 1
     AND a.login_id = ?
-    AND a.order_number = ?
-    AND a.amount = ?
+    AND a.date = ?
+    AND a.finish = ?
     AND a.objective = ?";
     $stmt = $this->dbcon->prepare($sql);
     $stmt->execute($data);
@@ -45,7 +45,7 @@ class Advance
 
   public function advance_insert($data)
   {
-    $sql = "INSERT INTO belink.advance_request( `uuid`, `last`, `login_id`, `order_number`, `amount`, `objective`) VALUES(uuid(),?,?,?,?,?)";
+    $sql = "INSERT INTO belink.advance_request(`uuid`, `last`, `login_id`, `date`, `finish`, `objective`) VALUES(uuid(),?,?,?,?,?)";
     $stmt = $this->dbcon->prepare($sql);
     return $stmt->execute($data);
   }
@@ -54,25 +54,15 @@ class Advance
   {
     $sql = "SELECT a.id,
       a.`uuid`,
-      CONCAT('AC',YEAR(a.created),LPAD(a.`last`,4,'0')) ticket,
+      CONCAT('AR',YEAR(a.created),LPAD(a.`last`,4,'0')) ticket,
       CONCAT(b.firstname,' ',b.lastname) username,
-      a.order_number,
-      a.amount,
-      c.usage,
-      (a.amount - c.usage) remain,
+      DATE_FORMAT(a.date,'%d/%m/%Y') `date`,
+      DATE_FORMAT(a.finish,'%d/%m/%Y') `finish`,
       a.objective,
       DATE_FORMAT(a.created,'%d/%m/%Y, %H:%i น.') created
     FROM belink.advance_request a
     LEFT JOIN belink.`user` b
     ON a.login_id = b.login
-    LEFT JOIN 
-    (
-    SELECT request_id,(SUM(amount) + SUM(vat) - SUM(wt)) `usage`
-    FROM belink.advance_item
-    WHERE	`status` = 1
-    GROUP BY request_id
-    ) c
-    ON a.id = c.request_id
     WHERE a.`uuid` = ?";
     $stmt = $this->dbcon->prepare($sql);
     $stmt->execute($data);
@@ -82,8 +72,6 @@ class Advance
   public function advance_update($data)
   {
     $sql = "UPDATE belink.advance_request SET
-    order_number = ?,
-    amount = ?,
     objective = ?,
     `action` = 1,
     updated = NOW()
@@ -107,7 +95,7 @@ class Advance
 
   public function advance_item_insert($data)
   {
-    $sql = "INSERT INTO belink.advance_item(`request_id`, `expense_id`, `text`, `amount`, `vat`, `wt`) VALUES(?,?,?,?,?,?)";
+    $sql = "INSERT INTO belink.advance_item( `request_id`, `expense_id`, `text`, `amount`) VALUES(?,?,?,?)";
     $stmt = $this->dbcon->prepare($sql);
     return $stmt->execute($data);
   }
@@ -118,10 +106,7 @@ class Advance
     b.expense_id,
     CONCAT('[',c.`code`,'] ',c.`name`) expense_name,
     b.text,
-    b.amount,
-    b.vat,
-    b.wt,
-    (b.amount + b.vat - b.wt) total
+    b.amount
     FROM belink.advance_request a
     LEFT JOIN belink.advance_item b
     ON a.id = b.request_id
@@ -137,10 +122,7 @@ class Advance
 
   public function advance_item_total($data)
   {
-    $sql = "SELECT SUM(a.amount) amount, 
-      SUM(a.vat) vat, 
-      SUM(a.wt) wt,
-      (SUM(a.amount) + SUM(a.vat) - SUM(a.wt)) total
+    $sql = "SELECT SUM(a.amount) total
     FROM belink.advance_item a
     LEFT JOIN belink.advance_request b
     ON a.request_id = b.id
@@ -156,8 +138,6 @@ class Advance
     $sql = "UPDATE belink.advance_item SET
     `text` = ?,
     `amount` = ?,
-    `vat` = ?,
-    `wt` = ?,
     updated = NOW()
     WHERE id = ?";
     $stmt = $this->dbcon->prepare($sql);
@@ -286,11 +266,9 @@ class Advance
 
     $sql = "SELECT a.id,
     a.`uuid`,
-    CONCAT('AC',YEAR(a.created),LPAD(a.`last`,4,'0')) ticket,
+    CONCAT('AR',YEAR(a.created),LPAD(a.`last`,4,'0')) ticket,
     CONCAT(b.firstname,' ',b.lastname) username,
-    a.order_number,
     a.objective,
-    a.amount,
     c.total,
     a.`status`,
       (
@@ -321,7 +299,7 @@ class Advance
     ON a.login_id = b.login
     LEFT JOIN 
     (
-      SELECT request_id,(SUM(amount) + SUM(vat) - SUM(wt)) total
+      SELECT request_id,SUM(amount) total
       FROM belink.advance_item
       WHERE	`status` = 1
       GROUP BY request_id
@@ -359,9 +337,7 @@ class Advance
         $action,
         $row['ticket'],
         $row['username'],
-        $row['order_number'],
         str_replace("\n", "<br>", $row['objective']),
-        number_format($row['amount'], 2),
         number_format($row['total'], 2),
         $row['created'],
       ];
@@ -395,11 +371,9 @@ class Advance
 
     $sql = "SELECT a.id,
     a.`uuid`,
-    CONCAT('AC',YEAR(a.created),LPAD(a.`last`,4,'0')) ticket,
+    CONCAT('AR',YEAR(a.created),LPAD(a.`last`,4,'0')) ticket,
     CONCAT(b.firstname,' ',b.lastname) username,
-    a.order_number,
     a.objective,
-    a.amount,
     c.total,
     a.`status`,
       (
@@ -424,7 +398,7 @@ class Advance
     ON a.login_id = b.login
     LEFT JOIN 
     (
-      SELECT request_id,(SUM(amount) + SUM(vat) - SUM(wt)) total
+      SELECT request_id,SUM(amount) total
       FROM belink.advance_item
       WHERE	`status` = 1
       GROUP BY request_id
@@ -462,9 +436,7 @@ class Advance
         $action,
         $row['ticket'],
         $row['username'],
-        $row['order_number'],
         str_replace("\n", "<br>", $row['objective']),
-        number_format($row['amount'], 2),
         number_format($row['total'], 2),
         $row['created'],
       ];

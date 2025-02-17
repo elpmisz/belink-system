@@ -21,7 +21,7 @@ ob_start();
 
 <head>
   <meta charset="utf-8">
-  <title>ใบเคลียร์เงินทดรองจ่าย (Advance Clearing Voucher)</title>
+  <title>ใบเบิกเงินทดรองจ่าย (Advance Request)</title>
   <style>
     table {
       width: 100%;
@@ -71,30 +71,30 @@ ob_start();
   <table>
     <tr>
       <td class="text-left no-border" width="10%"></td>
-      <td class="text-center no-border" width="60%">
+      <td class="text-center no-border" width="50%">
         <h2>บริษัท บีลิงค์ มีเดีย จำกัด</h2>
       </td>
-      <td class="no-border" width="10%">เลขที่เอกสาร</td>
+      <td class="no-border" width="20%">เลขที่เอกสาร</td>
       <td class="bottom-border" width="20%">
         <?php echo htmlspecialchars($row['ticket'], ENT_QUOTES, 'UTF-8'); ?>
       </td>
     </tr>
     <tr>
       <td class="text-left no-border" width="10%"></td>
-      <td class="text-center no-border" width="60%">
-        <h3>ใบเคลียร์เงินทดรองจ่าย (Advance Clearing Voucher)</h3>
+      <td class="text-center no-border" width="50%">
+        <h3>ใบเบิกเงินทดรองจ่าย (Advance Request)</h3>
       </td>
-      <td class="no-border" width="10%">วันที่</td>
+      <td class="no-border" width="20%">วันที่เอกสาร</td>
       <td class="bottom-border" width="20%">
-        <?php echo htmlspecialchars($row['created'], ENT_QUOTES, 'UTF-8'); ?>
+        <?php echo htmlspecialchars($row['date'], ENT_QUOTES, 'UTF-8'); ?>
       </td>
     </tr>
     <tr>
       <td class="text-left no-border" width="10%"></td>
-      <td class="text-center no-border" width="60%"></td>
-      <td class="no-border" width="10%">เลขที่สัญญา</td>
+      <td class="text-center no-border" width="50%"></td>
+      <td class="no-border" width="20%">วันที่ครบกำหนด</td>
       <td class="bottom-border" width="20%">
-        <?php echo htmlspecialchars($row['order_number'], ENT_QUOTES, 'UTF-8'); ?>
+        <?php echo htmlspecialchars($row['finish'], ENT_QUOTES, 'UTF-8'); ?>
       </td>
     </tr>
   </table>
@@ -116,36 +116,15 @@ ob_start();
       <td class="no-border" width="20%"></td>
       <td class="no-border" width="30%"></td>
     </tr>
-    <tr>
-      <td class="no-border" width="20%">ยอดเงินเบิก</td>
-      <td class="bottom-border" width="30%">
-        <?php echo htmlspecialchars(number_format($row['amount'], 2), ENT_QUOTES, 'UTF-8'); ?>
-      </td>
-      <td class="no-border" width="20%">ยอดเงินที่ใช้จริง</td>
-      <td class="bottom-border" width="30%">
-        <?php echo htmlspecialchars(number_format($row['usage'], 2), ENT_QUOTES, 'UTF-8'); ?>
-      </td>
-    </tr>
-    <tr>
-      <td class="no-border" width="20%">ยอดเงินที่เหลือคืน</td>
-      <td class="bottom-border" width="30%">
-        <?php echo htmlspecialchars(number_format($row['remain'], 2), ENT_QUOTES, 'UTF-8'); ?>
-      </td>
-      <td class="no-border" width="20%">ยอดเงินที่คืน</td>
-      <td class="bottom-border" width="30%"></td>
-    </tr>
   </table>
 
   <!-- Items Section -->
   <table style="margin-top: 10px;">
     <tr>
-      <th width="5%">#</th>
-      <th width="15%">รายจ่าย</th>
-      <th width="15%">รายละเอียด</th>
+      <th width="10%">#</th>
+      <th width="40%">รายจ่าย</th>
+      <th width="40%">รายละเอียด</th>
       <th width="10%">จำนวนเงิน</th>
-      <th width="10%">VAT 7%</th>
-      <th width="10%">W/T</th>
-      <th width="10%">ยอดสุทธิ</th>
     </tr>
     <?php
     $items = $ADVANCE->advance_item_view([$uuid]);
@@ -157,9 +136,6 @@ ob_start();
         <td class="text-left"><?php echo $item['expense_name'] ?></td>
         <td class="text-left"><?php echo $item['text'] ?></td>
         <td class="text-right"><?php echo number_format($item['amount'], 2) ?></td>
-        <td class="text-right"><?php echo number_format($item['vat'], 2) ?></td>
-        <td class="text-right"><?php echo number_format($item['wt'], 2) ?></td>
-        <td class="text-right"><?php echo number_format($item['total'], 2) ?></td>
       </tr>
     <?php
     endforeach;
@@ -170,17 +146,11 @@ ob_start();
         <td></td>
         <td></td>
         <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
       </tr>
     <?php endfor; ?>
     <tr>
       <td colspan="2" class="text-center"><?php echo $VALIDATION->bathformat($total['total']) ?></td>
       <td class="text-right">รวมทั้งสิ้น</td>
-      <td class="text-right"><?php echo number_format($total['amount'], 2) ?></td>
-      <td class="text-right"><?php echo number_format($total['vat'], 2) ?></td>
-      <td class="text-right"><?php echo number_format($total['wt'], 2) ?></td>
       <td class="text-right"><?php echo number_format($total['total'], 2) ?></td>
     </tr>
   </table>

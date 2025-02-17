@@ -42,26 +42,26 @@ $VALIDATION = new Validation();
 if ($action === "create") {
   try {
     $login_id = (isset($user['login_id']) ? $VALIDATION->input($user['login_id']) : "");
-    $order_number = (isset($_POST['order_number']) ? $VALIDATION->input($_POST['order_number']) : "");
-    $amount = (isset($_POST['amount']) ? $VALIDATION->input($_POST['amount']) : "");
+    $date = (isset($_POST['date']) ? $VALIDATION->input($_POST['date']) : "");
+    $date = (!empty($date) ? DateTime::createFromFormat('d/m/Y', $date)->format('Y-m-d') : "");
+    $finish = (isset($_POST['finish']) ? $VALIDATION->input($_POST['finish']) : "");
+    $finish = (!empty($finish) ? DateTime::createFromFormat('d/m/Y', $finish)->format('Y-m-d') : "");
     $objective = (isset($_POST['objective']) ? $VALIDATION->input($_POST['objective']) : "");
     $advance_last = $ADVANCE->advance_last();
 
-    $advance_count = $ADVANCE->advance_count([$login_id, $order_number, $amount, $objective]);
+    $advance_count = $ADVANCE->advance_count([$login_id, $date, $finish, $objective]);
     if (intval($advance_count) === 0) {
-      $ADVANCE->advance_insert([$advance_last, $login_id, $order_number, $amount, $objective]);
+      $ADVANCE->advance_insert([$advance_last, $login_id, $date, $finish, $objective]);
       $request_id = $ADVANCE->last_insert_id();
 
       foreach ($_POST['expense_id'] as $key => $row) {
         $expense_id = (isset($_POST['expense_id'][$key]) ? $VALIDATION->input($_POST['expense_id'][$key]) : "");
         $item_text = (isset($_POST['item_text'][$key]) ? $VALIDATION->input($_POST['item_text'][$key]) : "");
         $item_amount = (isset($_POST['item_amount'][$key]) ? $VALIDATION->input($_POST['item_amount'][$key]) : "");
-        $item_vat = (isset($_POST['item_vat'][$key]) ? $VALIDATION->input($_POST['item_vat'][$key]) : "");
-        $item_wt = (isset($_POST['item_wt'][$key]) ? $VALIDATION->input($_POST['item_wt'][$key]) : "");
 
         $advance_item_count = $ADVANCE->advance_item_count([$request_id, $expense_id]);
         if (intval($advance_item_count) === 0) {
-          $ADVANCE->advance_item_insert([$request_id, $expense_id, $item_text, $item_amount, $item_vat, $item_wt]);
+          $ADVANCE->advance_item_insert([$request_id, $expense_id, $item_text, $item_amount]);
         }
       }
 
@@ -105,19 +105,15 @@ if ($action === "update") {
   try {
     $request_id = (isset($_POST['id']) ? $VALIDATION->input($_POST['id']) : "");
     $uuid = (isset($_POST['uuid']) ? $VALIDATION->input($_POST['uuid']) : "");
-    $order_number = (isset($_POST['order_number']) ? $VALIDATION->input($_POST['order_number']) : "");
-    $amount = (isset($_POST['amount']) ? $VALIDATION->input($_POST['amount']) : "");
     $objective = (isset($_POST['objective']) ? $VALIDATION->input($_POST['objective']) : "");
-    $ADVANCE->advance_update([$order_number, $amount, $objective, $uuid]);
+    $ADVANCE->advance_update([$objective, $uuid]);
 
     foreach ($_POST['item__id'] as $key => $row) {
       $item__id = (isset($_POST['item__id'][$key]) ? $VALIDATION->input($_POST['item__id'][$key]) : "");
       $item__text = (isset($_POST['item__text'][$key]) ? $VALIDATION->input($_POST['item__text'][$key]) : "");
       $item__amount = (isset($_POST['item__amount'][$key]) ? $VALIDATION->input($_POST['item__amount'][$key]) : "");
-      $item__vat = (isset($_POST['item__vat'][$key]) ? $VALIDATION->input($_POST['item__vat'][$key]) : "");
-      $item__wt = (isset($_POST['item__wt'][$key]) ? $VALIDATION->input($_POST['item__wt'][$key]) : "");
 
-      $ADVANCE->advance_item_update([$item__text, $item__amount, $item__vat, $item__wt, $item__id]);
+      $ADVANCE->advance_item_update([$item__text, $item__amount, $item__id]);
     }
 
     if (isset($_POST['expense_id'])) {
@@ -125,12 +121,10 @@ if ($action === "update") {
         $expense_id = (isset($_POST['expense_id'][$key]) ? $VALIDATION->input($_POST['expense_id'][$key]) : "");
         $item_text = (isset($_POST['item_text'][$key]) ? $VALIDATION->input($_POST['item_text'][$key]) : "");
         $item_amount = (isset($_POST['item_amount'][$key]) ? $VALIDATION->input($_POST['item_amount'][$key]) : "");
-        $item_vat = (isset($_POST['item_vat'][$key]) ? $VALIDATION->input($_POST['item_vat'][$key]) : "");
-        $item_wt = (isset($_POST['item_wt'][$key]) ? $VALIDATION->input($_POST['item_wt'][$key]) : "");
 
         $advance_item_count = $ADVANCE->advance_item_count([$request_id, $expense_id]);
         if (intval($advance_item_count) === 0) {
-          $ADVANCE->advance_item_insert([$request_id, $expense_id, $item_text, $item_amount, $item_vat, $item_wt]);
+          $ADVANCE->advance_item_insert([$request_id, $expense_id, $item_text, $item_amount]);
         }
       }
     }

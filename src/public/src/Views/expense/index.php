@@ -1,6 +1,6 @@
 <?php
-$menu = "Setting";
-$page = "SettingExpense";
+$menu = "Service";
+$page = "ServiceExpense";
 include_once(__DIR__ . "/../layout/header.php");
 ?>
 

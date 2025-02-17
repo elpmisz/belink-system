@@ -42,7 +42,7 @@ $files = $ISSUE->file_view([$uuid]);
         <div class="row mb-2">
           <label class="col-xl-2 offset-xl-2 col-form-label">TYPE</label>
           <div class="col-xl-4">
-            <input type="text" class="form-control form-control-sm" name="type" value="<?php echo $row['type'] ?>" readonly>
+            <input type="text" class="form-control form-control-sm type-id" name="type" value="<?php echo $row['type'] ?>" readonly>
             <div class="invalid-feedback">
               กรุณากรอกข้อมูล!
             </div>
@@ -271,15 +271,27 @@ $files = $ISSUE->file_view([$uuid]);
 
 <?php include_once(__DIR__ . "/../layout/footer.php"); ?>
 <script>
+  const typeId = parseInt($(".type-id").val() || 0);
+  console.log(typeId)
   initializeSelect2(".outcome-select", "/issue/outcome-select", "-- ใบเบิกออก --");
-  initializeSelect2(".product-select", "/issue/product-select", "-- สินค้า --");
+  if (typeId === 1) {
+    initializeSelect2(".product-select", "/issue/product-select", "-- สินค้า --");
+  } else {
+    initializeSelect2(".product-select", "/issue/product-stock-select", "-- สินค้า --");
+  }
   initializeSelect2(".warehouse-select", "/issue/warehouse-select", "-- คลัง --");
+
+  const selected = new Option("สาทร", 1, true, true);
+  $(".warehouse-select").append(selected).trigger("change");
 
   $(".item-decrease, .file-decrease").hide();
   $(document).on("click", ".item-increase", function() {
-    let row = $(".item-tr:last");
-    let clone = row.clone();
-    clone.find("input, select").val("").empty();
+    const row = $(".item-tr:last");
+    const clone = row.clone();
+    const typeId = parseInt($(".type-id").val() || 0);
+    const selected = new Option("สาทร", 1, true, true);
+    row.find(".warehouse-select").append(selected).trigger("change");
+    clone.find("input, span, .product-select").val("").empty();
     clone.find("span").text("");
     clone.find(".item-increase").hide();
     clone.find(".item-decrease").show();
@@ -288,7 +300,11 @@ $files = $ISSUE->file_view([$uuid]);
     });
 
     row.after(clone);
-    initializeSelect2(".product-select", "/issue/product-select", "-- สินค้า --");
+    if (typeId === 1) {
+      initializeSelect2(".product-select", "/issue/product-select", "-- สินค้า --");
+    } else {
+      initializeSelect2(".product-select", "/issue/product-stock-select", "-- สินค้า --");
+    }
     initializeSelect2(".warehouse-select", "/issue/warehouse-select", "-- คลัง --");
   });
 

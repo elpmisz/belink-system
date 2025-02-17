@@ -115,9 +115,7 @@ include_once(__DIR__ . "/../layout/header.php");
                     </div>
                   </td>
                   <td>
-                    <select class="form-control form-control-sm warehouse-select" name="warehouse_id[]" required>
-                      <option value="1" selected>สาทร</option>
-                    </select>
+                    <select class="form-control form-control-sm warehouse-select" name="warehouse_id[]" required></select>
                     <div class="invalid-feedback">
                       กรุณากรอกข้อมูล!
                     </div>
@@ -177,11 +175,16 @@ include_once(__DIR__ . "/../layout/header.php");
   initializeSelect2(".product-select", "/issue/product-stock-select", "-- สินค้า --");
   initializeSelect2(".warehouse-select", "/issue/warehouse-select", "-- คลัง --");
 
+  const selected = new Option("สาทร", 1, true, true);
+  $(".warehouse-select").append(selected).trigger("change");
+
   $(".item-decrease, .file-decrease").hide();
   $(document).on("click", ".item-increase", function() {
-    let row = $(".item-tr:last");
-    let clone = row.clone();
-    clone.find("input, select, span").val("").empty();
+    const row = $(".item-tr:last");
+    const clone = row.clone();
+    const selected = new Option("สาทร", 1, true, true);
+    row.find(".warehouse-select").append(selected).trigger("change");
+    clone.find("input, span, .product-select").val("").empty();
     clone.find("span").text("");
     clone.find(".item-increase").hide();
     clone.find(".item-decrease").show();
@@ -189,11 +192,11 @@ include_once(__DIR__ . "/../layout/header.php");
       $(this).closest("tr").remove();
     });
 
+
     row.after(clone);
     initializeSelect2(".product-select", "/issue/product-stock-select", "-- สินค้า --");
     initializeSelect2(".warehouse-select", "/issue/warehouse-select", "-- คลัง --");
   });
-
   $(document).on("change", ".product-select, .warehouse-select", function() {
     const row = $(this).closest("tr");
     const product = (row.find(".product-select").val() || "");

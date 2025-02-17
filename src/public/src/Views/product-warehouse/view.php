@@ -1,6 +1,6 @@
 <?php
-$menu = "Setting";
-$page = "SettingProduct";
+$menu = "Service";
+$page = "ServiceProduct";
 include_once(__DIR__ . "/../layout/header.php");
 
 use App\Classes\ProductWarehouse;

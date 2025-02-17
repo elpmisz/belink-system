@@ -1,6 +1,6 @@
 <?php
-$menu = "Setting";
-$page = "SettingCustomer";
+$menu = "Service";
+$page = "ServiceCustomer";
 include_once(__DIR__ . "/../layout/header.php");
 
 use App\Classes\Expense;

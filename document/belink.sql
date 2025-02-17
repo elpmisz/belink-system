@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: database
--- Generation Time: Feb 17, 2025 at 07:35 AM
+-- Generation Time: Feb 17, 2025 at 04:35 PM
 -- Server version: 11.6.2-MariaDB-ubu2404
 -- PHP Version: 8.2.27
 
@@ -20,6 +20,104 @@ SET time_zone = "+00:00";
 --
 -- Database: `belink`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `advance_clear_file`
+--
+
+CREATE TABLE `advance_clear_file` (
+  `id` int(11) NOT NULL,
+  `request_id` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `status` int(11) NOT NULL DEFAULT 1,
+  `updated` datetime DEFAULT NULL,
+  `created` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `advance_clear_file`
+--
+
+INSERT INTO `advance_clear_file` (`id`, `request_id`, `name`, `status`, `updated`, `created`) VALUES
+(1, 1, '88613f7d491e77911c1480385fcc870b.pdf', 1, NULL, '2025-02-17 22:31:26');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `advance_clear_item`
+--
+
+CREATE TABLE `advance_clear_item` (
+  `id` int(11) NOT NULL,
+  `request_id` int(11) NOT NULL,
+  `expense_id` int(11) NOT NULL,
+  `text` varchar(100) NOT NULL,
+  `amount` decimal(20,2) NOT NULL,
+  `vat` decimal(20,2) NOT NULL,
+  `wt` decimal(20,2) NOT NULL,
+  `status` int(11) NOT NULL DEFAULT 1,
+  `updated` datetime DEFAULT NULL,
+  `created` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `advance_clear_item`
+--
+
+INSERT INTO `advance_clear_item` (`id`, `request_id`, `expense_id`, `text`, `amount`, `vat`, `wt`, `status`, `updated`, `created`) VALUES
+(1, 1, 3, 'aaaaa', 18000.00, 1260.00, 0.00, 1, '2025-02-17 22:56:00', '2025-02-17 22:31:26'),
+(2, 1, 6, 'bbbbb', 15000.00, 1050.00, 0.00, 1, '2025-02-17 22:56:00', '2025-02-17 22:31:26'),
+(3, 1, 7, 'ccccc', 4000.00, 280.00, 120.00, 1, '2025-02-17 22:56:00', '2025-02-17 22:31:26');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `advance_clear_remark`
+--
+
+CREATE TABLE `advance_clear_remark` (
+  `id` int(11) NOT NULL,
+  `request_id` int(11) NOT NULL,
+  `login_id` int(11) NOT NULL,
+  `text` varchar(200) NOT NULL,
+  `status` int(11) NOT NULL,
+  `created` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `advance_clear_remark`
+--
+
+INSERT INTO `advance_clear_remark` (`id`, `request_id`, `login_id`, `text`, `status`, `created`) VALUES
+(1, 1, 1, '', 2, '2025-02-17 22:59:30');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `advance_clear_request`
+--
+
+CREATE TABLE `advance_clear_request` (
+  `id` int(11) NOT NULL,
+  `uuid` varchar(36) NOT NULL,
+  `last` int(11) NOT NULL,
+  `login_id` int(11) NOT NULL,
+  `advance_id` int(11) NOT NULL,
+  `amount` decimal(20,2) NOT NULL,
+  `action` int(11) NOT NULL DEFAULT 1,
+  `status` int(11) NOT NULL DEFAULT 1,
+  `updated` datetime DEFAULT NULL,
+  `created` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `advance_clear_request`
+--
+
+INSERT INTO `advance_clear_request` (`id`, `uuid`, `last`, `login_id`, `advance_id`, `amount`, `action`, `status`, `updated`, `created`) VALUES
+(1, '418336bc-ed44-11ef-9de3-0242ac120005', 1, 1, 1, 42000.00, 1, 2, '2025-02-17 22:59:30', '2025-02-17 22:31:26');
 
 -- --------------------------------------------------------
 
@@ -41,7 +139,7 @@ CREATE TABLE `advance_file` (
 --
 
 INSERT INTO `advance_file` (`id`, `request_id`, `name`, `status`, `updated`, `created`) VALUES
-(1, 1, '55b3e12ba8fc2598f43aea3f69a25b66.pdf', 1, NULL, '2025-02-02 20:44:00');
+(1, 1, '888b2b094af524d8720623d09929ff6a.pdf', 1, NULL, '2025-02-17 21:35:27');
 
 -- --------------------------------------------------------
 
@@ -55,8 +153,6 @@ CREATE TABLE `advance_item` (
   `expense_id` int(11) NOT NULL,
   `text` varchar(100) NOT NULL,
   `amount` decimal(20,2) NOT NULL,
-  `vat` decimal(20,2) NOT NULL,
-  `wt` decimal(20,2) NOT NULL,
   `status` int(11) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
   `created` datetime NOT NULL DEFAULT current_timestamp()
@@ -66,8 +162,10 @@ CREATE TABLE `advance_item` (
 -- Dumping data for table `advance_item`
 --
 
-INSERT INTO `advance_item` (`id`, `request_id`, `expense_id`, `text`, `amount`, `vat`, `wt`, `status`, `updated`, `created`) VALUES
-(1, 1, 7, 'xxxx', 9000.00, 630.00, 0.00, 1, NULL, '2025-02-02 20:44:00');
+INSERT INTO `advance_item` (`id`, `request_id`, `expense_id`, `text`, `amount`, `status`, `updated`, `created`) VALUES
+(1, 1, 3, 'xxxxx', 20000.00, 1, '2025-02-17 21:35:27', '2025-02-17 21:07:07'),
+(2, 1, 6, 'yyyyy', 17500.00, 1, '2025-02-17 21:35:27', '2025-02-17 21:07:07'),
+(3, 1, 7, 'zzzzz', 4500.00, 1, '2025-02-17 21:35:27', '2025-02-17 21:19:25');
 
 -- --------------------------------------------------------
 
@@ -89,7 +187,9 @@ CREATE TABLE `advance_remark` (
 --
 
 INSERT INTO `advance_remark` (`id`, `request_id`, `login_id`, `text`, `status`, `created`) VALUES
-(1, 1, 1, '', 2, '2025-02-02 20:45:00');
+(1, 1, 1, '', 2, '2025-02-17 21:40:12'),
+(2, 1, 1, '', 2, '2025-02-17 22:58:15'),
+(3, 1, 1, '', 2, '2025-02-17 22:58:42');
 
 -- --------------------------------------------------------
 
@@ -102,8 +202,8 @@ CREATE TABLE `advance_request` (
   `uuid` varchar(36) NOT NULL,
   `last` int(11) NOT NULL,
   `login_id` int(11) NOT NULL,
-  `order_number` varchar(20) NOT NULL,
-  `amount` decimal(20,2) NOT NULL,
+  `date` date NOT NULL,
+  `finish` date NOT NULL,
   `objective` text NOT NULL,
   `action` int(11) NOT NULL DEFAULT 1,
   `status` int(11) NOT NULL DEFAULT 1,
@@ -115,8 +215,8 @@ CREATE TABLE `advance_request` (
 -- Dumping data for table `advance_request`
 --
 
-INSERT INTO `advance_request` (`id`, `uuid`, `last`, `login_id`, `order_number`, `amount`, `objective`, `action`, `status`, `updated`, `created`) VALUES
-(1, 'c5f0d78a-e16b-11ef-8d4c-0242ac120003', 1, 1, 'SO07010001', 10000.00, 'XXXXXX\r\nXXXXXX', 1, 2, '2025-02-02 20:45:00', '2025-02-02 20:44:00');
+INSERT INTO `advance_request` (`id`, `uuid`, `last`, `login_id`, `date`, `finish`, `objective`, `action`, `status`, `updated`, `created`) VALUES
+(1, '79e2c921-ed38-11ef-9de3-0242ac120005', 1, 1, '2025-02-17', '2025-02-24', 'xxxxx\r\nxxxxx', 1, 2, '2025-02-17 21:40:12', '2025-02-17 21:07:07');
 
 -- --------------------------------------------------------
 
@@ -270,8 +370,7 @@ INSERT INTO `asset` (`id`, `uuid`, `name`, `code`, `type_id`, `warehouse_id`, `l
 (121, '91ba4d01-e62f-11ef-92b2-0242ac120002', 'Game หมุนวงล้อ', '', 2, 1, 0, 5, 1, '', 'เหล็ก', '', 1, NULL, '2025-02-08 22:15:44'),
 (122, '91ba9c1a-e62f-11ef-92b2-0242ac120002', 'Standee', '', 2, 1, 0, 5, 1, '0.40 x 1.70 m', 'PP BORAD', '', 1, NULL, '2025-02-08 22:15:44'),
 (123, '91bae7d8-e62f-11ef-92b2-0242ac120002', 'พื้นไม้ติดสติกเกอร์', '', 2, 1, 0, 5, 1, '3.00 x 3.00 x 0.15 m', 'HMR', '', 1, NULL, '2025-02-08 22:15:44'),
-(124, '91bb3160-e62f-11ef-92b2-0242ac120002', 'Standee', '', 2, 1, 0, 5, 1, '0.40 x 1.20 m', 'PP BORAD', '', 1, NULL, '2025-02-08 22:15:44'),
-(125, '6b0ed8e3-e91b-11ef-8583-2ad6c30b0fff', 'ddd', 'ddd', 3, 1, 1, 0, 0, '', '', 'ddd', 2, '2025-02-14 14:09:19', '2025-02-12 08:29:04');
+(124, '91bb3160-e62f-11ef-92b2-0242ac120002', 'Standee', '', 2, 1, 0, 5, 1, '0.40 x 1.20 m', 'PP BORAD', '', 1, NULL, '2025-02-08 22:15:44');
 
 -- --------------------------------------------------------
 
@@ -414,8 +513,8 @@ INSERT INTO `asset_warehouse` (`id`, `name`, `status`, `updated`, `created`) VAL
 CREATE TABLE `borrow_authorize` (
   `id` int(11) NOT NULL,
   `login_id` int(11) NOT NULL,
-  `type` int(1) NOT NULL,
-  `status` int(1) NOT NULL DEFAULT 1,
+  `type` int(11) NOT NULL,
+  `status` int(11) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
   `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -444,6 +543,14 @@ CREATE TABLE `borrow_file` (
   `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `borrow_file`
+--
+
+INSERT INTO `borrow_file` (`id`, `request_id`, `name`, `status`, `updated`, `created`) VALUES
+(1, 1, '0b726c9f80e517a70bcfbf80f905095d.pdf', 1, NULL, '2025-02-17 08:07:04'),
+(2, 2, '45911751f79c75fa3789c9aa765f0bc6.pdf', 1, NULL, '2025-02-17 08:48:05');
+
 -- --------------------------------------------------------
 
 --
@@ -459,6 +566,23 @@ CREATE TABLE `borrow_item` (
   `updated` datetime DEFAULT NULL,
   `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `borrow_item`
+--
+
+INSERT INTO `borrow_item` (`id`, `request_id`, `asset_id`, `text`, `status`, `updated`, `created`) VALUES
+(1, 1, 90, 'Gaenier Men 1 ชุด', 1, NULL, '2025-02-17 08:07:04'),
+(2, 1, 112, 'ตัวละคร Gaenier Men 1 ตัว', 1, NULL, '2025-02-17 08:07:04'),
+(3, 1, 112, 'หลอดโฟม Gaenier Men 1 ตัว', 1, NULL, '2025-02-17 08:07:04'),
+(4, 1, 4, 'ติดสติ๊กเกอร์ Gaenier Men', 1, NULL, '2025-02-17 08:07:04'),
+(5, 1, 102, 'Gaenier Men 3 อัน', 1, NULL, '2025-02-17 08:07:04'),
+(6, 1, 60, 'ปลั๊กโรล และ ปลั๊กพ่วง', 1, NULL, '2025-02-17 08:07:04'),
+(7, 1, 45, 'ผ้าใบเต็นท์สีขาว', 1, NULL, '2025-02-17 08:07:04'),
+(8, 1, 62, 'ติดสติ๊กเกอร์ Gaenier Men 6 ใบ', 1, NULL, '2025-02-17 08:07:04'),
+(9, 1, 19, '', 1, NULL, '2025-02-17 08:07:04'),
+(10, 2, 38, 'ส่งของคืน ตู้กาชาปองที่แร็ปงานเดอร์มาติก', 1, NULL, '2025-02-17 08:48:05'),
+(11, 2, 19, '', 1, NULL, '2025-02-17 08:48:05');
 
 -- --------------------------------------------------------
 
@@ -495,11 +619,19 @@ CREATE TABLE `borrow_request` (
   `sale` varchar(50) NOT NULL,
   `location_start` varchar(50) NOT NULL,
   `location_end` varchar(50) NOT NULL,
-  `objective` varchar(200) NOT NULL,
+  `objective` text NOT NULL,
   `status` int(11) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
   `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `borrow_request`
+--
+
+INSERT INTO `borrow_request` (`id`, `uuid`, `last`, `login_id`, `date`, `event_date`, `event_start`, `event_end`, `event_name`, `sale`, `location_start`, `location_end`, `objective`, `status`, `updated`, `created`) VALUES
+(1, '2c7beff7-ed06-11ef-8583-2ad6c30b0fff', 1, 8, '2025-02-18', '19/02/2025 - 21/02/2025', '2025-02-19', '2025-02-21', 'Gaenier Men', 'เก๋', 'โกดังสาทร', 'โรงเรียนชลราษฎรอำรุง', 'รายการที่ไม่มีในระบบ\r\nแท่นเกมส์ต่อยมวย 1 ตัว\r\nเครื่องเกมส์ต่อยมวย 2 เครื่อง\r\nพรม Black &amp; White 4 ผืน\r\nสายชาร์จเครื่องเกมส์ต่อยมวย 2 ชุด\r\nนวมต่อยมวย 2 คู่\r\nนาฬิกาจับเวลา 1 เครื่อง\r\nรถเข็น 1 อัน\r\nบั', 1, NULL, '2025-02-17 08:07:04'),
+(2, 'e777ed49-ed0b-11ef-8583-2ad6c30b0fff', 2, 7, '2025-02-14', '16/02/2025 - 17/02/2025', '2025-02-16', '2025-02-17', 'เดอร์มาติก', 'พี่ตาล', 'ม.ธรรมศาสตร์ รังสิต', 'โกดังสาทร', 'ส่งของคืนโกดัง งานเดอร์มาติก\r\nมีจัดงานเดอร์มาติกต่อเดือนมีนาคม และเมษายน\r\n\r\nของที่ไม่มีในตัวเลือก\r\n1. พรม atlantis A19 1 ม้วน\r\n2. แร็ปใส 1 ม้วน\r\n3. ผ้าคลุมถุงทราย สีขาว 4 ผืน\r\n4. ถุงทราย 4 กระสอบ\r\n5. ', 1, NULL, '2025-02-17 08:48:05');
 
 -- --------------------------------------------------------
 
@@ -681,8 +813,8 @@ INSERT INTO `expense` (`id`, `uuid`, `code`, `name`, `type`, `reference`, `statu
 CREATE TABLE `issue_authorize` (
   `id` int(11) NOT NULL,
   `login_id` int(11) NOT NULL,
-  `type` int(1) NOT NULL,
-  `status` int(1) NOT NULL DEFAULT 1,
+  `type` int(11) NOT NULL,
+  `status` int(11) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
   `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -730,6 +862,24 @@ CREATE TABLE `issue_item` (
   `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `issue_item`
+--
+
+INSERT INTO `issue_item` (`id`, `request_id`, `product_id`, `warehouse_id`, `type`, `amount`, `confirm`, `status`, `updated`, `created`) VALUES
+(1, 1, 2, 1, 1, 48.00, 48.00, 1, '2025-02-17 09:14:05', '2025-02-17 09:10:17'),
+(2, 1, 10, 1, 1, 648.00, 648.00, 1, '2025-02-17 09:14:05', '2025-02-17 09:10:18'),
+(3, 1, 27, 1, 1, 340.00, 340.00, 1, '2025-02-17 09:14:05', '2025-02-17 09:10:18'),
+(4, 1, 28, 1, 1, 300.00, 300.00, 1, '2025-02-17 09:14:05', '2025-02-17 09:10:18'),
+(5, 1, 29, 1, 1, 300.00, 300.00, 1, '2025-02-17 09:14:05', '2025-02-17 09:10:18'),
+(6, 1, 37, 1, 1, 66.00, 66.00, 1, '2025-02-17 09:14:05', '2025-02-17 09:10:18'),
+(7, 1, 38, 1, 1, 2592.00, 2592.00, 1, '2025-02-17 09:14:05', '2025-02-17 09:10:18'),
+(8, 1, 39, 1, 1, 1418.00, 1418.00, 1, '2025-02-17 09:14:05', '2025-02-17 09:10:18'),
+(9, 1, 40, 1, 1, 56.00, 56.00, 1, '2025-02-17 09:14:05', '2025-02-17 09:10:18'),
+(10, 1, 43, 1, 1, 502.00, 502.00, 1, '2025-02-17 09:14:05', '2025-02-17 09:10:18'),
+(11, 1, 44, 1, 1, 161.00, 161.00, 1, '2025-02-17 09:14:05', '2025-02-17 09:10:18'),
+(12, 1, 45, 1, 1, 1300.00, 1300.00, 1, '2025-02-17 09:14:05', '2025-02-17 09:10:18');
+
 -- --------------------------------------------------------
 
 --
@@ -744,6 +894,13 @@ CREATE TABLE `issue_remark` (
   `status` int(11) NOT NULL,
   `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `issue_remark`
+--
+
+INSERT INTO `issue_remark` (`id`, `request_id`, `login_id`, `text`, `status`, `created`) VALUES
+(1, 1, 1, 'ผ่านการตรวจสอบ', 2, '2025-02-17 09:14:05');
 
 -- --------------------------------------------------------
 
@@ -766,11 +923,18 @@ CREATE TABLE `issue_request` (
   `location_start` varchar(50) DEFAULT NULL,
   `location_end` varchar(50) DEFAULT NULL,
   `outcome` int(11) DEFAULT NULL,
-  `text` varchar(200) NOT NULL,
+  `text` text NOT NULL,
   `status` int(11) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
   `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `issue_request`
+--
+
+INSERT INTO `issue_request` (`id`, `uuid`, `last`, `login_id`, `type`, `date`, `event_date`, `event_start`, `event_end`, `event_name`, `sale`, `location_start`, `location_end`, `outcome`, `text`, `status`, `updated`, `created`) VALUES
+(1, '01a8dd16-ed0f-11ef-8583-2ad6c30b0fff', 1, 1, 1, '2025-02-17', '', '0000-00-00', '0000-00-00', '', '', '', '', 0, 'ยอดยกมา', 2, '2025-02-17 09:14:05', '2025-02-17 09:10:17');
 
 -- --------------------------------------------------------
 
@@ -799,7 +963,7 @@ INSERT INTO `login` (`id`, `uuid`, `username`, `email`, `password`, `level`, `st
 (2, '857827b5-d0ae-11ef-91c3-0242ac120002', '', 'user@test.com', '$2y$10$jwAmc2BoS2EwrzfL2LkYOel9FZHc9LSbRn4sge.SvmPiOyjoSgLVq', 1, 1, '2025-02-11 00:38:49', '2025-01-03 08:42:52'),
 (3, '088ace55-e80f-11ef-8583-2ad6c30b0fff', '', 'n0866881414@gmail.com', '$2y$10$wH1zRiGz7/.zwlccIxlKoOW2Ph2g061zMc5PBs9a.5zaYhOCH9XpO', 1, 1, '2025-02-11 00:39:00', '2025-02-11 00:27:53'),
 (4, '333f7a89-e80f-11ef-8583-2ad6c30b0fff', '', 'acount@test.com', '$2y$10$PWvUBBWbA.X8Z6sK1.g9jOAesSlGUgIVUMGaJQwY3yYiBnGsUKRre', 1, 1, '2025-02-11 00:39:21', '2025-02-11 00:29:05'),
-(5, '7313af95-e810-11ef-8583-2ad6c30b0fff', '', 'store@test.com', '$2y$10$AFRyl5Hh9/sGPXMbyuA/Bum78re.OqMxnWPS2J8Rn.ca4R9ppm4da', 9, 1, '2025-02-11 00:39:42', '2025-02-11 00:38:01'),
+(5, '7313af95-e810-11ef-8583-2ad6c30b0fff', 'store', 'store@test.com', '$2y$10$AFRyl5Hh9/sGPXMbyuA/Bum78re.OqMxnWPS2J8Rn.ca4R9ppm4da', 1, 1, '2025-02-17 11:18:15', '2025-02-11 00:38:01'),
 (6, '7bc14cfa-e868-11ef-8583-2ad6c30b0fff', '', 'jutamas.pu@test.com', '$2y$10$RlzJAiuhr0uZmr3XEC/unuuP5bKENxpuqeOfZ408S3qey60si.e72', 1, 1, '2025-02-13 07:41:29', '2025-02-11 11:08:12'),
 (7, '967c4eaf-e868-11ef-8583-2ad6c30b0fff', '', 'supanida.ja@test.com', '$2y$10$pkvurqhgZowu8eCRfcURE.XDkj4nkWXezT8cqxCQ66WwYbDyzo5t.', 1, 1, '2025-02-13 07:48:55', '2025-02-11 11:08:57'),
 (8, 'a6193884-e868-11ef-8583-2ad6c30b0fff', '', 'kamonwan.su@test.com', '$2y$10$1aGNo1ks0dU5m2l03oPzouqrVcAbfUx4XNbUkYxb/aY2D37QAgXEi', 1, 1, '2025-02-13 07:42:01', '2025-02-11 11:09:23'),
@@ -811,7 +975,7 @@ INSERT INTO `login` (`id`, `uuid`, `username`, `email`, `password`, `level`, `st
 (14, 'fd5dd5d9-e868-11ef-8583-2ad6c30b0fff', '', 'jakawan.ch@test.com', '$2y$10$DHf9sF7RA/mOuhl5Ec.aD.LBO45SPb7bB0K3A7A.Ro6Cvpxw5gXja', 1, 1, '2025-02-13 07:42:30', '2025-02-11 11:11:49'),
 (15, 'd06a19f1-e869-11ef-8583-2ad6c30b0fff', '', 'arthid.na@test.com', '$2y$10$3NX/iG6sF.FzCSo1112X0O0klBPtfhsqe4bqKWt7aAe9gVkZ3Tbsi', 1, 1, '2025-02-13 07:49:33', '2025-02-11 11:17:43'),
 (16, 'ef7d1fc6-e869-11ef-8583-2ad6c30b0fff', '', 'phadung.bo@test.com', '$2y$10$3e22V5VHB0yjDFO8pF8Rgusw3R/OSsuv3dzR1ZE2jCCGvztpeyIKK', 1, 1, '2025-02-13 07:47:45', '2025-02-11 11:18:35'),
-(17, '887b64c0-e9df-11ef-8583-2ad6c30b0fff', '', 'onuma.th@test.com', '$2y$10$0RmoAdHcPzlbjWnnDfD.i.r4oRq/QmTI.htMyOcVCyuPM5QnBwXU2', 9, 1, '2025-02-13 08:16:43', '2025-02-13 07:52:54');
+(17, '887b64c0-e9df-11ef-8583-2ad6c30b0fff', 'onuma.th', 'onuma.th@test.com', '$2y$10$0RmoAdHcPzlbjWnnDfD.i.r4oRq/QmTI.htMyOcVCyuPM5QnBwXU2', 1, 1, '2025-02-17 11:18:01', '2025-02-13 07:52:54');
 
 -- --------------------------------------------------------
 
@@ -955,15 +1119,15 @@ CREATE TABLE `product` (
 
 INSERT INTO `product` (`id`, `uuid`, `name`, `code`, `type_id`, `warehouse_id`, `location_id`, `brand_id`, `unit_id`, `text`, `status`, `updated`, `created`) VALUES
 (1, 'e69deff0-e69d-11ef-8e45-0242ac120003', 'Scotch', '', 0, 1, 0, 1, 0, '', 1, NULL, '2025-02-09 11:25:32'),
-(2, 'e69e6c49-e69d-11ef-8e45-0242ac120003', 'Mansome คอลาเจน', '', 0, 1, 0, 2, 0, '', 1, NULL, '2025-02-09 11:25:32'),
-(3, 'e69ead77-e69d-11ef-8e45-0242ac120003', 'Mansome ฮันนี่เลมอน', '', 0, 1, 0, 2, 0, '', 1, NULL, '2025-02-09 11:25:32'),
+(2, 'e69e6c49-e69d-11ef-8e45-0242ac120003', 'Mansome คอลาเจน', '', 1, 1, 0, 2, 0, '', 1, '2025-02-17 08:49:37', '2025-02-09 11:25:32'),
+(3, 'e69ead77-e69d-11ef-8e45-0242ac120003', 'Mansome ฮันนี่เลมอน', '', 1, 1, 0, 2, 0, '', 1, '2025-02-17 08:49:44', '2025-02-09 11:25:32'),
 (4, 'e69ee937-e69d-11ef-8e45-0242ac120003', 'Mansome กูลตาไธโอน', '', 1, 1, 0, 2, 0, '', 1, '2025-02-09 12:47:33', '2025-02-09 11:25:32'),
 (5, 'e69f297c-e69d-11ef-8e45-0242ac120003', 'Puriku มิกเบอร์รี่', '', 0, 1, 0, 3, 0, '', 1, NULL, '2025-02-09 11:25:32'),
 (6, 'e69f6780-e69d-11ef-8e45-0242ac120003', 'Puriku องุ่นเคียวโฮ', '', 0, 1, 0, 3, 0, '', 1, NULL, '2025-02-09 11:25:32'),
 (7, 'e69fa52f-e69d-11ef-8e45-0242ac120003', 'Puriku เก๊กฮวย', '', 0, 1, 0, 3, 0, '', 1, NULL, '2025-02-09 11:25:32'),
 (8, 'e69fe840-e69d-11ef-8e45-0242ac120003', 'Puriku น้ำผึ้งเลม่อน', '', 0, 1, 0, 3, 0, '', 1, NULL, '2025-02-09 11:25:32'),
 (9, 'e6a0550b-e69d-11ef-8e45-0242ac120003', 'Puriku สตอเบอรี่', '', 0, 1, 0, 3, 0, '', 1, NULL, '2025-02-09 11:25:32'),
-(10, 'e6a091a4-e69d-11ef-8e45-0242ac120003', 'Dermatix', '', 0, 1, 0, 5, 0, '', 1, NULL, '2025-02-09 11:25:32'),
+(10, 'e6a091a4-e69d-11ef-8e45-0242ac120003', 'Dermatix เจล', '', 4, 1, 0, 5, 0, '', 1, '2025-02-17 08:59:30', '2025-02-09 11:25:32'),
 (11, 'e6a0d086-e69d-11ef-8e45-0242ac120003', 'ANTI-HAIR LOSS INTENSIVE TREATMENT 16 DAY 60 ML.', '52095', 0, 2, 0, 0, 0, '', 1, NULL, '2025-02-09 11:25:32'),
 (12, 'e6a10da5-e69d-11ef-8e45-0242ac120003', 'ANTI-HAIR LOSS SCALP BOOSTER SERUM 75 ML.', '99156', 0, 2, 0, 0, 0, '', 1, NULL, '2025-02-09 11:25:32'),
 (13, 'e6a149a2-e69d-11ef-8e45-0242ac120003', 'ANTI-HAIR LOSS WITH WHITE LUPIN SHAMPOO 300 ML.', '98437', 0, 2, 0, 0, 0, '', 1, NULL, '2025-02-09 11:25:32'),
@@ -979,23 +1143,24 @@ INSERT INTO `product` (`id`, `uuid`, `name`, `code`, `type_id`, `warehouse_id`, 
 (23, 'e6a3c937-e69d-11ef-8e45-0242ac120003', 'MINI SC2 BODY MILK LAIT CARPS REPARATION -TU- 30 ML.', '58306', 0, 2, 0, 0, 0, '', 1, NULL, '2025-02-09 11:25:32'),
 (24, 'e6a4041d-e69d-11ef-8e45-0242ac120003', 'MINI ANTI - DANDUFF SHAMPOO 50 ML.', '38028', 0, 2, 0, 0, 0, '', 1, NULL, '2025-02-09 11:25:32'),
 (25, 'e6a43d36-e69d-11ef-8e45-0242ac120003', 'MINI HYDRA VEGETAL 100H NON-STOP INTENSE MOISTURIZING CARE 7 ML.', '94060', 0, 2, 0, 0, 0, '', 1, NULL, '2025-02-09 11:25:32'),
-(26, 'e6a46c60-e69d-11ef-8e45-0242ac120003', 'ครีมแต้มสิว', '', 0, 0, 0, 5, 0, '', 1, NULL, '2025-02-09 11:25:32'),
-(27, 'e6a49a84-e69d-11ef-8e45-0242ac120003', 'ถ้วย', '', 0, 0, 0, 5, 0, '', 1, NULL, '2025-02-09 11:25:32'),
-(28, 'e6a4caa2-e69d-11ef-8e45-0242ac120003', 'กระเป๋า สีกรม', '', 0, 0, 0, 5, 0, '', 1, NULL, '2025-02-09 11:25:32'),
-(29, 'e6a4f9de-e69d-11ef-8e45-0242ac120003', 'กระเป๋า สีขาว', '', 0, 0, 0, 5, 0, '', 1, NULL, '2025-02-09 11:25:32'),
-(30, 'e6a52849-e69d-11ef-8e45-0242ac120003', 'คลอโรฟิล', '', 0, 0, 0, 2, 0, '', 1, NULL, '2025-02-09 11:25:32'),
+(26, 'e6a46c60-e69d-11ef-8e45-0242ac120003', 'Dermatix ครีมแต้มสิว', '', 4, 1, 0, 5, 0, '', 1, '2025-02-17 08:59:11', '2025-02-09 11:25:32'),
+(27, 'e6a49a84-e69d-11ef-8e45-0242ac120003', 'Dermatix ชาม', '', 2, 1, 0, 5, 0, '', 1, '2025-02-17 08:59:20', '2025-02-09 11:25:32'),
+(28, 'e6a4caa2-e69d-11ef-8e45-0242ac120003', 'Dermatix กระเป๋าสีน้ำเงิน', '', 2, 1, 0, 5, 0, '', 1, '2025-02-17 08:59:04', '2025-02-09 11:25:32'),
+(29, 'e6a4f9de-e69d-11ef-8e45-0242ac120003', 'Dermatix กระเป๋าสีขาว', '', 2, 1, 0, 5, 0, '', 1, '2025-02-17 08:58:56', '2025-02-09 11:25:32'),
+(30, 'e6a52849-e69d-11ef-8e45-0242ac120003', 'Mansome คลอโรฟิล', '', 1, 1, 0, 2, 0, '', 1, '2025-02-17 08:58:43', '2025-02-09 11:25:32'),
 (31, 'e6a55b2d-e69d-11ef-8e45-0242ac120003', 'White WGH 15g', '', 0, 0, 0, 6, 0, '', 1, NULL, '2025-02-09 11:25:32'),
 (32, 'e6a5d441-e69d-11ef-8e45-0242ac120003', 'Whip Collagen In a WGH 15g', '', 0, 0, 0, 6, 0, '', 1, NULL, '2025-02-09 11:25:32'),
 (33, 'e6a607af-e69d-11ef-8e45-0242ac120003', 'Whip VITC Poreless Glow', '', 0, 0, 0, 6, 0, '', 1, NULL, '2025-02-09 11:25:32'),
 (34, 'e6a63bee-e69d-11ef-8e45-0242ac120003', 'พรี่เมี่ยม โลชั่น 30มล.', '', 0, 0, 0, 8, 0, '', 1, NULL, '2025-02-09 11:25:32'),
 (35, 'e6a66d3f-e69d-11ef-8e45-0242ac120003', 'พรี่เมี่ยม โลชั่น 170มล.', '', 0, 0, 0, 8, 0, '', 1, NULL, '2025-02-09 11:25:32'),
 (36, 'e6a69ba0-e69d-11ef-8e45-0242ac120003', 'พรี่เมี่ยม โลชั่น ไฮเดรทติ้ง ครีม 50กรัม', '', 0, 0, 0, 8, 0, '', 1, NULL, '2025-02-09 11:25:32'),
-(37, 'e6a6ca40-e69d-11ef-8e45-0242ac120003', 'แพ็ค 3 แอคโนไฟท์ โฟม 50มล.', '', 0, 0, 0, 7, 0, '', 1, NULL, '2025-02-09 11:25:32'),
-(38, 'e6a6f893-e69d-11ef-8e45-0242ac120003', 'บอม 6 เมน แอคโนไฟท์ โฟมสครับ 15มล', '', 0, 0, 0, 7, 0, '', 1, NULL, '2025-02-09 11:25:32'),
-(39, 'e6a73d9e-e69d-11ef-8e45-0242ac120003', 'แอคโนไฟท์ ซูเปอร์ เซรั่ม 7มล.', '', 0, 0, 0, 7, 0, '', 1, NULL, '2025-02-09 11:25:32'),
-(40, 'e6a781a3-e69d-11ef-8e45-0242ac120003', 'แอคโนไฟท์ โฟมสครับ 100มล.', '', 0, 0, 0, 7, 0, '', 1, NULL, '2025-02-09 11:25:32'),
-(41, '273a242b-e77f-11ef-8583-2ad6c30b0fff', 'Mansome คอลาเจน', '8888888888', 1, 1, 1, 2, 1, '', 2, '2025-02-10 07:24:53', '2025-02-10 07:17:57'),
-(42, '53c66a45-e91b-11ef-8583-2ad6c30b0fff', 'aa', 'aa', 2, 1, 1, 5, 1, '', 1, '2025-02-14 14:09:27', '2025-02-12 08:28:25');
+(37, 'e6a6ca40-e69d-11ef-8e45-0242ac120003', 'แอคโนไฟท์ โฟม 50มล.', '', 4, 1, 0, 7, 0, '', 1, '2025-02-17 08:50:02', '2025-02-09 11:25:32'),
+(38, 'e6a6f893-e69d-11ef-8e45-0242ac120003', 'เมน แอคโนไฟท์ โฟมสครับ 15มล', '', 4, 1, 0, 7, 0, '', 1, '2025-02-17 08:48:30', '2025-02-09 11:25:32'),
+(39, 'e6a73d9e-e69d-11ef-8e45-0242ac120003', 'แอคโนไฟท์ ซูเปอร์ เซรั่ม 7มล.', '', 4, 1, 0, 7, 0, '', 1, '2025-02-17 08:50:14', '2025-02-09 11:25:32'),
+(40, 'e6a781a3-e69d-11ef-8e45-0242ac120003', 'แอคโนไฟท์ โฟมสครับ 100มล.', '', 4, 1, 0, 7, 0, '', 1, '2025-02-17 08:50:26', '2025-02-09 11:25:32'),
+(43, '7f57911c-ed0c-11ef-8583-2ad6c30b0fff', 'ถุงผ้าสีชมพู', '', 2, 1, 0, 9, 0, '', 1, NULL, '2025-02-17 08:52:20'),
+(44, '85fdd568-ed0c-11ef-8583-2ad6c30b0fff', 'ถุงผ้าสีขาว', '', 2, 1, 0, 9, 0, '', 1, NULL, '2025-02-17 08:52:31'),
+(45, '8d521b44-ed0c-11ef-8583-2ad6c30b0fff', 'พัดพลาสติก', '', 2, 1, 0, 9, 0, '', 1, NULL, '2025-02-17 08:52:43');
 
 -- --------------------------------------------------------
 
@@ -1023,7 +1188,8 @@ INSERT INTO `product_brand` (`id`, `name`, `status`, `updated`, `created`) VALUE
 (5, 'Dermatix', 1, NULL, '2025-02-08 23:03:39'),
 (6, 'Senka Perfect', 1, NULL, '2025-02-09 10:53:02'),
 (7, 'Ganier Men', 1, NULL, '2025-02-09 10:53:10'),
-(8, 'Hada Labo', 1, NULL, '2025-02-09 10:53:34');
+(8, 'Hada Labo', 1, NULL, '2025-02-09 10:53:34'),
+(9, 'JobDB', 1, NULL, '2025-02-17 08:51:46');
 
 -- --------------------------------------------------------
 
@@ -1098,7 +1264,8 @@ CREATE TABLE `product_type` (
 INSERT INTO `product_type` (`id`, `name`, `status`, `updated`, `created`) VALUES
 (1, 'เครื่องดื่ม', 1, NULL, '2025-02-08 22:54:40'),
 (2, 'กระเป๋า', 1, NULL, '2025-02-08 22:55:10'),
-(3, 'ผลิตภัณฑ์ดูแลผม', 1, '2025-02-08 23:00:11', '2025-02-08 22:58:56');
+(3, 'ผลิตภัณฑ์ดูแลผม', 1, '2025-02-08 23:00:11', '2025-02-08 22:58:56'),
+(4, 'ผลิตภัณฑ์ดูแลผิวหน้า', 1, NULL, '2025-02-17 08:48:15');
 
 -- --------------------------------------------------------
 
@@ -1263,12 +1430,21 @@ CREATE TABLE `service` (
 --
 
 INSERT INTO `service` (`id`, `uuid`, `sequence`, `name`, `url`, `status`, `updated`, `created`) VALUES
-(1, 'cf1bf169-e929-11ef-9523-0242ac120005', 1, 'Estimate Budget', '/estimate', 1, '2025-02-12 17:42:03', '2025-02-12 20:37:08'),
-(2, 'cf1c7170-e929-11ef-9523-0242ac120005', 2, 'Purchase Request', '/purchase', 1, '2025-02-12 17:42:03', '2025-02-12 20:37:08'),
-(3, 'cf1cfac9-e929-11ef-9523-0242ac120005', 3, 'Payment Order', '/payment', 1, '2025-02-12 17:42:03', '2025-02-12 20:37:08'),
-(4, 'cf1d4709-e929-11ef-9523-0242ac120005', 4, 'Advance Clearing', '/advance', 1, '2025-02-12 17:42:03', '2025-02-12 20:37:08'),
-(5, 'cf1d9368-e929-11ef-9523-0242ac120005', 5, 'ระบบยืมทรัพย์สิน', '/borrow', 1, '2025-02-12 17:42:03', '2025-02-12 20:37:08'),
-(6, 'cf1ddb6a-e929-11ef-9523-0242ac120005', 6, 'ระบบนำเข้า-เบิกออก', '/issue', 1, '2025-02-12 17:42:03', '2025-02-12 20:37:08');
+(1, 'cf1bf169-e929-11ef-9523-0242ac120005', 1, 'Estimate Budget', '/estimate', 1, '2025-02-17 23:34:29', '2025-02-12 20:37:08'),
+(2, 'cf1c7170-e929-11ef-9523-0242ac120005', 2, 'Purchase Request', '/purchase', 1, '2025-02-17 23:34:29', '2025-02-12 20:37:08'),
+(3, 'cf1cfac9-e929-11ef-9523-0242ac120005', 3, 'Payment Order', '/payment', 1, '2025-02-17 23:34:29', '2025-02-12 20:37:08'),
+(4, 'cf1d4709-e929-11ef-9523-0242ac120005', 5, 'Advance Clearing', '/advance-clear', 1, '2025-02-17 23:34:29', '2025-02-12 20:37:08'),
+(5, 'cf1d9368-e929-11ef-9523-0242ac120005', 10, 'ระบบยืมทรัพย์สิน', '/borrow', 1, '2025-02-17 23:34:29', '2025-02-12 20:37:08'),
+(6, 'cf1ddb6a-e929-11ef-9523-0242ac120005', 11, 'ระบบนำเข้า-เบิกออก', '/issue', 1, '2025-02-17 23:34:29', '2025-02-12 20:37:08'),
+(7, '680848cb-ed18-11ef-852d-2ad6c30b0fff', 12, 'ข้อมูลทรัพย์สิน', '/asset', 1, '2025-02-17 23:34:29', '2025-02-17 10:17:35'),
+(8, '6808cf6e-ed18-11ef-852d-2ad6c30b0fff', 13, 'ข้อมูลสินค้า', '/product', 1, '2025-02-17 23:34:29', '2025-02-17 10:17:35'),
+(9, 'c83e08b2-ed19-11ef-852d-2ad6c30b0fff', 14, 'ข้อมูลรายจ่าย', '/expense', 1, '2025-02-17 23:34:29', '2025-02-17 10:27:26'),
+(10, 'c83ebb45-ed19-11ef-852d-2ad6c30b0fff', 15, 'ข้อมูลลูกค้า', '/customer', 1, '2025-02-17 23:34:29', '2025-02-17 10:27:26'),
+(11, '80a0d3c2-ed36-11ef-9de3-0242ac120005', 4, 'Advance Request', '/advance', 1, '2025-02-17 23:34:29', '2025-02-17 20:52:59'),
+(12, '29716cc4-ed4a-11ef-9de3-0242ac120005', 6, 'Petty Cash', '/petty', 1, '2025-02-17 23:34:29', '2025-02-17 23:13:42'),
+(13, '2971ed4f-ed4a-11ef-9de3-0242ac120005', 7, 'ระบบใบค้างจ่าย', '/accrued', 1, '2025-02-17 23:34:29', '2025-02-17 23:13:42'),
+(14, 'd9a60cd4-ed4b-11ef-9de3-0242ac120005', 8, 'ระบบใบเสนอราคา', '/quotation', 1, '2025-02-17 23:34:29', '2025-02-17 23:25:48'),
+(15, 'd9a65f95-ed4b-11ef-9de3-0242ac120005', 9, 'ระบบใบรับมอบงาน', '/job', 1, '2025-02-17 23:34:29', '2025-02-17 23:25:48');
 
 -- --------------------------------------------------------
 
@@ -1289,23 +1465,23 @@ CREATE TABLE `service_authorize` (
 --
 
 INSERT INTO `service_authorize` (`id`, `login_id`, `service`, `updated`, `created`) VALUES
-(1, 1, '1,1,1,1,1,1', '2025-02-13 02:41:14', '2025-02-12 18:37:02'),
-(2, 2, '1,1,1,1,1,1', '2025-02-13 02:42:33', '2025-02-12 18:53:10'),
-(3, 5, '0,0,0,0,1,1', '2025-02-13 02:42:36', '2025-02-12 14:11:37'),
-(4, 3, '1,1,1,1,1,1', '2025-02-13 02:42:34', '2025-02-13 02:41:47'),
-(5, 4, '1,1,1,1,0,0', '2025-02-13 02:42:54', '2025-02-13 02:42:35'),
-(6, 6, '0,0,0,0,1,1', '2025-02-13 02:43:01', '2025-02-13 02:42:37'),
-(7, 7, '0,0,0,0,1,1', '2025-02-13 02:43:06', '2025-02-13 02:42:38'),
-(8, 8, '0,0,0,0,1,1', '2025-02-13 02:43:09', '2025-02-13 02:42:42'),
-(9, 9, '0,0,0,0,1,1', '2025-02-13 02:43:13', '2025-02-13 02:42:43'),
-(10, 10, '0,0,0,0,1,1', NULL, '2025-02-13 02:43:17'),
-(11, 11, '0,0,0,0,1,1', NULL, '2025-02-13 02:43:21'),
-(12, 12, '0,0,0,0,1,1', NULL, '2025-02-13 02:43:25'),
-(13, 13, '0,0,0,0,1,1', NULL, '2025-02-13 02:43:29'),
-(14, 14, '0,0,0,0,1,1', NULL, '2025-02-13 02:43:32'),
-(15, 15, '0,0,0,0,1,1', NULL, '2025-02-13 02:43:38'),
-(16, 16, '0,0,0,0,1,1', NULL, '2025-02-13 02:43:43'),
-(17, 17, '0,0,0,0,1,1', '2025-02-13 08:19:43', '2025-02-13 08:19:38');
+(1, 1, '1,1,1,1,1,1,1,1,1,1,1,1,1,1,1', '2025-02-17 23:26:10', '2025-02-12 18:37:02'),
+(2, 2, '1,1,1,1,1,1,1,1,1,1,1,1,1,1,1', '2025-02-17 23:26:17', '2025-02-12 18:53:10'),
+(3, 5, '0,0,0,0,0,0,0,0,0,1,1,1,1,0,0', '2025-02-17 23:26:30', '2025-02-12 14:11:37'),
+(4, 3, '1,1,1,1,1,1,1,1,1,1,1,1,1', '2025-02-17 23:14:46', '2025-02-13 02:41:47'),
+(5, 4, '1,1,1,1,1,1,1,0,0,0,0,0,0,0,0', '2025-02-17 23:26:49', '2025-02-13 02:42:35'),
+(6, 6, '0,0,0,0,0,0,0,0,0,1,1,0,0,0,0', '2025-02-17 23:27:00', '2025-02-13 02:42:37'),
+(7, 7, '0,0,0,0,0,0,0,0,0,1,1,0,0,0,0', '2025-02-13 02:43:06', '2025-02-13 02:42:38'),
+(8, 8, '0,0,0,0,0,0,0,0,0,1,1,0,0,0,0', '2025-02-13 02:43:09', '2025-02-13 02:42:42'),
+(9, 9, '0,0,0,0,0,0,0,0,0,1,1,0,0,0,0', '2025-02-13 02:43:13', '2025-02-13 02:42:43'),
+(10, 10, '0,0,0,0,0,0,0,0,0,1,1,0,0,0,0', NULL, '2025-02-13 02:43:17'),
+(11, 11, '0,0,0,0,0,0,0,0,0,1,1,0,0,0,0', NULL, '2025-02-13 02:43:21'),
+(12, 12, '0,0,0,0,0,0,0,0,0,1,1,0,0,0,0', NULL, '2025-02-13 02:43:25'),
+(13, 13, '0,0,0,0,0,0,0,0,0,1,1,0,0,0,0', NULL, '2025-02-13 02:43:29'),
+(14, 14, '0,0,0,0,0,0,0,0,0,1,1,0,0,0,0', NULL, '2025-02-13 02:43:32'),
+(15, 15, '0,0,0,0,0,0,0,0,0,1,1,0,0,0,0', NULL, '2025-02-13 02:43:38'),
+(16, 16, '0,0,0,0,0,0,0,0,0,1,1,0,0,0,0', NULL, '2025-02-13 02:43:43'),
+(17, 17, '0,0,0,0,0,0,0,0,0,1,1,0,0,0,0', '2025-02-13 08:19:43', '2025-02-13 08:19:38');
 
 -- --------------------------------------------------------
 
@@ -1370,6 +1546,30 @@ INSERT INTO `user` (`id`, `login`, `firstname`, `lastname`, `manager_id`, `conta
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `advance_clear_file`
+--
+ALTER TABLE `advance_clear_file`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `advance_clear_item`
+--
+ALTER TABLE `advance_clear_item`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `advance_clear_remark`
+--
+ALTER TABLE `advance_clear_remark`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `advance_clear_request`
+--
+ALTER TABLE `advance_clear_request`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `advance_file`
@@ -1659,6 +1859,30 @@ ALTER TABLE `user`
 --
 
 --
+-- AUTO_INCREMENT for table `advance_clear_file`
+--
+ALTER TABLE `advance_clear_file`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `advance_clear_item`
+--
+ALTER TABLE `advance_clear_item`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `advance_clear_remark`
+--
+ALTER TABLE `advance_clear_remark`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `advance_clear_request`
+--
+ALTER TABLE `advance_clear_request`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT for table `advance_file`
 --
 ALTER TABLE `advance_file`
@@ -1668,13 +1892,13 @@ ALTER TABLE `advance_file`
 -- AUTO_INCREMENT for table `advance_item`
 --
 ALTER TABLE `advance_item`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `advance_remark`
 --
 ALTER TABLE `advance_remark`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `advance_request`
@@ -1734,13 +1958,13 @@ ALTER TABLE `borrow_authorize`
 -- AUTO_INCREMENT for table `borrow_file`
 --
 ALTER TABLE `borrow_file`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `borrow_item`
 --
 ALTER TABLE `borrow_item`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `borrow_remark`
@@ -1752,7 +1976,7 @@ ALTER TABLE `borrow_remark`
 -- AUTO_INCREMENT for table `borrow_request`
 --
 ALTER TABLE `borrow_request`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `customer`
@@ -1806,19 +2030,19 @@ ALTER TABLE `issue_file`
 -- AUTO_INCREMENT for table `issue_item`
 --
 ALTER TABLE `issue_item`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `issue_remark`
 --
 ALTER TABLE `issue_remark`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `issue_request`
 --
 ALTER TABLE `issue_request`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `login`
@@ -1854,13 +2078,13 @@ ALTER TABLE `payment_request`
 -- AUTO_INCREMENT for table `product`
 --
 ALTER TABLE `product`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46;
 
 --
 -- AUTO_INCREMENT for table `product_brand`
 --
 ALTER TABLE `product_brand`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `product_file`
@@ -1878,7 +2102,7 @@ ALTER TABLE `product_location`
 -- AUTO_INCREMENT for table `product_type`
 --
 ALTER TABLE `product_type`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `product_unit`
@@ -1920,7 +2144,7 @@ ALTER TABLE `purchase_request`
 -- AUTO_INCREMENT for table `service`
 --
 ALTER TABLE `service`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `service_authorize`

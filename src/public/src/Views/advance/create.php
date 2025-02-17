@@ -5,7 +5,7 @@ include_once(__DIR__ . "/../layout/header.php");
 ?>
 
 <div class="card shadow">
-  <h4 class="card-header text-center">Advance Clearing Voucher</h4>
+  <h4 class="card-header text-center">Advance Request</h4>
   <div class="card-body">
 
     <form action="/advance/create" method="POST" class="needs-validation" novalidate enctype="multipart/form-data">
@@ -16,18 +16,18 @@ include_once(__DIR__ . "/../layout/header.php");
         </div>
       </div>
       <div class="row mb-2">
-        <label class="col-xl-2 offset-xl-2 col-form-label">เลขที่สัญญา</label>
+        <label class="col-xl-2 offset-xl-2 col-form-label">วันที่เอกสาร</label>
         <div class="col-xl-4">
-          <select class="form-control form-control-sm order-select" name="order_number"></select>
+          <input type="text" class="form-control form-control-sm date-select" name="date" required>
           <div class="invalid-feedback">
             กรุณากรอกข้อมูล!
           </div>
         </div>
       </div>
       <div class="row mb-2">
-        <label class="col-xl-2 offset-xl-2 col-form-label">ยอดเงินเบิก</label>
+        <label class="col-xl-2 offset-xl-2 col-form-label">วันที่ครบกำหนด</label>
         <div class="col-xl-4">
-          <input type="number" class="form-control form-control-sm" name="amount" min="1" step="0.01" required>
+          <input type="text" class="form-control form-control-sm date-select" name="finish" required>
           <div class="invalid-feedback">
             กรุณากรอกข้อมูล!
           </div>
@@ -51,11 +51,8 @@ include_once(__DIR__ . "/../layout/header.php");
                 <tr>
                   <th width="10%">#</th>
                   <th width="20%">รายจ่าย</th>
-                  <th width="20%">รายละเอียด</th>
-                  <th width="10%">จำนวนเงิน</th>
-                  <th width="10%">VAT 7%</th>
-                  <th width="10%">W/T</th>
-                  <th width="10%">ยอดสุทธิ</th>
+                  <th width="40%">รายละเอียด</th>
+                  <th width="20%">จำนวนเงิน</th>
                 </tr>
               </thead>
               <tbody>
@@ -82,30 +79,11 @@ include_once(__DIR__ . "/../layout/header.php");
                       กรุณากรอกข้อมูล!
                     </div>
                   </td>
-                  </td>
-                  <td>
-                    <input type="number" class="form-control form-control-sm text-right vat-item" min="1" step="0.01" name="item_vat[]">
-                  </td>
-                  <td>
-                    <input type="number" class="form-control form-control-sm text-right wt-item" min="1" step="0.01" name="item_wt[]">
-                  </td>
-                  <td class="text-right">
-                    <span class="total-item"></span>
-                  </td>
                 </tr>
                 <tr>
                   <td colspan="3" class="text-right">รวมทั้งสิ้น</td>
                   <td class="text-right">
                     <span class=" amount-total"></span>
-                  </td>
-                  <td class="text-right">
-                    <span class=" vat-total"></span>
-                  </td>
-                  <td class="text-right">
-                    <span class=" wt-total"></span>
-                  </td>
-                  <td class="text-right">
-                    <span class=" all-total"></span>
                   </td>
                 </tr>
               </tbody>
@@ -184,37 +162,23 @@ include_once(__DIR__ . "/../layout/header.php");
     }
   });
 
-  $(document).on("blur", ".amount-item, .vat-item, .wt-item", function() {
+  $(document).on("blur", ".amount-item", function() {
     const row = $(this).closest("tr");
     const amount = parseFloat(row.find(".amount-item").val() || 0);
-    const vat = parseFloat(row.find(".vat-item").val() || 0);
-    const wt = parseFloat(row.find(".wt-item").val() || 0);
-
-    const total = (amount + vat - wt).toFixed(2);
-    row.find(".total-item").text(total);
 
     updateTotal();
   });
 
   function updateTotal() {
     let totalAmount = 0;
-    let totalVat = 0;
-    let totalWt = 0;
 
     $("tr.item-tr").each(function() {
       const amount = parseFloat($(this).find(".amount-item").val() || 0);
-      const vat = parseFloat($(this).find(".vat-item").val() || 0);
-      const wt = parseFloat($(this).find(".wt-item").val() || 0);
 
       totalAmount += amount;
-      totalVat += vat;
-      totalWt += wt;
     });
 
     $(".amount-total").text(totalAmount.toFixed(2));
-    $(".vat-total").text(totalVat.toFixed(2));
-    $(".wt-total").text(totalWt.toFixed(2));
-    $(".all-total").text((totalAmount + totalVat - totalWt).toFixed(2));
   }
 
   $(document).on("change", "input[name='file[]']", function() {
@@ -238,5 +202,32 @@ include_once(__DIR__ . "/../layout/header.php");
       });
       return $(this).val("");
     }
+  });
+
+  $(".date-select").daterangepicker({
+    singleDatePicker: true,
+    showDropdowns: true,
+    locale: {
+      "format": "DD/MM/YYYY",
+      "applyLabel": "ยืนยัน",
+      "cancelLabel": "ยกเลิก",
+      "daysOfWeek": [
+        "อา", "จ", "อ", "พ", "พฤ", "ศ", "ส"
+      ],
+      "monthNames": [
+        "มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน",
+        "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"
+      ]
+    },
+    "applyButtonClasses": "btn-success",
+    "cancelClass": "btn-danger"
+  });
+
+  $(".date-select").on("apply.daterangepicker", function(ev, picker) {
+    $(this).val(picker.startDate.format('DD/MM/YYYY'));
+  });
+
+  $(".date-select").on("keydown paste", function(e) {
+    e.preventDefault();
   });
 </script>
