@@ -233,12 +233,12 @@ $remarks = $PAYMENT->payment_remark_view([$uuid]);
         <div class="col-xl-8">
           <div class="form-group pl-3 pt-2">
             <label class="form-check-label px-3">
-              <input class="form-check-input" type="radio" name="status" value="4" required>
-              <span class="text-success">ผ่านอนุมัติ</span>
+              <input class="form-check-input" type="radio" name="status" value="2" required>
+              <span class="text-success">ผ่านการตรวจรับ</span>
             </label>
             <label class="form-check-label px-3">
               <input class="form-check-input" type="radio" name="status" value="1" required>
-              <span class="text-danger">ไม่ผ่านอนุมัติ</span>
+              <span class="text-danger">ไม่ผ่านการตรวจรับ</span>
             </label>
           </div>
         </div>

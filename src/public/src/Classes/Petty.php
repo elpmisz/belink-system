@@ -4,7 +4,7 @@ namespace App\Classes;
 
 use PDO;
 
-class AdvanceClear
+class Petty
 {
   private $dbcon;
 
@@ -14,26 +14,25 @@ class AdvanceClear
     $this->dbcon = $db->getConnection();
   }
 
-  public function advance_count($data)
+  public function petty_count($data)
   {
     $sql = "SELECT 
       COUNT(*)
-    FROM belink.advance_clear_request a
+    FROM belink.petty_request a
     WHERE a.status = 1
     AND a.login_id = ?
     AND a.doc_date = ?
-    AND a.advance_id = ?
-    AND a.amount = ?";
+    AND a.objective = ?";
     $stmt = $this->dbcon->prepare($sql);
     $stmt->execute($data);
     return $stmt->fetchColumn();
   }
 
-  public function advance_last()
+  public function petty_last()
   {
     $sql = "SELECT 
       a.last
-    FROM belink.advance_clear_request a
+    FROM belink.petty_request a
     WHERE YEAR(a.created) = YEAR(NOW())
     ORDER BY a.id DESC
     LIMIT 1";
@@ -43,50 +42,35 @@ class AdvanceClear
     return (!empty($row['last']) ? intval($row['last']) + 1 : 1);
   }
 
-  public function advance_insert($data)
+  public function petty_insert($data)
   {
-    $sql = "INSERT INTO belink.advance_clear_request( `uuid`, `last`, `login_id`, `doc_date`, `advance_id`, `amount`) VALUES(uuid(),?,?,?,?,?)";
+    $sql = "INSERT INTO belink.petty_request(`uuid`, `last`, `login_id`, `doc_date`, `objective`) VALUES(uuid(),?,?,?,?)";
     $stmt = $this->dbcon->prepare($sql);
     return $stmt->execute($data);
   }
 
-  public function advance_view($data)
+  public function petty_view($data)
   {
     $sql = "SELECT a.id,
       a.`uuid`,
-      CONCAT('AC',YEAR(a.created),LPAD(a.`last`,4,'0')) ticket,
+      CONCAT('PC',YEAR(a.created),LPAD(a.`last`,4,'0')) ticket,
       CONCAT(b.firstname,' ',b.lastname) username,
-      a.advance_id,
-      CONCAT('AR',YEAR(d.created),LPAD(d.`last`,4,'0')) advance_ticket,
-      a.amount,
-      c.usage,
-      (a.amount - c.usage) remain,
-      DATE_FORMAT(a.doc_date,'%d/%m/%Y') doc_date,
+      DATE_FORMAT(a.doc_date,'%d/%m/%Y') `doc_date`,
+      a.objective,
       DATE_FORMAT(a.created,'%d/%m/%Y, %H:%i น.') created
-    FROM belink.advance_clear_request a
+    FROM belink.petty_request a
     LEFT JOIN belink.`user` b
     ON a.login_id = b.login
-    LEFT JOIN 
-    (
-    SELECT request_id,(SUM(amount) + SUM(vat) - SUM(wt)) `usage`
-    FROM belink.advance_clear_item
-    WHERE	`status` = 1
-    GROUP BY request_id
-    ) c
-    ON a.id = c.request_id
-    LEFT JOIN belink.advance_request d
-    ON a.advance_id = d.id
     WHERE a.`uuid` = ?";
     $stmt = $this->dbcon->prepare($sql);
     $stmt->execute($data);
     return $stmt->fetch();
   }
 
-  public function advance_update($data)
+  public function petty_update($data)
   {
-    $sql = "UPDATE belink.advance_clear_request SET
-    order_number = ?,
-    amount = ?,
+    $sql = "UPDATE belink.petty_request SET
+    doc_date = ?,
     objective = ?,
     `action` = 1,
     updated = NOW()
@@ -95,61 +79,48 @@ class AdvanceClear
     return $stmt->execute($data);
   }
 
-  public function advance_item_count($data)
+  public function petty_item_count($data)
   {
     $sql = "SELECT 
       COUNT(*)
-    FROM belink.advance_clear_item a
+    FROM belink.petty_item a
     WHERE a.status = 1
     AND a.request_id = ?
-    AND a.expense_id = ?";
+    AND a.expense_id = ?
+    AND a.text = ?";
     $stmt = $this->dbcon->prepare($sql);
     $stmt->execute($data);
     return $stmt->fetchColumn();
   }
 
-  public function advance_item_insert($data)
+  public function petty_item_insert($data)
   {
-    $sql = "INSERT INTO belink.advance_clear_item(`request_id`, `expense_id`, `text`, `amount`, `vat`, `wt`) VALUES(?,?,?,?,?,?)";
+    $sql = "INSERT INTO belink.petty_item( `request_id`, `expense_id`, `text`, `amount`) VALUES(?,?,?,?)";
     $stmt = $this->dbcon->prepare($sql);
     return $stmt->execute($data);
   }
 
-  public function advance_item_view($data)
+  public function petty_item_view($data)
   {
     $sql = "SELECT b.id,
-    b.expense_id,
-    CONCAT('[',c.`code`,'] ',c.`name`) expense_name,
     b.text,
-    b.amount,
-    b.vat,
-    b.wt,
-    (b.amount + b.vat - b.wt) total,
-    d.amount request
-    FROM belink.advance_clear_request a
-    LEFT JOIN belink.advance_clear_item b
+    b.amount
+    FROM belink.petty_request a
+    LEFT JOIN belink.petty_item b
     ON a.id = b.request_id
-    LEFT JOIN belink.expense c
-    ON b.expense_id = c.id
-    LEFT JOIN belink.advance_item d
-    ON a.advance_id = d.request_id
-    AND b.expense_id = d.expense_id
     WHERE a.`uuid` = ?
     AND b.`status` = 1
-    ORDER BY c.`code` ASC";
+    ORDER BY b.id ASC";
     $stmt = $this->dbcon->prepare($sql);
     $stmt->execute($data);
     return $stmt->fetchAll();
   }
 
-  public function advance_item_total($data)
+  public function petty_item_total($data)
   {
-    $sql = "SELECT SUM(a.amount) amount, 
-      SUM(a.vat) vat, 
-      SUM(a.wt) wt,
-      (SUM(a.amount) + SUM(a.vat) - SUM(a.wt)) total
-    FROM belink.advance_clear_item a
-    LEFT JOIN belink.advance_clear_request b
+    $sql = "SELECT SUM(a.amount) total
+    FROM belink.petty_item a
+    LEFT JOIN belink.petty_request b
     ON a.request_id = b.id
     WHERE b.`uuid` = ?
     AND a.`status` = 1";
@@ -158,22 +129,20 @@ class AdvanceClear
     return $stmt->fetch();
   }
 
-  public function advance_item_update($data)
+  public function petty_item_update($data)
   {
-    $sql = "UPDATE belink.advance_clear_item SET
+    $sql = "UPDATE belink.petty_item SET
     `text` = ?,
     `amount` = ?,
-    `vat` = ?,
-    `wt` = ?,
     updated = NOW()
     WHERE id = ?";
     $stmt = $this->dbcon->prepare($sql);
     return $stmt->execute($data);
   }
 
-  public function advance_item_delete($data)
+  public function petty_item_delete($data)
   {
-    $sql = "UPDATE belink.advance_clear_item SET
+    $sql = "UPDATE belink.petty_item SET
     status = 0,
     updated = NOW()
     WHERE id = ?";
@@ -181,11 +150,11 @@ class AdvanceClear
     return $stmt->execute($data);
   }
 
-  public function advance_file_count($data)
+  public function petty_file_count($data)
   {
     $sql = "SELECT 
       COUNT(*)
-    FROM belink.advance_clear_file a
+    FROM belink.petty_file a
     WHERE a.status = 1
     AND a.request_id = ?
     AND a.name = ?";
@@ -194,20 +163,20 @@ class AdvanceClear
     return $stmt->fetchColumn();
   }
 
-  public function advance_file_insert($data)
+  public function petty_file_insert($data)
   {
-    $sql = "INSERT INTO belink.advance_clear_file(`request_id`, `name`) VALUES(?,?)";
+    $sql = "INSERT INTO belink.petty_file(`request_id`, `name`) VALUES(?,?)";
     $stmt = $this->dbcon->prepare($sql);
     return $stmt->execute($data);
   }
 
-  public function advance_file_view($data)
+  public function petty_file_view($data)
   {
     $sql = "SELECT 
       a.id,
       a.`name`
-    FROM belink.advance_clear_file a
-    LEFT JOIN belink.advance_clear_request b
+    FROM belink.petty_file a
+    LEFT JOIN belink.petty_request b
     ON a.request_id = b.id
     WHERE a.`status` = 1
     AND b.`uuid` = ?";
@@ -216,9 +185,9 @@ class AdvanceClear
     return $stmt->fetchAll();
   }
 
-  public function advance_file_delete($data)
+  public function petty_file_delete($data)
   {
-    $sql = "UPDATE belink.advance_clear_file SET
+    $sql = "UPDATE belink.petty_file SET
     status = 0,
     updated = NOW()
     WHERE id = ?";
@@ -226,9 +195,9 @@ class AdvanceClear
     return $stmt->execute($data);
   }
 
-  public function advance_approve($data)
+  public function petty_approve($data)
   {
-    $sql = "UPDATE belink.advance_clear_request SET
+    $sql = "UPDATE belink.petty_request SET
     action = ?,
     status = ?,
     updated = NOW()
@@ -237,14 +206,14 @@ class AdvanceClear
     return $stmt->execute($data);
   }
 
-  public function advance_remark_insert($data)
+  public function petty_remark_insert($data)
   {
-    $sql = "INSERT INTO belink.advance_clear_remark(`request_id`, `login_id`, `text`, `status`) VALUES(?,?,?,?)";
+    $sql = "INSERT INTO belink.petty_remark(`request_id`, `login_id`, `text`, `status`) VALUES(?,?,?,?)";
     $stmt = $this->dbcon->prepare($sql);
     return $stmt->execute($data);
   }
 
-  public function advance_remark_view($data)
+  public function petty_remark_view($data)
   {
     $sql = "SELECT CONCAT(c.firstname,' ',c.lastname) username,a.text,
     (
@@ -262,8 +231,8 @@ class AdvanceClear
     END
     ) status_color,
     DATE_FORMAT(a.created,'%d/%m/%Y, %H:%i น.') created
-    FROM belink.advance_clear_remark a
-    LEFT JOIN belink.advance_clear_request b
+    FROM belink.petty_remark a
+    LEFT JOIN belink.petty_request b
     ON a.request_id = b.id
     LEFT JOIN belink.`user` c
     ON a.login_id = c.login
@@ -274,50 +243,9 @@ class AdvanceClear
     return $stmt->fetchAll();
   }
 
-  public function advance_select($keyword)
-  {
-    $sql = "SELECT a.id,
-      CONCAT('AR',YEAR(a.created),LPAD(a.`last`,4,'0')) `text`
-    FROM belink.advance_request a
-    WHERE a.`status` = 2 ";
-    if (!empty($keyword)) {
-      $sql .= " AND (a.objective LIKE '%{$keyword}%') ";
-    }
-    $sql .= " ORDER BY  a.last ASC LIMIT 20";
-    $stmt = $this->dbcon->prepare($sql);
-    $stmt->execute();
-    return $stmt->fetchAll();
-  }
-
-  public function advance_amount($data)
-  {
-    $sql = "SELECT SUM(b.amount) total
-    FROM belink.advance_clear_request a
-    LEFT JOIN belink.advance_item b
-    ON b.`status` = 1
-    WHERE a.id = ?";
-    $stmt = $this->dbcon->prepare($sql);
-    $stmt->execute($data);
-    $row = $stmt->fetch();
-    return (isset($row['total']) ? $row['total'] : "");
-  }
-
-  public function advance_order($data)
-  {
-    $sql = "SELECT a.expense_id,CONCAT('[',b.`code`,'] ',b.`name`) expense_name,a.amount
-    FROM belink.advance_item a
-    LEFT JOIN belink.expense b
-    ON a.expense_id = b.id
-    WHERE a.request_id = ?
-    AND a.`status` = 1";
-    $stmt = $this->dbcon->prepare($sql);
-    $stmt->execute($data);
-    return $stmt->fetchAll();
-  }
-
   public function request_data()
   {
-    $sql = "SELECT COUNT(*) FROM belink.advance_clear_request a WHERE a.status IN (1,2,3)";
+    $sql = "SELECT COUNT(*) FROM belink.petty_request a WHERE a.status IN (1,2,3)";
     $stmt = $this->dbcon->prepare($sql);
     $stmt->execute();
     $total = $stmt->fetchColumn();
@@ -334,11 +262,9 @@ class AdvanceClear
 
     $sql = "SELECT a.id,
     a.`uuid`,
-    CONCAT('AC',YEAR(a.created),LPAD(a.`last`,4,'0')) ticket,
+    CONCAT('PC',YEAR(a.created),LPAD(a.`last`,4,'0')) ticket,
     CONCAT(b.firstname,' ',b.lastname) username,
-    a.advance_id,
-    CONCAT('AR',YEAR(d.created),LPAD(d.`last`,4,'0')) advance_ticket,
-    a.amount,
+    a.objective,
     c.total,
     a.`status`,
       (
@@ -364,19 +290,17 @@ class AdvanceClear
       END
       ) `page`,
       DATE_FORMAT(a.created,'%d/%m/%Y, %H:%i น.') created
-    FROM belink.advance_clear_request a
+    FROM belink.petty_request a
     LEFT JOIN belink.`user` b
     ON a.login_id = b.login
     LEFT JOIN 
     (
-      SELECT request_id,(SUM(amount) + SUM(vat) - SUM(wt)) total
-      FROM belink.advance_clear_item
+      SELECT request_id,SUM(amount) total
+      FROM belink.petty_item
       WHERE	`status` = 1
       GROUP BY request_id
     ) c
     ON a.id = c.request_id
-    LEFT JOIN belink.advance_request d
-    ON a.advance_id = d.id
     WHERE a.status IN (1,2,3) ";
 
     if (!empty($keyword)) {
@@ -403,14 +327,13 @@ class AdvanceClear
 
     $data = [];
     foreach ($result as $row) {
-      $action = "<a href='/advance-clear/{$row['page']}/{$row['uuid']}' class='badge badge-{$row['status_color']} font-weight-light'>{$row['status_name']}</a>";
+      $action = "<a href='/petty/{$row['page']}/{$row['uuid']}' class='badge badge-{$row['status_color']} font-weight-light'>{$row['status_name']}</a>";
 
       $data[] = [
         $action,
         $row['ticket'],
         $row['username'],
-        $row['advance_ticket'],
-        number_format($row['amount'], 2),
+        str_replace("\n", "<br>", $row['objective']),
         number_format($row['total'], 2),
         $row['created'],
       ];
@@ -427,7 +350,7 @@ class AdvanceClear
 
   public function approve_data()
   {
-    $sql = "SELECT COUNT(*) FROM belink.advance_clear_request a WHERE a.status = 1";
+    $sql = "SELECT COUNT(*) FROM belink.petty_request a WHERE a.status = 1";
     $stmt = $this->dbcon->prepare($sql);
     $stmt->execute();
     $total = $stmt->fetchColumn();
@@ -444,11 +367,9 @@ class AdvanceClear
 
     $sql = "SELECT a.id,
     a.`uuid`,
-    CONCAT('AC',YEAR(a.created),LPAD(a.`last`,4,'0')) ticket,
+    CONCAT('PC',YEAR(a.created),LPAD(a.`last`,4,'0')) ticket,
     CONCAT(b.firstname,' ',b.lastname) username,
-    a.advance_id,
-    CONCAT('AR',YEAR(d.created),LPAD(d.`last`,4,'0')) advance_ticket,
-    a.amount,
+    a.objective,
     c.total,
     a.`status`,
       (
@@ -467,26 +388,18 @@ class AdvanceClear
         WHEN a.`status` = 3 THEN 'danger'
       END
       ) status_color,
-      (
-      CASE
-        WHEN a.`status` = 1 THEN 'view'
-        ELSE 'complete'
-      END
-      ) `page`,
       DATE_FORMAT(a.created,'%d/%m/%Y, %H:%i น.') created
-    FROM belink.advance_clear_request a
+    FROM belink.petty_request a
     LEFT JOIN belink.`user` b
     ON a.login_id = b.login
     LEFT JOIN 
     (
-      SELECT request_id,(SUM(amount) + SUM(vat) - SUM(wt)) total
-      FROM belink.advance_clear_item
+      SELECT request_id,SUM(amount) total
+      FROM belink.petty_item
       WHERE	`status` = 1
       GROUP BY request_id
     ) c
     ON a.id = c.request_id
-    LEFT JOIN belink.advance_request d
-    ON a.advance_id = d.id
     WHERE a.status = 1 ";
 
     if (!empty($keyword)) {
@@ -513,14 +426,13 @@ class AdvanceClear
 
     $data = [];
     foreach ($result as $row) {
-      $action = "<a href='/advance-clear/approve/{$row['uuid']}' class='badge badge-{$row['status_color']} font-weight-light'>{$row['status_name']}</a>";
+      $action = "<a href='/petty/approve/{$row['uuid']}' class='badge badge-{$row['status_color']} font-weight-light'>{$row['status_name']}</a>";
 
       $data[] = [
         $action,
         $row['ticket'],
         $row['username'],
-        $row['advance_ticket'],
-        number_format($row['amount'], 2),
+        str_replace("\n", "<br>", $row['objective']),
         number_format($row['total'], 2),
         $row['created'],
       ];

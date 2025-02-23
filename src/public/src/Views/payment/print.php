@@ -86,7 +86,7 @@ ob_start();
       </td>
       <td class="no-border" width="10%">วันที่</td>
       <td class="bottom-border" width="30%">
-        <?php echo htmlspecialchars($row['created'], ENT_QUOTES, 'UTF-8'); ?>
+        <?php echo htmlspecialchars($row['doc_date'], ENT_QUOTES, 'UTF-8'); ?>
       </td>
     </tr>
     <tr>

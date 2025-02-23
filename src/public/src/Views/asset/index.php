@@ -56,11 +56,11 @@ include_once(__DIR__ . "/../layout/header.php");
         </div>
 
         <div class="row justify-content-end mb-2">
-          <div class="col-xl-3 mb-2">
+          <!-- <div class="col-xl-3 mb-2">
             <button class="btn btn-primary btn-sm btn-block" data-toggle="modal" data-target="#modal-upload">
               <i class="fas fa-upload pr-2"></i>นำข้อมูลเข้า
             </button>
-          </div>
+          </div> -->
           <div class="col-xl-3 mb-2">
             <a href="javascript:void(0)" class="btn btn-danger btn-sm btn-block btn-download">
               <i class="fas fa-download pr-2"></i>นำข้อมูลออก

@@ -21,6 +21,7 @@ class Payment
     FROM belink.payment_request a
     WHERE a.status = 1
     AND a.login_id = ?
+    AND a.doc_date = ?
     AND a.order_number = ?
     AND a.receiver = ?
     AND a.type = ?
@@ -49,7 +50,7 @@ class Payment
 
   public function payment_insert($data)
   {
-    $sql = "INSERT INTO belink.payment_request(`uuid`, `last`, `login_id`, `order_number`, `receiver`, `type`, `cheque_bank`, `cheque_branch`, `cheque_number`, `cheque_date`) VALUES(uuid(),?,?,?,?,?,?,?,?,?)";
+    $sql = "INSERT INTO belink.payment_request(`uuid`, `last`, `login_id`, `doc_date`, `order_number`, `receiver`, `type`, `cheque_bank`, `cheque_branch`, `cheque_number`, `cheque_date`) VALUES(uuid(),?,?,?,?,?,?,?,?,?,?)";
     $stmt = $this->dbcon->prepare($sql);
     return $stmt->execute($data);
   }
@@ -68,6 +69,7 @@ class Payment
       a.cheque_bank,
       a.cheque_branch,
       a.cheque_number,
+      DATE_FORMAT(a.doc_date, '%d/%m/%Y') doc_date,
       DATE_FORMAT(a.cheque_date, '%d/%m/%Y') cheque_date,
       DATE_FORMAT(a.created, '%d/%m/%Y, %H:%i น.') created
     FROM belink.payment_request a
@@ -84,6 +86,7 @@ class Payment
   public function payment_update($data)
   {
     $sql = "UPDATE belink.payment_request SET
+    doc_date = ?,
     receiver = ?,
     cheque_bank = ?,
     cheque_branch = ?,
@@ -274,15 +277,17 @@ class Payment
     CASE
       WHEN a.`status` = 1 AND b.action = 1 THEN 'ดำเนินการแก้ไขเรียบร้อย'
       WHEN a.`status` = 1 AND b.action = 2 THEN 'ไม่ผ่านอนุมัติ รอผู้ใช้บริการแก้ไข'
-      WHEN a.`status` = 2 THEN 'ผ่านการอนุมัติจากฝ่ายบัญชี'
-      WHEN a.`status` = 3 THEN 'ผ่านการอนุมัติจากผู้อนุมัติ'
+      WHEN a.`status` = 2 THEN 'ผ่านการตรวจรับมอบงาน'
+      WHEN a.`status` = 3 THEN 'ผ่านการอนุมัติจากฝ่ายบัญชี'
+      WHEN a.`status` = 4 THEN 'ผ่านการอนุมัติจากผู้อนุมัติ'
     END
     ) status_name,
     (
     CASE
       WHEN a.`status` = 1 THEN 'danger'
-      WHEN a.`status` = 2 THEN 'primary'
-      WHEN a.`status` = 3 THEN 'info'
+      WHEN a.`status` = 2 THEN 'info'
+      WHEN a.`status` = 3 THEN 'primary'
+      WHEN a.`status` = 4 THEN 'success'
     END
     ) status_color,
     DATE_FORMAT(a.created,'%d/%m/%Y, %H:%i น.') created
@@ -369,31 +374,33 @@ class Payment
     CONCAT(b.firstname,' ',b.lastname) username,
     c.total,
     a.`status`,
-      (
+    (
       CASE
-        WHEN a.`status` = 1 AND a.action = 1 THEN 'รอฝ่ายบัญชีดำเนินการ'
+        WHEN a.`status` = 1 AND a.action = 1 THEN 'รอตรวจรับมอบงาน'
         WHEN a.`status` = 1 AND a.action = 2 THEN 'รอผู้ขอใช้บริการแก้ไข'
-        WHEN a.`status` = 2 THEN 'รอผู้อนุมัติดำเนินการ'
-        WHEN a.`status` = 3 THEN 'ดำเนินการเรียบร้อย'
-        WHEN a.`status` = 4 THEN 'รายการถูกยกเลิก'
+        WHEN a.`status` = 2 THEN 'รอฝ่ายบัญชีดำเนินการ'
+        WHEN a.`status` = 3 THEN 'รอผู้อนุมัติดำเนินการ'
+        WHEN a.`status` = 4 THEN 'ดำเนินการเรียบร้อย'
+        WHEN a.`status` = 5 THEN 'รายการถูกยกเลิก'
       END
-      ) status_name,
-      (
+    ) status_name,
+    (
       CASE
         WHEN a.`status` = 1 AND a.action = 1 THEN 'primary'
         WHEN a.`status` = 1 AND a.action = 2 THEN 'danger'
         WHEN a.`status` = 2 THEN 'info'
-        WHEN a.`status` = 3 THEN 'success'
-        WHEN a.`status` = 4 THEN 'danger'
-      END
-      ) status_color,
-      (
+        WHEN a.`status` = 3 THEN 'primary'
+        WHEN a.`status` = 4 THEN 'success'
+        WHEN a.`status` = 5 THEN 'danger'
+    END
+    ) status_color,
+    (
       CASE
         WHEN a.`status` = 1 THEN 'view'
         ELSE 'complete'
       END
-      ) `page`,
-      DATE_FORMAT(a.created,'%d/%m/%Y, %H:%i น.') created
+    ) `page`,
+    DATE_FORMAT(a.created,'%d/%m/%Y, %H:%i น.') created
     FROM belink.payment_request a
     LEFT JOIN belink.`user` b
     ON a.login_id = b.login
@@ -453,7 +460,7 @@ class Payment
     return $output;
   }
 
-  public function account_data()
+  public function check_data()
   {
     $sql = "SELECT COUNT(*) FROM belink.payment_request a WHERE a.status = 1";
     $stmt = $this->dbcon->prepare($sql);
@@ -478,25 +485,27 @@ class Payment
     CONCAT(b.firstname,' ',b.lastname) username,
     c.total,
     a.`status`,
-      (
+    (
       CASE
-        WHEN a.`status` = 1 AND a.action = 1 THEN 'รอฝ่ายบัญชีดำเนินการ'
+        WHEN a.`status` = 1 AND a.action = 1 THEN 'รอตรวจรับมอบงาน'
         WHEN a.`status` = 1 AND a.action = 2 THEN 'รอผู้ขอใช้บริการแก้ไข'
-        WHEN a.`status` = 2 THEN 'รอผู้อนุมัติดำเนินการ'
-        WHEN a.`status` = 3 THEN 'ดำเนินการเรียบร้อย'
-        WHEN a.`status` = 4 THEN 'รายการถูกยกเลิก'
+        WHEN a.`status` = 2 THEN 'รอฝ่ายบัญชีดำเนินการ'
+        WHEN a.`status` = 3 THEN 'รอผู้อนุมัติดำเนินการ'
+        WHEN a.`status` = 4 THEN 'ดำเนินการเรียบร้อย'
+        WHEN a.`status` = 5 THEN 'รายการถูกยกเลิก'
       END
-      ) status_name,
-      (
+    ) status_name,
+    (
       CASE
         WHEN a.`status` = 1 AND a.action = 1 THEN 'primary'
         WHEN a.`status` = 1 AND a.action = 2 THEN 'danger'
         WHEN a.`status` = 2 THEN 'info'
-        WHEN a.`status` = 3 THEN 'success'
-        WHEN a.`status` = 4 THEN 'danger'
-      END
-      ) status_color,
-      DATE_FORMAT(a.created,'%d/%m/%Y, %H:%i น.') created
+        WHEN a.`status` = 3 THEN 'primary'
+        WHEN a.`status` = 4 THEN 'success'
+        WHEN a.`status` = 5 THEN 'danger'
+    END
+    ) status_color,
+    DATE_FORMAT(a.created,'%d/%m/%Y, %H:%i น.') created
     FROM belink.payment_request a
     LEFT JOIN belink.`user` b
     ON a.login_id = b.login
@@ -509,6 +518,111 @@ class Payment
     ) c
     ON a.id = c.request_id
     WHERE a.status = 1 ";
+
+    if (!empty($keyword)) {
+      $sql .= " AND (b.name LIKE '%{$keyword}%' OR a.order_number LIKE '%{$keyword}%' OR a.receiver LIKE '%{$keyword}%') ";
+    }
+
+    if ($filter_order) {
+      $sql .= " ORDER BY {$column[$order_column]} {$order_dir} ";
+    } else {
+      $sql .= " ORDER BY a.status ASC, a.created DESC ";
+    }
+
+    $sql2 = "";
+    if ($limit_length) {
+      $sql2 .= "LIMIT {$limit_start}, {$limit_length}";
+    }
+
+    $stmt = $this->dbcon->prepare($sql);
+    $stmt->execute();
+    $filter = $stmt->rowCount();
+    $stmt = $this->dbcon->prepare($sql . $sql2);
+    $stmt->execute();
+    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    $data = [];
+    foreach ($result as $row) {
+      $action = "<a href='/payment/check/{$row['uuid']}' class='badge badge-{$row['status_color']} font-weight-light'>{$row['status_name']}</a>";
+
+      $data[] = [
+        $action,
+        $row['ticket'],
+        $row['username'],
+        $row['order_number'],
+        $row['receiver'],
+        number_format($row['total'], 2),
+        $row['created'],
+      ];
+    }
+
+    $output = [
+      "draw" => $draw,
+      "recordsTotal" =>  $total,
+      "recordsFiltered" => $filter,
+      "data" => $data
+    ];
+    return $output;
+  }
+
+  public function account_data()
+  {
+    $sql = "SELECT COUNT(*) FROM belink.payment_request a WHERE a.status = 2";
+    $stmt = $this->dbcon->prepare($sql);
+    $stmt->execute();
+    $total = $stmt->fetchColumn();
+
+    $column = ["a.id", "a.last", "a.order_number", "a.product_name", "a.title_name", "a.budget"];
+
+    $keyword = (isset($_POST['search']['value']) ? trim($_POST['search']['value']) : "");
+    $filter_order = (isset($_POST['order']) ? $_POST['order'] : "");
+    $order_column = (isset($_POST['order']['0']['column']) ? $_POST['order']['0']['column'] : "");
+    $order_dir = (isset($_POST['order']['0']['dir']) ? $_POST['order']['0']['dir'] : "");
+    $limit_start = (isset($_POST['start']) ? $_POST['start'] : "");
+    $limit_length = (isset($_POST['length']) ? $_POST['length'] : "");
+    $draw = (isset($_REQUEST['draw']) ? $_REQUEST['draw'] : "");
+
+    $sql = "SELECT a.id,
+    a.`uuid`,
+    CONCAT('PO',YEAR(a.created),LPAD(a.`last`,4,'0')) ticket,
+    a.order_number,
+    a.receiver,
+    CONCAT(b.firstname,' ',b.lastname) username,
+    c.total,
+    a.`status`,
+    (
+      CASE
+        WHEN a.`status` = 1 AND a.action = 1 THEN 'รอตรวจรับมอบงาน'
+        WHEN a.`status` = 1 AND a.action = 2 THEN 'รอผู้ขอใช้บริการแก้ไข'
+        WHEN a.`status` = 2 THEN 'รอฝ่ายบัญชีดำเนินการ'
+        WHEN a.`status` = 3 THEN 'รอผู้อนุมัติดำเนินการ'
+        WHEN a.`status` = 4 THEN 'ดำเนินการเรียบร้อย'
+        WHEN a.`status` = 5 THEN 'รายการถูกยกเลิก'
+      END
+    ) status_name,
+    (
+      CASE
+        WHEN a.`status` = 1 AND a.action = 1 THEN 'primary'
+        WHEN a.`status` = 1 AND a.action = 2 THEN 'danger'
+        WHEN a.`status` = 2 THEN 'info'
+        WHEN a.`status` = 3 THEN 'primary'
+        WHEN a.`status` = 4 THEN 'success'
+        WHEN a.`status` = 5 THEN 'danger'
+    END
+    ) status_color,
+    DATE_FORMAT(a.created,'%d/%m/%Y, %H:%i น.') created
+    FROM belink.payment_request a
+    LEFT JOIN belink.`user` b
+    ON a.login_id = b.login
+    LEFT JOIN 
+    (
+      SELECT request_id,(SUM(amount) + SUM(vat) - SUM(wt)) total
+      FROM belink.payment_item
+      WHERE	`status` = 1
+      GROUP BY request_id
+    ) c
+    ON a.id = c.request_id
+    WHERE a.status = 2 ";
 
     if (!empty($keyword)) {
       $sql .= " AND (b.name LIKE '%{$keyword}%' OR a.order_number LIKE '%{$keyword}%' OR a.receiver LIKE '%{$keyword}%') ";
@@ -558,7 +672,7 @@ class Payment
 
   public function approve_data()
   {
-    $sql = "SELECT COUNT(*) FROM belink.payment_request a WHERE a.status = 2";
+    $sql = "SELECT COUNT(*) FROM belink.payment_request a WHERE a.status = 3";
     $stmt = $this->dbcon->prepare($sql);
     $stmt->execute();
     $total = $stmt->fetchColumn();
@@ -580,26 +694,27 @@ class Payment
     a.receiver,
     CONCAT(b.firstname,' ',b.lastname) username,
     c.total,
-    a.`status`,
-      (
+    (
       CASE
-        WHEN a.`status` = 1 AND a.action = 1 THEN 'รอฝ่ายบัญชีดำเนินการ'
+        WHEN a.`status` = 1 AND a.action = 1 THEN 'รอตรวจรับมอบงาน'
         WHEN a.`status` = 1 AND a.action = 2 THEN 'รอผู้ขอใช้บริการแก้ไข'
-        WHEN a.`status` = 2 THEN 'รอผู้อนุมัติดำเนินการ'
-        WHEN a.`status` = 3 THEN 'ดำเนินการเรียบร้อย'
-        WHEN a.`status` = 4 THEN 'รายการถูกยกเลิก'
+        WHEN a.`status` = 2 THEN 'รอฝ่ายบัญชีดำเนินการ'
+        WHEN a.`status` = 3 THEN 'รอผู้อนุมัติดำเนินการ'
+        WHEN a.`status` = 4 THEN 'ดำเนินการเรียบร้อย'
+        WHEN a.`status` = 5 THEN 'รายการถูกยกเลิก'
       END
-      ) status_name,
-      (
+    ) status_name,
+    (
       CASE
         WHEN a.`status` = 1 AND a.action = 1 THEN 'primary'
         WHEN a.`status` = 1 AND a.action = 2 THEN 'danger'
         WHEN a.`status` = 2 THEN 'info'
-        WHEN a.`status` = 3 THEN 'success'
-        WHEN a.`status` = 4 THEN 'danger'
-      END
-      ) status_color,
-      DATE_FORMAT(a.created,'%d/%m/%Y, %H:%i น.') created
+        WHEN a.`status` = 3 THEN 'primary'
+        WHEN a.`status` = 4 THEN 'success'
+        WHEN a.`status` = 5 THEN 'danger'
+    END
+    ) status_color,
+    DATE_FORMAT(a.created,'%d/%m/%Y, %H:%i น.') created
     FROM belink.payment_request a
     LEFT JOIN belink.`user` b
     ON a.login_id = b.login
@@ -611,7 +726,7 @@ class Payment
       GROUP BY request_id
     ) c
     ON a.id = c.request_id
-    WHERE a.status = 2 ";
+    WHERE a.status = 3 ";
 
     if (!empty($keyword)) {
       $sql .= " AND (b.name LIKE '%{$keyword}%' OR a.order_number LIKE '%{$keyword}%' OR a.receiver LIKE '%{$keyword}%') ";

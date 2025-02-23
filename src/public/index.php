@@ -1,11 +1,6 @@
 <?php
 require_once(__DIR__ . "/vendor/autoload.php");
 
-if ($_SERVER['REQUEST_URI'] === '/phpmyadmin') {
-  header('Location: /phpmyadmin');
-  exit();
-}
-
 $ROUTER = new AltoRouter();
 
 ##################### SERVICE #####################
@@ -27,6 +22,27 @@ $ROUTER->map("GET", "/accrued", function () {
 ##################### PETTY #####################
 $ROUTER->map("GET", "/petty", function () {
   require(__DIR__ . "/src/Views/petty/index.php");
+});
+$ROUTER->map("GET", "/petty/create", function () {
+  require(__DIR__ . "/src/Views/petty/create.php");
+});
+$ROUTER->map("GET", "/petty/manage", function () {
+  require(__DIR__ . "/src/Views/petty/manage.php");
+});
+$ROUTER->map("GET", "/petty/view/[**:params]", function ($params) {
+  require(__DIR__ . "/src/Views/petty/view.php");
+});
+$ROUTER->map("GET", "/petty/approve/[**:params]", function ($params) {
+  require(__DIR__ . "/src/Views/petty/approve.php");
+});
+$ROUTER->map("GET", "/petty/complete/[**:params]", function ($params) {
+  require(__DIR__ . "/src/Views/petty/complete.php");
+});
+$ROUTER->map("GET", "/petty/print/[**:params]", function ($params) {
+  require(__DIR__ . "/src/Views/petty/print.php");
+});
+$ROUTER->map("POST", "/petty/[**:params]", function ($params) {
+  require(__DIR__ . "/src/Views/petty/action.php");
 });
 
 ##################### ISSUE-AUTHORIZE #####################
@@ -255,6 +271,9 @@ $ROUTER->map("GET", "/payment/manage", function () {
 });
 $ROUTER->map("GET", "/payment/view/[**:params]", function ($params) {
   require(__DIR__ . "/src/Views/payment/view.php");
+});
+$ROUTER->map("GET", "/payment/check/[**:params]", function ($params) {
+  require(__DIR__ . "/src/Views/payment/check.php");
 });
 $ROUTER->map("GET", "/payment/account/[**:params]", function ($params) {
   require(__DIR__ . "/src/Views/payment/account.php");

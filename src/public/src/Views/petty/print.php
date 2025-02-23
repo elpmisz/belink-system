@@ -1,18 +1,18 @@
 <?php
 $menu = "Service";
-$page = "ServiceAdvance";
+$page = "ServicePetty";
 
-use App\Classes\Advance;
+use App\Classes\Petty;
 use App\Classes\Validation;
 
-$ADVANCE = new Advance();
+$PETTY = new Petty();
 $VALIDATION = new Validation();
 
 $param = (isset($params) ? explode("/", $params) : "");
 $uuid = (!empty($param[0]) ? $param[0] : "");
 
-$row = $ADVANCE->advance_view([$uuid]);
-$total = $ADVANCE->advance_item_total([$uuid]);
+$row = $PETTY->petty_view([$uuid]);
+$total = $PETTY->petty_item_total([$uuid]);
 
 ob_start();
 ?>
@@ -21,7 +21,7 @@ ob_start();
 
 <head>
   <meta charset="utf-8">
-  <title>ใบเบิกเงินทดรองจ่าย (Advance Request)</title>
+  <title>ใบเบิกเงินสดย่อย (PETTY CASH)</title>
   <style>
     table {
       width: 100%;
@@ -82,19 +82,11 @@ ob_start();
     <tr>
       <td class="text-left no-border" width="10%"></td>
       <td class="text-center no-border" width="50%">
-        <h3>ใบเบิกเงินทดรองจ่าย (Advance Request)</h3>
+        <h3>ใบเบิกเงินสดย่อย (PETTY CASH)</h3>
       </td>
       <td class="no-border" width="20%">วันที่เอกสาร</td>
       <td class="bottom-border" width="20%">
         <?php echo htmlspecialchars($row['doc_date'], ENT_QUOTES, 'UTF-8'); ?>
-      </td>
-    </tr>
-    <tr>
-      <td class="text-left no-border" width="10%"></td>
-      <td class="text-center no-border" width="50%"></td>
-      <td class="no-border" width="20%">วันที่ครบกำหนด</td>
-      <td class="bottom-border" width="20%">
-        <?php echo htmlspecialchars($row['finish'], ENT_QUOTES, 'UTF-8'); ?>
       </td>
     </tr>
   </table>
@@ -122,19 +114,17 @@ ob_start();
   <table style="margin-top: 10px;">
     <tr>
       <th width="10%">#</th>
-      <th width="40%">รายจ่าย</th>
-      <th width="40%">รายละเอียด</th>
-      <th width="10%">จำนวนเงิน</th>
+      <th colspan="2" width="70%">รายละเอียด</th>
+      <th width="20%">จำนวนเงิน</th>
     </tr>
     <?php
-    $items = $ADVANCE->advance_item_view([$uuid]);
+    $items = $PETTY->petty_item_view([$uuid]);
     foreach ($items as $key => $item) :
       $key++;
     ?>
       <tr>
         <td class="text-center"><?php echo $key ?></td>
-        <td class="text-left"><?php echo $item['expense_name'] ?></td>
-        <td class="text-left"><?php echo $item['text'] ?></td>
+        <td colspan="2" class="text-left"><?php echo $item['text'] ?></td>
         <td class="text-right"><?php echo number_format($item['amount'], 2) ?></td>
       </tr>
     <?php
@@ -143,8 +133,7 @@ ob_start();
     ?>
       <tr>
         <td class="text-center"><?php echo $i ?></td>
-        <td></td>
-        <td></td>
+        <td colspan="2"></td>
         <td></td>
       </tr>
     <?php endfor; ?>
@@ -174,4 +163,4 @@ ob_end_clean();
 $mpdf = new \Mpdf\Mpdf(['mode' => 'utf-8', 'default_font' => 'garuda']);
 $mpdf->WriteHTML($html);
 $date = date('Ymd');
-$mpdf->Output("{$date}_advance_request.pdf", 'I');
+$mpdf->Output("{$date}_petty_cash.pdf", 'I');

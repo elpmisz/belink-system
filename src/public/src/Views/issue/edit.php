@@ -214,7 +214,7 @@ $remarks = $ISSUE->remark_view([$uuid]);
 
       <div class="row justify-content-center">
         <div class="col-xl-3 mb-2">
-          <a class="btn btn-danger btn-sm btn-block" href="/issue">
+          <a class="btn btn-danger btn-sm btn-block" href="/issue/manage">
             <i class="fas fa-arrow-left pr-2"></i>หน้าหลัก
           </a>
         </div>

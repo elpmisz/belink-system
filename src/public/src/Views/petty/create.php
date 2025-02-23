@@ -1,14 +1,14 @@
 <?php
 $menu = "Service";
-$page = "ServiceAdvance";
+$page = "ServicePetty";
 include_once(__DIR__ . "/../layout/header.php");
 ?>
 
 <div class="card shadow">
-  <h4 class="card-header text-center">Advance Request</h4>
+  <h4 class="card-header text-center">Petty Cash</h4>
   <div class="card-body">
 
-    <form action="/advance/create" method="POST" class="needs-validation" novalidate enctype="multipart/form-data">
+    <form action="/petty/create" method="POST" class="needs-validation" novalidate enctype="multipart/form-data">
       <div class="row mb-2">
         <label class="col-xl-2 offset-xl-2 col-form-label">ผู้ใช้บริการ</label>
         <div class="col-xl-4 text-underline">
@@ -19,15 +19,6 @@ include_once(__DIR__ . "/../layout/header.php");
         <label class="col-xl-2 offset-xl-2 col-form-label">วันที่เอกสาร</label>
         <div class="col-xl-4">
           <input type="text" class="form-control form-control-sm date-select" name="doc_date" required>
-          <div class="invalid-feedback">
-            กรุณากรอกข้อมูล!
-          </div>
-        </div>
-      </div>
-      <div class="row mb-2">
-        <label class="col-xl-2 offset-xl-2 col-form-label">วันที่ครบกำหนด</label>
-        <div class="col-xl-4">
-          <input type="text" class="form-control form-control-sm date-select" name="finish" required>
           <div class="invalid-feedback">
             กรุณากรอกข้อมูล!
           </div>
@@ -50,8 +41,7 @@ include_once(__DIR__ . "/../layout/header.php");
               <thead>
                 <tr>
                   <th width="10%">#</th>
-                  <th width="20%">รายจ่าย</th>
-                  <th width="40%">รายละเอียด</th>
+                  <th width="70%">รายละเอียด</th>
                   <th width="20%">จำนวนเงิน</th>
                 </tr>
               </thead>
@@ -60,12 +50,6 @@ include_once(__DIR__ . "/../layout/header.php");
                   <td class="text-center">
                     <button type="button" class="btn btn-sm btn-success item-increase">+</button>
                     <button type="button" class="btn btn-sm btn-danger item-decrease">-</button>
-                  </td>
-                  <td>
-                    <select class="form-control form-control-sm expense-select" name="expense_id[]" required></select>
-                    <div class="invalid-feedback">
-                      กรุณากรอกข้อมูล!
-                    </div>
                   </td>
                   <td>
                     <input type="text" class="form-control form-control-sm text-left" name="item_text[]" required>
@@ -81,7 +65,7 @@ include_once(__DIR__ . "/../layout/header.php");
                   </td>
                 </tr>
                 <tr>
-                  <td colspan="3" class="text-right">รวมทั้งสิ้น</td>
+                  <td colspan="2" class="text-right">รวมทั้งสิ้น</td>
                   <td class="text-right">
                     <span class=" amount-total"></span>
                   </td>
@@ -116,7 +100,7 @@ include_once(__DIR__ . "/../layout/header.php");
           </button>
         </div>
         <div class="col-xl-3 mb-2">
-          <a class="btn btn-danger btn-sm btn-block" href="/advance">
+          <a class="btn btn-danger btn-sm btn-block" href="/petty">
             <i class="fas fa-arrow-left pr-2"></i>หน้าหลัก
           </a>
         </div>
@@ -129,9 +113,6 @@ include_once(__DIR__ . "/../layout/header.php");
 
 <?php include_once(__DIR__ . "/../layout/footer.php"); ?>
 <script>
-  initializeSelect2(".order-select", "/payment/order-select", "-- รายชื่อเลขที่สัญญา --");
-  initializeSelect2(".expense-select", "/estimate/expense-select", "-- รายชื่อรายจ่าย --");
-
   $(".item-decrease, .file-decrease").hide();
   $(document).on("click", ".item-increase", function() {
     $(".expense-select").select2('destroy');
@@ -149,7 +130,6 @@ include_once(__DIR__ . "/../layout/header.php");
     });
 
     row.after(clone);
-    initializeSelect2(".expense-select", "/estimate/expense-select", "-- รายชื่อรายจ่าย --");
     updateTotal();
   });
 

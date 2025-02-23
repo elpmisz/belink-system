@@ -16,6 +16,15 @@ include_once(__DIR__ . "/../layout/header.php");
         </div>
       </div>
       <div class="row mb-2">
+        <label class="col-xl-2 offset-xl-2 col-form-label">วันที่เอกสาร</label>
+        <div class="col-xl-4">
+          <input type="text" class="form-control form-control-sm date-select" name="doc_date" required>
+          <div class="invalid-feedback">
+            กรุณากรอกข้อมูล!
+          </div>
+        </div>
+      </div>
+      <div class="row mb-2">
         <label class="col-xl-2 offset-xl-2 col-form-label">เลขที่สัญญา</label>
         <div class="col-xl-4">
           <select class="form-control form-control-sm order-select" name="order_number"></select>
@@ -439,9 +448,10 @@ include_once(__DIR__ . "/../layout/header.php");
   $(".date-select").daterangepicker({
     singleDatePicker: true,
     showDropdowns: true,
-    minDate: new Date(),
     locale: {
       "format": "DD/MM/YYYY",
+      "applyLabel": "ยืนยัน",
+      "cancelLabel": "ยกเลิก",
       "daysOfWeek": [
         "อา", "จ", "อ", "พ", "พฤ", "ศ", "ส"
       ],

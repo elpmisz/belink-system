@@ -43,6 +43,8 @@ if ($action === "estimate-create") {
   try {
     $login_id = (isset($user['login_id']) ? $VALIDATION->input($user['login_id']) : "");
     $customer_id = (isset($_POST['customer_id']) ? $VALIDATION->input($_POST['customer_id']) : "");
+    $doc_date = (isset($_POST['doc_date']) ? $VALIDATION->input($_POST['doc_date']) : "");
+    $doc_date = (!empty($doc_date) ? DateTime::createFromFormat('d/m/Y', $doc_date)->format('Y-m-d') : "");
     $order_number = (isset($_POST['order_number']) ? $VALIDATION->input($_POST['order_number']) : "");
     $product_name = (isset($_POST['product_name']) ? $VALIDATION->input($_POST['product_name']) : "");
     $title_name = (isset($_POST['title_name']) ? $VALIDATION->input($_POST['title_name']) : "");
@@ -52,9 +54,9 @@ if ($action === "estimate-create") {
     $remark = (isset($_POST['remark']) ? $VALIDATION->input($_POST['remark']) : "");
     $estimate_last = $ESTIMATE->estimate_last();
 
-    $estimate_count = $ESTIMATE->estimate_count([$login_id, $customer_id, $order_number, $product_name, $title_name, $sales_name, $budget, $type, $remark]);
+    $estimate_count = $ESTIMATE->estimate_count([$login_id, $customer_id, $doc_date, $order_number, $product_name, $title_name, $sales_name, $budget, $type, $remark]);
     if (intval($estimate_count) === 0) {
-      $ESTIMATE->estimate_insert([$estimate_last, $login_id, $customer_id, $order_number, $product_name, $title_name, $sales_name, $budget, $type, $remark]);
+      $ESTIMATE->estimate_insert([$estimate_last, $login_id, $customer_id, $doc_date, $order_number, $product_name, $title_name, $sales_name, $budget, $type, $remark]);
       $request_id = $ESTIMATE->last_insert_id();
 
       foreach ($_POST['item_expense'] as $key => $row) {
@@ -108,6 +110,8 @@ if ($action === "estimate-update") {
     $request_id = (isset($_POST['id']) ? $VALIDATION->input($_POST['id']) : "");
     $uuid = (isset($_POST['uuid']) ? $VALIDATION->input($_POST['uuid']) : "");
     $customer_id = (isset($_POST['customer_id']) ? $VALIDATION->input($_POST['customer_id']) : "");
+    $doc_date = (isset($_POST['doc_date']) ? $VALIDATION->input($_POST['doc_date']) : "");
+    $doc_date = (!empty($doc_date) ? DateTime::createFromFormat('d/m/Y', $doc_date)->format('Y-m-d') : "");
     $order_number = (isset($_POST['order_number']) ? $VALIDATION->input($_POST['order_number']) : "");
     $product_name = (isset($_POST['product_name']) ? $VALIDATION->input($_POST['product_name']) : "");
     $title_name = (isset($_POST['title_name']) ? $VALIDATION->input($_POST['title_name']) : "");
@@ -163,7 +167,7 @@ if ($action === "estimate-update") {
       }
     }
 
-    $ESTIMATE->estimate_update([$customer_id, $order_number, $product_name, $title_name, $sales_name, $budget, $type, $remark, $uuid]);
+    $ESTIMATE->estimate_update([$customer_id, $doc_date, $order_number, $product_name, $title_name, $sales_name, $budget, $type, $remark, $uuid]);
 
     $VALIDATION->alert("success", "ดำเนินการเรียบร้อย!", "/estimate/view/{$uuid}");
   } catch (PDOException $e) {

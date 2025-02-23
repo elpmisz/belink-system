@@ -55,6 +55,15 @@ $remarks = $PAYMENT->payment_remark_view([$uuid]);
         </div>
       </div>
       <div class="row mb-2">
+        <label class="col-xl-2 offset-xl-2 col-form-label">วันที่เอกสาร</label>
+        <div class="col-xl-4">
+          <input type="text" class="form-control form-control-sm date-select" name="doc_date" value="<?php echo $row['doc_date'] ?>" required>
+          <div class=" invalid-feedback">
+            กรุณากรอกข้อมูล!
+          </div>
+        </div>
+      </div>
+      <div class="row mb-2">
         <label class="col-xl-2 offset-xl-2 col-form-label">เลขที่สัญญา</label>
         <div class="col-xl-4 text-underline-link">
           <a href="/estimate/complete/<?php echo $row['estimate_uuid'] ?>" target="_blank"><?php echo $row['order_number'] ?></a>

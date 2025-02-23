@@ -22,6 +22,7 @@ class Estimate
     WHERE a.status = 1
     AND a.login_id = ?
     AND a.customer_id = ?
+    AND a.doc_date = ?
     AND a.order_number = ?
     AND a.product_name = ?
     AND a.title_name = ?
@@ -50,7 +51,7 @@ class Estimate
 
   public function estimate_insert($data)
   {
-    $sql = "INSERT INTO belink.estimate_request(`uuid`, `last`, `login_id`, `customer_id`, `order_number`, `product_name`, `title_name`, `sales_name`, `budget`, `type`, `remark`) VALUES(uuid(),?,?,?,?,?,?,?,?,?,?)";
+    $sql = "INSERT INTO belink.estimate_request(`uuid`, `last`, `login_id`, `customer_id`, `doc_date`, `order_number`, `product_name`, `title_name`, `sales_name`, `budget`, `type`, `remark`) VALUES(uuid(),?,?,?,?,?,?,?,?,?,?,?)";
     $stmt = $this->dbcon->prepare($sql);
     return $stmt->execute($data);
   }
@@ -80,6 +81,7 @@ class Estimate
       END
       ) type_name,
       a.remark,
+      DATE_FORMAT(a.doc_date,'%d/%m/%Y') `doc_date`,
       DATE_FORMAT(a.created,'%d/%m/%Y, %H:%i น.') created
     FROM belink.estimate_request a
     LEFT JOIN belink.customer b
@@ -96,6 +98,7 @@ class Estimate
   {
     $sql = "UPDATE belink.estimate_request SET
     customer_id = ?,
+    `doc_date` = ?,
     order_number = ?,
     product_name = ?,
     title_name = ?,

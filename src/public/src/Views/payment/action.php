@@ -42,6 +42,8 @@ $VALIDATION = new Validation();
 if ($action === "create") {
   try {
     $login_id = (isset($user['login_id']) ? $VALIDATION->input($user['login_id']) : "");
+    $doc_date = (isset($_POST['doc_date']) ? $VALIDATION->input($_POST['doc_date']) : "");
+    $doc_date = (!empty($doc_date) ? DateTime::createFromFormat('d/m/Y', $doc_date)->format('Y-m-d') : "");
     $order_number = (isset($_POST['order_number']) ? $VALIDATION->input($_POST['order_number']) : "");
     $receiver = (isset($_POST['receiver']) ? $VALIDATION->input($_POST['receiver']) : "");
     $type = (isset($_POST['type']) ? $VALIDATION->input($_POST['type']) : "");
@@ -52,9 +54,9 @@ if ($action === "create") {
     $cheque_date = (!empty($cheque_date) ? date("Y-m-d", strtotime(str_replace("/", "-", $cheque_date))) : "");
     $payment_last = $PAYMENT->payment_last();
 
-    $payment_count = $PAYMENT->payment_count([$login_id, $order_number, $receiver, $type, $cheque_bank, $cheque_branch, $cheque_number, $cheque_date]);
+    $payment_count = $PAYMENT->payment_count([$login_id, $doc_date, $order_number, $receiver, $type, $cheque_bank, $cheque_branch, $cheque_number, $cheque_date]);
     if (intval($payment_count) === 0) {
-      $PAYMENT->payment_insert([$payment_last, $login_id, $order_number, $receiver, $type, $cheque_bank, $cheque_branch, $cheque_number, $cheque_date]);
+      $PAYMENT->payment_insert([$payment_last, $login_id, $doc_date, $order_number, $receiver, $type, $cheque_bank, $cheque_branch, $cheque_number, $cheque_date]);
       $request_id = $PAYMENT->last_insert_id();
 
       foreach ($_POST['expense_id'] as $key => $row) {
@@ -111,13 +113,15 @@ if ($action === "update") {
   try {
     $request_id = (isset($_POST['id']) ? $VALIDATION->input($_POST['id']) : "");
     $uuid = (isset($_POST['uuid']) ? $VALIDATION->input($_POST['uuid']) : "");
+    $doc_date = (isset($_POST['doc_date']) ? $VALIDATION->input($_POST['doc_date']) : "");
+    $doc_date = (!empty($doc_date) ? DateTime::createFromFormat('d/m/Y', $doc_date)->format('Y-m-d') : "");
     $receiver = (isset($_POST['receiver']) ? $VALIDATION->input($_POST['receiver']) : "");
     $cheque_bank = (isset($_POST['cheque_bank']) ? $VALIDATION->input($_POST['cheque_bank']) : "");
     $cheque_branch = (isset($_POST['cheque_branch']) ? $VALIDATION->input($_POST['cheque_branch']) : "");
     $cheque_number = (isset($_POST['cheque_number']) ? $VALIDATION->input($_POST['cheque_number']) : "");
     $cheque_date = (isset($_POST['cheque_date']) ? $VALIDATION->input($_POST['cheque_date']) : "");
     $cheque_date = (!empty($cheque_date) ? date("Y-m-d", strtotime(str_replace("/", "-", $cheque_date))) : "");
-    $PAYMENT->payment_update([$receiver, $cheque_bank, $cheque_branch, $cheque_number, $cheque_date, $uuid]);
+    $PAYMENT->payment_update([$doc_date, $receiver, $cheque_bank, $cheque_branch, $cheque_number, $cheque_date, $uuid]);
 
     foreach ($_POST['item__id'] as $key => $row) {
       $item__id = (isset($_POST['item__id'][$key]) ? $VALIDATION->input($_POST['item__id'][$key]) : "");
@@ -185,6 +189,16 @@ if ($action === "update") {
 if ($action === "request-data") {
   try {
     $result = $PAYMENT->request_data();
+
+    echo json_encode($result);
+  } catch (PDOException $e) {
+    die($e->getMessage());
+  }
+}
+
+if ($action === "check-data") {
+  try {
+    $result = $PAYMENT->check_data();
 
     echo json_encode($result);
   } catch (PDOException $e) {

@@ -55,6 +55,12 @@ $remarks = $PAYMENT->payment_remark_view([$uuid]);
         </div>
       </div>
       <div class="row mb-2">
+        <label class="col-xl-2 offset-xl-2 col-form-label">วันที่เอกสาร</label>
+        <div class="col-xl-4 text-underline">
+          <?php echo $row['doc_date'] ?>
+        </div>
+      </div>
+      <div class="row mb-2">
         <label class="col-xl-2 offset-xl-2 col-form-label">เลขที่สัญญา</label>
         <div class="col-xl-4 text-underline">
           <?php echo $row['order_number'] ?>
@@ -227,7 +233,7 @@ $remarks = $PAYMENT->payment_remark_view([$uuid]);
         <div class="col-xl-8">
           <div class="form-group pl-3 pt-2">
             <label class="form-check-label px-3">
-              <input class="form-check-input" type="radio" name="status" value="2" required>
+              <input class="form-check-input" type="radio" name="status" value="3" required>
               <span class="text-success">ผ่านอนุมัติ</span>
             </label>
             <label class="form-check-label px-3">

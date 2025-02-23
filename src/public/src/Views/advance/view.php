@@ -17,7 +17,7 @@ $files = $ADVANCE->advance_file_view([$uuid]);
 ?>
 
 <div class="card shadow">
-  <h4 class="card-header text-center">Advance Clearing Voucher</h4>
+  <h4 class="card-header text-center">Advance Request</h4>
   <div class="card-body">
 
     <form action="/advance/update" method="POST" class="needs-validation" novalidate enctype="multipart/form-data">
@@ -50,7 +50,7 @@ $files = $ADVANCE->advance_file_view([$uuid]);
       <div class="row mb-2">
         <label class="col-xl-2 offset-xl-2 col-form-label">วันที่เอกสาร</label>
         <div class="col-xl-4">
-          <input type="text" class="form-control form-control-sm date-select" name="date" value="<?php echo $row['date'] ?>" required>
+          <input type="text" class="form-control form-control-sm date-select" name="doc_date" value="<?php echo $row['doc_date'] ?>" required>
           <div class="invalid-feedback">
             กรุณากรอกข้อมูล!
           </div>

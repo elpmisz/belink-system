@@ -1,27 +1,26 @@
 <?php
 $menu = "Service";
-$page = "ServiceAdvance";
+$page = "ServicePetty";
 include_once(__DIR__ . "/../layout/header.php");
 
-use App\Classes\Advance;
+use App\Classes\Petty;
 
-$ADVANCE = new Advance();
+$PETTY = new Petty();
 
 $param = (isset($params) ? explode("/", $params) : "");
 $uuid = (!empty($param[0]) ? $param[0] : "");
 
-$row = $ADVANCE->advance_view([$uuid]);
-$items = $ADVANCE->advance_item_view([$uuid]);
-$total = $ADVANCE->advance_item_total([$uuid]);
-$files = $ADVANCE->advance_file_view([$uuid]);
-$remarks = $ADVANCE->advance_remark_view([$uuid]);
+$row = $PETTY->petty_view([$uuid]);
+$items = $PETTY->petty_item_view([$uuid]);
+$total = $PETTY->petty_item_total([$uuid]);
+$files = $PETTY->petty_file_view([$uuid]);
 ?>
 
 <div class="card shadow">
-  <h4 class="card-header text-center">Advance Request</h4>
+  <h4 class="card-header text-center">Petty Cash</h4>
   <div class="card-body">
 
-    <form action="/advance/approve" method="POST" class="needs-validation" novalidate enctype="multipart/form-data">
+    <form action="/petty/approve" method="POST" class="needs-validation" novalidate enctype="multipart/form-data">
       <div style="display: none;">
         <div class="row mb-2">
           <label class="col-xl-2 offset-xl-2 col-form-label">ID</label>
@@ -55,12 +54,6 @@ $remarks = $ADVANCE->advance_remark_view([$uuid]);
         </div>
       </div>
       <div class="row mb-2">
-        <label class="col-xl-2 offset-xl-2 col-form-label">วันที่ครบกำหนด</label>
-        <div class="col-xl-4 text-underline">
-          <?php echo $row['finish'] ?>
-        </div>
-      </div>
-      <div class="row mb-2">
         <label class="col-xl-2 offset-xl-2 col-form-label">วัตถุประสงค์</label>
         <div class="col-xl-6 text-underline">
           <?php echo str_replace("\n", "<br>", $row['objective']) ?>
@@ -74,8 +67,7 @@ $remarks = $ADVANCE->advance_remark_view([$uuid]);
               <thead>
                 <tr>
                   <th width="10%">#</th>
-                  <th width="20%">รายจ่าย</th>
-                  <th width="40%">รายละเอียด</th>
+                  <th width="70%">รายละเอียด</th>
                   <th width="20%">จำนวนเงิน</th>
                 </tr>
               </thead>
@@ -83,13 +75,12 @@ $remarks = $ADVANCE->advance_remark_view([$uuid]);
                 <?php foreach ($items as $key => $item) : $key++; ?>
                   <tr>
                     <td class="text-center"><?php echo $key ?></td>
-                    <td class="text-left"><?php echo $item['expense_name'] ?></td>
                     <td class="text-left"><?php echo $item['text'] ?></td>
                     <td class="text-right"><?php echo number_format($item['amount'], 2) ?></td>
                   </tr>
                 <?php endforeach; ?>
                 <tr>
-                  <td colspan="3" class="text-right">รวมทั้งสิ้น</td>
+                  <td colspan="2" class="text-right">รวมทั้งสิ้น</td>
                   <td class="text-right">
                     <span class="amount-total"><?php echo number_format($total['total'], 2) ?></span>
                   </td>
@@ -111,7 +102,7 @@ $remarks = $ADVANCE->advance_remark_view([$uuid]);
             ?>
                 <tr>
                   <td>
-                    <a href="/src/Publics/advance/<?php echo $file['name'] ?>" class="text-primary" target="_blank">
+                    <a href="/src/Publics/petty/<?php echo $file['name'] ?>" class="text-primary" target="_blank">
                       <span class="badge badge-primary font-weight-light">ดาวน์โหลด!</span>
                     </a>
                   </td>
@@ -124,49 +115,44 @@ $remarks = $ADVANCE->advance_remark_view([$uuid]);
         </div>
       </div>
 
-      <?php if (COUNT($remarks) > 0) : ?>
-        <div class="row justify-content-center mb-2">
-          <div class="col-xl-10">
-            <hr>
-            <div class="h5 text-primary">รายละเอียดการดำเนินการ</div>
-            <div class="table-responsive">
-              <table class="table table-sm table-bordered table-hover">
-                <thead>
-                  <tr>
-                    <th width="10%">#</th>
-                    <th width="20%">ผู้ดำเนินการ</th>
-                    <th width="60%">รายละเอียดการ</th>
-                    <th width="10%">วันที่</th>
-                  </tr>
-                </thead>
-                <?php
-                foreach ($remarks as $remark) :
-                ?>
-                  <tr>
-                    <td class="text-center">
-                      <span class="badge badge-<?php echo $remark['status_color'] ?> font-weight-light">
-                        <?php echo $remark['status_name'] ?>
-                      </span>
-                    </td>
-                    <td class="text-center"><?php echo $remark['username'] ?></td>
-                    <td class="text-left"><?php echo str_replace("\r\n", "<br>", $remark['text']) ?></td>
-                    <td class="text-center"><?php echo $remark['created'] ?></td>
-                  </tr>
-                <?php endforeach; ?>
-              </table>
-            </div>
+      <div class="row mb-2">
+        <label class="col-xl-2 offset-xl-2 col-form-label">สถานะ</label>
+        <div class="col-xl-8">
+          <div class="form-group pl-3 pt-2">
+            <label class="form-check-label px-3">
+              <input class="form-check-input" type="radio" name="status" value="2" required>
+              <span class="text-success">ผ่านอนุมัติ</span>
+            </label>
+            <label class="form-check-label px-3">
+              <input class="form-check-input" type="radio" name="status" value="1" required>
+              <span class="text-danger">ไม่ผ่านอนุมัติ</span>
+            </label>
           </div>
         </div>
-      <?php endif; ?>
+      </div>
+      <div class="row mb-2">
+        <label class="col-xl-2 offset-xl-2 col-form-label">เหตุผล</label>
+        <div class="col-sm-6">
+          <textarea class="form-control" name="reason" rows="4"></textarea>
+          <div class="invalid-feedback">
+            กรุณา กรอกข้อมูล!
+          </div>
+        </div>
+      </div>
 
       <div class="row justify-content-center">
         <div class="col-xl-3 mb-2">
-          <a class="btn btn-primary btn-sm btn-block" href="/advance/print/<?php echo $row['uuid'] ?>" target="_blank">
+          <button type="submit" class="btn btn-success btn-sm btn-block">
+            <i class="fas fa-check pr-2"></i>ยืนยัน
+          </button>
+        </div>
+        <div class="col-xl-3 mb-2">
+          <a class="btn btn-primary btn-sm btn-block" href="/petty/print/<?php echo $row['uuid'] ?>" target="_blank">
             <i class="fas fa-print pr-2"></i>พิมพ์
           </a>
         </div>
         <div class="col-xl-3 mb-2">
-          <a class="btn btn-danger btn-sm btn-block" href="/advance">
+          <a class="btn btn-danger btn-sm btn-block" href="/petty">
             <i class="fas fa-arrow-left pr-2"></i>หน้าหลัก
           </a>
         </div>
@@ -178,3 +164,13 @@ $remarks = $ADVANCE->advance_remark_view([$uuid]);
 </div>
 
 <?php include_once(__DIR__ . "/../layout/footer.php"); ?>
+<script>
+  $(document).on("click", "input[name='status']", function() {
+    let status = ($(this).val() ? parseInt($(this).val()) : "");
+    if (status === 1) {
+      $("textarea[name='reason']").prop("required", true);
+    } else {
+      $("textarea[name='reason']").prop("required", false);
+    }
+  });
+</script>

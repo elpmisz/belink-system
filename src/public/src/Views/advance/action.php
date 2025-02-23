@@ -42,16 +42,16 @@ $VALIDATION = new Validation();
 if ($action === "create") {
   try {
     $login_id = (isset($user['login_id']) ? $VALIDATION->input($user['login_id']) : "");
-    $date = (isset($_POST['date']) ? $VALIDATION->input($_POST['date']) : "");
-    $date = (!empty($date) ? DateTime::createFromFormat('d/m/Y', $date)->format('Y-m-d') : "");
+    $doc_date = (isset($_POST['doc_date']) ? $VALIDATION->input($_POST['doc_date']) : "");
+    $doc_date = (!empty($doc_date) ? DateTime::createFromFormat('d/m/Y', $doc_date)->format('Y-m-d') : "");
     $finish = (isset($_POST['finish']) ? $VALIDATION->input($_POST['finish']) : "");
     $finish = (!empty($finish) ? DateTime::createFromFormat('d/m/Y', $finish)->format('Y-m-d') : "");
     $objective = (isset($_POST['objective']) ? $VALIDATION->input($_POST['objective']) : "");
     $advance_last = $ADVANCE->advance_last();
 
-    $advance_count = $ADVANCE->advance_count([$login_id, $date, $finish, $objective]);
+    $advance_count = $ADVANCE->advance_count([$login_id, $doc_date, $finish, $objective]);
     if (intval($advance_count) === 0) {
-      $ADVANCE->advance_insert([$advance_last, $login_id, $date, $finish, $objective]);
+      $ADVANCE->advance_insert([$advance_last, $login_id, $doc_date, $finish, $objective]);
       $request_id = $ADVANCE->last_insert_id();
 
       foreach ($_POST['expense_id'] as $key => $row) {
@@ -59,7 +59,7 @@ if ($action === "create") {
         $item_text = (isset($_POST['item_text'][$key]) ? $VALIDATION->input($_POST['item_text'][$key]) : "");
         $item_amount = (isset($_POST['item_amount'][$key]) ? $VALIDATION->input($_POST['item_amount'][$key]) : "");
 
-        $advance_item_count = $ADVANCE->advance_item_count([$request_id, $expense_id]);
+        $advance_item_count = $ADVANCE->advance_item_count([$request_id, $expense_id, $item_text]);
         if (intval($advance_item_count) === 0) {
           $ADVANCE->advance_item_insert([$request_id, $expense_id, $item_text, $item_amount]);
         }
@@ -105,8 +105,12 @@ if ($action === "update") {
   try {
     $request_id = (isset($_POST['id']) ? $VALIDATION->input($_POST['id']) : "");
     $uuid = (isset($_POST['uuid']) ? $VALIDATION->input($_POST['uuid']) : "");
+    $doc_date = (isset($_POST['doc_date']) ? $VALIDATION->input($_POST['doc_date']) : "");
+    $doc_date = (!empty($doc_date) ? DateTime::createFromFormat('d/m/Y', $doc_date)->format('Y-m-d') : "");
+    $finish = (isset($_POST['finish']) ? $VALIDATION->input($_POST['finish']) : "");
+    $finish = (!empty($finish) ? DateTime::createFromFormat('d/m/Y', $finish)->format('Y-m-d') : "");
     $objective = (isset($_POST['objective']) ? $VALIDATION->input($_POST['objective']) : "");
-    $ADVANCE->advance_update([$objective, $uuid]);
+    $ADVANCE->advance_update([$doc_date, $finish, $objective, $uuid]);
 
     foreach ($_POST['item__id'] as $key => $row) {
       $item__id = (isset($_POST['item__id'][$key]) ? $VALIDATION->input($_POST['item__id'][$key]) : "");
@@ -122,7 +126,7 @@ if ($action === "update") {
         $item_text = (isset($_POST['item_text'][$key]) ? $VALIDATION->input($_POST['item_text'][$key]) : "");
         $item_amount = (isset($_POST['item_amount'][$key]) ? $VALIDATION->input($_POST['item_amount'][$key]) : "");
 
-        $advance_item_count = $ADVANCE->advance_item_count([$request_id, $expense_id]);
+        $advance_item_count = $ADVANCE->advance_item_count([$request_id, $expense_id, $item_text]);
         if (intval($advance_item_count) === 0) {
           $ADVANCE->advance_item_insert([$request_id, $expense_id, $item_text, $item_amount]);
         }

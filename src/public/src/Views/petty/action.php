@@ -9,7 +9,7 @@ $action = (isset($param[0]) ? $param[0] : die(header("Location: /error")));
 $param1 = (isset($param[1]) ? $param[1] : "");
 $param2 = (isset($param[2]) ? $param[2] : "");
 
-use App\Classes\Purchase;
+use App\Classes\Petty;
 use App\Classes\Validation;
 use App\Classes\User;
 use Firebase\JWT\JWT;
@@ -36,35 +36,30 @@ try {
 $USER = new User();
 $user = $USER->user_view([$email, $email]);
 
-$PURCHASE = new Purchase();
+$PETTY = new Petty();
 $VALIDATION = new Validation();
 
 if ($action === "create") {
   try {
     $login_id = (isset($user['login_id']) ? $VALIDATION->input($user['login_id']) : "");
-    $department = (isset($_POST['department']) ? $VALIDATION->input($_POST['department']) : "");
     $doc_date = (isset($_POST['doc_date']) ? $VALIDATION->input($_POST['doc_date']) : "");
-    $doc_date = (!empty($doc_date) ? date("Y-m-d", strtotime(str_replace("/", "-", $doc_date))) : "");
-    $date = (isset($_POST['date']) ? $VALIDATION->input($_POST['date']) : "");
-    $date = (!empty($date) ? date("Y-m-d", strtotime(str_replace("/", "-", $date))) : "");
-    $order_number = (isset($_POST['order_number']) ? $VALIDATION->input($_POST['order_number']) : "");
+    $doc_date = (!empty($doc_date) ? DateTime::createFromFormat('d/m/Y', $doc_date)->format('Y-m-d') : "");
     $objective = (isset($_POST['objective']) ? $VALIDATION->input($_POST['objective']) : "");
-    $purchase_last = $PURCHASE->purchase_last();
+    $petty_last = $PETTY->petty_last();
 
-    $purchase_count = $PURCHASE->purchase_count([$login_id, $doc_date, $department, $date, $order_number, $objective]);
-    if (intval($purchase_count) === 0) {
-      $PURCHASE->purchase_insert([$purchase_last, $login_id, $doc_date, $department, $date, $order_number, $objective]);
-      $request_id = $PURCHASE->last_insert_id();
+    $petty_count = $PETTY->petty_count([$login_id, $doc_date, $objective]);
+    if (intval($petty_count) === 0) {
+      $PETTY->petty_insert([$petty_last, $login_id, $doc_date, $objective]);
+      $request_id = $PETTY->last_insert_id();
 
-      foreach ($_POST['item_name'] as $key => $row) {
-        $item_name = (isset($_POST['item_name'][$key]) ? $VALIDATION->input($_POST['item_name'][$key]) : "");
+      foreach ($_POST['expense_id'] as $key => $row) {
+        $expense_id = (isset($_POST['expense_id'][$key]) ? $VALIDATION->input($_POST['expense_id'][$key]) : "");
+        $item_text = (isset($_POST['item_text'][$key]) ? $VALIDATION->input($_POST['item_text'][$key]) : "");
         $item_amount = (isset($_POST['item_amount'][$key]) ? $VALIDATION->input($_POST['item_amount'][$key]) : "");
-        $item_unit = (isset($_POST['item_unit'][$key]) ? $VALIDATION->input($_POST['item_unit'][$key]) : "");
-        $item_estimate = (isset($_POST['item_estimate'][$key]) ? $VALIDATION->input($_POST['item_estimate'][$key]) : "");
 
-        $purchase_item_count = $PURCHASE->purchase_item_count([$request_id, $item_name, $item_amount, $item_unit, $item_estimate]);
-        if (intval($purchase_item_count) === 0) {
-          $PURCHASE->purchase_item_insert([$request_id, $item_name, $item_amount, $item_unit, $item_estimate]);
+        $petty_item_count = $PETTY->petty_item_count([$request_id, $expense_id]);
+        if (intval($petty_item_count) === 0) {
+          $PETTY->petty_item_insert([$request_id, $expense_id, $item_text, $item_amount]);
         }
       }
 
@@ -80,24 +75,24 @@ if ($action === "create") {
         if (!empty($file_name) && in_array($file_extension, $file_allow)) {
           if (in_array($file_extension, $file_document)) {
             $file_rename = "{$file_random}.{$file_extension}";
-            $file_path = (__DIR__ . "/../../Publics/purchase/{$file_rename}");
+            $file_path = (__DIR__ . "/../../Publics/petty/{$file_rename}");
             move_uploaded_file($file_tmp, $file_path);
           }
           if (in_array($file_extension, $file_image)) {
             $file_rename = "{$file_random}.webp";
-            $file_path = (__DIR__ . "/../../Publics/purchase/{$file_rename}");
+            $file_path = (__DIR__ . "/../../Publics/petty/{$file_rename}");
             $VALIDATION->image_upload($file_tmp, $file_path);
           }
 
-          $purchase_file_count = $PURCHASE->purchase_file_count([$request_id, $file_rename]);
-          if (intval($purchase_file_count) === 0) {
-            $PURCHASE->purchase_file_insert([$request_id, $file_rename]);
+          $petty_file_count = $PETTY->petty_file_count([$request_id, $file_rename]);
+          if (intval($petty_file_count) === 0) {
+            $PETTY->petty_file_insert([$request_id, $file_rename]);
           }
         }
       }
-      $VALIDATION->alert("success", "ดำเนินการเรียบร้อย!", "/purchase");
+      $VALIDATION->alert("success", "ดำเนินการเรียบร้อย!", "/petty");
     } else {
-      $VALIDATION->alert("danger", "ข้อมูลซ้ำในระบบ!", "/purchase");
+      $VALIDATION->alert("danger", "ข้อมูลซ้ำในระบบ!", "/petty");
     }
   } catch (PDOException $e) {
     die($e->getMessage());
@@ -108,35 +103,28 @@ if ($action === "update") {
   try {
     $request_id = (isset($_POST['id']) ? $VALIDATION->input($_POST['id']) : "");
     $uuid = (isset($_POST['uuid']) ? $VALIDATION->input($_POST['uuid']) : "");
-    $department = (isset($_POST['department']) ? $VALIDATION->input($_POST['department']) : "");
     $doc_date = (isset($_POST['doc_date']) ? $VALIDATION->input($_POST['doc_date']) : "");
-    $doc_date = (!empty($doc_date) ? date("Y-m-d", strtotime(str_replace("/", "-", $doc_date))) : "");
-    $date = (isset($_POST['date']) ? $VALIDATION->input($_POST['date']) : "");
-    $date = (!empty($date) ? date("Y-m-d", strtotime(str_replace("/", "-", $date))) : "");
-    $order_number = (isset($_POST['order_number']) ? $VALIDATION->input($_POST['order_number']) : "");
+    $doc_date = (!empty($doc_date) ? DateTime::createFromFormat('d/m/Y', $doc_date)->format('Y-m-d') : "");
     $objective = (isset($_POST['objective']) ? $VALIDATION->input($_POST['objective']) : "");
-    $PURCHASE->purchase_update([$doc_date, $department, $date, $order_number, $objective, $uuid]);
+    $PETTY->petty_update([$doc_date, $objective, $uuid]);
 
     foreach ($_POST['item__id'] as $key => $row) {
       $item__id = (isset($_POST['item__id'][$key]) ? $VALIDATION->input($_POST['item__id'][$key]) : "");
-      $item__name = (isset($_POST['item__name'][$key]) ? $VALIDATION->input($_POST['item__name'][$key]) : "");
+      $item__text = (isset($_POST['item__text'][$key]) ? $VALIDATION->input($_POST['item__text'][$key]) : "");
       $item__amount = (isset($_POST['item__amount'][$key]) ? $VALIDATION->input($_POST['item__amount'][$key]) : "");
-      $item__unit = (isset($_POST['item__unit'][$key]) ? $VALIDATION->input($_POST['item__unit'][$key]) : "");
-      $item__estimate = (isset($_POST['item__estimate'][$key]) ? $VALIDATION->input($_POST['item__estimate'][$key]) : "");
 
-      $PURCHASE->purchase_item_update([$item__name, $item__amount, $item__unit, $item__estimate, $item__id]);
+      $PETTY->petty_item_update([$item__text, $item__amount, $item__id]);
     }
 
-    if (isset($_POST['item_name'])) {
-      foreach ($_POST['item_name'] as $key => $row) {
-        $item_name = (isset($_POST['item_name'][$key]) ? $VALIDATION->input($_POST['item_name'][$key]) : "");
+    if (isset($_POST['expense_id'])) {
+      foreach ($_POST['expense_id'] as $key => $row) {
+        $expense_id = (isset($_POST['expense_id'][$key]) ? $VALIDATION->input($_POST['expense_id'][$key]) : "");
+        $item_text = (isset($_POST['item_text'][$key]) ? $VALIDATION->input($_POST['item_text'][$key]) : "");
         $item_amount = (isset($_POST['item_amount'][$key]) ? $VALIDATION->input($_POST['item_amount'][$key]) : "");
-        $item_unit = (isset($_POST['item_unit'][$key]) ? $VALIDATION->input($_POST['item_unit'][$key]) : "");
-        $item_estimate = (isset($_POST['item_estimate'][$key]) ? $VALIDATION->input($_POST['item_estimate'][$key]) : "");
 
-        $purchase_item_count = $PURCHASE->purchase_item_count([$request_id, $item_name, $item_amount, $item_unit, $item_estimate]);
-        if (intval($purchase_item_count) === 0) {
-          $PURCHASE->purchase_item_insert([$request_id, $item_name, $item_amount, $item_unit, $item_estimate]);
+        $petty_item_count = $PETTY->petty_item_count([$request_id, $expense_id, $item_text]);
+        if (intval($petty_item_count) === 0) {
+          $PETTY->petty_item_insert([$request_id, $expense_id, $item_text, $item_amount]);
         }
       }
     }
@@ -153,23 +141,23 @@ if ($action === "update") {
       if (!empty($file_name) && in_array($file_extension, $file_allow)) {
         if (in_array($file_extension, $file_document)) {
           $file_rename = "{$file_random}.{$file_extension}";
-          $file_path = (__DIR__ . "/../../Publics/purchase/{$file_rename}");
+          $file_path = (__DIR__ . "/../../Publics/petty/{$file_rename}");
           move_uploaded_file($file_tmp, $file_path);
         }
         if (in_array($file_extension, $file_image)) {
           $file_rename = "{$file_random}.webp";
-          $file_path = (__DIR__ . "/../../Publics/purchase/{$file_rename}");
+          $file_path = (__DIR__ . "/../../Publics/petty/{$file_rename}");
           $VALIDATION->image_upload($file_tmp, $file_path);
         }
 
-        $purchase_file_count = $PURCHASE->purchase_file_count([$request_id, $file_rename]);
-        if (intval($purchase_file_count) === 0) {
-          $PURCHASE->purchase_file_insert([$request_id, $file_rename]);
+        $petty_file_count = $PETTY->petty_file_count([$request_id, $file_rename]);
+        if (intval($petty_file_count) === 0) {
+          $PETTY->petty_file_insert([$request_id, $file_rename]);
         }
       }
     }
 
-    $VALIDATION->alert("success", "ดำเนินการเรียบร้อย!", "/purchase/view/{$uuid}");
+    $VALIDATION->alert("success", "ดำเนินการเรียบร้อย!", "/petty/view/{$uuid}");
   } catch (PDOException $e) {
     die($e->getMessage());
   }
@@ -184,10 +172,10 @@ if ($action === "approve") {
     $reason = (isset($_POST['reason']) ? $VALIDATION->input($_POST['reason']) : "");
     $action = (intval($status) === 1 ? 2 : 1);
 
-    $PURCHASE->purchase_approve([$action, $status, $uuid]);
-    $PURCHASE->purchase_remark_insert([$request_id, $login_id, $reason, $status]);
+    $PETTY->petty_approve([$action, $status, $uuid]);
+    $PETTY->petty_remark_insert([$request_id, $login_id, $reason, $status]);
 
-    $VALIDATION->alert("success", "ดำเนินการเรียบร้อย!", "/purchase");
+    $VALIDATION->alert("success", "ดำเนินการเรียบร้อย!", "/petty");
   } catch (PDOException $e) {
     die($e->getMessage());
   }
@@ -195,7 +183,7 @@ if ($action === "approve") {
 
 if ($action === "request-data") {
   try {
-    $result = $PURCHASE->request_data();
+    $result = $PETTY->request_data();
 
     echo json_encode($result);
   } catch (PDOException $e) {
@@ -205,7 +193,7 @@ if ($action === "request-data") {
 
 if ($action === "approve-data") {
   try {
-    $result = $PURCHASE->approve_data();
+    $result = $PETTY->approve_data();
 
     echo json_encode($result);
   } catch (PDOException $e) {
@@ -218,7 +206,7 @@ if ($action === "item-delete") {
     $data = json_decode(file_get_contents("php://input"), true);
     $id = $data['id'];
     if (!empty($id)) {
-      $PURCHASE->purchase_item_delete([$id]);
+      $PETTY->petty_item_delete([$id]);
       echo json_encode(200);
     } else {
       echo json_encode(500);
@@ -233,23 +221,11 @@ if ($action === "file-delete") {
     $data = json_decode(file_get_contents("php://input"), true);
     $id = $data['id'];
     if (!empty($id)) {
-      $PURCHASE->purchase_file_delete([$id]);
+      $PETTY->petty_file_delete([$id]);
       echo json_encode(200);
     } else {
       echo json_encode(500);
     }
-  } catch (PDOException $e) {
-    die($e->getMessage());
-  }
-}
-
-if ($action === "order-view") {
-  try {
-    $data = json_decode(file_get_contents("php://input"), true);
-    $order = $data['order'];
-    $result = $PURCHASE->order_view([$order]);
-
-    echo json_encode($result);
   } catch (PDOException $e) {
     die($e->getMessage());
   }

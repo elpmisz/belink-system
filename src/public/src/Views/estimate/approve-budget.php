@@ -53,6 +53,12 @@ $reference = $ESTIMATE->estimate_item_reference([$uuid]);
           <?php echo $row['username'] ?>
         </div>
       </div>
+      <div class="row mb-2">
+        <label class="col-xl-2 offset-xl-2 col-form-label">วันที่เอกสาร</label>
+        <div class="col-xl-4 text-underline">
+          <?php echo $row['doc_date'] ?>
+        </div>
+      </div>
       <div class="old-customer">
         <div class="row mb-2">
           <label class="col-xl-2 offset-xl-2 col-form-label">ชื่อลูกค้า</label>

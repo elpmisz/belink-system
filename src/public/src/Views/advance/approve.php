@@ -50,7 +50,7 @@ $files = $ADVANCE->advance_file_view([$uuid]);
       <div class="row mb-2">
         <label class="col-xl-2 offset-xl-2 col-form-label">วันที่เอกสาร</label>
         <div class="col-xl-4 text-underline">
-          <?php echo $row['date'] ?>
+          <?php echo $row['doc_date'] ?>
         </div>
       </div>
       <div class="row mb-2">

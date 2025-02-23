@@ -1,26 +1,26 @@
 <?php
 $menu = "Service";
-$page = "ServicePurchase";
+$page = "ServicePetty";
 include_once(__DIR__ . "/../layout/header.php");
 
-use App\Classes\Purchase;
+use App\Classes\Petty;
 
-$PURCHASE = new Purchase();
+$PETTY = new Petty();
 
 $param = (isset($params) ? explode("/", $params) : "");
 $uuid = (!empty($param[0]) ? $param[0] : "");
 
-$row = $PURCHASE->purchase_view([$uuid]);
-$items = $PURCHASE->purchase_item_view([$uuid]);
-$total = $PURCHASE->purchase_item_total([$uuid]);
-$files = $PURCHASE->purchase_file_view([$uuid]);
+$row = $PETTY->petty_view([$uuid]);
+$items = $PETTY->petty_item_view([$uuid]);
+$total = $PETTY->petty_item_total([$uuid]);
+$files = $PETTY->petty_file_view([$uuid]);
 ?>
 
 <div class="card shadow">
-  <h4 class="card-header text-center">Purchase Request</h4>
+  <h4 class="card-header text-center">Petty Cash</h4>
   <div class="card-body">
 
-    <form action="/purchase/update" method="POST" class="needs-validation" novalidate enctype="multipart/form-data">
+    <form action="/petty/update" method="POST" class="needs-validation" novalidate enctype="multipart/form-data">
       <div style="display: none;">
         <div class="row mb-2">
           <label class="col-xl-2 offset-xl-2 col-form-label">ID</label>
@@ -44,67 +44,18 @@ $files = $PURCHASE->purchase_file_view([$uuid]);
       <div class="row mb-2">
         <label class="col-xl-2 offset-xl-2 col-form-label">ผู้ใช้บริการ</label>
         <div class="col-xl-4 text-underline">
-          <?php echo $user['fullname'] ?>
+          <?php echo $row['username'] ?>
         </div>
       </div>
       <div class="row mb-2">
         <label class="col-xl-2 offset-xl-2 col-form-label">วันที่เอกสาร</label>
         <div class="col-xl-4">
           <input type="text" class="form-control form-control-sm date-select" name="doc_date" value="<?php echo $row['doc_date'] ?>" required>
-          <div class=" invalid-feedback">
-            กรุณากรอกข้อมูล!
-          </div>
-        </div>
-      </div>
-      <div class="row mb-2">
-        <label class="col-xl-2 offset-xl-2 col-form-label">หน่วยงานที่ขอซื้อ</label>
-        <div class="col-xl-4">
-          <input type="text" class="form-control form-control-sm" name="department" value="<?php echo $row['department'] ?>" required>
           <div class="invalid-feedback">
             กรุณากรอกข้อมูล!
           </div>
         </div>
       </div>
-      <div class="row mb-2">
-        <label class="col-xl-2 offset-xl-2 col-form-label">วันที่ต้องการใช้</label>
-        <div class="col-xl-4">
-          <input type="text" class="form-control form-control-sm date-select" name="date" value="<?php echo $row['date'] ?>">
-          <div class="invalid-feedback">
-            กรุณากรอกข้อมูล!
-          </div>
-        </div>
-      </div>
-      <div class="row mb-2">
-        <label class="col-xl-2 offset-xl-2 col-form-label">เลขที่สัญญา</label>
-        <div class="col-xl-4">
-          <select class="form-control form-control-sm order-select" name="order_number">
-            <?php
-            if (!empty($row['order_number'])) {
-              echo "<option value='{$row['order_number']}'>{$row['order_number']}</option>";
-            }
-            ?>
-          </select>
-          <div class="invalid-feedback">
-            กรุณากรอกข้อมูล!
-          </div>
-        </div>
-      </div>
-      <?php if (!empty($row['order_number'])) : ?>
-        <div class="order-div">
-          <div class="row mb-2">
-            <label class="col-xl-2 offset-xl-2 col-form-label">ชื่อลูกค้า</label>
-            <div class="col-xl-4 text-underline">
-              <span class="order-customer"><?php echo $row['customer_name'] ?></span>
-            </div>
-          </div>
-          <div class="row mb-2">
-            <label class="col-xl-2 offset-xl-2 col-form-label">สินค้า</label>
-            <div class="col-xl-4 text-underline">
-              <span class="order-product"><?php echo $row['product_name'] ?></span>
-            </div>
-          </div>
-        </div>
-      <?php endif; ?>
       <div class="row mb-2">
         <label class="col-xl-2 offset-xl-2 col-form-label">วัตถุประสงค์</label>
         <div class="col-xl-6">
@@ -122,10 +73,8 @@ $files = $PURCHASE->purchase_file_view([$uuid]);
               <thead>
                 <tr>
                   <th width="10%">#</th>
-                  <th width="50%">รายการสินค้า/บริการ</th>
-                  <th width="10%">จำนวน</th>
-                  <th width="10%">หน่วย</th>
-                  <th width="10%">ราคา</th>
+                  <th width="70%">รายละเอียด</th>
+                  <th width="20%">จำนวนเงิน</th>
                 </tr>
               </thead>
               <tbody>
@@ -136,25 +85,10 @@ $files = $PURCHASE->purchase_file_view([$uuid]);
                       <input type="hidden" class="form-control form-control-sm text-center" name="item__id[]" value="<?php echo $item['id'] ?>" readonly>
                     </td>
                     <td class="text-left">
-                      <input type="text" class="form-control form-control-sm" name="item__name[]" value="<?php echo $item['name'] ?>" required>
-                      <div class="invalid-feedback">
-                        กรุณากรอกข้อมูล!
-                      </div>
+                      <input type="text" class="form-control form-control-sm text-left" name="item__text[]" value="<?php echo $item['text'] ?>" required>
                     </td>
                     <td>
-                      <input type="number" class="form-control form-control-sm text-right amount-item" name="item__amount[]" value="<?php echo $item['amount'] ?>" required>
-                      <div class="invalid-feedback">
-                        กรุณากรอกข้อมูล!
-                      </div>
-                    </td>
-                    <td>
-                      <input type="text" class="form-control form-control-sm item-unit" name="item__unit[]" value="<?php echo $item['unit'] ?>" required>
-                      <div class="invalid-feedback">
-                        กรุณากรอกข้อมูล!
-                      </div>
-                    </td>
-                    <td>
-                      <input type="number" class="form-control form-control-sm text-right item-estimate" value="<?php echo $item['estimate'] ?>" min="1" step="0.01" name="item__estimate[]" required>
+                      <input type="number" class="form-control form-control-sm text-right amount-item" name="item__amount[]" value="<?php echo $item['amount'] ?>" max="<?php echo $item['remain'] ?>" required>
                       <div class="invalid-feedback">
                         กรุณากรอกข้อมูล!
                       </div>
@@ -167,34 +101,22 @@ $files = $PURCHASE->purchase_file_view([$uuid]);
                     <button type="button" class="btn btn-sm btn-danger item-decrease">-</button>
                   </td>
                   <td>
-                    <input type="text" class="form-control form-control-sm text-left item-name" name="item_name[]">
+                    <input type="text" class="form-control form-control-sm text-left" name="item_text[]">
                     <div class="invalid-feedback">
                       กรุณากรอกข้อมูล!
                     </div>
                   </td>
                   <td>
-                    <input type="number" class="form-control form-control-sm text-right item-amount" min="1" step="0.01" name="item_amount[]">
-                    <div class="invalid-feedback">
-                      กรุณากรอกข้อมูล!
-                    </div>
-                  </td>
-                  <td>
-                    <input type="text" class="form-control form-control-sm item-unit" name="item_unit[]">
-                    <div class="invalid-feedback">
-                      กรุณากรอกข้อมูล!
-                    </div>
-                  </td>
-                  <td>
-                    <input type="number" class="form-control form-control-sm text-right item-estimate" min="1" step="0.01" name="item_estimate[]">
+                    <input type="number" class="form-control form-control-sm text-right amount-item" min="1" step="0.01" name="item_amount[]">
                     <div class="invalid-feedback">
                       กรุณากรอกข้อมูล!
                     </div>
                   </td>
                 </tr>
                 <tr>
-                  <td colspan="4" class="text-right">รวมทั้งสิ้น</td>
+                  <td colspan="2" class="text-right">รวมทั้งสิ้น</td>
                   <td class="text-right">
-                    <span class="all-total"><?php echo number_format($total['total'], 2) ?></span>
+                    <span class="amount-total"><?php echo number_format($total['total'], 2) ?></span>
                   </td>
                 </tr>
               </tbody>
@@ -213,7 +135,7 @@ $files = $PURCHASE->purchase_file_view([$uuid]);
             ?>
                 <tr>
                   <td>
-                    <a href="/src/Publics/purchase/<?php echo $file['name'] ?>" class="text-primary" target="_blank">
+                    <a href="/src/Publics/petty/<?php echo $file['name'] ?>" class="text-primary" target="_blank">
                       <span class="badge badge-primary font-weight-light">ดาวน์โหลด!</span>
                     </a>
                   </td>
@@ -247,12 +169,12 @@ $files = $PURCHASE->purchase_file_view([$uuid]);
           </button>
         </div>
         <div class="col-xl-3 mb-2">
-          <a class="btn btn-primary btn-sm btn-block" href="/purchase/print/<?php echo $row['uuid'] ?>" target="_blank">
+          <a class="btn btn-primary btn-sm btn-block" href="/petty/print/<?php echo $row['uuid'] ?>" target="_blank">
             <i class="fas fa-print pr-2"></i>พิมพ์
           </a>
         </div>
         <div class="col-xl-3 mb-2">
-          <a class="btn btn-danger btn-sm btn-block" href="/purchase">
+          <a class="btn btn-danger btn-sm btn-block" href="/petty">
             <i class="fas fa-arrow-left pr-2"></i>หน้าหลัก
           </a>
         </div>
@@ -265,10 +187,10 @@ $files = $PURCHASE->purchase_file_view([$uuid]);
 
 <?php include_once(__DIR__ . "/../layout/footer.php"); ?>
 <script>
-  initializeSelect2(".order-select", "/payment/order-select", "-- รายชื่อเลขที่สัญญา --");
-
   $(".item-decrease, .file-decrease").hide();
   $(document).on("click", ".item-increase", function() {
+    $(".expense-select").select2('destroy');
+
     let row = $(".item-tr:last");
     let clone = row.clone();
     clone.find("input, select").val("").empty();
@@ -285,28 +207,22 @@ $files = $PURCHASE->purchase_file_view([$uuid]);
     updateTotal();
   });
 
-  $(document).on("blur", ".item-name", function() {
-    const name = ($(this).val() || "");
-    if (name) {
-      $(".item-amount, .item-unit, .item-estimate").prop("required", true);
-    } else {
-      $(".item-amount, .item-unit, .item-estimate").prop("required", false);
-    }
+  $(document).on("blur", ".amount-item", function() {
+    const row = $(this).closest("tr");
+    const amount = parseFloat(row.find(".amount-item").val() || 0);
+
+    updateTotal();
   });
 
-  $(document).on("blur", ".item-estimate", function() {
-    updateTotal();
-  })
-
   function updateTotal() {
-    let totalEstimate = 0;
+    let totalAmount = 0;
 
-    $('.item-estimate').each(function() {
-      var estimate = parseFloat($(this).val()) || 0;
-      totalEstimate += estimate;
+    $('.amount-item').each(function() {
+      var amount = parseFloat($(this).val()) || 0;
+      totalAmount += amount;
     });
 
-    $(".all-total").text(totalEstimate.toFixed(2).toLocaleString('th-TH', {
+    $(".amount-total").text(totalAmount.toFixed(2).toLocaleString('th-TH', {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2
     }));
@@ -362,29 +278,6 @@ $files = $PURCHASE->purchase_file_view([$uuid]);
     e.preventDefault();
   });
 
-  $(document).on("change", ".order-select", function() {
-    const order = $(this).val() || 0;
-
-    if (order) {
-      $(".order-div").show();
-      axios.post("/purchase/order-view", {
-          order
-        })
-        .then((res) => {
-          const result = res.data;
-          if (result) {
-            $(".order-customer").text(result.customer_name);
-            $(".order-product").text(result.product_name);
-          }
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-    } else {
-      $(".order-div").hide();
-    }
-  });
-
   $(document).on("click", ".item-delete", function(e) {
     let id = $(this).prop("id");
     e.preventDefault();
@@ -398,7 +291,7 @@ $files = $PURCHASE->purchase_file_view([$uuid]);
       cancelButtonText: "ปิด",
     }).then((result) => {
       if (result.value) {
-        axios.post("/purchase/item-delete", {
+        axios.post("/petty/item-delete", {
           id
         }).then((res) => {
           let result = res.data;
@@ -441,7 +334,7 @@ $files = $PURCHASE->purchase_file_view([$uuid]);
       cancelButtonText: "ปิด",
     }).then((result) => {
       if (result.value) {
-        axios.post("/purchase/file-delete", {
+        axios.post("/petty/file-delete", {
           id
         }).then((res) => {
           let result = res.data;
@@ -469,32 +362,5 @@ $files = $PURCHASE->purchase_file_view([$uuid]);
         return false;
       }
     })
-  });
-
-  $(".date-select").daterangepicker({
-    singleDatePicker: true,
-    showDropdowns: true,
-    locale: {
-      "format": "DD/MM/YYYY",
-      "applyLabel": "ยืนยัน",
-      "cancelLabel": "ยกเลิก",
-      "daysOfWeek": [
-        "อา", "จ", "อ", "พ", "พฤ", "ศ", "ส"
-      ],
-      "monthNames": [
-        "มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน",
-        "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"
-      ]
-    },
-    "applyButtonClasses": "btn-success",
-    "cancelClass": "btn-danger"
-  });
-
-  $(".date-select").on("apply.daterangepicker", function(ev, picker) {
-    $(this).val(picker.startDate.format('DD/MM/YYYY'));
-  });
-
-  $(".date-select").on("keydown paste", function(e) {
-    e.preventDefault();
   });
 </script>

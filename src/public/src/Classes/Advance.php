@@ -21,7 +21,7 @@ class Advance
     FROM belink.advance_request a
     WHERE a.status = 1
     AND a.login_id = ?
-    AND a.date = ?
+    AND a.doc_date = ?
     AND a.finish = ?
     AND a.objective = ?";
     $stmt = $this->dbcon->prepare($sql);
@@ -45,7 +45,7 @@ class Advance
 
   public function advance_insert($data)
   {
-    $sql = "INSERT INTO belink.advance_request(`uuid`, `last`, `login_id`, `date`, `finish`, `objective`) VALUES(uuid(),?,?,?,?,?)";
+    $sql = "INSERT INTO belink.advance_request(`uuid`, `last`, `login_id`, `doc_date`, `finish`, `objective`) VALUES(uuid(),?,?,?,?,?)";
     $stmt = $this->dbcon->prepare($sql);
     return $stmt->execute($data);
   }
@@ -56,7 +56,7 @@ class Advance
       a.`uuid`,
       CONCAT('AR',YEAR(a.created),LPAD(a.`last`,4,'0')) ticket,
       CONCAT(b.firstname,' ',b.lastname) username,
-      DATE_FORMAT(a.date,'%d/%m/%Y') `date`,
+      DATE_FORMAT(a.doc_date,'%d/%m/%Y') `doc_date`,
       DATE_FORMAT(a.finish,'%d/%m/%Y') `finish`,
       a.objective,
       DATE_FORMAT(a.created,'%d/%m/%Y, %H:%i น.') created
@@ -72,6 +72,8 @@ class Advance
   public function advance_update($data)
   {
     $sql = "UPDATE belink.advance_request SET
+    doc_date = ?,
+    `finish` = ?,
     objective = ?,
     `action` = 1,
     updated = NOW()
@@ -87,7 +89,8 @@ class Advance
     FROM belink.advance_item a
     WHERE a.status = 1
     AND a.request_id = ?
-    AND a.expense_id = ?";
+    AND a.expense_id = ?
+    AND a.text = ?";
     $stmt = $this->dbcon->prepare($sql);
     $stmt->execute($data);
     return $stmt->fetchColumn();
