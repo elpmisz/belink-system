@@ -181,6 +181,21 @@ include_once(__DIR__ . "/../layout/header.php");
     $(".amount-total").text(totalAmount.toFixed(2));
   }
 
+  $(document).on("click", ".file-increase", function() {
+    let row = $(".file-tr:last");
+    let clone = row.clone();
+    clone.find("input, select").val("").empty();
+    clone.find("span").text("");
+    clone.find(".file-increase").hide();
+    clone.find(".file-decrease").show();
+
+    clone.find(".file-decrease").off("click").on("click", function() {
+      $(this).closest("tr").remove();
+    });
+
+    row.after(clone);
+  });
+
   $(document).on("change", "input[name='file[]']", function() {
     const file = $(this).val();
     const size = ($(this)[0].files[0].size / (1024 * 1024)).toFixed(2);

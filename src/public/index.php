@@ -13,6 +13,27 @@ $ROUTER->map("GET", "/job", function () {
 $ROUTER->map("GET", "/quotation", function () {
   require(__DIR__ . "/src/Views/quotation/index.php");
 });
+$ROUTER->map("GET", "/quotation/create", function () {
+  require(__DIR__ . "/src/Views/quotation/create.php");
+});
+$ROUTER->map("GET", "/quotation/manage", function () {
+  require(__DIR__ . "/src/Views/quotation/manage.php");
+});
+$ROUTER->map("GET", "/quotation/view/[**:params]", function ($params) {
+  require(__DIR__ . "/src/Views/quotation/view.php");
+});
+$ROUTER->map("GET", "/quotation/approve/[**:params]", function ($params) {
+  require(__DIR__ . "/src/Views/quotation/approve.php");
+});
+$ROUTER->map("GET", "/quotation/complete/[**:params]", function ($params) {
+  require(__DIR__ . "/src/Views/quotation/complete.php");
+});
+$ROUTER->map("GET", "/quotation/print/[**:params]", function ($params) {
+  require(__DIR__ . "/src/Views/quotation/print.php");
+});
+$ROUTER->map("POST", "/quotation/[**:params]", function ($params) {
+  require(__DIR__ . "/src/Views/quotation/action.php");
+});
 
 ##################### ACCRUED #####################
 $ROUTER->map("GET", "/accrued", function () {
