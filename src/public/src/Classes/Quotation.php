@@ -63,9 +63,10 @@ class Quotation
     CONCAT('[',c.`code`,'] ',c.`name`) biller_name,
     c.contact biller_address,
     a.customer_type,
-    IF(a.customer_type = 1,'ลูกค่าเก่า','ลูกค้าใหม่') customer_type_name,
-    a.customer_id,a.customer_address,
+    IF(a.customer_type = 1,'ลูกค้าเก่า','ลูกค้าใหม่') customer_type_name,
+    a.customer_id,
     IF(a.customer_type = 1,CONCAT('[',d.`code`,'] ',d.`name`),a.customer_name) customer_name,
+    IF(a.customer_type = 1,d.contact,a.customer_address) customer_address,
     a.text,
     DATE_FORMAT(a.doc_date,'%d/%m/%Y') doc_date,
     DATE_FORMAT(a.created,'%d/%m/%Y, %H:%i น.') created
@@ -105,6 +106,19 @@ class Quotation
     return $stmt->execute($data);
   }
 
+  public function quotation_item_view($data)
+  {
+    $sql = "SELECT b.id,b.product,b.price,b.discount,b.amount
+    FROM belink.quotation_request a
+    LEFT JOIN belink.quotation_item b
+    ON a.id = b.request_id
+    WHERE b.`status` = 1
+    AND a.`uuid` = ?";
+    $stmt = $this->dbcon->prepare($sql);
+    $stmt->execute($data);
+    return $stmt->fetchAll();
+  }
+
   public function quotation_file_count($data)
   {
     $sql = "SELECT 
@@ -123,6 +137,21 @@ class Quotation
     $sql = "INSERT INTO belink.quotation_file(`request_id`, `name`) VALUES(?,?)";
     $stmt = $this->dbcon->prepare($sql);
     return $stmt->execute($data);
+  }
+
+  public function quotation_file_view($data)
+  {
+    $sql = "SELECT 
+      a.id,
+      a.`name`
+    FROM belink.quotation_file a
+    LEFT JOIN belink.quotation_request b
+    ON a.request_id = b.id
+    WHERE a.`status` = 1
+    AND b.`uuid` = ?";
+    $stmt = $this->dbcon->prepare($sql);
+    $stmt->execute($data);
+    return $stmt->fetchAll();
   }
 
   public function biller_view($data)

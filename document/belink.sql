@@ -3,8 +3,8 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: database
--- Generation Time: Feb 25, 2025 at 09:48 AM
--- Server version: 11.6.2-MariaDB-ubu2404
+-- Generation Time: Mar 05, 2025 at 09:50 AM
+-- Server version: 11.7.2-MariaDB-ubu2404
 -- PHP Version: 8.2.27
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -1735,7 +1735,9 @@ CREATE TABLE `quotation_item` (
 
 INSERT INTO `quotation_item` (`id`, `request_id`, `product`, `price`, `discount`, `amount`, `status`, `updated`, `created`) VALUES
 (1, 1, 'aaa', 1000.00, '10', 10, 1, NULL, '2025-02-25 15:43:11'),
-(2, 1, 'bbb', 1000.00, '10%', 10, 1, NULL, '2025-02-25 15:43:11');
+(2, 1, 'bbb', 1000.00, '10%', 10, 1, NULL, '2025-02-25 15:43:11'),
+(3, 2, 'xxx', 1000.00, '20', 10, 1, NULL, '2025-03-05 16:43:00'),
+(4, 2, 'yyy', 1000.00, '20%', 10, 1, NULL, '2025-03-05 16:43:00');
 
 -- --------------------------------------------------------
 
@@ -1765,7 +1767,8 @@ CREATE TABLE `quotation_request` (
 --
 
 INSERT INTO `quotation_request` (`id`, `uuid`, `last`, `login_id`, `doc_date`, `biller_id`, `customer_type`, `customer_id`, `customer_name`, `customer_address`, `text`, `status`, `updated`, `created`) VALUES
-(1, '51b21187-f352-11ef-a2a0-0242ac120002', 1, 1, '2025-02-25', 1, 2, NULL, 'new-customer', 'address-customer', 'TESTTEST\r\nTESTTEST', 1, NULL, '2025-02-25 15:43:11');
+(1, '51b21187-f352-11ef-a2a0-0242ac120002', 1, 1, '2025-02-25', 1, 2, NULL, 'new-customer', 'address-customer', 'TESTTEST\r\nTESTTEST', 1, NULL, '2025-02-25 15:43:11'),
+(2, '3a6e2c3e-f9a6-11ef-9f5e-0242ac120003', 2, 1, '2025-03-05', 1, 1, 1, '', '', 'old-customer\r\nold-customer', 1, NULL, '2025-03-05 16:43:00');
 
 -- --------------------------------------------------------
 
@@ -2575,13 +2578,13 @@ ALTER TABLE `quotation_file`
 -- AUTO_INCREMENT for table `quotation_item`
 --
 ALTER TABLE `quotation_item`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `quotation_request`
 --
 ALTER TABLE `quotation_request`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `service`

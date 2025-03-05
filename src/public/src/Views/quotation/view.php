@@ -1,6 +1,6 @@
 <?php
 $menu = "Service";
-$page = "ServiceQuotataion";
+$page = "ServiceQuotation";
 include_once(__DIR__ . "/../layout/header.php");
 
 use App\Classes\Quotation;
@@ -11,12 +11,8 @@ $param = (isset($params) ? explode("/", $params) : "");
 $uuid = (!empty($param[0]) ? $param[0] : "");
 
 $row = $QUOTATION->quotation_view([$uuid]);
-echo "<pre>";
-print_r($row);
-echo "</pre>";
-// $items = $QUOTATION->quotation_item_view([$uuid]);
-// $total = $QUOTATION->quotation_item_total([$uuid]);
-// $files = $QUOTATION->quotation_file_view([$uuid]);
+$items = $QUOTATION->quotation_item_view([$uuid]);
+$files = $QUOTATION->quotation_file_view([$uuid]);
 ?>
 <div class="card shadow">
   <h4 class="card-header text-center">Quotation</h4>
@@ -89,7 +85,13 @@ echo "</pre>";
       <div class="row mb-2 div-old-customer">
         <label class="col-xl-2 offset-xl-2 col-form-label">ที่อยู่ผู้รับ</label>
         <div class="col-xl-4">
-          <select class="form-control form-control-sm customer-select" name="customer_id"></select>
+          <select class="form-control form-control-sm customer-select" name="customer_id">
+            <?php  
+            if (!empty($row['customer_id'])) {
+              echo "<option value='{$row['customer_id']}' selected>{$row['customer_name']}</option>";
+            }
+            ?>
+          </select>
           <div class="invalid-feedback">
             กรุณากรอกข้อมูล!
           </div>
@@ -152,6 +154,37 @@ echo "</pre>";
                 <th width="15%">จำนวน</th>
                 <th width="15%">รวม</th>
               </tr>
+              <?php 
+              foreach ($items as $key => $item) : 
+                $key++; 
+                $discount = (strpos($item['discount'], '%') !== false 
+                  ? ($item['price'] * intval($item['discount'])) / 100 
+                  : $item['discount']
+                );
+                $total = (($item['price'] - $discount) * $item['amount']);
+              ?>
+              <tr>
+                <td class="text-center">
+                  <a href="javascript:void(0)" class="badge badge-danger font-weight-light item-delete" id="<?php echo $item['id'] ?>">ลบ</a>
+                  <input type="text" class="form-control form-control-sm text-center" name="item__id[]" value="<?php echo $item['id'] ?>" readonly>
+                </td>
+                <td class="text-left">
+                  <input type="text" class="form-control form-control-sm text-left item-product" name="item__product[]" value="<?php echo $item['product'] ?>" required>
+                </td>
+                <td class="text-left">
+                  <input type="text" class="form-control form-control-sm text-center item-price" name="item__price[]" value="<?php echo $item['price'] ?>" required>
+                </td>
+                <td class="text-left">
+                  <input type="text" class="form-control form-control-sm text-center item-discount" name="item__discount[]" value="<?php echo $item['discount'] ?>" required>
+                </td>
+                <td class="text-left">
+                  <input type="text" class="form-control form-control-sm text-center item-amount" name="item__amount[]" value="<?php echo $item['amount'] ?>" required>
+                </td>
+                <td class="text-right">
+                  <input type="text" class="form-control form-control-sm text-right item-total" value="<?php echo round($total,2) ?>" readonly>
+                </td>
+              </tr>
+            <?php endforeach; ?>
               <tr class="item-tr">
                 <td class="text-center">
                   <button type="button" class="btn btn-sm btn-success item-increase">+</button>
@@ -179,7 +212,7 @@ echo "</pre>";
                   </div>
                 </td>
                 <td>
-                  <input type="text" class="form-control form-control-sm text-center item-total" readonly>
+                  <input type="text" class="form-control form-control-sm text-right item-total" readonly>
                 </td>
               </tr>
               <tr>
@@ -203,6 +236,26 @@ echo "</pre>";
         <label class="col-xl-2 offset-xl-2 col-form-label">เอกสารแนบ</label>
         <div class="col-xl-6">
           <table class="table-sm">
+            <?php
+            foreach ($files as $file) :
+              if (!empty($file['name'])) :
+            ?>
+                <tr>
+                  <td>
+                    <a href="/src/Publics/quotation/<?php echo $file['name'] ?>" class="text-primary" target="_blank">
+                      <span class="badge badge-primary font-weight-light">ดาวน์โหลด!</span>
+                    </a>
+                  </td>
+                  <td>
+                    <a href="javascript:void(0)" class="file-delete" id="<?php echo $file['id'] ?>">
+                      <span class="badge badge-danger font-weight-light">ลบ!</span>
+                    </a>
+                  </td>
+                </tr>
+            <?php
+              endif;
+            endforeach;
+            ?>
             <tr class="file-tr">
               <td>
                 <a href="javascript:void(0)" class="btn btn-success btn-sm file-increase">+</a>

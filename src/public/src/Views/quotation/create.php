@@ -145,7 +145,7 @@ include_once(__DIR__ . "/../layout/header.php");
                   </div>
                 </td>
                 <td>
-                  <input type="text" class="form-control form-control-sm text-center item-total" readonly>
+                  <input type="text" class="form-control form-control-sm text-right item-total" readonly>
                 </td>
               </tr>
               <tr>
