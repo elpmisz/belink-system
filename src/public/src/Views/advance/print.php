@@ -82,7 +82,7 @@ ob_start();
     <tr>
       <td class="text-left no-border" width="10%"></td>
       <td class="text-center no-border" width="50%">
-        <h3>ใบเบิกเงินทดรองจ่าย (Advance Request)</h3>
+        <h2>ใบเบิกเงินทดรองจ่าย (Advance Request)</h2>
       </td>
       <td class="no-border" width="20%">วันที่เอกสาร</td>
       <td class="bottom-border" width="20%">

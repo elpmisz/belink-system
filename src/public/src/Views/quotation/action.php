@@ -78,7 +78,7 @@ if ($action === "create") {
           $file_document = ["pdf", "doc", "docx", "xls", "xlsx"];
           $file_allow = array_merge($file_image, $file_document);
           $file_extension = pathinfo(strtolower($file_name), PATHINFO_EXTENSION);
-  
+
           if (!empty($file_name) && in_array($file_extension, $file_allow)) {
             if (in_array($file_extension, $file_document)) {
               $file_rename = "{$file_random}.{$file_extension}";
@@ -90,7 +90,7 @@ if ($action === "create") {
               $file_path = (__DIR__ . "/../../Publics/quotation/{$file_rename}");
               $VALIDATION->image_upload($file_tmp, $file_path);
             }
-  
+
             $quotation_file_count = $QUOTATION->quotation_file_count([$request_id, $file_rename]);
             if (intval($quotation_file_count) === 0) {
               $QUOTATION->quotation_file_insert([$request_id, $file_rename]);
@@ -115,10 +115,11 @@ if ($action === "update") {
     $doc_date = (isset($_POST['doc_date']) ? $VALIDATION->input($_POST['doc_date']) : "");
     $doc_date = (!empty($doc_date) ? DateTime::createFromFormat('d/m/Y', $doc_date)->format('Y-m-d') : "");
     $biller = (isset($_POST['biller']) ? $VALIDATION->input($_POST['biller']) : "");
+    $customer_id = (isset($_POST['customer_id']) ? $VALIDATION->input($_POST['customer_id']) : "");
     $customer_name = (isset($_POST['customer_name']) ? $VALIDATION->input($_POST['customer_name']) : "");
     $customer_address = (isset($_POST['customer_address']) ? $VALIDATION->input($_POST['customer_address']) : "");
     $text = (isset($_POST['text']) ? $VALIDATION->input($_POST['text']) : "");
-    $QUOTATION->quotation_update([$doc_date, $objective, $uuid]);
+    $QUOTATION->quotation_update([$doc_date, $biller, $customer_id, $customer_name, $customer_address, $text, $uuid]);
 
     foreach ($_POST['item__id'] as $key => $row) {
       $item__id = (isset($_POST['item__id'][$key]) ? $VALIDATION->input($_POST['item__id'][$key]) : "");

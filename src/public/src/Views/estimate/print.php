@@ -69,6 +69,13 @@ ob_start();
     <tr>
       <td class="text-left no-border" width="10%"></td>
       <td class="text-center no-border" width="80%">
+        <h2>บริษัท บีลิงค์ มีเดีย จำกัด</h2>
+      </td>
+      <td class="text-right no-border" width="10%"></td>
+    </tr>
+    <tr>
+      <td class="text-left no-border" width="10%"></td>
+      <td class="text-center no-border" width="80%">
         <h2>Estimate Budget</h2>
       </td>
       <td class="text-right no-border" width="10%"></td>

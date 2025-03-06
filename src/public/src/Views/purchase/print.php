@@ -71,28 +71,28 @@ ob_start();
   <table>
     <tr>
       <td class="text-left no-border" width="10%"></td>
-      <td class="text-center no-border" width="60%">
+      <td class="text-center no-border" width="50%">
         <h2>บริษัท บีลิงค์ มีเดีย จำกัด</h2>
       </td>
-      <td class="no-border" width="10%">เลขที่เอกสาร</td>
+      <td class="no-border" width="20%">เลขที่เอกสาร</td>
       <td class="bottom-border" width="20%">
         <?php echo htmlspecialchars($row['ticket'], ENT_QUOTES, 'UTF-8'); ?>
       </td>
     </tr>
     <tr>
       <td class="text-left no-border" width="10%"></td>
-      <td class="text-center no-border" width="60%">
-        <h3>ใบขอซื้อ (Purchase Request)</h3>
+      <td class="text-center no-border" width="50%">
+        <h2>ใบขอซื้อ (Purchase Request)</h2>
       </td>
-      <td class="no-border" width="10%">วันที่</td>
+      <td class="no-border" width="20%">วันที่</td>
       <td class="bottom-border" width="20%">
         <?php echo htmlspecialchars($row['doc_date'], ENT_QUOTES, 'UTF-8'); ?>
       </td>
     </tr>
     <tr>
       <td class="text-left no-border" width="10%"></td>
-      <td class="text-center no-border" width="60%"></td>
-      <td class="no-border" width="10%">เลขที่ PO</td>
+      <td class="text-center no-border" width="50%"></td>
+      <td class="no-border" width="20%">เลขที่ PO</td>
       <td class="bottom-border" width="20%"></td>
     </tr>
   </table>

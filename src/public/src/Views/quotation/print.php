@@ -1,19 +1,19 @@
 <?php
 $menu = "Service";
-$page = "ServicePetty";
+$page = "ServiceQuotation";
 
-use App\Classes\Petty;
-use App\Classes\Validation;
+use App\Classes\Quotation;
 
-$PETTY = new Petty();
-$VALIDATION = new Validation();
+$QUOTATION = new Quotation();
 
 $param = (isset($params) ? explode("/", $params) : "");
 $uuid = (!empty($param[0]) ? $param[0] : "");
 
-$row = $PETTY->petty_view([$uuid]);
-$total = $PETTY->petty_item_total([$uuid]);
-
+$row = $QUOTATION->quotation_view([$uuid]);
+$items = $QUOTATION->quotation_item_view([$uuid]);
+$total = $QUOTATION->quotation_item_total([$uuid]);
+$vat = ($total * 0.07);
+$summary = ($total + $vat);
 ob_start();
 ?>
 <!DOCTYPE html>
@@ -21,7 +21,7 @@ ob_start();
 
 <head>
   <meta charset="utf-8">
-  <title>ใบเบิกเงินสดย่อย (PETTY CASH)</title>
+  <title>Estimate Budget</title>
   <style>
     table {
       width: 100%;
@@ -71,61 +71,90 @@ ob_start();
   <table>
     <tr>
       <td class="text-left no-border" width="10%"></td>
-      <td class="text-center no-border" width="50%">
+      <td class="text-center no-border" width="80%">
         <h2>บริษัท บีลิงค์ มีเดีย จำกัด</h2>
       </td>
-      <td class="no-border" width="20%">เลขที่เอกสาร</td>
-      <td class="bottom-border" width="20%">
-        <?php echo htmlspecialchars($row['ticket'], ENT_QUOTES, 'UTF-8'); ?>
-      </td>
+      <td class="text-right no-border" width="10%"></td>
     </tr>
     <tr>
       <td class="text-left no-border" width="10%"></td>
-      <td class="text-center no-border" width="50%">
-        <h3>ใบเบิกเงินสดย่อย (PETTY CASH)</h3>
+      <td class="text-center no-border" width="80%">
+        <h2>ใบเสนอราคา (Quotation)</h2>
       </td>
-      <td class="no-border" width="20%">วันที่เอกสาร</td>
-      <td class="bottom-border" width="20%">
-        <?php echo htmlspecialchars($row['doc_date'], ENT_QUOTES, 'UTF-8'); ?>
-      </td>
+      <td class="text-right no-border" width="10%"></td>
     </tr>
   </table>
 
   <table>
     <tr>
-      <td class="no-border" width="20%">ผู้เบิกเงิน</td>
-      <td class="bottom-border" width="30%">
-        <?php echo htmlspecialchars($row['username'], ENT_QUOTES, 'UTF-8'); ?>
+      <td class="no-border" width="40%">
+        <h4>ที่อยู่สำหรับติดต่อ</h4>
       </td>
-      <td class="no-border" width="20%"></td>
-      <td class="no-border" width="30%"></td>
+      <td class="no-border" width="10%"></td>
+      <td class="no-border" width="40%">
+        <h4>ที่อยู่ผู้รับ</h4>
+      </td>
+      <td class="no-border" width="10%"></td>
     </tr>
     <tr>
-      <td class="no-border" width="20%">วัตถุประสงค์</td>
-      <td class="bottom-border" width="30%">
-        <?php echo str_replace("\n", "<br>", $row['objective']) ?>
+      <td class="no-border" width="40%">
+        <h4><?php echo $row['biller_text'] ?></h4>
       </td>
-      <td class="no-border" width="20%"></td>
-      <td class="no-border" width="30%"></td>
+      <td class="no-border" width="10%"></td>
+      <td class="no-border" width="40%">
+        <h4><?php echo $row['customer_text'] ?></h4>
+      </td>
+      <td class="no-border" width="10%"></td>
+    </tr>
+    <tr>
+      <td class="no-border" width="40%">
+        <?php echo $row['biller_address'] ?>
+      </td>
+      <td class="no-border" width="10%"></td>
+      <td class="no-border" width="40%">
+        <?php echo $row['customer_address'] ?>
+      </td>
+      <td class="no-border" width="10%"></td>
     </tr>
   </table>
 
-  <!-- Items Section -->
+  <table>
+    <tr>
+      <td class="no-border" width="10%">วันที่เอกสาร</td>
+      <td class="no-border" width="90%"><?php echo $row['doc_date'] ?></td>
+    </tr>
+    <tr>
+      <td class="no-border" width="10%">เลขที่เอกสาร</td>
+      <td class="no-border" width="90%"><?php echo $row['ticket'] ?></td>
+    </tr>
+  </table>
+
   <table style="margin-top: 10px;">
     <tr>
       <th width="10%">#</th>
-      <th colspan="2" width="70%">รายละเอียด</th>
-      <th width="20%">จำนวนเงิน</th>
+      <th width="30%">รายการสินค้า</th>
+      <th width="15%">ราคา</th>
+      <th width="15%">ส่วนลด</th>
+      <th width="15%">จำนวน</th>
+      <th width="15%">รวม</th>
     </tr>
     <?php
-    $items = $PETTY->petty_item_view([$uuid]);
+    $items = $QUOTATION->quotation_item_view([$uuid]);
     foreach ($items as $key => $item) :
       $key++;
+      $discount = (strpos($item['discount'], '%') !== false
+        ? ($item['price'] * intval($item['discount'])) / 100
+        : $item['discount']
+      );
+      $sum = (($item['price'] - $discount) * $item['amount']);
     ?>
       <tr>
         <td class="text-center"><?php echo $key ?></td>
-        <td colspan="2" class="text-left"><?php echo $item['text'] ?></td>
-        <td class="text-right"><?php echo number_format($item['amount'], 2) ?></td>
+        <td class="text-right"><?php echo $item['product'] ?></td>
+        <td class="text-right"><?php echo number_format($item['price'], 2) ?></td>
+        <td class="text-right"><?php echo $item['discount'] ?></td>
+        <td class="text-right"><?php echo $item['amount'] ?></td>
+        <td class="text-right"><?php echo number_format($sum, 2) ?></td>
       </tr>
     <?php
     endforeach;
@@ -133,25 +162,26 @@ ob_start();
     ?>
       <tr>
         <td class="text-center"><?php echo $i ?></td>
-        <td colspan="2"></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
         <td></td>
       </tr>
     <?php endfor; ?>
     <tr>
-      <td colspan="2" class="text-center"><?php echo $VALIDATION->bathformat($total['total']) ?></td>
-      <td class="text-right">รวมทั้งสิ้น</td>
-      <td class="text-right"><?php echo number_format($total['total'], 2) ?></td>
+      <td class="text-right" colspan="5">ยอดรวม</td>
+      <td class="text-right"><?php echo number_format($total, 2) ?></td>
     </tr>
-  </table>
-
-  <!-- Footer Section -->
-  <table style="margin-top: 10px;">
     <tr>
-      <td rowspan="2" class="text-center" width="20%"><br><br>____________<br>ผู้ขอเบิก<br><br>วันที่____________</td>
-      <td rowspan="2" class="text-center" width="20%"><br><br>____________<br>ผู้อนุมัติ<br><br>วันที่____________</td>
+      <td class="text-right" colspan="5">Vat 7%</td>
+      <td class="text-right"><?php echo number_format($vat, 2) ?></td>
+    </tr>
+    <tr>
+      <td class="text-right" colspan="5">ยอดรวมทั้งหมด</td>
+      <td class="text-right"><?php echo number_format($summary, 2) ?></td>
     </tr>
   </table>
-
 
 </body>
 
@@ -163,4 +193,4 @@ ob_end_clean();
 $mpdf = new \Mpdf\Mpdf(['mode' => 'utf-8', 'default_font' => 'garuda']);
 $mpdf->WriteHTML($html);
 $date = date('Ymd');
-$mpdf->Output("{$date}_petty_cash.pdf", 'I');
+$mpdf->Output("{$date}_quotation.pdf", 'I');

@@ -53,6 +53,21 @@ class Quotation
     return $stmt->execute($data);
   }
 
+  public function quotation_update($data)
+  {
+    $sql = "UPDATE belink.quotation_request SET
+    doc_date = ?,
+    biller_id = ?,
+    customer_id = ?,
+    customer_name = ?,
+    customer_address = ?,
+    `text` = ?,
+    updated = NOW()
+    WHERE uuid = ?";
+    $stmt = $this->dbcon->prepare($sql);
+    return $stmt->execute($data);
+  }
+
   public function quotation_view($data)
   {
     $sql = "SELECT a.id,
@@ -61,11 +76,13 @@ class Quotation
     CONCAT(b.firstname,' ',b.lastname) username,
     a.biller_id,
     CONCAT('[',c.`code`,'] ',c.`name`) biller_name,
+    c.`name` biller_text,
     c.contact biller_address,
     a.customer_type,
     IF(a.customer_type = 1,'ลูกค้าเก่า','ลูกค้าใหม่') customer_type_name,
     a.customer_id,
     IF(a.customer_type = 1,CONCAT('[',d.`code`,'] ',d.`name`),a.customer_name) customer_name,
+    IF(a.customer_type = 1,d.`name`,a.customer_name) customer_text,
     IF(a.customer_type = 1,d.contact,a.customer_address) customer_address,
     a.text,
     DATE_FORMAT(a.doc_date,'%d/%m/%Y') doc_date,
@@ -106,6 +123,19 @@ class Quotation
     return $stmt->execute($data);
   }
 
+  public function quotation_item_update($data)
+  {
+    $sql = "UPDATE belink.quotation_item SET
+    product = ?,
+    price = ?,
+    discount = ?,
+    amount = ?,
+    updated = NOW()
+    WHERE id = ?";
+    $stmt = $this->dbcon->prepare($sql);
+    return $stmt->execute($data);
+  }
+
   public function quotation_item_view($data)
   {
     $sql = "SELECT b.id,b.product,b.price,b.discount,b.amount
@@ -117,6 +147,37 @@ class Quotation
     $stmt = $this->dbcon->prepare($sql);
     $stmt->execute($data);
     return $stmt->fetchAll();
+  }
+
+  public function quotation_item_total($data)
+  {
+    $sql = "SELECT 
+    SUM((b.price -
+    (
+    CASE
+      WHEN b.discount LIKE '%%' THEN (b.price * CAST(SUBSTRING(b.discount, 1, LENGTH(b.discount)-1) AS DECIMAL(10,2))) / 100
+      ELSE b.discount
+    END
+    )) * b.amount) total
+    FROM belink.quotation_request a
+    LEFT JOIN belink.quotation_item b
+    ON a.id = b.request_id
+    WHERE a.`uuid` = ?
+    AND b.`status` = 1";
+    $stmt = $this->dbcon->prepare($sql);
+    $stmt->execute($data);
+    $row = $stmt->fetch();
+    return (isset($row['total']) ? $row['total'] : 0);
+  }
+
+  public function quotation_item_delete($data)
+  {
+    $sql = "UPDATE belink.quotation_item SET
+    status = 0,
+    updated = NOW()
+    WHERE id = ?";
+    $stmt = $this->dbcon->prepare($sql);
+    return $stmt->execute($data);
   }
 
   public function quotation_file_count($data)
@@ -152,6 +213,16 @@ class Quotation
     $stmt = $this->dbcon->prepare($sql);
     $stmt->execute($data);
     return $stmt->fetchAll();
+  }
+
+  public function quotation_file_delete($data)
+  {
+    $sql = "UPDATE belink.quotation_file SET
+    status = 0,
+    updated = NOW()
+    WHERE id = ?";
+    $stmt = $this->dbcon->prepare($sql);
+    return $stmt->execute($data);
   }
 
   public function biller_view($data)
