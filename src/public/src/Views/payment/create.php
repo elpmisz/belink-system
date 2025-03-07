@@ -353,7 +353,7 @@ include_once(__DIR__ . "/../layout/header.php");
                 <div class="invalid-feedback">กรุณากรอกข้อมูล!</div>
               </td>
               <td>
-                <input type="number" class="form-control form-control-sm text-right amount-item" min="1" max="${item.estimate}" step="0.01" name="item_amount[]" required><div class="invalid-feedback">กรุณากรอกข้อมูล!</div>
+                <input type="number" class="form-control form-control-sm text-right amount-item" min="1" max="${item.remain}" step="0.01" name="item_amount[]" required><div class="invalid-feedback">กรุณากรอกข้อมูล!</div>
               </td>
               <td>
                 <input type="number" class="form-control form-control-sm text-right vat-item" min="1" step="0.01" name="item_vat[]">

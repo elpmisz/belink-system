@@ -156,31 +156,31 @@ class Estimate
     (a.estimate - b.usage) remain
     FROM 
     (
-    SELECT b.id,
-    a.`uuid`,
-    a.order_number,
-    b.expense_id,
-    c.`name` expense_name,
-    b.estimate,
-    c.`reference`,
-    c.`code`
-    FROM belink.estimate_request a
-    LEFT JOIN belink.estimate_item b
-    ON a.id = b.request_id
-    LEFT JOIN belink.expense c
-    ON b.expense_id = c.id
-    WHERE a.`status` IN (1,2,3,4)
-    AND b.`status` = 1
+      SELECT b.id,
+      a.`uuid`,
+      a.order_number,
+      b.expense_id,
+      c.`name` expense_name,
+      b.estimate,
+      c.`reference`,
+      c.`code`
+      FROM belink.estimate_request a
+      LEFT JOIN belink.estimate_item b
+      ON a.id = b.request_id
+      LEFT JOIN belink.expense c
+      ON b.expense_id = c.id
+      WHERE a.`status` IN (1,2,3,4)
+      AND b.`status` = 1
     ) a
     LEFT JOIN 
     (
-    SELECT a.order_number,b.expense_id,(SUM(b.amount) + SUM(b.vat) + SUM(b.wt)) `usage`
-    FROM belink.payment_request a
-    LEFT JOIN belink.payment_item b
-    ON a.id = b.request_id
-    WHERE a.`status` IN (1,2,3)
-    AND b.`status` = 1
-    GROUP BY a.order_number,b.expense_id
+      SELECT a.order_number,b.expense_id,(SUM(b.amount) + SUM(b.vat) + SUM(b.wt)) `usage`
+      FROM belink.payment_request a
+      LEFT JOIN belink.payment_item b
+      ON a.id = b.request_id
+      WHERE a.`status` IN (1,2,3,4)
+      AND b.`status` = 1
+      GROUP BY a.order_number,b.expense_id
     ) b
     ON a.order_number = b.order_number 
     AND a.expense_id = b.expense_id
@@ -351,24 +351,26 @@ class Estimate
     CONCAT(b.firstname,' ',b.lastname) username,
     c.total,
     a.`status`,
-      (
+    (
       CASE
-        WHEN a.`status` = 1 AND a.action = 1 THEN 'รอฝ่ายบัญชีดำเนินการ'
+        WHEN a.`status` = 1 AND a.action = 1 THEN 'รอตรวจรับมอบงาน'
         WHEN a.`status` = 1 AND a.action = 2 THEN 'รอผู้ขอใช้บริการแก้ไข'
-        WHEN a.`status` = 2 THEN 'รอผู้อนุมัติดำเนินการ'
-        WHEN a.`status` = 3 THEN 'ดำเนินการเรียบร้อย'
-        WHEN a.`status` = 4 THEN 'รายการถูกยกเลิก'
+        WHEN a.`status` = 2 THEN 'รอฝ่ายบัญชีดำเนินการ'
+        WHEN a.`status` = 3 THEN 'รอผู้อนุมัติดำเนินการ'
+        WHEN a.`status` = 4 THEN 'ดำเนินการเรียบร้อย'
+        WHEN a.`status` = 5 THEN 'รายการถูกยกเลิก'
       END
-      ) status_name,
-      (
+    ) status_name,
+    (
       CASE
         WHEN a.`status` = 1 AND a.action = 1 THEN 'primary'
         WHEN a.`status` = 1 AND a.action = 2 THEN 'danger'
         WHEN a.`status` = 2 THEN 'info'
-        WHEN a.`status` = 3 THEN 'success'
-        WHEN a.`status` = 4 THEN 'danger'
+        WHEN a.`status` = 3 THEN 'primary'
+        WHEN a.`status` = 4 THEN 'success'
+        WHEN a.`status` = 5 THEN 'danger'
       END
-      ) status_color,
+    ) status_color,
       DATE_FORMAT(a.created,'%d/%m/%Y, %H:%i น.') created
     FROM belink.payment_request a
     LEFT JOIN belink.`user` b
@@ -381,7 +383,7 @@ class Estimate
       GROUP BY request_id
     ) c
     ON a.id = c.request_id
-    WHERE a.status IN (1,2,3)
+    WHERE a.status IN (1,2,3,4)
     AND a.order_number = ?
     ORDER BY a.id DESC";
     $stmt = $this->dbcon->prepare($sql);
