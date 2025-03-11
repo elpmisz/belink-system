@@ -60,7 +60,7 @@ class User
   public function user_insert($data)
   {
 
-    $sql = "INSERT INTO belink.user( `login`, `firstname`, `lastname`, `manager_id`, `contact`) VALUES(?,?,?,?,?)";
+    $sql = "INSERT INTO belink.user(`login`, `firstname`, `lastname`, `department_id`, `manager_id`, `manager_id2`, `contact`) VALUES(?,?,?,?,?,?,?)";
     $stmt = $this->dbcon->prepare($sql);
     return $stmt->execute($data);
   }
@@ -78,8 +78,11 @@ class User
     CONCAT(b.firstname,' ',b.lastname) fullname,
     b.contact,
     b.manager_id,
-    CONCAT(c.firstname,' ',c.lastname) manager_name ,
-    d.service
+    CONCAT(c.firstname,' ',c.lastname) manager_name,
+    b.manager_id2,
+    CONCAT(e.firstname,' ',e.lastname) manager_name2,
+    d.service,
+    b.department_id,f.name department_name
     FROM belink.login a
     LEFT JOIN belink.user b
     on a.id = b.login
@@ -87,6 +90,10 @@ class User
     on b.manager_id = c.login 
     LEFT JOIN belink.service_authorize d
     ON a.id = d.login_id
+    LEFT JOIN belink.user e
+    ON b.manager_id2 = e.login
+    LEFT JOIN belink.department f
+    ON b.department_id = f.id
     WHERE (a.uuid = ? OR a.email = ?)";
     $stmt = $this->dbcon->prepare($sql);
     $stmt->execute($data);
@@ -144,7 +151,9 @@ class User
     a.updated = NOW(),
     b.firstname = ?,
     b.lastname = ?,
+    b.department_id = ?,
     b.manager_id = ?,
+    b.manager_id2 = ?,
     b.contact = ?
     WHERE a.uuid = ?";
     $stmt = $this->dbcon->prepare($sql);
@@ -177,6 +186,20 @@ class User
       $sql .= " and (b.firstname like '%{$keyword}%' OR b.lastname like '%{$keyword}%' OR a.email like '%{$keyword}%') ";
     }
     $sql .= " order by b.firstname asc ";
+    $stmt = $this->dbcon->prepare($sql);
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+  }
+
+  public function department_select($keyword)
+  {
+    $sql = "select a.id, a.name `text`
+    from belink.department a
+    where a.status = 1";
+    if (!empty($keyword)) {
+      $sql .= " and (a.name like '%{$keyword}%') ";
+    }
+    $sql .= " order by a.name asc ";
     $stmt = $this->dbcon->prepare($sql);
     $stmt->execute();
     return $stmt->fetchAll(PDO::FETCH_ASSOC);

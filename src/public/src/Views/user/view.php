@@ -65,6 +65,21 @@ $row = $USER->user_view([$uuid, $uuid]);
             </div>
           </div>
           <div class="row mb-2">
+            <label class="col-xl-2 offset-xl-2 col-form-label">ฝ่าย / แผนก</label>
+            <div class="col-xl-4">
+              <select class="form-control form-control-sm department-select" name="department_id" required>
+                <?php
+                if (!empty($row['department_id'])) {
+                  echo "<option value='{$row['department_id']}' selected>{$row['department_name']}</option>";
+                }
+                ?>
+              </select>
+              <div class="invalid-feedback">
+                กรุณา กรอกข้อมูล!
+              </div>
+            </div>
+          </div>
+          <div class="row mb-2">
             <label class="col-xl-2 offset-xl-2 col-form-label">ติดต่อ</label>
             <div class="col-xl-4">
               <textarea class="form-control form-control-sm" name="contact" rows="4"><?php echo $row['contact'] ?></textarea>
@@ -79,7 +94,22 @@ $row = $USER->user_view([$uuid, $uuid]);
               <select class="form-control form-control-sm user-select" name="manager_id" required>
                 <?php
                 if (!empty($row['manager_id'])) {
-                  echo "<option value='{$row['manager_id']}'>{$row['manager_name']}</option>";
+                  echo "<option value='{$row['manager_id']}' selected>{$row['manager_name']}</option>";
+                }
+                ?>
+              </select>
+              <div class="invalid-feedback">
+                กรุณา กรอกข้อมูล!
+              </div>
+            </div>
+          </div>
+          <div class="row mb-2">
+            <label class="col-xl-2 offset-xl-2 col-form-label">ผู้จัดการ / ผู้อนุมัติ 2</label>
+            <div class="col-xl-4">
+              <select class="form-control form-control-sm user-select" name="manager_id2" required>
+                <?php
+                if (!empty($row['manager_id2'])) {
+                  echo "<option value='{$row['manager_id2']}' selected>{$row['manager_name2']}</option>";
                 }
                 ?>
               </select>
@@ -149,21 +179,6 @@ $row = $USER->user_view([$uuid, $uuid]);
 
 <?php include_once(__DIR__ . "/../layout/footer.php"); ?>
 <script>
-  $(".user-select").select2({
-    placeholder: "-- เลือก --",
-    allowClear: true,
-    width: "100%",
-    ajax: {
-      url: "/user/user-select",
-      method: "POST",
-      dataType: "json",
-      delay: 100,
-      processResults: function(data) {
-        return {
-          results: data
-        };
-      },
-      cache: true
-    }
-  });
+  initializeSelect2(".department-select", "/user/department-select", "-- เลือก --");
+  initializeSelect2(".user-select", "/user/user-select", "-- เลือก --");
 </script>

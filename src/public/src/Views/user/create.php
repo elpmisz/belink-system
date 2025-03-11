@@ -50,6 +50,15 @@ include_once(__DIR__ . "/../layout/header.php");
             </div>
           </div>
           <div class="row mb-2">
+            <label class="col-xl-2 offset-xl-2 col-form-label">ฝ่าย / แผนก</label>
+            <div class="col-xl-4">
+              <select class="form-control form-control-sm department-select" name="department_id" required></select>
+              <div class="invalid-feedback">
+                กรุณา กรอกข้อมูล!
+              </div>
+            </div>
+          </div>
+          <div class="row mb-2">
             <label class="col-xl-2 offset-xl-2 col-form-label">ติดต่อ</label>
             <div class="col-xl-4">
               <textarea class="form-control form-control-sm" name="contact" rows="4"></textarea>
@@ -62,6 +71,15 @@ include_once(__DIR__ . "/../layout/header.php");
             <label class="col-xl-2 offset-xl-2 col-form-label">ผู้จัดการ / ผู้อนุมัติ</label>
             <div class="col-xl-4">
               <select class="form-control form-control-sm user-select" name="manager_id" required></select>
+              <div class="invalid-feedback">
+                กรุณา กรอกข้อมูล!
+              </div>
+            </div>
+          </div>
+          <div class="row mb-2">
+            <label class="col-xl-2 offset-xl-2 col-form-label">ผู้จัดการ / ผู้อนุมัติ 2</label>
+            <div class="col-xl-4">
+              <select class="form-control form-control-sm user-select" name="manager_id2" required></select>
               <div class="invalid-feedback">
                 กรุณา กรอกข้อมูล!
               </div>
@@ -90,21 +108,6 @@ include_once(__DIR__ . "/../layout/header.php");
 
 <?php include_once(__DIR__ . "/../layout/footer.php"); ?>
 <script>
-  $(".user-select").select2({
-    placeholder: "-- เลือก --",
-    allowClear: true,
-    width: "100%",
-    ajax: {
-      url: "/user/user-select",
-      method: "POST",
-      dataType: "json",
-      delay: 100,
-      processResults: function(data) {
-        return {
-          results: data
-        };
-      },
-      cache: true
-    }
-  });
+  initializeSelect2(".department-select", "/user/department-select", "-- เลือก --");
+  initializeSelect2(".user-select", "/user/user-select", "-- เลือก --");
 </script>

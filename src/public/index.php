@@ -516,6 +516,20 @@ $ROUTER->map("POST", "/expense/[**:params]", function ($params) {
   require(__DIR__ . "/src/Views/expense/action.php");
 });
 
+##################### DEPARTMENT #####################
+$ROUTER->map("GET", "/department", function () {
+  require(__DIR__ . "/src/Views/department/index.php");
+});
+$ROUTER->map("GET", "/department/create", function () {
+  require(__DIR__ . "/src/Views/department/create.php");
+});
+$ROUTER->map("GET", "/department/view/[**:params]", function ($params) {
+  require(__DIR__ . "/src/Views/department/view.php");
+});
+$ROUTER->map("POST", "/department/[**:params]", function ($params) {
+  require(__DIR__ . "/src/Views/department/action.php");
+});
+
 ##################### USER #####################
 $ROUTER->map("GET", "/user", function () {
   require(__DIR__ . "/src/Views/user/index.php");
