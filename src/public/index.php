@@ -177,14 +177,14 @@ $ROUTER->map("GET", "/estimate/manage", function () {
 $ROUTER->map("GET", "/estimate/view/[**:params]", function ($params) {
   require(__DIR__ . "/src/Views/estimate/view.php");
 });
-$ROUTER->map("GET", "/estimate/approve-sale/[**:params]", function ($params) {
-  require(__DIR__ . "/src/Views/estimate/approve-sale.php");
+$ROUTER->map("GET", "/estimate/event/[**:params]", function ($params) {
+  require(__DIR__ . "/src/Views/estimate/event.php");
 });
-$ROUTER->map("GET", "/estimate/approve-budget/[**:params]", function ($params) {
-  require(__DIR__ . "/src/Views/estimate/approve-budget.php");
+$ROUTER->map("GET", "/estimate/budget/[**:params]", function ($params) {
+  require(__DIR__ . "/src/Views/estimate/budget.php");
 });
-$ROUTER->map("GET", "/estimate/approve-finance/[**:params]", function ($params) {
-  require(__DIR__ . "/src/Views/estimate/approve-finance.php");
+$ROUTER->map("GET", "/estimate/approve/[**:params]", function ($params) {
+  require(__DIR__ . "/src/Views/estimate/approve.php");
 });
 $ROUTER->map("GET", "/estimate/complete/[**:params]", function ($params) {
   require(__DIR__ . "/src/Views/estimate/complete.php");

@@ -14,6 +14,8 @@ $row = $ESTIMATE->estimate_view([$uuid]);
 $files = $ESTIMATE->estimate_file_view([$uuid]);
 $remarks = $ESTIMATE->estimate_remark_view([$uuid]);
 $reference = $ESTIMATE->estimate_item_reference([$uuid]);
+$profit = ($row['budget'] - $row['cost']);
+$gp = (($profit * 100) / $row['budget']);
 ?>
 
 <div class="card shadow">
@@ -93,8 +95,20 @@ $reference = $ESTIMATE->estimate_item_reference([$uuid]);
       </div>
       <div class="row mb-2">
         <label class="col-xl-2 offset-xl-2 col-form-label">งบประมาณ</label>
-        <div class="col-xl-4 text-underline">
+        <div class="col-xl-4 text-underline text-primary">
           <?php echo number_format($row['budget'], 2) ?>
+        </div>
+      </div>
+      <div class="row mb-2">
+        <label class="col-xl-2 offset-xl-2 col-form-label">รายจ่าย</label>
+        <div class="col-xl-4 text-underline text-danger">
+          <?php echo number_format($row['cost'], 2) ?>
+        </div>
+      </div>
+      <div class="row mb-2">
+        <label class="col-xl-2 offset-xl-2 col-form-label">GP</label>
+        <div class="col-xl-4 text-underline text-success">
+          <?php echo number_format($profit, 2) . ' (' . $gp . '% )' ?>
         </div>
       </div>
       <div class="row mb-2">
@@ -217,7 +231,7 @@ $reference = $ESTIMATE->estimate_item_reference([$uuid]);
         <div class="col-xl-8">
           <div class="form-group pl-3 pt-2">
             <label class="form-check-label px-3">
-              <input class="form-check-input" type="radio" name="status" value="3" required>
+              <input class="form-check-input" type="radio" name="status" value="4" required>
               <span class="text-success">ผ่านอนุมัติ</span>
             </label>
             <label class="form-check-label px-3">

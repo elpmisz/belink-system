@@ -3,8 +3,8 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: database
--- Generation Time: Mar 11, 2025 at 01:16 PM
--- Server version: 11.6.2-MariaDB-ubu2404
+-- Generation Time: Mar 12, 2025 at 09:52 AM
+-- Server version: 11.7.2-MariaDB-ubu2404
 -- PHP Version: 8.2.27
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -931,7 +931,7 @@ CREATE TABLE `estimate_file` (
 --
 
 INSERT INTO `estimate_file` (`id`, `request_id`, `name`, `status`, `updated`, `created`) VALUES
-(1, 1, '6676cd510687ae07cb6a569ce0516f35.pdf', 1, NULL, '2025-02-02 20:30:37');
+(1, 1, 'b5692f0420711298cfb22332cd4f736d.pdf', 1, NULL, '2025-03-12 11:53:58');
 
 -- --------------------------------------------------------
 
@@ -954,10 +954,12 @@ CREATE TABLE `estimate_item` (
 --
 
 INSERT INTO `estimate_item` (`id`, `request_id`, `expense_id`, `estimate`, `status`, `updated`, `created`) VALUES
-(1, 1, 3, 200000.00, 1, '2025-02-02 20:31:03', '2025-02-02 20:30:37'),
-(2, 1, 5, 150000.00, 1, '2025-02-02 20:31:03', '2025-02-02 20:30:37'),
-(3, 1, 8, 50000.00, 1, '2025-02-02 20:31:03', '2025-02-02 20:30:37'),
-(4, 1, 13, 100000.00, 1, '2025-02-02 20:31:03', '2025-02-02 20:30:37');
+(1, 1, 3, 20000.00, 1, NULL, '2025-03-12 13:46:15'),
+(2, 1, 5, 30000.00, 1, NULL, '2025-03-12 13:46:15'),
+(3, 1, 6, 10000.00, 1, NULL, '2025-03-12 13:46:15'),
+(4, 1, 8, 30000.00, 1, NULL, '2025-03-12 13:46:15'),
+(5, 1, 13, 10000.00, 1, NULL, '2025-03-12 13:46:15'),
+(6, 1, 16, 7000.00, 1, NULL, '2025-03-12 13:46:15');
 
 -- --------------------------------------------------------
 
@@ -979,9 +981,9 @@ CREATE TABLE `estimate_remark` (
 --
 
 INSERT INTO `estimate_remark` (`id`, `request_id`, `login_id`, `text`, `status`, `created`) VALUES
-(1, 1, 1, '', 2, '2025-02-02 20:31:19'),
-(2, 1, 1, '', 3, '2025-02-02 20:31:24'),
-(3, 1, 1, '', 4, '2025-02-02 20:31:28');
+(1, 1, 1, '', 2, '2025-03-12 13:46:44'),
+(2, 1, 1, '', 3, '2025-03-12 16:43:23'),
+(3, 1, 1, '', 4, '2025-03-12 16:50:39');
 
 -- --------------------------------------------------------
 
@@ -994,6 +996,7 @@ CREATE TABLE `estimate_request` (
   `uuid` varchar(36) NOT NULL,
   `last` int(11) NOT NULL,
   `login_id` int(11) NOT NULL,
+  `department_number` varchar(20) NOT NULL,
   `customer_id` int(11) NOT NULL,
   `doc_date` date NOT NULL,
   `order_number` varchar(20) NOT NULL,
@@ -1013,8 +1016,8 @@ CREATE TABLE `estimate_request` (
 -- Dumping data for table `estimate_request`
 --
 
-INSERT INTO `estimate_request` (`id`, `uuid`, `last`, `login_id`, `customer_id`, `doc_date`, `order_number`, `product_name`, `title_name`, `sales_name`, `budget`, `type`, `remark`, `action`, `status`, `updated`, `created`) VALUES
-(1, 'e6e5ddd2-e169-11ef-8d4c-0242ac120003', 1, 1, 1, '2025-02-02', 'SO07010001', 'Breeze', 'Unilever - Breeze Esan', 'Esan Caravan', 700000.00, 1, '', 1, 4, '2025-02-02 20:31:28', '2025-02-02 20:30:37');
+INSERT INTO `estimate_request` (`id`, `uuid`, `last`, `login_id`, `department_number`, `customer_id`, `doc_date`, `order_number`, `product_name`, `title_name`, `sales_name`, `budget`, `type`, `remark`, `action`, `status`, `updated`, `created`) VALUES
+(1, '029f7137-fefe-11ef-b067-0242ac120004', 1, 1, 'IT-680001', 1, '2025-03-12', 'SO-680001', 'test-product', 'test-title', 'test-name', 200000.00, 1, 'test-remark\r\ntest-remark\r\ntest-remark', 1, 4, '2025-03-12 16:50:39', '2025-03-12 11:53:58');
 
 -- --------------------------------------------------------
 
@@ -2725,7 +2728,7 @@ ALTER TABLE `estimate_file`
 -- AUTO_INCREMENT for table `estimate_item`
 --
 ALTER TABLE `estimate_item`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `estimate_remark`

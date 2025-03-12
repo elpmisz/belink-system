@@ -24,15 +24,16 @@ include_once(__DIR__ . "/../layout/header.php");
           <div class="col-sm-12">
             <div class="card shadow">
               <div class="card-header">
-                <h4 class="text-center">รายการรอฝ่ายการเงินดำเนินการ</h4>
+                <h4 class="text-center">รอผู้อนุมัติดำเนินการ</h4>
               </div>
               <div class="card-body">
                 <div class="table-responsive">
-                  <table class="table table-sm table-bordered table-hover finance-data">
+                  <table class="table table-sm table-bordered table-hover approve-data">
                     <thead>
                       <tr>
                         <th width="10%">#</th>
                         <th width="10%">เลขที่เอกสาร</th>
+                        <th width="10%">เลขที่เอกสารฝ่าย</th>
                         <th width="10%">เลขที่สัญญา</th>
                         <th width="20%">สินค้า</th>
                         <th width="30%">หัวข้อสินค้า</th>
@@ -60,6 +61,7 @@ include_once(__DIR__ . "/../layout/header.php");
                       <tr>
                         <th width="10%">#</th>
                         <th width="10%">เลขที่เอกสาร</th>
+                        <th width="10%">เลขที่เอกสารฝ่าย</th>
                         <th width="10%">เลขที่สัญญา</th>
                         <th width="20%">สินค้า</th>
                         <th width="30%">หัวข้อสินค้า</th>
@@ -78,15 +80,16 @@ include_once(__DIR__ . "/../layout/header.php");
           <div class="col-sm-12">
             <div class="card shadow">
               <div class="card-header">
-                <h4 class="text-center">รายการรอฝ่ายขายดำเนินการ</h4>
+                <h4 class="text-center">รายการรอฝ่าย Event ดำเนินการ</h4>
               </div>
               <div class="card-body">
                 <div class="table-responsive">
-                  <table class="table table-sm table-bordered table-hover sale-data">
+                  <table class="table table-sm table-bordered table-hover event-data">
                     <thead>
                       <tr>
                         <th width="10%">#</th>
                         <th width="10%">เลขที่เอกสาร</th>
+                        <th width="10%">เลขที่เอกสารฝ่าย</th>
                         <th width="10%">เลขที่สัญญา</th>
                         <th width="20%">สินค้า</th>
                         <th width="30%">หัวข้อสินค้า</th>
@@ -114,6 +117,7 @@ include_once(__DIR__ . "/../layout/header.php");
                       <tr>
                         <th width="10%">#</th>
                         <th width="10%">เลขที่เอกสาร</th>
+                        <th width="10%">เลขที่เอกสารฝ่าย</th>
                         <th width="10%">เลขที่สัญญา</th>
                         <th width="20%">สินค้า</th>
                         <th width="30%">หัวข้อสินค้า</th>
@@ -173,12 +177,12 @@ include_once(__DIR__ . "/../layout/header.php");
       },
     });
 
-    $(".sale-data").DataTable({
+    $(".event-data").DataTable({
       serverSide: true,
       searching: false,
       order: [],
       ajax: {
-        url: "/estimate/sale-data",
+        url: "/estimate/event-data",
         type: "POST",
       },
       columnDefs: [{
@@ -241,12 +245,12 @@ include_once(__DIR__ . "/../layout/header.php");
       },
     });
 
-    $(".finance-data").DataTable({
+    $(".approve-data").DataTable({
       serverSide: true,
       searching: false,
       order: [],
       ajax: {
-        url: "/estimate/finance-data",
+        url: "/estimate/approve-data",
         type: "POST",
       },
       columnDefs: [{

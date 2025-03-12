@@ -105,60 +105,6 @@ $payments = $ESTIMATE->payment_order([$row['order_number']]);
         </div>
       </div>
 
-      <?php
-      if (COUNT($reference) > 0) :
-        foreach ($reference as $ref) :
-      ?>
-          <div class="row justify-content-center mb-2">
-            <div class="col-sm-12">
-              <div class="h5"><?php echo $ref['reference_name'] ?></div>
-              <div class="table-responsive">
-                <table class="table table-bordered table-sm item-table">
-                  <thead>
-                    <tr>
-                      <th width="10%">#</th>
-                      <th width="40%">รายจ่าย</th>
-                      <th width="20%">งบประมาณ</th>
-                      <th width="10%">ยอดที่ใช้</th>
-                      <th width="10%">ยอดคงเหลือ</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <?php
-                    $items = $ESTIMATE->estimate_item_view([$uuid], $ref['reference']);
-                    $totalEstimate = 0;
-                    $totalUsage = 0;
-                    $totalRemain = 0;
-                    foreach ($items as $key => $item) :
-                      $key++;
-                      $totalEstimate += $item['estimate'];
-                      $totalUsage += $item['usage'];
-                      $totalRemain += $item['remain'];
-                    ?>
-                      <tr>
-                        <td class="text-center"><?php echo $key ?></td>
-                        <td class="text-left"><?php echo $item['expense_name'] ?></td>
-                        <td class="text-primary text-right"><?php echo number_format($item['estimate'], 2) ?></td>
-                        <td class="text-danger text-right"><?php echo number_format($item['usage'], 2) ?></td>
-                        <td class="text-success text-right"><?php echo number_format($item['remain'], 2) ?></td>
-                      </tr>
-                    <?php endforeach; ?>
-                    <tr>
-                      <td class="text-center h5" colspan="2">รวม</td>
-                      <td class="text-primary text-right h5"><?php echo number_format($totalEstimate, 2) ?></td>
-                      <td class="text-danger text-right h5"><?php echo number_format($totalUsage, 2) ?></td>
-                      <td class="text-success text-right h5"><?php echo number_format($totalRemain, 2) ?></td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-      <?php
-        endforeach;
-      endif;
-      ?>
-
       <div class="row mb-2">
         <label class="col-xl-2 offset-xl-2 col-form-label">เอกสารแนบ</label>
         <div class="col-xl-6">
@@ -265,11 +211,6 @@ $payments = $ESTIMATE->payment_order([$row['order_number']]);
       <?php endif; ?>
 
       <div class="row justify-content-center">
-        <div class="col-xl-3 mb-2">
-          <a class="btn btn-primary btn-sm btn-block" href="/estimate/print/<?php echo $row['uuid'] ?>" target="_blank">
-            <i class="fas fa-print pr-2"></i>พิมพ์
-          </a>
-        </div>
         <div class="col-xl-3 mb-2">
           <a class="btn btn-danger btn-sm btn-block" href="/estimate">
             <i class="fas fa-arrow-left pr-2"></i>หน้าหลัก

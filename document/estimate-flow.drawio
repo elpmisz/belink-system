@@ -1,0 +1,97 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36 Edg/134.0.0.0" version="26.1.0">
+  <diagram name="Page-1" id="xpWsUoMC6G3oUbRDl_Jd">
+    <mxGraphModel dx="1106" dy="567" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="fNnDw5SYeR6E-zPJxPh3-3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="fNnDw5SYeR6E-zPJxPh3-1" target="fNnDw5SYeR6E-zPJxPh3-2" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="fNnDw5SYeR6E-zPJxPh3-11" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="fNnDw5SYeR6E-zPJxPh3-1" target="fNnDw5SYeR6E-zPJxPh3-7" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="fNnDw5SYeR6E-zPJxPh3-1" value="พนักงานขาย" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="20" y="160" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="fNnDw5SYeR6E-zPJxPh3-5" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="fNnDw5SYeR6E-zPJxPh3-2" target="fNnDw5SYeR6E-zPJxPh3-4" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="fNnDw5SYeR6E-zPJxPh3-10" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="fNnDw5SYeR6E-zPJxPh3-2" target="fNnDw5SYeR6E-zPJxPh3-8" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="fNnDw5SYeR6E-zPJxPh3-2" value="พนักงานฝ่าย Event" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="185" y="160" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="fNnDw5SYeR6E-zPJxPh3-12" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="fNnDw5SYeR6E-zPJxPh3-4" target="fNnDw5SYeR6E-zPJxPh3-9" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="fNnDw5SYeR6E-zPJxPh3-15" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="fNnDw5SYeR6E-zPJxPh3-4" target="fNnDw5SYeR6E-zPJxPh3-14" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="fNnDw5SYeR6E-zPJxPh3-4" value="ฝ่ายงบประมาณ" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="385" y="160" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="fNnDw5SYeR6E-zPJxPh3-7" value="เพิ่มงบประมาณ" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="20" y="40" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="fNnDw5SYeR6E-zPJxPh3-8" value="เพิ่มรายการรายจ่าย" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="185" y="40" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="fNnDw5SYeR6E-zPJxPh3-9" value="แสดงงบประมาณ + รายการรายจ่าย" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="330" y="40" width="230" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="fNnDw5SYeR6E-zPJxPh3-20" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="fNnDw5SYeR6E-zPJxPh3-14" target="fNnDw5SYeR6E-zPJxPh3-19" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="fNnDw5SYeR6E-zPJxPh3-32" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="fNnDw5SYeR6E-zPJxPh3-14" target="fNnDw5SYeR6E-zPJxPh3-30" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="fNnDw5SYeR6E-zPJxPh3-14" value="" style="rhombus;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="385" y="270" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="fNnDw5SYeR6E-zPJxPh3-16" value="ผ่านอนุมัติ" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;labelBorderColor=default;textShadow=0;" parent="1" vertex="1">
+          <mxGeometry x="515" y="260" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="fNnDw5SYeR6E-zPJxPh3-17" value="ไม่ผ่านอนุมัติ" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;labelBorderColor=default;textShadow=0;" parent="1" vertex="1">
+          <mxGeometry x="330" y="350" width="110" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="fNnDw5SYeR6E-zPJxPh3-22" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="fNnDw5SYeR6E-zPJxPh3-19" target="fNnDw5SYeR6E-zPJxPh3-21" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="fNnDw5SYeR6E-zPJxPh3-36" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="fNnDw5SYeR6E-zPJxPh3-19" target="fNnDw5SYeR6E-zPJxPh3-34" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="fNnDw5SYeR6E-zPJxPh3-19" value="CFO" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="585" y="280" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="fNnDw5SYeR6E-zPJxPh3-24" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="fNnDw5SYeR6E-zPJxPh3-21" target="fNnDw5SYeR6E-zPJxPh3-23" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="fNnDw5SYeR6E-zPJxPh3-31" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="fNnDw5SYeR6E-zPJxPh3-21" target="fNnDw5SYeR6E-zPJxPh3-30" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="fNnDw5SYeR6E-zPJxPh3-21" value="" style="rhombus;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="585" y="380" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="fNnDw5SYeR6E-zPJxPh3-23" value="จบการดำเนินการ" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="585" y="500" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="fNnDw5SYeR6E-zPJxPh3-25" value="ผ่านอนุมัติ" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;labelBorderColor=default;textShadow=0;" parent="1" vertex="1">
+          <mxGeometry x="665" y="460" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="fNnDw5SYeR6E-zPJxPh3-27" value="ไม่ผ่านอนุมัติ" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;labelBorderColor=default;textShadow=0;" parent="1" vertex="1">
+          <mxGeometry x="495" y="380" width="110" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="fNnDw5SYeR6E-zPJxPh3-33" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" source="fNnDw5SYeR6E-zPJxPh3-30" target="fNnDw5SYeR6E-zPJxPh3-1" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="fNnDw5SYeR6E-zPJxPh3-30" value="" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="425" y="400" width="40" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="fNnDw5SYeR6E-zPJxPh3-34" value="แสดงงบประมาณ + รายการรายจ่าย + gp" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="530" y="120" width="230" height="60" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

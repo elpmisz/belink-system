@@ -20,7 +20,7 @@ $reference = $ESTIMATE->estimate_item_reference([$uuid]);
   <h4 class="card-header text-center">Estimate Budget</h4>
   <div class="card-body">
 
-    <form action="/estimate/approve" method="POST" class="needs-validation" novalidate>
+    <form action="/estimate/sale-update" method="POST" class="needs-validation" novalidate>
       <div style="display: none;">
         <div class="row mb-2">
           <label class="col-xl-2 offset-xl-2 col-form-label">ID</label>
@@ -51,6 +51,12 @@ $reference = $ESTIMATE->estimate_item_reference([$uuid]);
         <label class="col-xl-2 offset-xl-2 col-form-label">พนักงานขาย</label>
         <div class="col-xl-4 text-underline">
           <?php echo $row['username'] ?>
+        </div>
+      </div>
+      <div class="row mb-2">
+        <label class="col-xl-2 offset-xl-2 col-form-label">เลขที่เอกสารฝ่าย</label>
+        <div class="col-xl-4 text-underline">
+          <?php echo $row['department_number'] ?>
         </div>
       </div>
       <div class="row mb-2">
@@ -92,61 +98,11 @@ $reference = $ESTIMATE->estimate_item_reference([$uuid]);
         </div>
       </div>
       <div class="row mb-2">
-        <label class="col-xl-2 offset-xl-2 col-form-label">งบประมาณ</label>
-        <div class="col-xl-4 text-underline">
-          <?php echo number_format($row['budget'], 2) ?>
-        </div>
-      </div>
-      <div class="row mb-2">
         <label class="col-xl-2 offset-xl-2 col-form-label">ประเภท</label>
         <div class="col-xl-4 text-underline">
           <?php echo $row['type_name'] ?>
         </div>
       </div>
-
-      <?php
-      if (COUNT($reference) > 0) :
-        foreach ($reference as $ref) :
-      ?>
-          <div class="row justify-content-center mb-2">
-            <div class="col-sm-12">
-              <div class="h5"><?php echo $ref['reference_name'] ?></div>
-              <div class="table-responsive">
-                <table class="table table-bordered table-sm item-table">
-                  <thead>
-                    <tr>
-                      <th width="10%">#</th>
-                      <th width="40%">รายจ่าย</th>
-                      <th width="20%">งบประมาณ</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <?php
-                    $items = $ESTIMATE->estimate_item_view([$uuid], $ref['reference']);
-                    $total = 0;
-                    foreach ($items as $key => $item) :
-                      $key++;
-                      $total += $item['estimate'];
-                    ?>
-                      <tr>
-                        <td class="text-center"><?php echo $key ?></td>
-                        <td class="text-left"><?php echo $item['expense_name'] ?></td>
-                        <td class="text-right"><?php echo number_format($item['estimate'], 2) ?></td>
-                      </tr>
-                    <?php endforeach; ?>
-                    <tr>
-                      <td class="text-center h5" colspan="2">รวม</td>
-                      <td class="text-right h5"><?php echo number_format($total, 2) ?></td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-      <?php
-        endforeach;
-      endif;
-      ?>
 
       <div class="row mb-2">
         <label class="col-xl-2 offset-xl-2 col-form-label">เอกสารแนบ</label>
@@ -174,6 +130,48 @@ $reference = $ESTIMATE->estimate_item_reference([$uuid]);
         <label class="col-xl-2 offset-xl-2 col-form-label">หมายเหตุ</label>
         <div class="col-xl-4 text-underline">
           <?php echo str_replace("\n", "<br>", $row['remark']) ?>
+        </div>
+      </div>
+
+      <div class="row justify-content-center mb-2">
+        <div class="col-sm-12">
+          <div class="table-responsive">
+            <table class="table table-bordered table-sm item-table">
+              <thead>
+                <tr>
+                  <th width="10%">#</th>
+                  <th width="40%">รายจ่าย</th>
+                  <th width="20%">งบประมาณ</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="item-tr">
+                  <td class="text-center">
+                    <button type="button" class="btn btn-sm btn-success item-increase">+</button>
+                    <button type="button" class="btn btn-sm btn-danger item-decrease">-</button>
+                  </td>
+                  <td>
+                    <select class="form-control form-control-sm expense-select" name="item_expense[]" required></select>
+                    <div class="invalid-feedback">
+                      กรุณากรอกข้อมูล!
+                    </div>
+                  </td>
+                  <td>
+                    <input type="number" class="form-control form-control-sm text-right item-estimate" name="item_estimate[]" min="1" required>
+                    <div class="invalid-feedback">
+                      กรุณากรอกข้อมูล!
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="2" class="text-right">รวมทั้งสิ้น</td>
+                  <td class="text-right">
+                    <span class="item-total"></span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
 
@@ -212,41 +210,11 @@ $reference = $ESTIMATE->estimate_item_reference([$uuid]);
         </div>
       <?php endif; ?>
 
-      <div class="row mb-2">
-        <label class="col-xl-2 offset-xl-2 col-form-label">สถานะ</label>
-        <div class="col-xl-8">
-          <div class="form-group pl-3 pt-2">
-            <label class="form-check-label px-3">
-              <input class="form-check-input" type="radio" name="status" value="3" required>
-              <span class="text-success">ผ่านอนุมัติ</span>
-            </label>
-            <label class="form-check-label px-3">
-              <input class="form-check-input" type="radio" name="status" value="1" required>
-              <span class="text-danger">ไม่ผ่านอนุมัติ</span>
-            </label>
-          </div>
-        </div>
-      </div>
-      <div class="row mb-2">
-        <label class="col-xl-2 offset-xl-2 col-form-label">เหตุผล</label>
-        <div class="col-sm-6">
-          <textarea class="form-control" name="reason" rows="4"></textarea>
-          <div class="invalid-feedback">
-            กรุณา กรอกข้อมูล!
-          </div>
-        </div>
-      </div>
-
       <div class="row justify-content-center">
         <div class="col-xl-3 mb-2">
           <button type="submit" class="btn btn-success btn-sm btn-block">
             <i class="fas fa-check pr-2"></i>ยืนยัน
           </button>
-        </div>
-        <div class="col-xl-3 mb-2">
-          <a class="btn btn-primary btn-sm btn-block" href="/estimate/print/<?php echo $row['uuid'] ?>" target="_blank">
-            <i class="fas fa-print pr-2"></i>พิมพ์
-          </a>
         </div>
         <div class="col-xl-3 mb-2">
           <a class="btn btn-danger btn-sm btn-block" href="/estimate">
@@ -262,12 +230,42 @@ $reference = $ESTIMATE->estimate_item_reference([$uuid]);
 
 <?php include_once(__DIR__ . "/../layout/footer.php"); ?>
 <script>
-  $(document).on("click", "input[name='status']", function() {
-    let status = ($(this).val() ? parseInt($(this).val()) : "");
-    if (status === 1) {
-      $("textarea[name='reason']").prop("required", true);
-    } else {
-      $("textarea[name='reason']").prop("required", false);
-    }
+  initializeSelect2(".expense-select", "/estimate/expense-select", "-- รายชื่อรายจ่าย --");
+
+  $(".item-decrease").hide();
+  $(document).on("click", ".item-increase", function() {
+    $(".expense-select").select2('destroy');
+
+    let row = $(".item-tr:last");
+    let clone = row.clone();
+    clone.find("input, select").val("").empty();
+    clone.find("span").text("");
+    clone.find(".item-increase").hide();
+    clone.find(".item-decrease").show();
+
+    clone.find(".item-decrease").off("click").on("click", function() {
+      $(this).closest("tr").remove();
+    });
+
+    row.after(clone);
+    initializeSelect2(".expense-select", "/estimate/expense-select", "-- รายชื่อรายจ่าย --");
   });
+
+  updateTotal();
+
+  $(document).on("input", ".item-estimate", function() {
+    updateTotal();
+  });
+
+  function updateTotal() {
+    let totalEstimate = 0;
+
+    $(".item-estimate").each(function() {
+      const estimate = +($(this).val() || 0);
+
+      totalEstimate += estimate;
+    });
+
+    $(".item-total").text(totalEstimate.toFixed(2));
+  }
 </script>

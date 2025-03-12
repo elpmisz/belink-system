@@ -54,6 +54,15 @@ $remarks = $ESTIMATE->estimate_remark_view([$uuid]);
         </div>
       </div>
       <div class="row mb-2">
+        <label class="col-xl-2 offset-xl-2 col-form-label">เลขที่เอกสารฝ่าย</label>
+        <div class="col-xl-4">
+          <input type="text" class="form-control form-control-sm" name="department_number" value="<?php echo $row['department_number'] ?>" required>
+          <div class="invalid-feedback">
+            กรุณากรอกข้อมูล!
+          </div>
+        </div>
+      </div>
+      <div class="row mb-2">
         <label class="col-xl-2 offset-xl-2 col-form-label">วันที่เอกสาร</label>
         <div class="col-xl-4">
           <input type="text" class="form-control form-control-sm date-select" name="doc_date" value="<?php echo $row['doc_date'] ?>" required>
@@ -156,59 +165,6 @@ $remarks = $ESTIMATE->estimate_remark_view([$uuid]);
         </div>
       </div>
 
-      <div class="row justify-content-center mb-2">
-        <div class="col-sm-12">
-          <div class="table-responsive">
-            <table class="table table-bordered table-sm item-table">
-              <thead>
-                <tr>
-                  <th width="10%">#</th>
-                  <th width="40%">รายจ่าย</th>
-                  <th width="20%">งบประมาณ</th>
-                </tr>
-              </thead>
-              <tbody>
-                <?php
-                foreach ($items as $item) :
-                ?>
-                  <tr>
-                    <td class="text-center">
-                      <a href="javascript:void(0)" class="badge badge-danger font-weight-light item-delete" id="<?php echo $item['id'] ?>">ลบ</a>
-                      <input type="hidden" class="form-control form-control-sm text-center" name="item__id[]" value="<?php echo $item['id'] ?>" readonly>
-                    </td>
-                    <td class="text-left"><?php echo $item['expense_name'] ?></td>
-                    <td class="text-left">
-                      <input type="number" class="form-control form-control-sm" name="item__estimate[]" value="<?php echo $item['estimate'] ?>" min="1" required>
-                      <div class="invalid-feedback">
-                        กรุณากรอกข้อมูล!
-                      </div>
-                    </td>
-                  </tr>
-                <?php endforeach; ?>
-                <tr class="item-tr">
-                  <td class="text-center">
-                    <button type="button" class="btn btn-sm btn-success item-increase">+</button>
-                    <button type="button" class="btn btn-sm btn-danger item-decrease">-</button>
-                  </td>
-                  <td class="text-left">
-                    <select class="form-control form-control-sm expense-select" name="item_expense[]"></select>
-                    <div class="invalid-feedback">
-                      กรุณากรอกข้อมูล!
-                    </div>
-                  </td>
-                  <td>
-                    <input type="number" class="form-control form-control-sm" name="item_estimate[]" min="1">
-                    <div class="invalid-feedback">
-                      กรุณากรอกข้อมูล!
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-
       <div class="row mb-2">
         <label class="col-xl-2 offset-xl-2 col-form-label">เอกสารแนบ</label>
         <div class="col-xl-6">
@@ -297,11 +253,6 @@ $remarks = $ESTIMATE->estimate_remark_view([$uuid]);
           </button>
         </div>
         <div class="col-xl-3 mb-2">
-          <a class="btn btn-primary btn-sm btn-block" href="/estimate/print/<?php echo $row['uuid'] ?>" target="_blank">
-            <i class="fas fa-print pr-2"></i>พิมพ์
-          </a>
-        </div>
-        <div class="col-xl-3 mb-2">
           <a class="btn btn-danger btn-sm btn-block" href="/estimate">
             <i class="fas fa-arrow-left pr-2"></i>หน้าหลัก
           </a>
@@ -318,24 +269,7 @@ $remarks = $ESTIMATE->estimate_remark_view([$uuid]);
   initializeSelect2(".customer-select", "/estimate/customer-select", "-- รายชื่อลูกค้า --");
   initializeSelect2(".expense-select", "/estimate/expense-select", "-- รายชื่อรายจ่าย --");
 
-  $(".item-decrease, .file-decrease").hide();
-  $(document).on("click", ".item-increase", function() {
-    $(".expense-select").select2('destroy');
-
-    let row = $(".item-tr:last");
-    let clone = row.clone();
-    clone.find("input, select").val("").empty();
-    clone.find("span").text("");
-    clone.find(".item-increase").hide();
-    clone.find(".item-decrease").show();
-
-    clone.find(".item-decrease").off("click").on("click", function() {
-      $(this).closest("tr").remove();
-    });
-
-    row.after(clone);
-    initializeSelect2(".expense-select", "/estimate/expense-select", "-- รายชื่อรายจ่าย --");
-  });
+  $(".file-decrease").hide();
 
   $(document).on("click", ".file-increase", function() {
     let row = $(".file-tr:last");
@@ -373,49 +307,6 @@ $remarks = $ESTIMATE->estimate_remark_view([$uuid]);
       });
       return $(this).val("");
     }
-  });
-
-  $(document).on("click", ".item-delete", function(e) {
-    let id = $(this).prop("id");
-    e.preventDefault();
-    Swal.fire({
-      title: "ยืนยันที่จะลบ?",
-      icon: "question",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "ยืนยัน",
-      cancelButtonText: "ปิด",
-    }).then((result) => {
-      if (result.value) {
-        axios.post("/estimate/item-delete", {
-          id
-        }).then((res) => {
-          let result = res.data;
-          if (result === 200) {
-            Swal.fire({
-              title: "ดำเนินการเรียบร้อย!",
-              text: "",
-              icon: "success"
-            }).then((result) => {
-              location.reload()
-            });
-          } else {
-            Swal.fire({
-              title: "ระบบมีปัญหา\nกรุณาลองใหม่อีกครั้ง!",
-              text: "",
-              icon: "error"
-            }).then((result) => {
-              location.reload()
-            });
-          }
-        }).catch((error) => {
-          console.log(error);
-        });
-      } else {
-        return false;
-      }
-    })
   });
 
   $(document).on("click", ".file-delete", function(e) {

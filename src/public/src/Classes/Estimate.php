@@ -21,6 +21,7 @@ class Estimate
     FROM belink.estimate_request a
     WHERE a.status = 1
     AND a.login_id = ?
+    AND a.department_number = ?
     AND a.customer_id = ?
     AND a.doc_date = ?
     AND a.order_number = ?
@@ -51,7 +52,7 @@ class Estimate
 
   public function estimate_insert($data)
   {
-    $sql = "INSERT INTO belink.estimate_request(`uuid`, `last`, `login_id`, `customer_id`, `doc_date`, `order_number`, `product_name`, `title_name`, `sales_name`, `budget`, `type`, `remark`) VALUES(uuid(),?,?,?,?,?,?,?,?,?,?,?)";
+    $sql = "INSERT INTO belink.estimate_request(`uuid`, `last`, `login_id`, `department_number`, `customer_id`, `doc_date`, `order_number`, `product_name`, `title_name`, `sales_name`, `budget`, `type`, `remark`) VALUES(uuid(),?,?,?,?,?,?,?,?,?,?,?,?)";
     $stmt = $this->dbcon->prepare($sql);
     return $stmt->execute($data);
   }
@@ -64,6 +65,7 @@ class Estimate
       CONCAT('EB',YEAR(a.created),LPAD(a.`last`,4,'0')) ticket,
       a.login_id,
       CONCAT(c.firstname,' ',c.lastname) username,
+      department_number,
       a.customer_id,
       b.`name` customer_name,
       a.order_number,
@@ -71,6 +73,7 @@ class Estimate
       a.title_name,
       a.sales_name,
       a.budget,
+      (SELECT SUM(estimate) FROM belink.estimate_item WHERE request_id = a.id AND status = 1) cost,
       a.`type`,
       (
       CASE
@@ -97,6 +100,7 @@ class Estimate
   public function estimate_update($data)
   {
     $sql = "UPDATE belink.estimate_request SET
+    department_number = ?,
     customer_id = ?,
     `doc_date` = ?,
     order_number = ?,
@@ -314,10 +318,10 @@ class Estimate
     (
     CASE
       WHEN a.`status` = 1 AND b.action = 1 THEN 'ดำเนินการแก้ไขเรียบร้อย'
-      WHEN a.`status` = 1 AND b.action = 2 THEN 'ไม่ผ่านอนุมัติ รอผู้ใช้บริการแก้ไข'
-      WHEN a.`status` = 2 THEN 'ผ่านการอนุมัติจากฝ่ายขาย'
-      WHEN a.`status` = 3 THEN 'ผ่านการอนุมัติจากฝ่ายงบประมาณ'
-      WHEN a.`status` = 4 THEN 'ผ่านการอนุมัติจากฝ่ายการเงิน'
+      WHEN a.`status` = 1 AND b.action = 2 THEN 'ไม่ผ่านอนุมัติ รอพนักงานขายแก้ไข'
+      WHEN a.`status` = 2 THEN 'ผ่านการดำเนินการจากฝ่าย Event'
+      WHEN a.`status` = 3 THEN 'ผ่านการดำเนินการจากฝ่ายงบประมาณ'
+      WHEN a.`status` = 4 THEN 'ผ่านอนุมัติ'
     END
     ) status_name,
     (
@@ -325,7 +329,7 @@ class Estimate
       WHEN a.`status` = 1 THEN 'danger'
       WHEN a.`status` = 2 THEN 'primary'
       WHEN a.`status` = 3 THEN 'info'
-      WHEN a.`status` = 4 THEN 'warning'
+      WHEN a.`status` = 4 THEN 'success'
     END
     ) status_color,
     DATE_FORMAT(a.created,'%d/%m/%Y, %H:%i น.') created
@@ -443,6 +447,7 @@ class Estimate
       a.id,
       a.`uuid`,
       CONCAT('EB',YEAR(a.created),LPAD(a.`last`,4,'0')) ticket,
+      a.department_number,
       a.login_id,
       CONCAT(c.firstname,' ',c.lastname) username,
       a.customer_id,
@@ -465,11 +470,11 @@ class Estimate
       a.`status`,
       (
       CASE
-        WHEN a.`status` = 1 AND a.action = 1 THEN 'รอฝ่ายขายดำเนินการ'
+        WHEN a.`status` = 1 AND a.action = 1 THEN 'รอฝ่าย Event ดำเนินการ'
         WHEN a.`status` = 1 AND a.action = 2 THEN 'รอผู้ขอใช้บริการแก้ไข'
         WHEN a.`status` = 2 THEN 'รอฝ่ายงบประมาณดำเนินการ'
-        WHEN a.`status` = 3 THEN 'รอฝ่ายการเงินดำเนินการ'
-        WHEN a.`status` = 4 THEN 'ดำเนินการเรียบร้อย'
+        WHEN a.`status` = 3 THEN 'รอผู้อนุมัติดำเนินการ'
+        WHEN a.`status` = 4 THEN 'ผ่านการอนุมัติ'
         WHEN a.`status` = 5 THEN 'รายการถูกยกเลิก'
       END
       ) status_name,
@@ -495,7 +500,7 @@ class Estimate
     ON a.customer_id = b.id
     LEFT JOIN belink.user c
     ON a.login_id = c.login
-    WHERE a.`status` IN (1,2,3,4,5) ";
+    WHERE a.`status` IN (1,2,3,4) ";
 
     if (!empty($keyword)) {
       $sql .= " AND (b.name LIKE '%{$keyword}%' OR a.order_number LIKE '%{$keyword}%' OR a.product_name LIKE '%{$keyword}%' OR a.title_name LIKE '%{$keyword}%' OR a.sales_name LIKE '%{$keyword}%') ";
@@ -526,6 +531,7 @@ class Estimate
       $data[] = [
         $action,
         $row['ticket'],
+        $row['department_number'],
         $row['order_number'],
         $row['product_name'],
         $row['title_name'],
@@ -564,6 +570,7 @@ class Estimate
       a.id,
       a.`uuid`,
       CONCAT('EB',YEAR(a.created),LPAD(a.`last`,4,'0')) ticket,
+      a.department_number,
       a.login_id,
       CONCAT(c.firstname,' ',c.lastname) username,
       a.customer_id,
@@ -586,16 +593,18 @@ class Estimate
       a.`status`,
       (
       CASE
-        WHEN a.`status` = 1 THEN 'รอฝ่ายขายดำเนินการ'
+        WHEN a.`status` = 1 AND a.action = 1 THEN 'รอฝ่าย Event ดำเนินการ'
+        WHEN a.`status` = 1 AND a.action = 2 THEN 'รอผู้ขอใช้บริการแก้ไข'
         WHEN a.`status` = 2 THEN 'รอฝ่ายงบประมาณดำเนินการ'
-        WHEN a.`status` = 3 THEN 'รอฝ่ายการเงินดำเนินการ'
-        WHEN a.`status` = 4 THEN 'ดำเนินการเรียบร้อย'
+        WHEN a.`status` = 3 THEN 'รอผู้อนุมัติดำเนินการ'
+        WHEN a.`status` = 4 THEN 'ผ่านการอนุมัติ'
         WHEN a.`status` = 5 THEN 'รายการถูกยกเลิก'
       END
       ) status_name,
       (
       CASE
-        WHEN a.`status` = 1 THEN 'primary'
+        WHEN a.`status` = 1 AND a.action = 1 THEN 'primary'
+        WHEN a.`status` = 1 AND a.action = 2 THEN 'danger'
         WHEN a.`status` = 2 THEN 'info'
         WHEN a.`status` = 3 THEN 'warning'
         WHEN a.`status` = 4 THEN 'success'
@@ -604,9 +613,9 @@ class Estimate
       ) status_color,
       (
       CASE
-        WHEN a.`status` = 1 THEN 'approve-sale'
-        WHEN a.`status` = 2 THEN 'approve-budget'
-        WHEN a.`status` = 3 THEN 'approve-finance'
+        WHEN a.`status` = 1 THEN 'event'
+        WHEN a.`status` = 2 THEN 'budget'
+        WHEN a.`status` = 3 THEN 'approve'
       END
       ) `page`,
       DATE_FORMAT(a.created,'%d/%m/%Y, %H:%i น.') created
@@ -647,6 +656,7 @@ class Estimate
       $data[] = [
         $action,
         $row['ticket'],
+        $row['department_number'],
         $row['order_number'],
         $row['product_name'],
         $row['title_name'],
