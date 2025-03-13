@@ -21,6 +21,7 @@ class Payment
     FROM belink.payment_request a
     WHERE a.status = 1
     AND a.login_id = ?
+    AND a.department_number = ?
     AND a.doc_date = ?
     AND a.order_number = ?
     AND a.receiver = ?
@@ -50,7 +51,7 @@ class Payment
 
   public function payment_insert($data)
   {
-    $sql = "INSERT INTO belink.payment_request(`uuid`, `last`, `login_id`, `doc_date`, `order_number`, `receiver`, `type`, `cheque_bank`, `cheque_branch`, `cheque_number`, `cheque_date`) VALUES(uuid(),?,?,?,?,?,?,?,?,?,?)";
+    $sql = "INSERT INTO belink.payment_request(`uuid`, `last`, `login_id`, `department_number`, `doc_date`, `order_number`, `receiver`, `type`, `cheque_bank`, `cheque_branch`, `cheque_number`, `cheque_date`) VALUES(uuid(),?,?,?,?,?,?,?,?,?,?,?)";
     $stmt = $this->dbcon->prepare($sql);
     return $stmt->execute($data);
   }
@@ -62,6 +63,7 @@ class Payment
       a.`uuid`,
       c.`uuid` estimate_uuid,
       CONCAT(b.firstname,' ',b.lastname) username,
+      a.department_number,
       a.order_number,
       a.receiver,
       a.`type`,
@@ -122,7 +124,10 @@ class Payment
     FROM belink.payment_item a
     WHERE a.status = 1
     AND a.request_id = ?
-    AND a.expense_id = ?";
+    AND a.expense_id = ?
+    AND a.text = ?
+    AND a.text2 = ?
+    AND a.amount = ?";
     $stmt = $this->dbcon->prepare($sql);
     $stmt->execute($data);
     return $stmt->fetchColumn();
@@ -309,7 +314,7 @@ class Payment
       CONCAT('[',c.`code`,'] ',c.`name`) expense_name,
       b.estimate,
       IFNULL(d.payment,0) payment,
-      IFNULL((b.estimate - d.payment),0) remain
+      IFNULL((b.estimate - IFNULL(d.payment,0)),0) remain
     FROM belink.estimate_request a
     LEFT JOIN belink.estimate_item b
     ON a.id = b.request_id
@@ -322,16 +327,17 @@ class Payment
       LEFT JOIN belink.payment_item b
       ON a.id = b.request_id
       WHERE b.status = 1
-      GROUP BY b.expense_id 
+      GROUP BY b.request_id,b.expense_id
     ) d
     ON a.order_number = d.order_number
     AND b.expense_id = d.expense_id
     WHERE a.order_number = ?
+    AND b.expense_id = ?
     AND b.`status` = 1
     ORDER BY c.`reference` ASC, b.id ASC";
     $stmt = $this->dbcon->prepare($sql);
     $stmt->execute($data);
-    return $stmt->fetchAll();
+    return $stmt->fetch();
   }
 
   public function order_select($keyword)
@@ -343,6 +349,44 @@ class Payment
     WHERE a.`status` NOT IN (5) ";
     if (!empty($keyword)) {
       $sql .= " AND (a.order_number LIKE '%{$keyword}%') ";
+    }
+    $stmt = $this->dbcon->prepare($sql);
+    $stmt->execute();
+    return $stmt->fetchAll();
+  }
+
+  public function expense_select($keyword, $order)
+  {
+    $sql = "SELECT a.id,CONCAT('[',a.`code`,'] ',a.`name`) `text`
+    FROM belink.expense a
+    WHERE a.`status` = 1
+    AND a.`type` = 2 ";
+    if (!empty($keyword)) {
+      $sql .= " AND (a.code LIKE '%{$keyword}%' OR a.name LIKE '%{$keyword}%') ";
+    }
+    if (!empty($order)) {
+      $sql .= " AND b.order_number = '{$order}' ";
+    }
+    $stmt = $this->dbcon->prepare($sql);
+    $stmt->execute();
+    return $stmt->fetchAll();
+  }
+
+  public function expense_fix_select($keyword, $order)
+  {
+    $sql = "SELECT a.expense_id id,
+    CONCAT('[',c.`code`,'] ',c.`name`) `text`
+    FROM belink.estimate_item a
+    LEFT JOIN belink.estimate_request b
+    ON a.request_id = b.id
+    LEFT JOIN belink.expense c
+    ON a.expense_id = c.id
+    WHERE a.`status` = 1 ";
+    if (!empty($keyword)) {
+      $sql .= " AND (c.code LIKE '%{$keyword}%' OR c.name LIKE '%{$keyword}%') ";
+    }
+    if (!empty($order)) {
+      $sql .= " AND b.order_number = '{$order}' ";
     }
     $stmt = $this->dbcon->prepare($sql);
     $stmt->execute();

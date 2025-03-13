@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: database
--- Generation Time: Mar 12, 2025 at 09:52 AM
+-- Generation Time: Mar 13, 2025 at 09:54 AM
 -- Server version: 11.7.2-MariaDB-ubu2404
 -- PHP Version: 8.2.27
 
@@ -104,6 +104,7 @@ CREATE TABLE `advance_clear_request` (
   `uuid` varchar(36) NOT NULL,
   `last` int(11) NOT NULL,
   `login_id` int(11) NOT NULL,
+  `department_number` varchar(20) NOT NULL,
   `doc_date` date NOT NULL,
   `advance_id` int(11) NOT NULL,
   `amount` decimal(20,2) NOT NULL,
@@ -117,8 +118,8 @@ CREATE TABLE `advance_clear_request` (
 -- Dumping data for table `advance_clear_request`
 --
 
-INSERT INTO `advance_clear_request` (`id`, `uuid`, `last`, `login_id`, `doc_date`, `advance_id`, `amount`, `action`, `status`, `updated`, `created`) VALUES
-(1, '418336bc-ed44-11ef-9de3-0242ac120005', 1, 1, '2025-02-02', 1, 42000.00, 1, 2, '2025-02-17 22:59:30', '2025-02-17 22:31:26');
+INSERT INTO `advance_clear_request` (`id`, `uuid`, `last`, `login_id`, `department_number`, `doc_date`, `advance_id`, `amount`, `action`, `status`, `updated`, `created`) VALUES
+(1, '418336bc-ed44-11ef-9de3-0242ac120005', 1, 1, '', '2025-02-02', 1, 42000.00, 1, 2, '2025-02-17 22:59:30', '2025-02-17 22:31:26');
 
 -- --------------------------------------------------------
 
@@ -203,6 +204,7 @@ CREATE TABLE `advance_request` (
   `uuid` varchar(36) NOT NULL,
   `last` int(11) NOT NULL,
   `login_id` int(11) NOT NULL,
+  `department_number` varchar(20) NOT NULL,
   `doc_date` date NOT NULL,
   `finish` date NOT NULL,
   `objective` text NOT NULL,
@@ -216,8 +218,8 @@ CREATE TABLE `advance_request` (
 -- Dumping data for table `advance_request`
 --
 
-INSERT INTO `advance_request` (`id`, `uuid`, `last`, `login_id`, `doc_date`, `finish`, `objective`, `action`, `status`, `updated`, `created`) VALUES
-(1, '79e2c921-ed38-11ef-9de3-0242ac120005', 1, 1, '2025-02-17', '2025-02-24', 'xxxxx\r\nxxxxx', 1, 2, '2025-02-17 21:40:12', '2025-02-17 21:07:07');
+INSERT INTO `advance_request` (`id`, `uuid`, `last`, `login_id`, `department_number`, `doc_date`, `finish`, `objective`, `action`, `status`, `updated`, `created`) VALUES
+(1, '79e2c921-ed38-11ef-9de3-0242ac120005', 1, 1, '', '2025-02-17', '2025-02-24', 'xxxxx\r\nxxxxx', 1, 2, '2025-02-17 21:40:12', '2025-02-17 21:07:07');
 
 -- --------------------------------------------------------
 
@@ -1484,7 +1486,14 @@ INSERT INTO `payment_item` (`id`, `request_id`, `expense_id`, `text`, `text2`, `
 (6, 2, 5, 'xxx', 'xx', 30000.00, 2100.00, 0.00, 1, NULL, '2025-02-02 20:37:26'),
 (7, 2, 8, 'yyy', 'yy', 20000.00, 1400.00, 600.00, 1, NULL, '2025-02-02 20:37:26'),
 (8, 2, 13, 'yyy', 'yy', 20000.00, 1400.00, 600.00, 1, NULL, '2025-02-02 20:37:26'),
-(9, 3, 12, 'ซื้อคอมพิวเตอร์', '10 เครื่อง', 200000.00, 14000.00, 0.00, 1, NULL, '2025-02-23 14:27:25');
+(9, 3, 12, 'ซื้อคอมพิวเตอร์', '10 เครื่อง', 200000.00, 14000.00, 0.00, 1, NULL, '2025-02-23 14:27:25'),
+(10, 4, 3, 'aaaa', 'bbbb', 10000.00, 700.00, 0.00, 1, NULL, '2025-03-13 15:10:36'),
+(11, 4, 6, 'aaaa', 'bbbb', 5000.00, 0.00, 0.00, 1, NULL, '2025-03-13 15:10:36'),
+(12, 4, 13, 'aaaa-update', 'bbbb-update', 5000.00, 0.00, 0.00, 1, NULL, '2025-03-13 16:14:14'),
+(13, 4, 16, 'aaaa-update', 'bbbb-update', 3000.00, 0.00, 0.00, 1, NULL, '2025-03-13 16:14:14'),
+(14, 4, 6, 'aaaa-update', 'bbbb-update', 2000.00, 0.00, 0.00, 0, '2025-03-13 16:17:10', '2025-03-13 16:15:44'),
+(15, 8, 6, 'xxx', 'zzz', 3000.00, 0.00, 0.00, 1, NULL, '2025-03-13 16:35:58'),
+(16, 8, 16, 'xxx', 'zzz', 2000.00, 0.00, 0.00, 1, NULL, '2025-03-13 16:35:58');
 
 -- --------------------------------------------------------
 
@@ -1512,7 +1521,13 @@ INSERT INTO `payment_remark` (`id`, `request_id`, `login_id`, `text`, `status`, 
 (4, 2, 1, '', 3, '2025-02-02 20:37:43'),
 (5, 3, 1, '', 2, '2025-02-23 14:41:48'),
 (6, 3, 1, '', 3, '2025-02-23 14:43:17'),
-(7, 3, 1, '', 4, '2025-02-23 14:43:47');
+(7, 3, 1, '', 4, '2025-02-23 14:43:47'),
+(8, 4, 1, '', 2, '2025-03-13 16:16:07'),
+(9, 4, 1, '', 3, '2025-03-13 16:16:35'),
+(10, 4, 1, '', 4, '2025-03-13 16:16:49'),
+(11, 8, 1, '', 2, '2025-03-13 16:36:24'),
+(12, 8, 1, '', 3, '2025-03-13 16:36:28'),
+(13, 8, 1, '', 4, '2025-03-13 16:36:31');
 
 -- --------------------------------------------------------
 
@@ -1525,6 +1540,7 @@ CREATE TABLE `payment_request` (
   `uuid` varchar(36) NOT NULL,
   `last` int(11) NOT NULL,
   `login_id` int(11) NOT NULL,
+  `department_number` varchar(20) NOT NULL,
   `doc_date` date NOT NULL,
   `order_number` varchar(20) NOT NULL,
   `receiver` varchar(100) NOT NULL,
@@ -1543,10 +1559,12 @@ CREATE TABLE `payment_request` (
 -- Dumping data for table `payment_request`
 --
 
-INSERT INTO `payment_request` (`id`, `uuid`, `last`, `login_id`, `doc_date`, `order_number`, `receiver`, `type`, `cheque_bank`, `cheque_branch`, `cheque_number`, `cheque_date`, `action`, `status`, `updated`, `created`) VALUES
-(1, '3380d4e2-e16a-11ef-8d4c-0242ac120003', 1, 1, '0000-00-00', 'SO07010001', 'AAAAA', 1, '', '', '', '1970-01-01', 1, 4, '2025-02-02 20:35:18', '2025-02-02 20:32:46'),
-(2, 'dad734e2-e16a-11ef-8d4c-0242ac120003', 2, 1, '0000-00-00', 'SO07010001', 'AAAA', 2, 'BBB', 'BBB', 'BBBB', '2025-02-03', 1, 4, '2025-02-02 20:37:43', '2025-02-02 20:37:26'),
-(3, '40ff5554-f0fc-11ef-9531-0242ac120005', 3, 1, '2025-02-02', '', 'AAA', 1, '', '', '', '0000-00-00', 1, 4, '2025-02-23 14:43:47', '2025-02-23 14:27:25');
+INSERT INTO `payment_request` (`id`, `uuid`, `last`, `login_id`, `department_number`, `doc_date`, `order_number`, `receiver`, `type`, `cheque_bank`, `cheque_branch`, `cheque_number`, `cheque_date`, `action`, `status`, `updated`, `created`) VALUES
+(1, '3380d4e2-e16a-11ef-8d4c-0242ac120003', 1, 1, '', '0000-00-00', 'SO07010001', 'AAAAA', 1, '', '', '', '1970-01-01', 1, 4, '2025-02-02 20:35:18', '2025-02-02 20:32:46'),
+(2, 'dad734e2-e16a-11ef-8d4c-0242ac120003', 2, 1, '', '0000-00-00', 'SO07010001', 'AAAA', 2, 'BBB', 'BBB', 'BBBB', '2025-02-03', 1, 4, '2025-02-02 20:37:43', '2025-02-02 20:37:26'),
+(3, '40ff5554-f0fc-11ef-9531-0242ac120005', 3, 1, '', '2025-02-02', '', 'AAA', 1, '', '', '', '0000-00-00', 1, 4, '2025-02-23 14:43:47', '2025-02-23 14:27:25'),
+(4, '7cce4187-ffe2-11ef-ad9c-0242ac120003', 4, 1, 'IT-68002', '2025-03-13', 'SO-680001', 'it-aaaa', 1, '', '', '', '1970-01-01', 1, 4, '2025-03-13 16:16:49', '2025-03-13 15:10:36'),
+(8, '69dc0014-ffee-11ef-ad9c-0242ac120003', 5, 1, 'IT-68003', '2025-03-13', '', 'SSS', 1, '', '', '', '1970-01-01', 1, 4, '2025-03-13 16:36:31', '2025-03-13 16:35:58');
 
 -- --------------------------------------------------------
 
@@ -1948,7 +1966,10 @@ CREATE TABLE `purchase_item` (
 
 INSERT INTO `purchase_item` (`id`, `request_id`, `name`, `amount`, `unit`, `estimate`, `status`, `updated`, `created`) VALUES
 (1, 1, 'XXXX', 10, 'xx', 20000.00, 1, NULL, '2025-02-02 20:46:22'),
-(2, 1, 'YYYY', 20, 'yy', 20000.00, 1, NULL, '2025-02-02 20:46:22');
+(2, 1, 'YYYY', 20, 'yy', 20000.00, 1, NULL, '2025-02-02 20:46:22'),
+(3, 2, 'test-product-1', 2, 'อัน', 200.00, 1, '2025-03-13 09:24:25', '2025-03-13 09:18:32'),
+(4, 2, 'test-product-2', 2, 'อัน', 200.00, 1, '2025-03-13 09:24:25', '2025-03-13 09:18:32'),
+(5, 2, 'test-product-3', 2, 'อัน', 200.00, 1, '2025-03-13 09:24:25', '2025-03-13 09:18:32');
 
 -- --------------------------------------------------------
 
@@ -1970,7 +1991,8 @@ CREATE TABLE `purchase_remark` (
 --
 
 INSERT INTO `purchase_remark` (`id`, `request_id`, `login_id`, `text`, `status`, `created`) VALUES
-(1, 1, 1, '', 2, '2025-02-02 20:46:58');
+(1, 1, 1, '', 2, '2025-02-02 20:46:58'),
+(2, 2, 1, '', 2, '2025-03-13 09:26:44');
 
 -- --------------------------------------------------------
 
@@ -1983,6 +2005,7 @@ CREATE TABLE `purchase_request` (
   `uuid` varchar(36) NOT NULL,
   `last` int(11) NOT NULL,
   `login_id` int(11) NOT NULL,
+  `department_number` varchar(20) NOT NULL,
   `doc_date` date NOT NULL,
   `department` varchar(200) NOT NULL,
   `date` date NOT NULL,
@@ -1998,8 +2021,9 @@ CREATE TABLE `purchase_request` (
 -- Dumping data for table `purchase_request`
 --
 
-INSERT INTO `purchase_request` (`id`, `uuid`, `last`, `login_id`, `doc_date`, `department`, `date`, `order_number`, `objective`, `action`, `status`, `updated`, `created`) VALUES
-(1, '1a7ecf4a-e16c-11ef-8d4c-0242ac120003', 1, 1, '2025-02-02', 'YYYY', '2025-02-10', '', 'YYYYY\r\nYYYYY', 1, 2, '2025-02-02 20:46:58', '2025-02-02 20:46:22');
+INSERT INTO `purchase_request` (`id`, `uuid`, `last`, `login_id`, `department_number`, `doc_date`, `department`, `date`, `order_number`, `objective`, `action`, `status`, `updated`, `created`) VALUES
+(1, '1a7ecf4a-e16c-11ef-8d4c-0242ac120003', 1, 1, '', '2025-02-02', 'YYYY', '2025-02-10', '', 'YYYYY\r\nYYYYY', 1, 2, '2025-02-02 20:46:58', '2025-02-02 20:46:22'),
+(2, '7628e614-ffb1-11ef-ad9c-0242ac120003', 2, 1, 'IT-680002', '2025-03-13', 'IT', '2025-03-13', 'SO-680001', 'test-remark-edit\r\ntest-remark-edit\r\ntest-remark-edit', 1, 2, '2025-03-13 09:26:44', '2025-03-13 09:18:32');
 
 -- --------------------------------------------------------
 
@@ -2794,19 +2818,19 @@ ALTER TABLE `payment_file`
 -- AUTO_INCREMENT for table `payment_item`
 --
 ALTER TABLE `payment_item`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `payment_remark`
 --
 ALTER TABLE `payment_remark`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `payment_request`
 --
 ALTER TABLE `payment_request`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `petty_file`
@@ -2884,19 +2908,19 @@ ALTER TABLE `purchase_file`
 -- AUTO_INCREMENT for table `purchase_item`
 --
 ALTER TABLE `purchase_item`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `purchase_remark`
 --
 ALTER TABLE `purchase_remark`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `purchase_request`
 --
 ALTER TABLE `purchase_request`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `quotation_file`

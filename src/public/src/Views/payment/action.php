@@ -42,6 +42,7 @@ $VALIDATION = new Validation();
 if ($action === "create") {
   try {
     $login_id = (isset($user['login_id']) ? $VALIDATION->input($user['login_id']) : "");
+    $department_number = (isset($_POST['department_number']) ? $VALIDATION->input($_POST['department_number']) : "");
     $doc_date = (isset($_POST['doc_date']) ? $VALIDATION->input($_POST['doc_date']) : "");
     $doc_date = (!empty($doc_date) ? DateTime::createFromFormat('d/m/Y', $doc_date)->format('Y-m-d') : "");
     $order_number = (isset($_POST['order_number']) ? $VALIDATION->input($_POST['order_number']) : "");
@@ -54,9 +55,10 @@ if ($action === "create") {
     $cheque_date = (!empty($cheque_date) ? date("Y-m-d", strtotime(str_replace("/", "-", $cheque_date))) : "");
     $payment_last = $PAYMENT->payment_last();
 
-    $payment_count = $PAYMENT->payment_count([$login_id, $doc_date, $order_number, $receiver, $type, $cheque_bank, $cheque_branch, $cheque_number, $cheque_date]);
+    $payment_count = $PAYMENT->payment_count([$login_id, $department_number, $doc_date, $order_number, $receiver, $type, $cheque_bank, $cheque_branch, $cheque_number, $cheque_date]);
+
     if (intval($payment_count) === 0) {
-      $PAYMENT->payment_insert([$payment_last, $login_id, $doc_date, $order_number, $receiver, $type, $cheque_bank, $cheque_branch, $cheque_number, $cheque_date]);
+      $PAYMENT->payment_insert([$payment_last, $login_id, $department_number, $doc_date, $order_number, $receiver, $type, $cheque_bank, $cheque_branch, $cheque_number, $cheque_date]);
       $request_id = $PAYMENT->last_insert_id();
 
       foreach ($_POST['expense_id'] as $key => $row) {
@@ -67,8 +69,8 @@ if ($action === "create") {
         $item_vat = (isset($_POST['item_vat'][$key]) ? $VALIDATION->input($_POST['item_vat'][$key]) : "");
         $item_wt = (isset($_POST['item_wt'][$key]) ? $VALIDATION->input($_POST['item_wt'][$key]) : "");
 
-        $payment_item_count = $PAYMENT->payment_item_count([$request_id, $expense_id]);
-        if (intval($payment_item_count) === 0) {
+        $payment_item_count = $PAYMENT->payment_item_count([$request_id, $expense_id, $item_text, $item_text2, $item_amount]);
+        if (!empty($expense_id) && intval($payment_item_count) === 0) {
           $PAYMENT->payment_item_insert([$request_id, $expense_id, $item_text, $item_text2, $item_amount, $item_vat, $item_wt]);
         }
       }
@@ -113,6 +115,7 @@ if ($action === "update") {
   try {
     $request_id = (isset($_POST['id']) ? $VALIDATION->input($_POST['id']) : "");
     $uuid = (isset($_POST['uuid']) ? $VALIDATION->input($_POST['uuid']) : "");
+    $department_number = (isset($_POST['department_number']) ? $VALIDATION->input($_POST['department_number']) : "");
     $doc_date = (isset($_POST['doc_date']) ? $VALIDATION->input($_POST['doc_date']) : "");
     $doc_date = (!empty($doc_date) ? DateTime::createFromFormat('d/m/Y', $doc_date)->format('Y-m-d') : "");
     $receiver = (isset($_POST['receiver']) ? $VALIDATION->input($_POST['receiver']) : "");
@@ -123,17 +126,6 @@ if ($action === "update") {
     $cheque_date = (!empty($cheque_date) ? date("Y-m-d", strtotime(str_replace("/", "-", $cheque_date))) : "");
     $PAYMENT->payment_update([$doc_date, $receiver, $cheque_bank, $cheque_branch, $cheque_number, $cheque_date, $uuid]);
 
-    foreach ($_POST['item__id'] as $key => $row) {
-      $item__id = (isset($_POST['item__id'][$key]) ? $VALIDATION->input($_POST['item__id'][$key]) : "");
-      $item__text = (isset($_POST['item__text'][$key]) ? $VALIDATION->input($_POST['item__text'][$key]) : "");
-      $item__text2 = (isset($_POST['item__text2'][$key]) ? $VALIDATION->input($_POST['item__text2'][$key]) : "");
-      $item__amount = (isset($_POST['item__amount'][$key]) ? $VALIDATION->input($_POST['item__amount'][$key]) : "");
-      $item__vat = (isset($_POST['item__vat'][$key]) ? $VALIDATION->input($_POST['item__vat'][$key]) : "");
-      $item__wt = (isset($_POST['item__wt'][$key]) ? $VALIDATION->input($_POST['item__wt'][$key]) : "");
-
-      $PAYMENT->payment_item_update([$item__text, $item__text2, $item__amount, $item__vat, $item__wt, $item__id]);
-    }
-
     if (isset($_POST['expense_id'])) {
       foreach ($_POST['expense_id'] as $key => $row) {
         $expense_id = (isset($_POST['expense_id'][$key]) ? $VALIDATION->input($_POST['expense_id'][$key]) : "");
@@ -143,8 +135,8 @@ if ($action === "update") {
         $item_vat = (isset($_POST['item_vat'][$key]) ? $VALIDATION->input($_POST['item_vat'][$key]) : "");
         $item_wt = (isset($_POST['item_wt'][$key]) ? $VALIDATION->input($_POST['item_wt'][$key]) : "");
 
-        $payment_item_count = $PAYMENT->payment_item_count([$request_id, $expense_id]);
-        if (intval($payment_item_count) === 0) {
+        $payment_item_count = $PAYMENT->payment_item_count([$request_id, $expense_id, $item_text, $item_text2, $item_amount]);
+        if (!empty($expense_id) && intval($payment_item_count) === 0) {
           $PAYMENT->payment_item_insert([$request_id, $expense_id, $item_text, $item_text2, $item_amount, $item_vat, $item_wt]);
         }
       }
@@ -277,8 +269,9 @@ if ($action === "file-delete") {
 if ($action === "order-view") {
   try {
     $data = json_decode(file_get_contents("php://input"), true);
+    $expense = $data['expense'];
     $order = $data['order'];
-    $result = $PAYMENT->order_view([$order]);
+    $result = $PAYMENT->order_view([$order, $expense]);
 
     echo json_encode($result);
   } catch (PDOException $e) {
@@ -290,6 +283,22 @@ if ($action === "order-select") {
   try {
     $keyword = (isset($_POST['q']) ? $VALIDATION->input($_POST['q']) : "");
     $result = $PAYMENT->order_select($keyword);
+
+    echo json_encode($result);
+  } catch (PDOException $e) {
+    die($e->getMessage());
+  }
+}
+
+if ($action === 'expense-select') {
+  try {
+    $keyword = (isset($_POST['keyword']) ? $VALIDATION->input($_POST['keyword']) : "");
+    $order = (isset($_POST['order']) ? $VALIDATION->input($_POST['order']) : "");
+    if (!empty($order) && $order !== "") {
+      $result = $PAYMENT->expense_fix_select($keyword, $order);
+    } else {
+      $result = $PAYMENT->expense_select($keyword, $order);
+    }
 
     echo json_encode($result);
   } catch (PDOException $e) {

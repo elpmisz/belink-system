@@ -42,6 +42,7 @@ $VALIDATION = new Validation();
 if ($action === "create") {
   try {
     $login_id = (isset($user['login_id']) ? $VALIDATION->input($user['login_id']) : "");
+    $department_number = (isset($_POST['department_number']) ? $VALIDATION->input($_POST['department_number']) : "");
     $department = (isset($_POST['department']) ? $VALIDATION->input($_POST['department']) : "");
     $doc_date = (isset($_POST['doc_date']) ? $VALIDATION->input($_POST['doc_date']) : "");
     $doc_date = (!empty($doc_date) ? date("Y-m-d", strtotime(str_replace("/", "-", $doc_date))) : "");
@@ -51,9 +52,9 @@ if ($action === "create") {
     $objective = (isset($_POST['objective']) ? $VALIDATION->input($_POST['objective']) : "");
     $purchase_last = $PURCHASE->purchase_last();
 
-    $purchase_count = $PURCHASE->purchase_count([$login_id, $doc_date, $department, $date, $order_number, $objective]);
+    $purchase_count = $PURCHASE->purchase_count([$login_id, $department_number, $doc_date, $department, $date, $order_number, $objective]);
     if (intval($purchase_count) === 0) {
-      $PURCHASE->purchase_insert([$purchase_last, $login_id, $doc_date, $department, $date, $order_number, $objective]);
+      $PURCHASE->purchase_insert([$purchase_last, $login_id, $department_number, $doc_date, $department, $date, $order_number, $objective]);
       $request_id = $PURCHASE->last_insert_id();
 
       foreach ($_POST['item_name'] as $key => $row) {
@@ -135,7 +136,7 @@ if ($action === "update") {
         $item_estimate = (isset($_POST['item_estimate'][$key]) ? $VALIDATION->input($_POST['item_estimate'][$key]) : "");
 
         $purchase_item_count = $PURCHASE->purchase_item_count([$request_id, $item_name, $item_amount, $item_unit, $item_estimate]);
-        if (intval($purchase_item_count) === 0) {
+        if (!empty($item_name) && intval($purchase_item_count) === 0) {
           $PURCHASE->purchase_item_insert([$request_id, $item_name, $item_amount, $item_unit, $item_estimate]);
         }
       }

@@ -21,6 +21,7 @@ class Advance
     FROM belink.advance_request a
     WHERE a.status = 1
     AND a.login_id = ?
+    AND a.department = ?
     AND a.doc_date = ?
     AND a.finish = ?
     AND a.objective = ?";
@@ -45,7 +46,7 @@ class Advance
 
   public function advance_insert($data)
   {
-    $sql = "INSERT INTO belink.advance_request(`uuid`, `last`, `login_id`, `doc_date`, `finish`, `objective`) VALUES(uuid(),?,?,?,?,?)";
+    $sql = "INSERT INTO belink.advance_request(`uuid`, `last`, `login_id`, `department_number`, `doc_date`, `finish`, `objective`) VALUES(uuid(),?,?,?,?,?,?)";
     $stmt = $this->dbcon->prepare($sql);
     return $stmt->execute($data);
   }
@@ -56,6 +57,7 @@ class Advance
       a.`uuid`,
       CONCAT('AR',YEAR(a.created),LPAD(a.`last`,4,'0')) ticket,
       CONCAT(b.firstname,' ',b.lastname) username,
+      a.department_number,
       DATE_FORMAT(a.doc_date,'%d/%m/%Y') `doc_date`,
       DATE_FORMAT(a.finish,'%d/%m/%Y') `finish`,
       a.objective,
@@ -72,6 +74,7 @@ class Advance
   public function advance_update($data)
   {
     $sql = "UPDATE belink.advance_request SET
+    department_update = ?,
     doc_date = ?,
     `finish` = ?,
     objective = ?,

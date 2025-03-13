@@ -42,6 +42,7 @@ $VALIDATION = new Validation();
 if ($action === "create") {
   try {
     $login_id = (isset($user['login_id']) ? $VALIDATION->input($user['login_id']) : "");
+    $department_number = (isset($_POST['department_number']) ? $VALIDATION->input($_POST['department_number']) : "");
     $doc_date = (isset($_POST['doc_date']) ? $VALIDATION->input($_POST['doc_date']) : "");
     $doc_date = (!empty($doc_date) ? DateTime::createFromFormat('d/m/Y', $doc_date)->format('Y-m-d') : "");
     $finish = (isset($_POST['finish']) ? $VALIDATION->input($_POST['finish']) : "");
@@ -49,9 +50,9 @@ if ($action === "create") {
     $objective = (isset($_POST['objective']) ? $VALIDATION->input($_POST['objective']) : "");
     $advance_last = $ADVANCE->advance_last();
 
-    $advance_count = $ADVANCE->advance_count([$login_id, $doc_date, $finish, $objective]);
+    $advance_count = $ADVANCE->advance_count([$login_id, $department_number, $doc_date, $finish, $objective]);
     if (intval($advance_count) === 0) {
-      $ADVANCE->advance_insert([$advance_last, $login_id, $doc_date, $finish, $objective]);
+      $ADVANCE->advance_insert([$advance_last, $login_id, $department_number, $doc_date, $finish, $objective]);
       $request_id = $ADVANCE->last_insert_id();
 
       foreach ($_POST['expense_id'] as $key => $row) {
@@ -105,12 +106,13 @@ if ($action === "update") {
   try {
     $request_id = (isset($_POST['id']) ? $VALIDATION->input($_POST['id']) : "");
     $uuid = (isset($_POST['uuid']) ? $VALIDATION->input($_POST['uuid']) : "");
+    $department_number = (isset($_POST['department_number']) ? $VALIDATION->input($_POST['department_number']) : "");
     $doc_date = (isset($_POST['doc_date']) ? $VALIDATION->input($_POST['doc_date']) : "");
     $doc_date = (!empty($doc_date) ? DateTime::createFromFormat('d/m/Y', $doc_date)->format('Y-m-d') : "");
     $finish = (isset($_POST['finish']) ? $VALIDATION->input($_POST['finish']) : "");
     $finish = (!empty($finish) ? DateTime::createFromFormat('d/m/Y', $finish)->format('Y-m-d') : "");
     $objective = (isset($_POST['objective']) ? $VALIDATION->input($_POST['objective']) : "");
-    $ADVANCE->advance_update([$doc_date, $finish, $objective, $uuid]);
+    $ADVANCE->advance_update([$department_number, $doc_date, $finish, $objective, $uuid]);
 
     foreach ($_POST['item__id'] as $key => $row) {
       $item__id = (isset($_POST['item__id'][$key]) ? $VALIDATION->input($_POST['item__id'][$key]) : "");

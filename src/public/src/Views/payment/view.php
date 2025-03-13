@@ -41,6 +41,12 @@ $remarks = $PAYMENT->payment_remark_view([$uuid]);
             <input type="text" class="form-control form-control-sm type-select" value="<?php echo $row['type'] ?>" readonly>
           </div>
         </div>
+        <div class="row mb-2">
+          <label class="col-xl-2 offset-xl-2 col-form-label">ORDER NUMBER</label>
+          <div class="col-xl-4">
+            <input type="text" class="form-control form-control-sm order-select" value="<?php echo $row['order_number'] ?>" readonly>
+          </div>
+        </div>
       </div>
       <div class="row mb-2">
         <label class="col-xl-2 offset-xl-2 col-form-label">เลขที่เอกสาร</label>
@@ -52,6 +58,15 @@ $remarks = $PAYMENT->payment_remark_view([$uuid]);
         <label class="col-xl-2 offset-xl-2 col-form-label">ผู้ใช้บริการ</label>
         <div class="col-xl-4 text-underline">
           <?php echo $row['username'] ?>
+        </div>
+      </div>
+      <div class="row mb-2">
+        <label class="col-xl-2 offset-xl-2 col-form-label">เลขที่เอกสารฝ่าย</label>
+        <div class="col-xl-4">
+          <input type="text" class="form-control form-control-sm" name="department_number" value="<?php echo $row['department_number'] ?>" required>
+          <div class="invalid-feedback">
+            กรุณากรอกข้อมูล!
+          </div>
         </div>
       </div>
       <div class="row mb-2">
@@ -150,11 +165,7 @@ $remarks = $PAYMENT->payment_remark_view([$uuid]);
                   <th width="10%">VAT 7%</th>
                   <th width="10%">W/T</th>
                   <th width="10%">ยอดสุทธิ</th>
-                  <?php
-                  if (!empty($row['order_number'])) {
-                    echo '<th width="10%">ยอดคงเหลือ</th>';
-                  }
-                  ?>
+                  <th width="10%">ยอดคงเหลือ</th>
                 </tr>
               </thead>
               <tbody>
@@ -162,80 +173,69 @@ $remarks = $PAYMENT->payment_remark_view([$uuid]);
                   <tr>
                     <td class="text-center">
                       <a href="javascript:void(0)" class="badge badge-danger font-weight-light item-delete" id="<?php echo $item['id'] ?>">ลบ</a>
-                      <input type="hidden" class="form-control form-control-sm text-center" name="item__id[]" value="<?php echo $item['id'] ?>" readonly>
                     </td>
                     <td class="text-left"><?php echo $item['expense_name'] ?></td>
-                    <td class="text-left">
-                      <input type="text" class="form-control form-control-sm text-left" name="item__text[]" value="<?php echo $item['text'] ?>" required>
+                    <td class="text-left"><?php echo $item['text'] ?></td>
+                    <td class="text-left"><?php echo $item['text2'] ?></td>
+                    <td class="text-right">
+                      <input type="text" class="form-control from-control-sm text-right amount-item" value="<?php echo $item['amount'] ?>" readonly>
                     </td>
-                    <td class="text-left">
-                      <input type="text" class="form-control form-control-sm text-left" name="item__text2[]" value="<?php echo $item['text2'] ?>" required>
+                    <td class="text-right">
+                      <input type="text" class="form-control from-control-sm text-right vat-item" value="<?php echo $item['vat'] ?>" readonly>
                     </td>
-                    <td>
-                      <input type="number" class="form-control form-control-sm text-right amount-item" name="item__amount[]" value="<?php echo $item['amount'] ?>" max="<?php echo $item['remain'] ?>" required>
-                      <div class="invalid-feedback">
-                        กรุณากรอกข้อมูล!
-                      </div>
-                    </td>
-                    <td>
-                      <input type="number" class="form-control form-control-sm text-right vat-item" name="item__vat[]" value="<?php echo $item['vat'] ?>">
-                    </td>
-                    <td>
-                      <input type="number" class="form-control form-control-sm text-right wt-item" name="item__wt[]" value="<?php echo $item['wt'] ?>">
+                    <td class="text-right">
+                      <input type="text" class="form-control from-control-sm text-right wt-item" value="<?php echo $item['wt'] ?>" readonly>
                     </td>
                     <td class="text-right">
                       <?php echo number_format($item['total'], 2) ?>
                     </td>
-                    <?php
-                    if (!empty($row['order_number'])) {
-                      echo '<td class="text-right">' . number_format($item['remain'], 2) . '</td>';
-                    }
-                    ?>
+                    <td></td>
                   </tr>
                 <?php endforeach; ?>
-                <?php if (empty($row['order_number'])) : ?>
-                  <tr class="item-tr">
-                    <td class="text-center">
-                      <button type="button" class="btn btn-sm btn-success item-increase">+</button>
-                      <button type="button" class="btn btn-sm btn-danger item-decrease">-</button>
-                    </td>
-                    <td>
-                      <select class="form-control form-control-sm expense-select" name="expense_id[]"></select>
-                      <div class="invalid-feedback">
-                        กรุณากรอกข้อมูล!
-                      </div>
-                    </td>
-                    <td>
-                      <input type="text" class="form-control form-control-sm text-left" name="item_text[]">
-                      <div class="invalid-feedback">
-                        กรุณากรอกข้อมูล!
-                      </div>
-                    </td>
-                    <td>
-                      <input type="text" class="form-control form-control-sm text-left" name="item_text2[]">
-                      <div class="invalid-feedback">
-                        กรุณากรอกข้อมูล!
-                      </div>
-                    </td>
-                    </td>
-                    <td>
-                      <input type="number" class="form-control form-control-sm text-right amount-item" min="1" step="0.01" name="item_amount[]">
-                      <div class="invalid-feedback">
-                        กรุณากรอกข้อมูล!
-                      </div>
-                    </td>
-                    </td>
-                    <td>
-                      <input type="number" class="form-control form-control-sm text-right vat-item" min="1" step="0.01" name="item_vat[]">
-                    </td>
-                    <td>
-                      <input type="number" class="form-control form-control-sm text-right wt-item" min="1" step="0.01" name="item_wt[]">
-                    </td>
-                    <td class="text-right">
-                      <span class="total-item"></span>
-                    </td>
-                  </tr>
-                <?php endif; ?>
+                <tr class="item-tr">
+                  <td class="text-center">
+                    <button type="button" class="btn btn-sm btn-success item-increase">+</button>
+                    <button type="button" class="btn btn-sm btn-danger item-decrease">-</button>
+                  </td>
+                  <td>
+                    <select class="form-control form-control-sm expense-select" name="expense_id[]"></select>
+                    <div class="invalid-feedback">
+                      กรุณากรอกข้อมูล!
+                    </div>
+                  </td>
+                  <td>
+                    <input type="text" class="form-control form-control-sm text-left text-item" name="item_text[]">
+                    <div class="invalid-feedback">
+                      กรุณากรอกข้อมูล!
+                    </div>
+                  </td>
+                  <td>
+                    <input type="text" class="form-control form-control-sm text-left text2-item" name="item_text2[]">
+                    <div class="invalid-feedback">
+                      กรุณากรอกข้อมูล!
+                    </div>
+                  </td>
+                  </td>
+                  <td>
+                    <input type="number" class="form-control form-control-sm text-right amount-item" min="1" step="0.01" name="item_amount[]">
+                    <div class="invalid-feedback">
+                      กรุณากรอกข้อมูล!
+                    </div>
+                  </td>
+                  </td>
+                  <td>
+                    <input type="number" class="form-control form-control-sm text-right vat-item" min="1" step="0.01" name="item_vat[]">
+                  </td>
+                  <td>
+                    <input type="number" class="form-control form-control-sm text-right wt-item" min="1" step="0.01" name="item_wt[]">
+                  </td>
+                  <td class="text-right">
+                    <span class="total-item"></span>
+                  </td>
+                  <td class="text-right">
+                    <span class="remain-item"></span>
+                  </td>
+                </tr>
                 <tr>
                   <td colspan="4" class="text-right">รวมทั้งสิ้น</td>
                   <td class="text-right">
@@ -354,7 +354,30 @@ $remarks = $PAYMENT->payment_remark_view([$uuid]);
 
 <?php include_once(__DIR__ . "/../layout/footer.php"); ?>
 <script>
-  initializeSelect2(".expense-select", "/estimate/expense-select", "-- รายชื่อรายจ่าย --");
+  const order = ($(".order-select").val() || "");
+  $(".expense-select").select2({
+    placeholder: "-- รายจ่าย --",
+    width: "100%",
+    allowClear: true,
+    ajax: {
+      url: "/payment/expense-select",
+      method: "POST",
+      data: function(params) {
+        return {
+          keyword: params.term,
+          order
+        };
+      },
+      dataType: "json",
+      delay: 100,
+      processResults: function(data) {
+        return {
+          results: data
+        };
+      },
+      cache: true
+    }
+  });
 
   $(".item-decrease, .file-decrease").hide();
   $(document).on("click", ".item-increase", function() {
@@ -373,7 +396,31 @@ $remarks = $PAYMENT->payment_remark_view([$uuid]);
     });
 
     row.after(clone);
-    initializeSelect2(".expense-select", "/estimate/expense-select", "-- รายชื่อรายจ่าย --");
+    
+    const order = ($(".order-select").val() || "");
+    $(".expense-select").select2({
+      placeholder: "-- รายจ่าย --",
+      width: "100%",
+      allowClear: true,
+      ajax: {
+        url: "/payment/expense-select",
+        method: "POST",
+        data: function(params) {
+          return {
+            keyword: params.term,
+            order
+          };
+        },
+        dataType: "json",
+        delay: 100,
+        processResults: function(data) {
+          return {
+            results: data
+          };
+        },
+        cache: true
+      }
+    });
     updateTotal();
   });
 
@@ -394,13 +441,55 @@ $remarks = $PAYMENT->payment_remark_view([$uuid]);
   });
 
   $(document).on("change", ".expense-select", function() {
-    const expense = parseFloat($(this).val() || "");
+    const expense = ($(this).val() || "");
+    const order = ($(".order-select").val() || "");
+    const row = $(this).closest("tr");
+    row.find(".text-item, .text2-item, .amount-item, .vat-item, .wt-item").val("");
+    row.find(".total-item").text("");
+
+    console.log(order)
 
     if (expense) {
-      $("input[name='item_text[]'], input[name='item_text2[]'], input[name='item_amount[]']").prop("required", true);
+        axios.post("/payment/order-view", {
+        expense,
+        order
+      })
+      .then((res) => {
+        const result = res.data;
+        row.find(".remain-item").text(result.remain);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+
+      row.find(".text-item, .text2-item, .amount-item").prop("required", true);
     } else {
-      $("input[name='item_text[]'], input[name='item_text2[]'], input[name='item_amount[]']").prop("required", false);
+      row.find(".text-item, .text2-item, .amount-item").prop("required", false);
     }
+  });
+
+  $(document).on("input", ".amount-item, .vat-item, .wt-item", function() {
+    const row = $(this).closest("tr");
+    const amount = parseFloat(row.find(".amount-item").val() || 0);
+    const vat = parseFloat(row.find(".vat-item").val() || 0);
+    const wt = parseFloat(row.find(".wt-item").val() || 0);
+    const remain = parseFloat(row.find(".remain-item").text() || "");
+    const total = (amount + vat - wt);
+
+    row.find(".amount-item").attr("max", remain);
+
+    if (remain && total > remain) {
+      Swal.fire({
+        icon: "error",
+        title: "รายจ่ายเกินวงเงิน \nกรุณาตรวจสอบอีกครั้ง!",
+      });
+      row.find(".amount-item, .vat-item, .wt-item").val("");
+      row.find(".total-item").text("");
+    } else {
+      row.find(".total-item").text(total.toFixed(2));
+    }
+
+    updateTotal();
   });
 
   $(document).on("click", ".file-increase", function() {
@@ -416,21 +505,6 @@ $remarks = $PAYMENT->payment_remark_view([$uuid]);
     });
 
     row.after(clone);
-  });
-
-  $(document).on("blur", ".amount-item, .vat-item, .wt-item", function() {
-    const row = $(this).closest("tr");
-    const amount = parseFloat(row.find(".amount-item").val() || 0);
-    const vat = parseFloat(row.find(".vat-item").val() || 0);
-    const wt = parseFloat(row.find(".wt-item").val() || 0);
-
-    const total = (amount + vat - wt);
-    row.find(".total-item").text(total.toFixed(2).toLocaleString('th-TH', {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    }));
-
-    updateTotal();
   });
 
   function updateTotal() {

@@ -16,6 +16,15 @@ include_once(__DIR__ . "/../layout/header.php");
         </div>
       </div>
       <div class="row mb-2">
+        <label class="col-xl-2 offset-xl-2 col-form-label">เลขที่เอกสารฝ่าย</label>
+        <div class="col-xl-4">
+          <input type="text" class="form-control form-control-sm" name="department_number" required>
+          <div class="invalid-feedback">
+            กรุณากรอกข้อมูล!
+          </div>
+        </div>
+      </div>
+      <div class="row mb-2">
         <label class="col-xl-2 offset-xl-2 col-form-label">วันที่เอกสาร</label>
         <div class="col-xl-4">
           <input type="text" class="form-control form-control-sm date-select" name="doc_date" required>

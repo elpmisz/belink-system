@@ -21,6 +21,7 @@ class AdvanceClear
     FROM belink.advance_clear_request a
     WHERE a.status = 1
     AND a.login_id = ?
+    AND a.department_number = ?
     AND a.doc_date = ?
     AND a.advance_id = ?
     AND a.amount = ?";
@@ -45,7 +46,7 @@ class AdvanceClear
 
   public function advance_insert($data)
   {
-    $sql = "INSERT INTO belink.advance_clear_request( `uuid`, `last`, `login_id`, `doc_date`, `advance_id`, `amount`) VALUES(uuid(),?,?,?,?,?)";
+    $sql = "INSERT INTO belink.advance_clear_request( `uuid`, `last`, `login_id`, `department_number`, `doc_date`, `advance_id`, `amount`) VALUES(uuid(),?,?,?,?,?,?)";
     $stmt = $this->dbcon->prepare($sql);
     return $stmt->execute($data);
   }
@@ -56,6 +57,7 @@ class AdvanceClear
       a.`uuid`,
       CONCAT('AC',YEAR(a.created),LPAD(a.`last`,4,'0')) ticket,
       CONCAT(b.firstname,' ',b.lastname) username,
+      a.department_number,
       a.advance_id,
       CONCAT('AR',YEAR(d.created),LPAD(d.`last`,4,'0')) advance_ticket,
       a.amount,
@@ -85,9 +87,8 @@ class AdvanceClear
   public function advance_update($data)
   {
     $sql = "UPDATE belink.advance_clear_request SET
-    order_number = ?,
-    amount = ?,
-    objective = ?,
+    department_update = ?,
+    doc_date = ?,
     `action` = 1,
     updated = NOW()
     WHERE uuid = ?";

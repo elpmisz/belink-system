@@ -16,6 +16,15 @@ include_once(__DIR__ . "/../layout/header.php");
         </div>
       </div>
       <div class="row mb-2">
+        <label class="col-xl-2 offset-xl-2 col-form-label">เลขที่เอกสารฝ่าย</label>
+        <div class="col-xl-4">
+          <input type="text" class="form-control form-control-sm" name="department_number" required>
+          <div class="invalid-feedback">
+            กรุณากรอกข้อมูล!
+          </div>
+        </div>
+      </div>
+      <div class="row mb-2">
         <label class="col-xl-2 offset-xl-2 col-form-label">วันที่เอกสาร</label>
         <div class="col-xl-4">
           <input type="text" class="form-control form-control-sm date-select" name="doc_date" required>
@@ -100,15 +109,7 @@ include_once(__DIR__ . "/../layout/header.php");
         </div>
       </div>
 
-      <div class="row mb-2 items-div" style="display: none;">
-        <div class="col-xl-12">
-          <div class="table-responsive">
-            <table class="table table-bordered items-table"></table>
-          </div>
-        </div>
-      </div>
-
-      <div class="row mb-2 items-custom-div">
+      <div class="row mb-2">
         <div class="col-xl-12">
           <div class="table-responsive">
             <table class="table table-bordered">
@@ -122,6 +123,7 @@ include_once(__DIR__ . "/../layout/header.php");
                   <th width="10%">VAT 7%</th>
                   <th width="10%">W/T</th>
                   <th width="10%">ยอดสุทธิ</th>
+                  <th width="10%">ยอดคงเหลือ</th>
                 </tr>
               </thead>
               <tbody>
@@ -131,25 +133,25 @@ include_once(__DIR__ . "/../layout/header.php");
                     <button type="button" class="btn btn-sm btn-danger item-decrease">-</button>
                   </td>
                   <td>
-                    <select class="form-control form-control-sm expense-select" name="expense_id[]"></select>
+                    <select class="form-control form-control-sm expense-select" name="expense_id[]" required></select>
                     <div class="invalid-feedback">
                       กรุณากรอกข้อมูล!
                     </div>
                   </td>
                   <td>
-                    <input type="text" class="form-control form-control-sm text-left" name="item_text[]">
+                    <input type="text" class="form-control form-control-sm text-left text-item" name="item_text[]" required>
                     <div class="invalid-feedback">
                       กรุณากรอกข้อมูล!
                     </div>
                   </td>
                   <td>
-                    <input type="text" class="form-control form-control-sm text-left" name="item_text2[]">
+                    <input type="text" class="form-control form-control-sm text-left text2-item" name="item_text2[]" required>
                     <div class="invalid-feedback">
                       กรุณากรอกข้อมูล!
                     </div>
                   </td>
                   <td>
-                    <input type="number" class="form-control form-control-sm text-right amount-item" min="1" step="0.01" name="item_amount[]">
+                    <input type="number" class="form-control form-control-sm text-right amount-item" min="1" step="0.01" name="item_amount[]" required>
                     <div class="invalid-feedback">
                       กรุณากรอกข้อมูล!
                     </div>
@@ -163,6 +165,9 @@ include_once(__DIR__ . "/../layout/header.php");
                   </td>
                   <td class="text-right">
                     <span class="total-item"></span>
+                  </td>
+                  <td class="text-right">
+                    <span class="remain-item"></span>
                   </td>
                 </tr>
                 <tr>
@@ -224,7 +229,62 @@ include_once(__DIR__ . "/../layout/header.php");
 <?php include_once(__DIR__ . "/../layout/footer.php"); ?>
 <script>
   initializeSelect2(".order-select", "/payment/order-select", "-- รายชื่อเลขที่สัญญา --");
-  initializeSelect2(".expense-select", "/estimate/expense-select", "-- รายชื่อรายจ่าย --");
+  
+  const order = ($(".order-select").val() || "");
+  $(".expense-select").select2({
+    placeholder: "-- รายจ่าย --",
+    width: "100%",
+    allowClear: true,
+    ajax: {
+      url: "/payment/expense-select",
+      method: "POST",
+      data: function(params) {
+        return {
+          keyword: params.term,
+          order
+        };
+      },
+      dataType: "json",
+      delay: 100,
+      processResults: function(data) {
+        return {
+          results: data
+        };
+      },
+      cache: true
+    }
+  });
+
+  $(document).on("change", ".order-select", function(){
+    $(".expense-select").empty();
+    $(".text-item, .text2-item, .amount-item, .vat-item, .wt-item").val("");
+    $(".total-item, .amount-total, .vat-total, .wt-total, .all-total").text("");
+
+    const order = ($(this).val() || "");
+    $(".expense-select").select2({
+      placeholder: "-- รายจ่าย --",
+      width: "100%",
+      allowClear: true,
+      ajax: {
+        url: "/payment/expense-select",
+        method: "POST",
+        data: function(params) {
+          return {
+            keyword: params.term,
+            order
+          };
+        },
+        dataType: "json",
+        delay: 100,
+        processResults: function(data) {
+          return {
+            results: data
+          };
+        },
+        cache: true
+      }
+    });
+  });
 
   $(".item-decrease, .file-decrease").hide();
   $(document).on("click", ".item-increase", function() {
@@ -243,7 +303,31 @@ include_once(__DIR__ . "/../layout/header.php");
     });
 
     row.after(clone);
-    initializeSelect2(".expense-select", "/estimate/expense-select", "-- รายชื่อรายจ่าย --");
+
+    const order = ($(".order-select").val() || "");
+    $(".expense-select").select2({
+      placeholder: "-- รายจ่าย --",
+      width: "100%",
+      allowClear: true,
+      ajax: {
+        url: "/payment/expense-select",
+        method: "POST",
+        data: function(params) {
+          return {
+            keyword: params.term,
+            order
+          };
+        },
+        dataType: "json",
+        delay: 100,
+        processResults: function(data) {
+          return {
+            results: data
+          };
+        },
+        cache: true
+      }
+    });
     updateTotal();
   });
 
@@ -259,11 +343,52 @@ include_once(__DIR__ . "/../layout/header.php");
 
   $(document).on("change", ".expense-select", function() {
     const expense = ($(this).val() || "");
+    const order = ($(".order-select").val() || "");
+    const row = $(this).closest("tr");
+    row.find(".text-item, .text2-item, .amount-item, .vat-item, .wt-item").val("");
+    row.find(".total-item").text("");
+
     if (expense) {
-      $("input[name='item_text[]'], input[name='item_text2[]'], input[name='item_amount[]']").prop("required", true);
+        axios.post("/payment/order-view", {
+        expense,
+        order
+      })
+      .then((res) => {
+        const result = res.data;
+        row.find(".remain-item").text(result.remain);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+
+      row.find(".text-item, .text2-item, .amount-item").prop("required", true);
     } else {
-      $("input[name='item_text[]'], input[name='item_text2[]'], input[name='item_amount[]']").prop("required", false);
+      row.find(".text-item, .text2-item, .amount-item").prop("required", false);
     }
+  });
+
+  $(document).on("input", ".amount-item, .vat-item, .wt-item", function() {
+    const row = $(this).closest("tr");
+    const amount = parseFloat(row.find(".amount-item").val() || 0);
+    const vat = parseFloat(row.find(".vat-item").val() || 0);
+    const wt = parseFloat(row.find(".wt-item").val() || 0);
+    const remain = parseFloat(row.find(".remain-item").text() || "");
+    const total = (amount + vat - wt);
+
+    row.find(".amount-item").attr("max", remain);
+
+    if (remain && total > remain) {
+      Swal.fire({
+        icon: "error",
+        title: "รายจ่ายเกินวงเงิน \nกรุณาตรวจสอบอีกครั้ง!",
+      });
+      row.find(".amount-item, .vat-item, .wt-item").val("");
+      row.find(".total-item").text("");
+    } else {
+      row.find(".total-item").text(total.toFixed(2));
+    }
+
+    updateTotal();
   });
 
   $(document).on("click", ".file-increase", function() {
@@ -279,126 +404,6 @@ include_once(__DIR__ . "/../layout/header.php");
     });
 
     row.after(clone);
-  });
-
-  $(document).on("change", ".order-select", function() {
-    const order = $(this).val() || 0;
-    const row = $(this).closest("tr");
-
-    if (order === 0) {
-      $(".items-custom-div").show();
-      $(".expense-select").prop("required", true);
-      $("input[name='item_text[]'], input[name='item_text2[]'], input[name='item_amount[]']").prop("required", true);
-
-      initializeSelect2(".expense-select", "/estimate/expense-select", "-- รายชื่อรายจ่าย --");
-    } else {
-      $(".items-custom-div").hide();
-      $(".expense-select").prop("required", false);
-      $(".item-tr").each(function() {
-        $(this).find("input").val("");
-        $(this).find("span").text("");
-        $(this).find("select").val(null).trigger('change');
-      });
-      $("tr:last").find(".amount-total, .vat-total, .wt-total, .all-total").text("");
-
-      $(".expense-select").prop("required", false);
-      $("input[name='item_text[]'], input[name='item_text2[]'], input[name='item_amount[]']").prop("required", false);
-    }
-
-    axios.post("/payment/order-view", {
-        order
-      })
-      .then((res) => {
-        const items = res.data;
-        let tableContent = '';
-        if (items.length > 0) {
-          tableContent = `
-          <tr>
-            <th width="5%">#</th>
-            <th width="15%">รายจ่าย</th>
-            <th width="15%">รายละเอียด</th>
-            <th width="15%">รายละเอียด</th>
-            <th width="10%">จำนวนเงิน</th>
-            <th width="10%">VAT 7%</th>
-            <th width="10%">W/T</th>
-            <th width="10%">ยอดสุทธิ</th>
-            <th width="10%">ยอดคงเหลือ</th>
-          </tr>
-        `;
-
-          items.forEach((item, index) => {
-            let remain = parseFloat(item.remain).toLocaleString('th-TH', {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2
-            });
-            const estimate = parseFloat(item.estimate).toLocaleString('th-TH', {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2
-            });
-            remain = parseInt(item.payment) === 0 ? estimate : remain;
-            tableContent += `
-            <tr class="item-tr">
-              <td class="text-center">${index + 1}</td>
-              <td class="text-left">
-              ${item.expense_name}
-              <input type="hidden" class="form-control form-control-sm text-left" name="expense_id[]" value="${item.expense_id}" readonly>
-                <div class="invalid-feedback">กรุณากรอกข้อมูล!</div>
-              </td>
-              <td>
-                <input type="text" class="form-control form-control-sm text-left" name="item_text[]" required>
-                <div class="invalid-feedback">กรุณากรอกข้อมูล!</div>
-              </td>
-              <td>
-                <input type="text" class="form-control form-control-sm text-left" name="item_text2[]" required>
-                <div class="invalid-feedback">กรุณากรอกข้อมูล!</div>
-              </td>
-              <td>
-                <input type="number" class="form-control form-control-sm text-right amount-item" min="1" max="${item.remain}" step="0.01" name="item_amount[]" required><div class="invalid-feedback">กรุณากรอกข้อมูล!</div>
-              </td>
-              <td>
-                <input type="number" class="form-control form-control-sm text-right vat-item" min="1" step="0.01" name="item_vat[]">
-              </td>
-              <td>
-                <input type="number" class="form-control form-control-sm text-right wt-item" min="1" step="0.01" name="item_wt[]">
-              </td>
-              <td class="text-right"><span class="total-item"></span></td>
-              <td class="text-right">${remain}</span></td>
-            </tr>
-          `;
-          });
-
-          tableContent += `
-            <tr>
-              <td colspan="4" class="text-right">รวมทั้งสิ้น</td>
-              <td class="text-right"><span class="amount-total"></span></td>
-              <td class="text-right"><span class="vat-total"></span></td>
-              <td class="text-right"><span class="wt-total"></span></td>
-              <td class="text-right"><span class="all-total"></span></td>
-            </tr>
-          `;
-
-          $(".items-div").show();
-        } else {
-          $(".items-div").hide();
-        }
-
-        $(".items-table").html(tableContent);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  });
-
-  $(document).on("blur", ".amount-item, .vat-item, .wt-item", function() {
-    const row = $(this).closest("tr");
-    const amount = parseFloat(row.find(".amount-item").val() || 0);
-    const vat = parseFloat(row.find(".vat-item").val() || 0);
-    const wt = parseFloat(row.find(".wt-item").val() || 0);
-
-    const total = (amount + vat - wt).toFixed(2);
-    row.find(".total-item").text(total);
-
-    updateTotal();
   });
 
   function updateTotal() {

@@ -42,15 +42,16 @@ $VALIDATION = new Validation();
 if ($action === "create") {
   try {
     $login_id = (isset($user['login_id']) ? $VALIDATION->input($user['login_id']) : "");
+    $department_number = (isset($_POST['department_number']) ? $VALIDATION->input($_POST['department_number']) : "");
     $doc_date = (isset($_POST['doc_date']) ? $VALIDATION->input($_POST['doc_date']) : "");
     $doc_date = (!empty($doc_date) ? DateTime::createFromFormat('d/m/Y', $doc_date)->format('Y-m-d') : "");
     $advance_number = (isset($_POST['advance_number']) ? $VALIDATION->input($_POST['advance_number']) : "");
     $amount = (isset($_POST['amount']) ? $VALIDATION->input($_POST['amount']) : "");
     $advance_last = $ADVANCE->advance_last();
 
-    $advance_count = $ADVANCE->advance_count([$login_id, $doc_date, $advance_number, $amount]);
+    $advance_count = $ADVANCE->advance_count([$login_id, $department_number, $doc_date, $advance_number, $amount]);
     if (intval($advance_count) === 0) {
-      $ADVANCE->advance_insert([$advance_last, $login_id, $doc_date, $advance_number, $amount]);
+      $ADVANCE->advance_insert([$advance_last, $login_id, $department_number, $doc_date, $advance_number, $amount]);
       $request_id = $ADVANCE->last_insert_id();
 
       foreach ($_POST['expense_id'] as $key => $row) {
@@ -106,6 +107,10 @@ if ($action === "update") {
   try {
     $request_id = (isset($_POST['id']) ? $VALIDATION->input($_POST['id']) : "");
     $uuid = (isset($_POST['uuid']) ? $VALIDATION->input($_POST['uuid']) : "");
+    $department_number = (isset($_POST['department_number']) ? $VALIDATION->input($_POST['department_number']) : "");
+    $doc_date = (isset($_POST['doc_date']) ? $VALIDATION->input($_POST['doc_date']) : "");
+    $doc_date = (!empty($doc_date) ? DateTime::createFromFormat('d/m/Y', $doc_date)->format('Y-m-d') : "");
+    $ADVANCE->advance_update([$department_number, $doc_date, $uuid]);
 
     foreach ($_POST['item__id'] as $key => $row) {
       $item__id = (isset($_POST['item__id'][$key]) ? $VALIDATION->input($_POST['item__id'][$key]) : "");

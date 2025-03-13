@@ -39,6 +39,7 @@ class Purchase
     FROM belink.purchase_request a
     WHERE a.status = 1
     AND a.login_id = ?
+    AND a.department_number = ?
     AND a.doc_date = ?
     AND a.department = ?
     AND a.date = ?
@@ -65,7 +66,7 @@ class Purchase
 
   public function purchase_insert($data)
   {
-    $sql = "INSERT INTO belink.purchase_request( `uuid`, `last`, `login_id`, `doc_date`, `department`, `date`, `order_number`, `objective`) VALUES(uuid(),?,?,?,?,?,?,?)";
+    $sql = "INSERT INTO belink.purchase_request( `uuid`, `last`, `login_id`, `department_number`, `doc_date`, `department`, `date`, `order_number`, `objective`) VALUES(uuid(),?,?,?,?,?,?,?,?)";
     $stmt = $this->dbcon->prepare($sql);
     return $stmt->execute($data);
   }
@@ -76,6 +77,7 @@ class Purchase
     a.`uuid`,
     CONCAT('PR',YEAR(a.created),LPAD(a.`last`,4,'0')) ticket,
     CONCAT(b.firstname,' ',b.lastname) username,
+    a.department_number,
     a.department,
     DATE_FORMAT(a.doc_date, '%d/%m/%Y') `doc_date`,
     DATE_FORMAT(a.date, '%d/%m/%Y') `date`,
