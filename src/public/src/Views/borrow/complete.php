@@ -42,6 +42,12 @@ $remarks = $BORROW->remark_view([$uuid]);
         </div>
       </div>
       <div class="row mb-2">
+        <label class="col-xl-2 offset-xl-2 col-form-label">เลขที่เอกสาร</label>
+        <div class="col-xl-4 text-underline">
+          <?php echo $row['ticket'] ?>
+        </div>
+      </div>
+      <div class="row mb-2">
         <label class="col-xl-2 offset-xl-2 col-form-label">ผู้ใช้บริการ</label>
         <div class="col-xl-4 text-underline">
           <?php echo $row['username'] ?>

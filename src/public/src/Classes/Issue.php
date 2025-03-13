@@ -698,14 +698,14 @@ class Issue
 
   public function outcome_select($keyword)
   {
-    $sql = "SELECT id, CONCAT('[',CONCAT('IS',YEAR(created),LPAD(`last`,4,'0')),'] ',`text`) `text`
+    $sql = "SELECT id, CONCAT('[',CONCAT('IS-',RIGHT((YEAR(created) + 543),2),LPAD(`last`,4,'0')),'] ',`text`) `text`
     FROM belink.issue_request
     WHERE type = 2
     AND status = 2 ";
     if (!empty($keyword)) {
       $sql .= " AND (`text` LIKE '%{$keyword}%') ";
     }
-    $sql .= " ORDER BY id ASC LIMIT 20";
+    $sql .= " ORDER BY id DESC LIMIT 20";
     $stmt = $this->dbcon->prepare($sql);
     $stmt->execute();
     return $stmt->fetchAll();
