@@ -16,7 +16,7 @@ $files = $ISSUE->file_view([$uuid]);
 ?>
 
 <div class="card shadow">
-  <h4 class="card-header text-center">นำสินค้าเข้า-ออก</h4>
+  <h4 class="card-header text-center">ระบบใบนำเข้า-เบิกออก</h4>
   <div class="card-body">
 
     <form action="/issue/update" method="POST" class="needs-validation" novalidate enctype="multipart/form-data">

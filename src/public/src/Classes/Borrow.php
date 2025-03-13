@@ -66,7 +66,7 @@ class Borrow
   {
     $sql = "SELECT a.id,
     a.`uuid`,
-    CONCAT('BR',YEAR(a.created),LPAD(a.`last`,4,'0')) ticket,
+    CONCAT('BR-',RIGHT((YEAR(a.created) + 543),2),LPAD(a.`last`,4,'0')) ticket,
     CONCAT(b.firstname,' ',b.lastname) username,
     DATE_FORMAT(a.date,'%d/%m/%Y') `date`,
     a.event_date,
@@ -281,7 +281,7 @@ class Borrow
 
     $sql = "SELECT a.id,
     a.`uuid`,
-    CONCAT('BR',YEAR(a.created),LPAD(a.`last`,4,'0')) ticket,
+    CONCAT('BR-',RIGHT((YEAR(a.created) + 543),2),LPAD(a.`last`,4,'0')) ticket,
     CONCAT(b.firstname,' ',b.lastname) username,
     GROUP_CONCAT(DISTINCT CONCAT(IF(d.`code` = '','',CONCAT('[',d.`code`,'] ')),d.name)) items,
     CONCAT(DATE_FORMAT(a.event_start,'%d/%m/%Y'),' - ',DATE_FORMAT(a.event_end,'%d/%m/%Y')) `date`,
@@ -387,7 +387,7 @@ class Borrow
 
     $sql = "SELECT a.id,
     a.`uuid`,
-    CONCAT('BR',YEAR(a.created),LPAD(a.`last`,4,'0')) ticket,
+    CONCAT('BR-',RIGHT((YEAR(a.created) + 543),2),LPAD(a.`last`,4,'0')) ticket,
     CONCAT(b.firstname,' ',b.lastname) username,
     GROUP_CONCAT(DISTINCT CONCAT(IF(d.`code` = '','',CONCAT('[',d.`code`,'] ')),d.name)) items,
     CONCAT(DATE_FORMAT(a.event_start,'%d/%m/%Y'),' - ',DATE_FORMAT(a.event_end,'%d/%m/%Y')) `date`,
@@ -495,7 +495,7 @@ class Borrow
 
     $sql = "SELECT a.id,
     a.`uuid`,
-    CONCAT('BR',YEAR(a.created),LPAD(a.`last`,4,'0')) ticket,
+    CONCAT('BR-',RIGHT((YEAR(a.created) + 543),2),LPAD(a.`last`,4,'0')) ticket,
     CONCAT(b.firstname,' ',b.lastname) username,
     GROUP_CONCAT(DISTINCT CONCAT(IF(d.`code` = '','',CONCAT('[',d.`code`,'] ')),d.name)) items,
     CONCAT(DATE_FORMAT(a.event_start,'%d/%m/%Y'),' - ',DATE_FORMAT(a.event_end,'%d/%m/%Y')) `date`,

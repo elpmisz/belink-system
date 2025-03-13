@@ -18,7 +18,7 @@ $remarks = $ADVANCE->advance_remark_view([$uuid]);
 ?>
 
 <div class="card shadow">
-  <h4 class="card-header text-center">Advance Clearing Voucher</h4>
+  <h4 class="card-header text-center">ระบบใบขอเคลียร์ Clear Advance Payment Voucher</h4>
   <div class="card-body">
 
     <form action="/advance-clear/approve" method="POST" class="needs-validation" novalidate enctype="multipart/form-data">

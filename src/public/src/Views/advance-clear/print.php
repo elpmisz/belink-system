@@ -21,7 +21,7 @@ ob_start();
 
 <head>
   <meta charset="utf-8">
-  <title>ใบเคลียร์เงินทดรองจ่าย (Advance Clearing Voucher)</title>
+  <title>ระบบใบขอเคลียร์ Clear Advance Payment</title>
   <style>
     table {
       width: 100%;
@@ -82,7 +82,7 @@ ob_start();
     <tr>
       <td class="text-left no-border" width="10%"></td>
       <td class="text-center no-border" width="50%">
-        <h2>ใบเคลียร์เงินทดรองจ่าย (Advance Clearing)</h2>
+        <h2>ใบขอเคลียร์ Clear Advance Payment</h2>
       </td>
       <td class="no-border" width="20%">วันที่</td>
       <td class="bottom-border" width="20%">

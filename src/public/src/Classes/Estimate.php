@@ -62,7 +62,7 @@ class Estimate
     $sql = "SELECT 
       a.id,
       a.`uuid`,
-      CONCAT('EB',YEAR(a.created),LPAD(a.`last`,4,'0')) ticket,
+      CONCAT('EB-',RIGHT((YEAR(a.created) + 543),2),LPAD(a.`last`,4,'0')) ticket,
       a.login_id,
       CONCAT(c.firstname,' ',c.lastname) username,
       department_number,
@@ -156,8 +156,9 @@ class Estimate
     a.expense_id,
     CONCAT('[',a.code,'] ',a.expense_name) expense_name,
     a.estimate,
-    b.usage,
-    (a.estimate - b.usage) remain
+    IFNULL(b.count,0) `count`,
+    IFNULL(b.usage,0) `usage`,
+    (a.estimate - IFNULL(b.usage,0)) remain
     FROM 
     (
       SELECT b.id,
@@ -178,7 +179,7 @@ class Estimate
     ) a
     LEFT JOIN 
     (
-      SELECT a.order_number,b.expense_id,(SUM(b.amount) + SUM(b.vat) + SUM(b.wt)) `usage`
+      SELECT a.order_number,COUNT(b.expense_id) `count`,b.expense_id,(SUM(b.amount) + SUM(b.vat) + SUM(b.wt)) `usage`
       FROM belink.payment_request a
       LEFT JOIN belink.payment_item b
       ON a.id = b.request_id
@@ -349,7 +350,7 @@ class Estimate
   {
     $sql = "SELECT a.id,
     a.`uuid`,
-    CONCAT('PO',YEAR(a.created),LPAD(a.`last`,4,'0')) ticket,
+    CONCAT('PV-',RIGHT((YEAR(a.created) + 543),2),LPAD(a.`last`,4,'0')) ticket,
     a.order_number,
     a.receiver,
     CONCAT(b.firstname,' ',b.lastname) username,
@@ -446,7 +447,7 @@ class Estimate
     $sql = "SELECT 
       a.id,
       a.`uuid`,
-      CONCAT('EB',YEAR(a.created),LPAD(a.`last`,4,'0')) ticket,
+      CONCAT('EB-',RIGHT((YEAR(a.created) + 543),2),LPAD(a.`last`,4,'0')) ticket,
       a.department_number,
       a.login_id,
       CONCAT(c.firstname,' ',c.lastname) username,
@@ -569,7 +570,7 @@ class Estimate
     $sql = "SELECT 
       a.id,
       a.`uuid`,
-      CONCAT('EB',YEAR(a.created),LPAD(a.`last`,4,'0')) ticket,
+      CONCAT('EB-',RIGHT((YEAR(a.created) + 543),2),LPAD(a.`last`,4,'0')) ticket,
       a.department_number,
       a.login_id,
       CONCAT(c.firstname,' ',c.lastname) username,

@@ -21,7 +21,7 @@ ob_start();
 
 <head>
   <meta charset="utf-8">
-  <title>ใบเคลียร์เงินทดรองจ่าย (Advance Clearing Voucher)</title>
+  <title>ระบบใบยืมทรัพย์สิน</title>
   <style>
     table {
       width: 100%;

@@ -10,17 +10,17 @@ $issue_authorize = $ISSUE->issue_authorize([$user['login_id']]);
   <div class="col-xl-12">
     <div class="card shadow">
       <div class="card-header">
-        <h4 class="text-center">ระบบนำเข้า-เบิกออก</h4>
+        <h4 class="text-center">ระบบใบนำเข้า-เบิกออก</h4>
       </div>
       <div class="card-body">
 
         <div class="row justify-content-end mb-2">
           <?php if (intval($user['level']) === 9 || intval($issue_authorize) > 0) : ?>
-          <div class="col-xl-3 mb-2">
-            <a href="/issue/manage" class="btn btn-primary btn-sm btn-block">
-              <i class="fas fa-bars pr-2"></i>จัดการระบบ
-            </a>
-          </div>
+            <div class="col-xl-3 mb-2">
+              <a href="/issue/manage" class="btn btn-primary btn-sm btn-block">
+                <i class="fas fa-bars pr-2"></i>จัดการระบบ
+              </a>
+            </div>
           <?php endif; ?>
           <div class="col-xl-3 mb-2">
             <a href="/issue/income" class="btn btn-success btn-sm btn-block">
@@ -35,33 +35,33 @@ $issue_authorize = $ISSUE->issue_authorize([$user['login_id']]);
         </div>
 
         <?php if (intval($user['level']) === 9 || intval($issue_authorize) === 1) : ?>
-        <div class="row my-3">
-          <div class="col-sm-12">
-            <div class="card shadow">
-              <div class="card-header">
-                <h4 class="text-center">รายการรอตรวจสอบ</h4>
-              </div>
-              <div class="card-body">
-                <div class="table-responsive">
-                  <table class="table table-sm table-bordered table-hover approve-data">
-                    <thead>
-                      <tr>
-                        <th width="10%">#</th>
-                        <th width="10%">เลขที่เอกสาร</th>
-                        <th width="10%">ผู้ใช้บริการ</th>
-                        <th width="10%">ประเภท</th>
-                        <th width="20%">สินค้า</th>
-                        <th width="10%">วันที่</th>
-                        <th width="20%">รายละเอียด</th>
-                        <th width="10%">วันที่</th>
-                      </tr>
-                    </thead>
-                  </table>
+          <div class="row my-3">
+            <div class="col-sm-12">
+              <div class="card shadow">
+                <div class="card-header">
+                  <h4 class="text-center">รายการรอตรวจสอบ</h4>
+                </div>
+                <div class="card-body">
+                  <div class="table-responsive">
+                    <table class="table table-sm table-bordered table-hover approve-data">
+                      <thead>
+                        <tr>
+                          <th width="10%">#</th>
+                          <th width="10%">เลขที่เอกสาร</th>
+                          <th width="10%">ผู้ใช้บริการ</th>
+                          <th width="10%">ประเภท</th>
+                          <th width="20%">สินค้า</th>
+                          <th width="10%">วันที่</th>
+                          <th width="20%">รายละเอียด</th>
+                          <th width="10%">วันที่</th>
+                        </tr>
+                      </thead>
+                    </table>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
         <?php endif; ?>
 
         <div class="row my-3">

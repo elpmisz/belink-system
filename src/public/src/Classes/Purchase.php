@@ -75,7 +75,7 @@ class Purchase
   {
     $sql = "SELECT a.id,
     a.`uuid`,
-    CONCAT('PR',YEAR(a.created),LPAD(a.`last`,4,'0')) ticket,
+    CONCAT('PR-',RIGHT((YEAR(a.created) + 543),2),LPAD(a.`last`,4,'0')) ticket,
     CONCAT(b.firstname,' ',b.lastname) username,
     a.department_number,
     a.department,
@@ -313,7 +313,7 @@ class Purchase
 
     $sql = "SELECT a.id,
     a.`uuid`,
-    CONCAT('PR',YEAR(a.created),LPAD(a.`last`,4,'0')) ticket,
+    CONCAT('PR-',RIGHT((YEAR(a.created) + 543),2),LPAD(a.`last`,4,'0')) ticket,
     CONCAT(b.firstname,' ',b.lastname) username,
     a.department,
     DATE_FORMAT(a.date, '%d/%m/%Y') `date`,
@@ -422,7 +422,7 @@ class Purchase
 
     $sql = "SELECT a.id,
     a.`uuid`,
-    CONCAT('PR',YEAR(a.created),LPAD(a.`last`,4,'0')) ticket,
+    CONCAT('PR-',RIGHT((YEAR(a.created) + 543),2),LPAD(a.`last`,4,'0')) ticket,
     CONCAT(b.firstname,' ',b.lastname) username,
     a.department,
     DATE_FORMAT(a.date, '%d/%m/%Y') `date`,

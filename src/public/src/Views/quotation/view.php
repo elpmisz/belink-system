@@ -18,7 +18,7 @@ $summary = ($total + $vat);
 $files = $QUOTATION->quotation_file_view([$uuid]);
 ?>
 <div class="card shadow">
-  <h4 class="card-header text-center">Quotation</h4>
+  <h4 class="card-header text-center">ระบบใบเสนอราคา Quotation</h4>
   <div class="card-body">
 
     <form action="/quotation/update" method="POST" class="needs-validation" novalidate enctype="multipart/form-data">

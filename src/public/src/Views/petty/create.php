@@ -5,7 +5,7 @@ include_once(__DIR__ . "/../layout/header.php");
 ?>
 
 <div class="card shadow">
-  <h4 class="card-header text-center">Petty Cash</h4>
+  <h4 class="card-header text-center">ระบบใบเบิกเงินสดย่อย Petty Cash</h4>
   <div class="card-body">
 
     <form action="/petty/create" method="POST" class="needs-validation" novalidate enctype="multipart/form-data">
@@ -13,6 +13,15 @@ include_once(__DIR__ . "/../layout/header.php");
         <label class="col-xl-2 offset-xl-2 col-form-label">ผู้ใช้บริการ</label>
         <div class="col-xl-4 text-underline">
           <?php echo $user['fullname'] ?>
+        </div>
+      </div>
+      <div class="row mb-2">
+        <label class="col-xl-2 offset-xl-2 col-form-label">เลขที่เอกสารฝ่าย</label>
+        <div class="col-xl-4">
+          <input type="text" class="form-control form-control-sm" name="department_number" required>
+          <div class="invalid-feedback">
+            กรุณากรอกข้อมูล!
+          </div>
         </div>
       </div>
       <div class="row mb-2">

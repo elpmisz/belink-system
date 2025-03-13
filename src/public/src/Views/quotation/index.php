@@ -8,7 +8,7 @@ include_once(__DIR__ . "/../layout/header.php");
   <div class="col-xl-12">
     <div class="card shadow">
       <div class="card-header">
-        <h4 class="text-center">Quotation</h4>
+        <h4 class="text-center">ระบบใบเสนอราคา Quotation</h4>
       </div>
       <div class="card-body">
 

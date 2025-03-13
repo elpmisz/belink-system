@@ -72,7 +72,7 @@ class Quotation
   {
     $sql = "SELECT a.id,
     a.`uuid`,
-    CONCAT('QU',YEAR(a.created),LPAD(a.`last`,4,'0')) ticket,
+    CONCAT('QU-',RIGHT((YEAR(a.created) + 543),2),LPAD(a.`last`,4,'0')) ticket,
     CONCAT(b.firstname,' ',b.lastname) username,
     a.biller_id,
     CONCAT('[',c.`code`,'] ',c.`name`) biller_name,
@@ -254,7 +254,7 @@ class Quotation
 
     $sql = "SELECT a.id,
     a.`uuid`,
-    CONCAT('QU',YEAR(a.created),LPAD(a.`last`,4,'0')) ticket,
+    CONCAT('QU-',RIGHT((YEAR(a.created) + 543),2),LPAD(a.`last`,4,'0')) ticket,
     CONCAT(b.firstname,' ',b.lastname) username,
     CONCAT('[',c.`code`,'] ',c.`name`) biller_name,
     IF(a.customer_type = 1,'ลูกค่าเก่า','ลูกค้าใหม่') customer_type,

@@ -21,6 +21,7 @@ class Petty
     FROM belink.petty_request a
     WHERE a.status = 1
     AND a.login_id = ?
+    AND a.department_number = ?
     AND a.doc_date = ?
     AND a.objective = ?";
     $stmt = $this->dbcon->prepare($sql);
@@ -44,7 +45,7 @@ class Petty
 
   public function petty_insert($data)
   {
-    $sql = "INSERT INTO belink.petty_request(`uuid`, `last`, `login_id`, `doc_date`, `objective`) VALUES(uuid(),?,?,?,?)";
+    $sql = "INSERT INTO belink.petty_request(`uuid`, `last`, `department_number`, `login_id`, `doc_date`, `objective`) VALUES(uuid(),?,?,?,?,?)";
     $stmt = $this->dbcon->prepare($sql);
     return $stmt->execute($data);
   }
@@ -53,8 +54,9 @@ class Petty
   {
     $sql = "SELECT a.id,
       a.`uuid`,
-      CONCAT('PC',YEAR(a.created),LPAD(a.`last`,4,'0')) ticket,
+      CONCAT('PC-',RIGHT((YEAR(a.created) + 543),2),LPAD(a.`last`,4,'0')) ticket,
       CONCAT(b.firstname,' ',b.lastname) username,
+      a.department_number,
       DATE_FORMAT(a.doc_date,'%d/%m/%Y') `doc_date`,
       a.objective,
       DATE_FORMAT(a.created,'%d/%m/%Y, %H:%i น.') created
@@ -70,6 +72,7 @@ class Petty
   public function petty_update($data)
   {
     $sql = "UPDATE belink.petty_request SET
+    department_number = ?,
     doc_date = ?,
     objective = ?,
     `action` = 1,
@@ -262,7 +265,7 @@ class Petty
 
     $sql = "SELECT a.id,
     a.`uuid`,
-    CONCAT('PC',YEAR(a.created),LPAD(a.`last`,4,'0')) ticket,
+    CONCAT('PC-',RIGHT((YEAR(a.created) + 543),2),LPAD(a.`last`,4,'0')) ticket,
     CONCAT(b.firstname,' ',b.lastname) username,
     a.objective,
     c.total,
@@ -367,7 +370,7 @@ class Petty
 
     $sql = "SELECT a.id,
     a.`uuid`,
-    CONCAT('PC',YEAR(a.created),LPAD(a.`last`,4,'0')) ticket,
+    CONCAT('PC-',RIGHT((YEAR(a.created) + 543),2),LPAD(a.`last`,4,'0')) ticket,
     CONCAT(b.firstname,' ',b.lastname) username,
     a.objective,
     c.total,

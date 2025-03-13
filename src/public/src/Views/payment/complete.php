@@ -18,7 +18,7 @@ $remarks = $PAYMENT->payment_remark_view([$uuid]);
 ?>
 
 <div class="card shadow">
-  <h4 class="card-header text-center">Payment Order</h4>
+  <h4 class="card-header text-center">ระบบใบอนุมัติสั่งจ่าย Payment Order</h4>
   <div class="card-body">
 
     <form action="/payment/approve" method="POST" class="needs-validation" novalidate enctype="multipart/form-data">

@@ -21,7 +21,7 @@ ob_start();
 
 <head>
   <meta charset="utf-8">
-  <title>Estimate Budget</title>
+  <title>ระบบใบเสนอราคา Quotation</title>
   <style>
     table {
       width: 100%;
@@ -79,7 +79,7 @@ ob_start();
     <tr>
       <td class="text-left no-border" width="10%"></td>
       <td class="text-center no-border" width="80%">
-        <h2>ใบเสนอราคา (Quotation)</h2>
+        <h2>ใบเสนอราคา Quotation</h2>
       </td>
       <td class="text-right no-border" width="10%"></td>
     </tr>
@@ -150,7 +150,7 @@ ob_start();
     ?>
       <tr>
         <td class="text-center"><?php echo $key ?></td>
-        <td class="text-right"><?php echo $item['product'] ?></td>
+        <td class="text-left"><?php echo $item['product'] ?></td>
         <td class="text-right"><?php echo number_format($item['price'], 2) ?></td>
         <td class="text-right"><?php echo $item['discount'] ?></td>
         <td class="text-right"><?php echo $item['amount'] ?></td>

@@ -5,7 +5,7 @@ include_once(__DIR__ . "/../layout/header.php");
 ?>
 
 <div class="card shadow">
-  <h4 class="card-header text-center">Purchase Request</h4>
+  <h4 class="card-header text-center">ระบบใบขอซื้อ Purchase Request</h4>
   <div class="card-body">
 
     <form action="/purchase/create" method="POST" class="needs-validation" novalidate enctype="multipart/form-data">

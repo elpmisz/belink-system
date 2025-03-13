@@ -55,7 +55,7 @@ class Advance
   {
     $sql = "SELECT a.id,
       a.`uuid`,
-      CONCAT('AR',YEAR(a.created),LPAD(a.`last`,4,'0')) ticket,
+      CONCAT('AV-',RIGHT((YEAR(a.created) + 543),2),LPAD(a.`last`,4,'0')) ticket,
       CONCAT(b.firstname,' ',b.lastname) username,
       a.department_number,
       DATE_FORMAT(a.doc_date,'%d/%m/%Y') `doc_date`,
@@ -272,7 +272,7 @@ class Advance
 
     $sql = "SELECT a.id,
     a.`uuid`,
-    CONCAT('AR',YEAR(a.created),LPAD(a.`last`,4,'0')) ticket,
+    CONCAT('AV-',RIGHT((YEAR(a.created) + 543),2),LPAD(a.`last`,4,'0')) ticket,
     CONCAT(b.firstname,' ',b.lastname) username,
     a.objective,
     c.total,
@@ -377,7 +377,7 @@ class Advance
 
     $sql = "SELECT a.id,
     a.`uuid`,
-    CONCAT('AR',YEAR(a.created),LPAD(a.`last`,4,'0')) ticket,
+    CONCAT('AV-',RIGHT((YEAR(a.created) + 543),2),LPAD(a.`last`,4,'0')) ticket,
     CONCAT(b.firstname,' ',b.lastname) username,
     a.objective,
     c.total,

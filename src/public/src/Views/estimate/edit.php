@@ -14,7 +14,9 @@ $row = $ESTIMATE->estimate_view([$uuid]);
 $files = $ESTIMATE->estimate_file_view([$uuid]);
 $remarks = $ESTIMATE->estimate_remark_view([$uuid]);
 $reference = $ESTIMATE->estimate_item_reference([$uuid]);
+$payments = $ESTIMATE->payment_order([$row['order_number']]);
 $profit = ($row['budget'] - $row['cost']);
+$gp = (($profit * 100) / $row['budget']);
 ?>
 
 <div class="card shadow">
@@ -105,55 +107,17 @@ $profit = ($row['budget'] - $row['cost']);
         </div>
       </div>
       <div class="row mb-2">
+        <label class="col-xl-2 offset-xl-2 col-form-label">GP</label>
+        <div class="col-xl-4 text-underline text-success">
+          <?php echo number_format($profit, 2) . ' (' . $gp . '% )' ?>
+        </div>
+      </div>
+      <div class="row mb-2">
         <label class="col-xl-2 offset-xl-2 col-form-label">ประเภท</label>
         <div class="col-xl-4 text-underline">
           <?php echo $row['type_name'] ?>
         </div>
       </div>
-
-      <?php
-      if (COUNT($reference) > 0) :
-        foreach ($reference as $ref) :
-      ?>
-          <div class="row justify-content-center mb-2">
-            <div class="col-sm-12">
-              <div class="h5"><?php echo $ref['reference_name'] ?></div>
-              <div class="table-responsive">
-                <table class="table table-bordered table-sm item-table">
-                  <thead>
-                    <tr>
-                      <th width="10%">#</th>
-                      <th width="40%">รายจ่าย</th>
-                      <th width="20%">งบประมาณ</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <?php
-                    $items = $ESTIMATE->estimate_item_view([$uuid], $ref['reference']);
-                    $total = 0;
-                    foreach ($items as $key => $item) :
-                      $key++;
-                      $total += $item['estimate'];
-                    ?>
-                      <tr>
-                        <td class="text-center"><?php echo $key ?></td>
-                        <td class="text-left"><?php echo $item['expense_name'] ?></td>
-                        <td class="text-right"><?php echo number_format($item['estimate'], 2) ?></td>
-                      </tr>
-                    <?php endforeach; ?>
-                    <tr>
-                      <td class="text-center h5" colspan="2">รวม</td>
-                      <td class="text-right h5"><?php echo number_format($total, 2) ?></td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-      <?php
-        endforeach;
-      endif;
-      ?>
 
       <div class="row mb-2">
         <label class="col-xl-2 offset-xl-2 col-form-label">เอกสารแนบ</label>
@@ -183,6 +147,97 @@ $profit = ($row['budget'] - $row['cost']);
           <?php echo str_replace("\n", "<br>", $row['remark']) ?>
         </div>
       </div>
+
+      <?php
+      if (COUNT($reference) > 0) :
+        foreach ($reference as $ref) :
+      ?>
+          <div class="row justify-content-center mb-2">
+            <div class="col-sm-12">
+              <div class="h5"><?php echo $ref['reference_name'] ?></div>
+              <div class="table-responsive">
+                <table class="table table-bordered table-sm item-table">
+                  <thead>
+                    <tr>
+                      <th width="10%">#</th>
+                      <th width="30%">รายจ่าย</th>
+                      <th width="15%">งบประมาณ</th>
+                      <th width="15%">จำนวน</th>
+                      <th width="15%">ยอดใช้</th>
+                      <th width="15%">คงเหลือ</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <?php
+                    $items = $ESTIMATE->estimate_item_view([$uuid], $ref['reference']);
+                    $total = 0;
+                    foreach ($items as $key => $item) :
+                      $key++;
+                      $total += $item['estimate'];
+                    ?>
+                      <tr>
+                        <td class="text-center"><?php echo $key ?></td>
+                        <td class="text-left"><?php echo $item['expense_name'] ?></td>
+                        <td class="text-right"><?php echo number_format($item['estimate'], 2) ?></td>
+                        <td class="text-center"><?php echo $item['count'] ?></td>
+                        <td class="text-right"><?php echo number_format($item['usage'], 2) ?></td>
+                        <td class="text-right"><?php echo number_format($item['remain'], 2) ?></td>
+                      </tr>
+                    <?php endforeach; ?>
+                    <tr>
+                      <td class="text-center h5" colspan="2">รวม</td>
+                      <td class="text-right h5"><?php echo number_format($total, 2) ?></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+      <?php
+        endforeach;
+      endif;
+      ?>
+
+      <?php if (COUNT($payments) > 0) : ?>
+        <div class="row justify-content-center mb-2">
+          <div class="col-xl-10">
+            <hr>
+            <div class="h5 text-primary">รายการใบอนุมัติสั่งจ่าย</div>
+            <div class="table-responsive">
+              <table class="table table-sm table-bordered table-hover">
+                <thead>
+                  <tr>
+                    <th width="10%">#</th>
+                    <th width="10%">เลขที่เอกสาร</th>
+                    <th width="10%">ผู้ใช้บริการ</th>
+                    <th width="10%">เลขที่สัญญา</th>
+                    <th width="10%">จ่ายให้</th>
+                    <th width="10%">ยอดรวม</th>
+                    <th width="10%">วันที่</th>
+                  </tr>
+                </thead>
+                <?php
+                foreach ($payments as $payment) :
+                ?>
+                  <tr>
+                    <td class="text-center">
+                      <a href="/payment/complete/<?php echo $payment['uuid'] ?>" class="badge badge-<?php echo $payment['status_color'] ?> font-weight-light" target="_blank">
+                        <?php echo $payment['status_name'] ?>
+                      </a>
+                    </td>
+                    <td class="text-center"><?php echo $payment['ticket'] ?></td>
+                    <td class="text-left"><?php echo $payment['username'] ?></td>
+                    <td class="text-center"><?php echo $payment['order_number'] ?></td>
+                    <td class="text-left"><?php echo $payment['receiver'] ?></td>
+                    <td class="text-right"><?php echo number_format($payment['total'], 2) ?></td>
+                    <td class="text-center"><?php echo $payment['created'] ?></td>
+                  </tr>
+                <?php endforeach; ?>
+              </table>
+            </div>
+          </div>
+        </div>
+      <?php endif; ?>
 
       <?php if (COUNT($remarks) > 0) : ?>
         <div class="row justify-content-center mb-2">
@@ -219,37 +274,7 @@ $profit = ($row['budget'] - $row['cost']);
         </div>
       <?php endif; ?>
 
-      <div class="row mb-2">
-        <label class="col-xl-2 offset-xl-2 col-form-label">สถานะ</label>
-        <div class="col-xl-8">
-          <div class="form-group pl-3 pt-2">
-            <label class="form-check-label px-3">
-              <input class="form-check-input" type="radio" name="status" value="3" required>
-              <span class="text-success">ผ่านอนุมัติ</span>
-            </label>
-            <label class="form-check-label px-3">
-              <input class="form-check-input" type="radio" name="status" value="1" required>
-              <span class="text-danger">ไม่ผ่านอนุมัติ</span>
-            </label>
-          </div>
-        </div>
-      </div>
-      <div class="row mb-2">
-        <label class="col-xl-2 offset-xl-2 col-form-label">เหตุผล</label>
-        <div class="col-sm-6">
-          <textarea class="form-control" name="reason" rows="4"></textarea>
-          <div class="invalid-feedback">
-            กรุณา กรอกข้อมูล!
-          </div>
-        </div>
-      </div>
-
       <div class="row justify-content-center">
-        <div class="col-xl-3 mb-2">
-          <button type="submit" class="btn btn-success btn-sm btn-block">
-            <i class="fas fa-check pr-2"></i>ยืนยัน
-          </button>
-        </div>
         <div class="col-xl-3 mb-2">
           <a class="btn btn-primary btn-sm btn-block" href="/estimate/print/<?php echo $row['uuid'] ?>" target="_blank">
             <i class="fas fa-print pr-2"></i>พิมพ์
@@ -268,13 +293,3 @@ $profit = ($row['budget'] - $row['cost']);
 </div>
 
 <?php include_once(__DIR__ . "/../layout/footer.php"); ?>
-<script>
-  $(document).on("click", "input[name='status']", function() {
-    let status = ($(this).val() ? parseInt($(this).val()) : "");
-    if (status === 1) {
-      $("textarea[name='reason']").prop("required", true);
-    } else {
-      $("textarea[name='reason']").prop("required", false);
-    }
-  });
-</script>

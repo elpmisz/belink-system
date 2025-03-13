@@ -10,7 +10,7 @@ $borrow_authorize = $BORROW->borrow_authorize([$user['login_id']]);
   <div class="col-xl-12">
     <div class="card shadow">
       <div class="card-header">
-        <h4 class="text-center">ระบบยืมทรัพย์สิน</h4>
+        <h4 class="text-center">ระบบใบยืมทรัพย์สิน</h4>
       </div>
       <div class="card-body">
         <div class="row justify-content-end mb-2">

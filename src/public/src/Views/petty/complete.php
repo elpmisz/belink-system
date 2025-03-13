@@ -18,7 +18,7 @@ $remarks = $PETTY->petty_remark_view([$uuid]);
 ?>
 
 <div class="card shadow">
-  <h4 class="card-header text-center">Petty Cash</h4>
+  <h4 class="card-header text-center">ระบบใบเบิกเงินสดย่อย Petty Cash</h4>
   <div class="card-body">
 
     <form action="/petty/approve" method="POST" class="needs-validation" novalidate enctype="multipart/form-data">
@@ -46,6 +46,12 @@ $remarks = $PETTY->petty_remark_view([$uuid]);
         <label class="col-xl-2 offset-xl-2 col-form-label">ผู้ใช้บริการ</label>
         <div class="col-xl-4 text-underline">
           <?php echo $row['username'] ?>
+        </div>
+      </div>
+      <div class="row mb-2">
+        <label class="col-xl-2 offset-xl-2 col-form-label">เลขที่เอกสารฝ่าย</label>
+        <div class="col-xl-4 text-underline">
+          <?php echo $row['department_number'] ?>
         </div>
       </div>
       <div class="row mb-2">

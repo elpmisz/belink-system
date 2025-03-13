@@ -55,7 +55,7 @@ class AdvanceClear
   {
     $sql = "SELECT a.id,
       a.`uuid`,
-      CONCAT('AC',YEAR(a.created),LPAD(a.`last`,4,'0')) ticket,
+      CONCAT('CAV-',RIGHT((YEAR(a.created) + 543),2),LPAD(a.`last`,4,'0')) ticket,
       CONCAT(b.firstname,' ',b.lastname) username,
       a.department_number,
       a.advance_id,
@@ -335,7 +335,7 @@ class AdvanceClear
 
     $sql = "SELECT a.id,
     a.`uuid`,
-    CONCAT('AC',YEAR(a.created),LPAD(a.`last`,4,'0')) ticket,
+    CONCAT('CAV-',RIGHT((YEAR(a.created) + 543),2),LPAD(a.`last`,4,'0')) ticket,
     CONCAT(b.firstname,' ',b.lastname) username,
     a.advance_id,
     CONCAT('AR',YEAR(d.created),LPAD(d.`last`,4,'0')) advance_ticket,
@@ -445,7 +445,7 @@ class AdvanceClear
 
     $sql = "SELECT a.id,
     a.`uuid`,
-    CONCAT('AC',YEAR(a.created),LPAD(a.`last`,4,'0')) ticket,
+    CONCAT('CAV-',RIGHT((YEAR(a.created) + 543),2),LPAD(a.`last`,4,'0')) ticket,
     CONCAT(b.firstname,' ',b.lastname) username,
     a.advance_id,
     CONCAT('AR',YEAR(d.created),LPAD(d.`last`,4,'0')) advance_ticket,

@@ -5,7 +5,7 @@ include_once(__DIR__ . "/../layout/header.php");
 ?>
 
 <div class="card shadow">
-  <h4 class="card-header text-center">Quotation</h4>
+  <h4 class="card-header text-center">ระบบใบเสนอราคา Quotation</h4>
   <div class="card-body">
 
     <form action="/quotation/create" method="POST" class="needs-validation" novalidate enctype="multipart/form-data">
@@ -207,13 +207,13 @@ include_once(__DIR__ . "/../layout/header.php");
 
   $(".item-decrease, .file-decrease, .div-old-customer, .div-new-customer, .div-biller-address, .div-customer-address").hide();
 
-  $(document).on("change", ".biller-select", function(){
+  $(document).on("change", ".biller-select", function() {
     const customer = $(this).val() || '';
-    
+
     if (customer) {
       $(".div-biller-address").show();
       axios.post("/quotation/address-view", {
-        customer
+          customer
         })
         .then((res) => {
           const result = res.data;
@@ -227,13 +227,13 @@ include_once(__DIR__ . "/../layout/header.php");
     }
   });
 
-  $(document).on("change", ".customer-select", function(){
+  $(document).on("change", ".customer-select", function() {
     const customer = $(this).val() || '';
-    
+
     if (customer) {
       $(".div-customer-address").show();
       axios.post("/quotation/address-view", {
-        customer
+          customer
         })
         .then((res) => {
           const result = res.data;
@@ -247,12 +247,12 @@ include_once(__DIR__ . "/../layout/header.php");
     }
   });
 
-  $(document).on("click", "input[name='customer_type']", function(){
+  $(document).on("click", "input[name='customer_type']", function() {
     const isOldCustomer = +$(this).val() === 1;
 
     $(".div-old-customer").toggle(isOldCustomer);
     $(".div-new-customer").toggle(!isOldCustomer);
-    
+
     $(".customer-select").prop("required", isOldCustomer);
     $(".customer-name, .customer-address").prop("required", !isOldCustomer);
   });
@@ -342,7 +342,7 @@ include_once(__DIR__ . "/../layout/header.php");
     console.log(total)
     console.log(vat)
     console.log(summary)
-    
+
 
     $(".total").text(formatNumber(total));
     $(".vat").text(formatNumber(vat));

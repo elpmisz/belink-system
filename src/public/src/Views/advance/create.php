@@ -5,7 +5,7 @@ include_once(__DIR__ . "/../layout/header.php");
 ?>
 
 <div class="card shadow">
-  <h4 class="card-header text-center">Advance Request</h4>
+  <h4 class="card-header text-center">ระบบใบขอเบิก Advance Payment</h4>
   <div class="card-body">
 
     <form action="/advance/create" method="POST" class="needs-validation" novalidate enctype="multipart/form-data">

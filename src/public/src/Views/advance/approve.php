@@ -17,7 +17,7 @@ $files = $ADVANCE->advance_file_view([$uuid]);
 ?>
 
 <div class="card shadow">
-  <h4 class="card-header text-center">Advance Request</h4>
+  <h4 class="card-header text-center">ระบบใบขอเบิก Advance Payment</h4>
   <div class="card-body">
 
     <form action="/advance/approve" method="POST" class="needs-validation" novalidate enctype="multipart/form-data">

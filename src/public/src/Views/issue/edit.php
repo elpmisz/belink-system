@@ -17,7 +17,7 @@ $remarks = $ISSUE->remark_view([$uuid]);
 ?>
 
 <div class="card shadow">
-  <h4 class="card-header text-center"><?php echo "{$row['type_name']}สินค้า" ?></h4>
+  <h4 class="card-header text-center"><?php echo "ระบบ{$row['type_name']}สินค้า" ?></h4>
   <div class="card-body">
 
     <form action="/issue/approve" method="POST" class="needs-validation" novalidate enctype="multipart/form-data">

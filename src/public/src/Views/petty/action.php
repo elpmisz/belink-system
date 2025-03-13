@@ -42,14 +42,15 @@ $VALIDATION = new Validation();
 if ($action === "create") {
   try {
     $login_id = (isset($user['login_id']) ? $VALIDATION->input($user['login_id']) : "");
+    $department_number = (isset($_POST['department_number']) ? $VALIDATION->input($_POST['department_number']) : "");
     $doc_date = (isset($_POST['doc_date']) ? $VALIDATION->input($_POST['doc_date']) : "");
     $doc_date = (!empty($doc_date) ? DateTime::createFromFormat('d/m/Y', $doc_date)->format('Y-m-d') : "");
     $objective = (isset($_POST['objective']) ? $VALIDATION->input($_POST['objective']) : "");
     $petty_last = $PETTY->petty_last();
 
-    $petty_count = $PETTY->petty_count([$login_id, $doc_date, $objective]);
+    $petty_count = $PETTY->petty_count([$login_id, $department_number, $doc_date, $objective]);
     if (intval($petty_count) === 0) {
-      $PETTY->petty_insert([$petty_last, $login_id, $doc_date, $objective]);
+      $PETTY->petty_insert([$petty_last, $login_id, $department_number, $doc_date, $objective]);
       $request_id = $PETTY->last_insert_id();
 
       foreach ($_POST['expense_id'] as $key => $row) {
@@ -103,6 +104,7 @@ if ($action === "update") {
   try {
     $request_id = (isset($_POST['id']) ? $VALIDATION->input($_POST['id']) : "");
     $uuid = (isset($_POST['uuid']) ? $VALIDATION->input($_POST['uuid']) : "");
+    $department_number = (isset($_POST['department_number']) ? $VALIDATION->input($_POST['department_number']) : "");
     $doc_date = (isset($_POST['doc_date']) ? $VALIDATION->input($_POST['doc_date']) : "");
     $doc_date = (!empty($doc_date) ? DateTime::createFromFormat('d/m/Y', $doc_date)->format('Y-m-d') : "");
     $objective = (isset($_POST['objective']) ? $VALIDATION->input($_POST['objective']) : "");

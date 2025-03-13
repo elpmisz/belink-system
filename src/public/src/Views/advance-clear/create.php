@@ -5,7 +5,7 @@ include_once(__DIR__ . "/../layout/header.php");
 ?>
 
 <div class="card shadow">
-  <h4 class="card-header text-center">Advance Clearing</h4>
+  <h4 class="card-header text-center">ระบบใบขอเคลียร์ Clear Advance Payment</h4>
   <div class="card-body">
 
     <form action="/advance-clear/create" method="POST" class="needs-validation" novalidate enctype="multipart/form-data">

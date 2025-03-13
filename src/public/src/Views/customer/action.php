@@ -73,6 +73,52 @@ if ($action === "customer-update") {
   }
 }
 
+if ($action === "upload") {
+  try {
+    $file_name = (isset($_FILES['file']['name']) ? $_FILES['file']['name'] : '');
+    $file_tmp = (isset($_FILES['file']['tmp_name']) ? $_FILES['file']['tmp_name'] : '');
+    $file_allow = ["xls", "xlsx", "csv"];
+    $file_extension = pathinfo($file_name, PATHINFO_EXTENSION);
+
+    if (!in_array($file_extension, $file_allow)) :
+      $VALIDATION->alert("danger", "เฉพาะเอกสาร XLS XLSX CSV!", "/customer");
+    endif;
+
+    if ($file_extension === "xls") {
+      $READER = new \PhpOffice\PhpSpreadsheet\Reader\Xls();
+    } elseif ($file_extension === "xlsx") {
+      $READER = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
+    } else {
+      $READER = new \PhpOffice\PhpSpreadsheet\Reader\Csv();
+    }
+
+    $READ = $READER->load($file_tmp);
+    $result = $READ->getActiveSheet()->toArray();
+
+    $data = [];
+    foreach ($result as $value) {
+      $data[] = array_map("trim", $value);
+    }
+
+    foreach ($data as $key => $value) {
+      if (!in_array($key, [0])) {
+        $code = (isset($value[1]) ? $value[1] : "");
+        $name = (isset($value[2]) ? $value[2] : "");
+        $contact = (isset($value[3]) ? $value[3] : "");
+
+        $customer_count = $CUSTOMER->customer_count([$code, $name, $contact]);
+        if (!empty($code) && intval($customer_count) === 0) {
+          $CUSTOMER->customer_insert([$code, $name, $contact]);
+        }
+      }
+    }
+
+    $VALIDATION->alert("success", "ดำเนินการเรียบร้อย!", "/customer");
+  } catch (PDOException $e) {
+    die($e->getMessage());
+  }
+}
+
 if ($action === "request-data") {
   try {
     $result = $CUSTOMER->request_data();

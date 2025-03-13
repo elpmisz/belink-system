@@ -5,7 +5,7 @@ include_once(__DIR__ . "/../layout/header.php");
 ?>
 
 <div class="card shadow">
-  <h4 class="card-header text-center">Payment Order</h4>
+  <h4 class="card-header text-center">ระบบใบอนุมัติสั่งจ่าย Payment Order</h4>
   <div class="card-body">
 
     <form action="/payment/create" method="POST" class="needs-validation" novalidate enctype="multipart/form-data">
@@ -229,7 +229,7 @@ include_once(__DIR__ . "/../layout/header.php");
 <?php include_once(__DIR__ . "/../layout/footer.php"); ?>
 <script>
   initializeSelect2(".order-select", "/payment/order-select", "-- รายชื่อเลขที่สัญญา --");
-  
+
   const order = ($(".order-select").val() || "");
   $(".expense-select").select2({
     placeholder: "-- รายจ่าย --",
@@ -255,7 +255,7 @@ include_once(__DIR__ . "/../layout/header.php");
     }
   });
 
-  $(document).on("change", ".order-select", function(){
+  $(document).on("change", ".order-select", function() {
     $(".expense-select").empty();
     $(".text-item, .text2-item, .amount-item, .vat-item, .wt-item").val("");
     $(".total-item, .amount-total, .vat-total, .wt-total, .all-total").text("");
@@ -349,17 +349,17 @@ include_once(__DIR__ . "/../layout/header.php");
     row.find(".total-item").text("");
 
     if (expense) {
-        axios.post("/payment/order-view", {
-        expense,
-        order
-      })
-      .then((res) => {
-        const result = res.data;
-        row.find(".remain-item").text(result.remain);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+      axios.post("/payment/order-view", {
+          expense,
+          order
+        })
+        .then((res) => {
+          const result = res.data;
+          row.find(".remain-item").text(result.remain);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
 
       row.find(".text-item, .text2-item, .amount-item").prop("required", true);
     } else {

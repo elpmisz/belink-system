@@ -17,7 +17,7 @@ $remarks = $BORROW->remark_view([$uuid]);
 ?>
 
 <div class="card shadow">
-  <h4 class="card-header text-center">ระบบยืมทรัพย์สิน</h4>
+  <h4 class="card-header text-center">ระบบใบยืมทรัพย์สิน</h4>
   <div class="card-body">
 
     <form action="/borrow/process" method="POST" class="needs-validation" novalidate enctype="multipart/form-data">

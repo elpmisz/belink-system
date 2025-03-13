@@ -189,6 +189,9 @@ $ROUTER->map("GET", "/estimate/approve/[**:params]", function ($params) {
 $ROUTER->map("GET", "/estimate/complete/[**:params]", function ($params) {
   require(__DIR__ . "/src/Views/estimate/complete.php");
 });
+$ROUTER->map("GET", "/estimate/edit/[**:params]", function ($params) {
+  require(__DIR__ . "/src/Views/estimate/edit.php");
+});
 $ROUTER->map("GET", "/estimate/print/[**:params]", function ($params) {
   require(__DIR__ . "/src/Views/estimate/print.php");
 });

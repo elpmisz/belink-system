@@ -65,12 +65,12 @@ class Issue
   {
     $sql = "SELECT a.id,
     a.`uuid`,
-    CONCAT('IS',YEAR(a.created),LPAD(a.`last`,4,'0')) ticket,
+    CONCAT('IS-',RIGHT((YEAR(a.created) + 543),2),LPAD(a.`last`,4,'0')) ticket,
     CONCAT(b.firstname,' ',b.lastname) username,
     a.type,IF(a.type = 1,'นำเข้า','เบิกออก') type_name,
     DATE_FORMAT(a.date,'%d/%m/%Y') `date`,
     a.outcome,
-    CONCAT('[',CONCAT('IS',YEAR(c.created),LPAD(c.`last`,4,'0')),'] ',c.text) outcome_name,
+    CONCAT('[',CONCAT('IS-',RIGHT((YEAR(a.created) + 543),2),LPAD(a.`last`,4,'0')),'] ',c.text) outcome_name,
     a.event_date,
     a.event_name,
     a.sale,
@@ -341,7 +341,7 @@ class Issue
 
     $sql = "SELECT a.id,
     a.`uuid`,
-    CONCAT('IS',YEAR(a.created),LPAD(a.`last`,4,'0')) ticket,
+    CONCAT('IS-',RIGHT((YEAR(a.created) + 543),2),LPAD(a.`last`,4,'0')) ticket,
     CONCAT(b.firstname,' ',b.lastname) username,
     a.type,
     IF(a.type = 1,'นำเข้า','เบิกออก') type_name,
@@ -450,7 +450,7 @@ class Issue
 
     $sql = "SELECT a.id,
     a.`uuid`,
-    CONCAT('IS',YEAR(a.created),LPAD(a.`last`,4,'0')) ticket,
+    CONCAT('IS-',RIGHT((YEAR(a.created) + 543),2),LPAD(a.`last`,4,'0')) ticket,
     CONCAT(b.firstname,' ',b.lastname) username,
     a.type,
     IF(a.type = 1,'นำเข้า','เบิกออก') type_name,
@@ -552,7 +552,7 @@ class Issue
 
     $sql = "SELECT a.id,
     a.`uuid`,
-    CONCAT('IS',YEAR(a.created),LPAD(a.`last`,4,'0')) ticket,
+    CONCAT('IS-',RIGHT((YEAR(a.created) + 543),2),LPAD(a.`last`,4,'0')) ticket,
     CONCAT(b.firstname,' ',b.lastname) username,
     a.type,
     IF(a.type = 1,'นำเข้า','เบิกออก') type_name,

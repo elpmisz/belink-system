@@ -18,7 +18,7 @@ $remarks = $PAYMENT->payment_remark_view([$uuid]);
 ?>
 
 <div class="card shadow">
-  <h4 class="card-header text-center">Payment Order</h4>
+  <h4 class="card-header text-center">ระบบใบอนุมัติสั่งจ่าย Payment Order</h4>
   <div class="card-body">
 
     <form action="/payment/update" method="POST" class="needs-validation" novalidate enctype="multipart/form-data">
@@ -396,7 +396,7 @@ $remarks = $PAYMENT->payment_remark_view([$uuid]);
     });
 
     row.after(clone);
-    
+
     const order = ($(".order-select").val() || "");
     $(".expense-select").select2({
       placeholder: "-- รายจ่าย --",
@@ -450,17 +450,17 @@ $remarks = $PAYMENT->payment_remark_view([$uuid]);
     console.log(order)
 
     if (expense) {
-        axios.post("/payment/order-view", {
-        expense,
-        order
-      })
-      .then((res) => {
-        const result = res.data;
-        row.find(".remain-item").text(result.remain);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+      axios.post("/payment/order-view", {
+          expense,
+          order
+        })
+        .then((res) => {
+          const result = res.data;
+          row.find(".remain-item").text(result.remain);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
 
       row.find(".text-item, .text2-item, .amount-item").prop("required", true);
     } else {
