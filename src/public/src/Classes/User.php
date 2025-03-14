@@ -60,7 +60,7 @@ class User
   public function user_insert($data)
   {
 
-    $sql = "INSERT INTO belink.user(`login`, `firstname`, `lastname`, `department_id`, `manager_id`, `manager_id2`, `contact`) VALUES(?,?,?,?,?,?,?)";
+    $sql = "INSERT INTO belink.user(`login`, `firstname`, `lastname`, `department_id`, `position_id`, `manager_id`, `manager_id2`, `contact`) VALUES(?,?,?,?,?,?,?,?)";
     $stmt = $this->dbcon->prepare($sql);
     return $stmt->execute($data);
   }
@@ -82,7 +82,8 @@ class User
     b.manager_id2,
     CONCAT(e.firstname,' ',e.lastname) manager_name2,
     d.service,
-    b.department_id,f.name department_name
+    b.department_id,f.name department_name,
+    b.position_id,CONCAT('[',g.name_en,'] ',g.name_th) position_name
     FROM belink.login a
     LEFT JOIN belink.user b
     on a.id = b.login
@@ -94,6 +95,8 @@ class User
     ON b.manager_id2 = e.login
     LEFT JOIN belink.department f
     ON b.department_id = f.id
+    LEFT JOIN belink.position g
+    ON b.position_id = g.id
     WHERE (a.uuid = ? OR a.email = ?)";
     $stmt = $this->dbcon->prepare($sql);
     $stmt->execute($data);
@@ -152,6 +155,7 @@ class User
     b.firstname = ?,
     b.lastname = ?,
     b.department_id = ?,
+    b.position_id = ?,
     b.manager_id = ?,
     b.manager_id2 = ?,
     b.contact = ?
@@ -200,6 +204,20 @@ class User
       $sql .= " and (a.name like '%{$keyword}%') ";
     }
     $sql .= " order by a.name asc ";
+    $stmt = $this->dbcon->prepare($sql);
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+  }
+
+  public function position_select($keyword)
+  {
+    $sql = "select a.id, CONCAT('[',a.name_en,'] ',a.name_th) `text`
+    from belink.position a
+    where a.status = 1";
+    if (!empty($keyword)) {
+      $sql .= " and (a.name_en like '%{$keyword}%' or a.name_th like '%{$keyword}%') ";
+    }
+    $sql .= " order by a.name_th asc ";
     $stmt = $this->dbcon->prepare($sql);
     $stmt->execute();
     return $stmt->fetchAll(PDO::FETCH_ASSOC);

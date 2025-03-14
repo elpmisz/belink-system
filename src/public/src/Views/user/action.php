@@ -23,6 +23,7 @@ if ($action === "create") {
     $firstname = (isset($_POST['firstname']) ? $VALIDATION->input($_POST['firstname']) : "");
     $lastname = (isset($_POST['lastname']) ? $VALIDATION->input($_POST['lastname']) : "");
     $department_id = (isset($_POST['department_id']) ? $VALIDATION->input($_POST['department_id']) : "");
+    $position_id = (isset($_POST['position_id']) ? $VALIDATION->input($_POST['position_id']) : "");
     $contact = (isset($_POST['contact']) ? $VALIDATION->input($_POST['contact']) : "");
     $manager_id = (isset($_POST['manager_id']) ? $VALIDATION->input($_POST['manager_id']) : "");
     $manager_id2 = (isset($_POST['manager_id2']) ? $VALIDATION->input($_POST['manager_id2']) : "");
@@ -32,7 +33,7 @@ if ($action === "create") {
 
     $USER->login_insert([$email, $username, $hash_password]);
     $login = $USER->last_insert_id();
-    $USER->user_insert([$login, $firstname, $lastname, $department_id, $manager_id, $manager_id2, $contact]);
+    $USER->user_insert([$login, $firstname, $lastname, $department_id, $position_id, $manager_id, $manager_id2, $contact]);
 
     $VALIDATION->alert("success", "ดำเนินการเรียบร้อย!", "/user");
   } catch (PDOException $e) {
@@ -48,13 +49,14 @@ if ($action === "update") {
     $firstname = (isset($_POST['firstname']) ? $VALIDATION->input($_POST['firstname']) : "");
     $lastname = (isset($_POST['lastname']) ? $VALIDATION->input($_POST['lastname']) : "");
     $department_id = (isset($_POST['department_id']) ? $VALIDATION->input($_POST['department_id']) : "");
+    $position_id = (isset($_POST['position_id']) ? $VALIDATION->input($_POST['position_id']) : "");
     $contact = (isset($_POST['contact']) ? $VALIDATION->input($_POST['contact']) : "");
     $manager_id = (isset($_POST['manager_id']) ? $VALIDATION->input($_POST['manager_id']) : "");
     $manager_id2 = (isset($_POST['manager_id2']) ? $VALIDATION->input($_POST['manager_id2']) : "");
     $level = (isset($_POST['level']) ? $VALIDATION->input($_POST['level']) : "");
     $status = (isset($_POST['status']) ? $VALIDATION->input($_POST['status']) : "");
 
-    $USER->admin_update([$email, $username, $level, $status, $firstname, $lastname, $department_id, $manager_id, $manager_id2, $contact, $uuid]);
+    $USER->admin_update([$email, $username, $level, $status, $firstname, $lastname, $department_id, $position_id, $manager_id, $manager_id2, $contact, $uuid]);
     $VALIDATION->alert("success", "ดำเนินการเรียบร้อย!", "/user/view/{$uuid}");
   } catch (PDOException $e) {
     die($e->getMessage());
@@ -107,6 +109,16 @@ if ($action === "department-select") {
   try {
     $keyword = (isset($_POST['q']) ? $VALIDATION->input($_POST['q']) : "");
     $result = $USER->department_select($keyword);
+    echo json_encode($result);
+  } catch (PDOException $e) {
+    die($e->getMessage());
+  }
+}
+
+if ($action === "position-select") {
+  try {
+    $keyword = (isset($_POST['q']) ? $VALIDATION->input($_POST['q']) : "");
+    $result = $USER->position_select($keyword);
     echo json_encode($result);
   } catch (PDOException $e) {
     die($e->getMessage());

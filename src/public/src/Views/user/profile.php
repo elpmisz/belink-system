@@ -56,6 +56,18 @@ $row = $USER->user_view([$email, $email]);
             </div>
           </div>
           <div class="row mb-2">
+            <label class="col-xl-2 offset-xl-2 col-form-label">ฝ่าย / แผนก</label>
+            <div class="col-xl-4 text-underline">
+              <?php echo $row['department_name'] ?>
+            </div>
+          </div>
+          <div class="row mb-2">
+            <label class="col-xl-2 offset-xl-2 col-form-label">ตำแหน่ง</label>
+            <div class="col-xl-4 text-underline">
+              <?php echo $row['position_name'] ?>
+            </div>
+          </div>
+          <div class="row mb-2">
             <label class="col-xl-2 offset-xl-2 col-form-label">ติดต่อ</label>
             <div class="col-xl-4">
               <textarea class="form-control form-control-sm" name="contact" rows="4"><?php echo $row['contact'] ?></textarea>

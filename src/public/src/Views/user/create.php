@@ -59,6 +59,15 @@ include_once(__DIR__ . "/../layout/header.php");
             </div>
           </div>
           <div class="row mb-2">
+            <label class="col-xl-2 offset-xl-2 col-form-label">ตำแหน่ง</label>
+            <div class="col-xl-4">
+              <select class="form-control form-control-sm position-select" name="position_id" required></select>
+              <div class="invalid-feedback">
+                กรุณา กรอกข้อมูล!
+              </div>
+            </div>
+          </div>
+          <div class="row mb-2">
             <label class="col-xl-2 offset-xl-2 col-form-label">ติดต่อ</label>
             <div class="col-xl-4">
               <textarea class="form-control form-control-sm" name="contact" rows="4"></textarea>
@@ -109,5 +118,6 @@ include_once(__DIR__ . "/../layout/header.php");
 <?php include_once(__DIR__ . "/../layout/footer.php"); ?>
 <script>
   initializeSelect2(".department-select", "/user/department-select", "-- เลือก --");
+  initializeSelect2(".position-select", "/user/position-select", "-- เลือก --");
   initializeSelect2(".user-select", "/user/user-select", "-- เลือก --");
 </script>

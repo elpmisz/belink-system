@@ -80,6 +80,21 @@ $row = $USER->user_view([$uuid, $uuid]);
             </div>
           </div>
           <div class="row mb-2">
+            <label class="col-xl-2 offset-xl-2 col-form-label">ตำแหน่ง</label>
+            <div class="col-xl-4">
+              <select class="form-control form-control-sm position-select" name="position_id" required>
+                <?php
+                if (!empty($row['position_id'])) {
+                  echo "<option value='{$row['position_id']}' selected>{$row['position_name']}</option>";
+                }
+                ?>
+              </select>
+              <div class="invalid-feedback">
+                กรุณา กรอกข้อมูล!
+              </div>
+            </div>
+          </div>
+          <div class="row mb-2">
             <label class="col-xl-2 offset-xl-2 col-form-label">ติดต่อ</label>
             <div class="col-xl-4">
               <textarea class="form-control form-control-sm" name="contact" rows="4"><?php echo $row['contact'] ?></textarea>
@@ -180,5 +195,6 @@ $row = $USER->user_view([$uuid, $uuid]);
 <?php include_once(__DIR__ . "/../layout/footer.php"); ?>
 <script>
   initializeSelect2(".department-select", "/user/department-select", "-- เลือก --");
+  initializeSelect2(".position-select", "/user/position-select", "-- เลือก --");
   initializeSelect2(".user-select", "/user/user-select", "-- เลือก --");
 </script>
