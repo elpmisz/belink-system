@@ -16,7 +16,7 @@ class AssetBrand
 
   public function asset_brand_count($data)
   {
-    $sql = "SELECT 
+    $sql = "SELECT
       COUNT(*)
     FROM belink.asset_brand a
     WHERE a.status = 1
@@ -35,7 +35,7 @@ class AssetBrand
 
   public function asset_brand_view($data)
   {
-    $sql = "SELECT 
+    $sql = "SELECT
       a.id,
       a.`name`,
       a.`status`
@@ -75,7 +75,7 @@ class AssetBrand
     $limit_length = (isset($_POST['length']) ? $_POST['length'] : "");
     $draw = (isset($_REQUEST['draw']) ? $_REQUEST['draw'] : "");
 
-    $sql = "SELECT 
+    $sql = "SELECT
       a.id,
       a.name,
       IF(a.`status` = 1,'ใช้งาน','ระงับการใช้งาน') status_name,
@@ -83,7 +83,7 @@ class AssetBrand
     FROM belink.asset_brand a
     WHERE a.`status` IN (1,2) ";
 
-    if (!empty($keyword)) {
+    if (! empty($keyword)) {
       $sql .= " AND (a.name LIKE '%{$keyword}%') ";
     }
 
@@ -117,9 +117,9 @@ class AssetBrand
 
     $output = [
       "draw" => $draw,
-      "recordsTotal" =>  $total,
+      "recordsTotal" => $total,
       "recordsFiltered" => $filter,
-      "data" => $data
+      "data" => $data,
     ];
     return $output;
   }

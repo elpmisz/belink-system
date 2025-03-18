@@ -536,7 +536,6 @@ class Estimate
         $row['order_number'],
         $row['product_name'],
         $row['title_name'],
-        number_format($row['budget'], 2),
         $row['created'],
       ];
     }
@@ -661,7 +660,6 @@ class Estimate
         $row['order_number'],
         $row['product_name'],
         $row['title_name'],
-        number_format($row['budget'], 2),
         $row['created'],
       ];
     }

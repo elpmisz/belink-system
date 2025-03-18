@@ -37,7 +37,6 @@ include_once(__DIR__ . "/../layout/header.php");
                         <th width="10%">เลขที่สัญญา</th>
                         <th width="20%">สินค้า</th>
                         <th width="30%">หัวข้อสินค้า</th>
-                        <th width="10%">งบประมาณ</th>
                         <th width="10%">วันที่</th>
                       </tr>
                     </thead>
@@ -65,7 +64,6 @@ include_once(__DIR__ . "/../layout/header.php");
                         <th width="10%">เลขที่สัญญา</th>
                         <th width="20%">สินค้า</th>
                         <th width="30%">หัวข้อสินค้า</th>
-                        <th width="10%">งบประมาณ</th>
                         <th width="10%">วันที่</th>
                       </tr>
                     </thead>
@@ -93,7 +91,6 @@ include_once(__DIR__ . "/../layout/header.php");
                         <th width="10%">เลขที่สัญญา</th>
                         <th width="20%">สินค้า</th>
                         <th width="30%">หัวข้อสินค้า</th>
-                        <th width="10%">งบประมาณ</th>
                         <th width="10%">วันที่</th>
                       </tr>
                     </thead>
@@ -121,7 +118,6 @@ include_once(__DIR__ . "/../layout/header.php");
                         <th width="10%">เลขที่สัญญา</th>
                         <th width="20%">สินค้า</th>
                         <th width="30%">หัวข้อสินค้า</th>
-                        <th width="10%">งบประมาณ</th>
                         <th width="10%">วันที่</th>
                       </tr>
                     </thead>
@@ -155,11 +151,8 @@ include_once(__DIR__ . "/../layout/header.php");
         targets: [0, 1, 2],
         className: "text-center",
       }, {
-        targets: [3, 4, 6],
+        targets: [3, 4, 5],
         className: "text-left",
-      }, {
-        targets: [5],
-        className: "text-right",
       }],
       "oLanguage": {
         "sLengthMenu": "แสดง _MENU_ ลำดับ ต่อหน้า",
@@ -189,11 +182,8 @@ include_once(__DIR__ . "/../layout/header.php");
         targets: [0, 1, 2],
         className: "text-center",
       }, {
-        targets: [3, 4, 6],
+        targets: [3, 4, 5],
         className: "text-left",
-      }, {
-        targets: [5],
-        className: "text-right",
       }],
       "oLanguage": {
         "sLengthMenu": "แสดง _MENU_ ลำดับ ต่อหน้า",
@@ -223,11 +213,8 @@ include_once(__DIR__ . "/../layout/header.php");
         targets: [0, 1, 2],
         className: "text-center",
       }, {
-        targets: [3, 4, 6],
+        targets: [3, 4, 5],
         className: "text-left",
-      }, {
-        targets: [5],
-        className: "text-right",
       }],
       "oLanguage": {
         "sLengthMenu": "แสดง _MENU_ ลำดับ ต่อหน้า",
@@ -257,11 +244,8 @@ include_once(__DIR__ . "/../layout/header.php");
         targets: [0, 1, 2],
         className: "text-center",
       }, {
-        targets: [3, 4, 6],
+        targets: [3, 4, 5],
         className: "text-left",
-      }, {
-        targets: [5],
-        className: "text-right",
       }],
       "oLanguage": {
         "sLengthMenu": "แสดง _MENU_ ลำดับ ต่อหน้า",

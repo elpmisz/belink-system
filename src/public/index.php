@@ -29,9 +29,24 @@ $ROUTER->map("POST", "/quotation/[**:params]", function ($params) {
   require(__DIR__ . "/src/Views/quotation/action.php");
 });
 
-##################### ACCRUED #####################
-$ROUTER->map("GET", "/accrued", function () {
-  require(__DIR__ . "/src/Views/accrued/index.php");
+##################### OUTSTANDING #####################
+$ROUTER->map("GET", "/outstanding", function () {
+  require(__DIR__ . "/src/Views/outstanding/index.php");
+});
+$ROUTER->map("GET", "/outstanding/create", function () {
+  require(__DIR__ . "/src/Views/outstanding/create.php");
+});
+$ROUTER->map("GET", "/outstanding/manage", function () {
+  require(__DIR__ . "/src/Views/outstanding/manage.php");
+});
+$ROUTER->map("GET", "/outstanding/view/[**:params]", function ($params) {
+  require(__DIR__ . "/src/Views/outstanding/view.php");
+});
+$ROUTER->map("GET", "/outstanding/print/[**:params]", function ($params) {
+  require(__DIR__ . "/src/Views/outstanding/print.php");
+});
+$ROUTER->map("POST", "/outstanding/[**:params]", function ($params) {
+  require(__DIR__ . "/src/Views/outstanding/action.php");
 });
 
 ##################### PETTY #####################
