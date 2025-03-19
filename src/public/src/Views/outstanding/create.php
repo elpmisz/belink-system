@@ -5,7 +5,9 @@ include_once(__DIR__ . "/../layout/header.php");
 ?>
 
 <div class="card shadow">
-  <h4 class="text-center">ระบบใบค้างจ่าย Outstanding Invoice</h4>
+  <div class="card-header">
+    <h4 class="text-center">ระบบใบค้างจ่าย Outstanding Invoice</h4>
+  </div>
   <div class="card-body">
 
     <form action="/outstanding/create" method="POST" class="needs-validation" novalidate enctype="multipart/form-data">
@@ -27,7 +29,7 @@ include_once(__DIR__ . "/../layout/header.php");
       <div class="row mb-2">
         <label class="col-xl-2 offset-xl-2 col-form-label">วันที่เอกสาร</label>
         <div class="col-xl-4">
-          <input type="text" class="form-control form-control-sm date-select" name="date" required>
+          <input type="text" class="form-control form-control-sm date-select" name="doc_date" required>
           <div class="invalid-feedback">
             กรุณากรอกข้อมูล!
           </div>
@@ -84,7 +86,7 @@ include_once(__DIR__ . "/../layout/header.php");
           </button>
         </div>
         <div class="col-xl-3 mb-2">
-          <a class="btn btn-danger btn-sm btn-block" href="/advance-clear">
+          <a class="btn btn-danger btn-sm btn-block" href="/outstanding">
             <i class="fas fa-arrow-left pr-2"></i>หน้าหลัก
           </a>
         </div>
@@ -112,7 +114,7 @@ include_once(__DIR__ . "/../layout/header.php");
           if (result.length > 0) {
             tableContent = `
               <tr>
-                <th width="10%">#</th>
+                <th width="10%"><input type="checkbox" id="check_all"></th>
                 <th width="50%">รายละเอียด</th>
                 <th width="10%">จำนวน</th>
                 <th width="10%">หน่วยนับ</th>
@@ -127,7 +129,9 @@ include_once(__DIR__ . "/../layout/header.php");
               });
               tableContent += `
                 <tr class="item-tr">
-                  <td class="text-center">${index + 1}</td>
+                  <td class="text-center">
+                    <input type="checkbox" name="item_index[]" value="${index}">
+                  </td>
                   <td class="text-left">${item.name}</td>
                   <td class="text-center">${item.amount}</td>
                   <td class="text-center">${item.unit}</td>
@@ -212,5 +216,9 @@ include_once(__DIR__ . "/../layout/header.php");
 
   $(".date-select").on("keydown paste", function(e) {
     e.preventDefault();
+  });
+
+  $(document).on("change", "#check_all", function() {
+    $("input:checkbox").prop('checked', $(this).prop("checked"));
   });
 </script>
