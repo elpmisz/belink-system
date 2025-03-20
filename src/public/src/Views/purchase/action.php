@@ -128,7 +128,7 @@ if ($action === "update") {
       $PURCHASE->purchase_item_update([$item__name, $item__amount, $item__unit, $item__estimate, $item__id]);
     }
 
-    if (isset($_POST['item_name'])) {
+    if (isset($_POST['item_name']) && !empty($_POST['item_name'])) {
       foreach ($_POST['item_name'] as $key => $row) {
         $item_name = (isset($_POST['item_name'][$key]) ? $VALIDATION->input($_POST['item_name'][$key]) : "");
         $item_amount = (isset($_POST['item_amount'][$key]) ? $VALIDATION->input($_POST['item_amount'][$key]) : "");

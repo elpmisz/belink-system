@@ -32,14 +32,14 @@ $services = $SERVICE->service_read();
                     </tr>
                   </thead>
                   <tbody>
-                    <?php foreach ($services as $service) : ?>
+                    <?php foreach ($services as $key => $service) : $key++ ?>
                       <tr>
                         <td class="text-center">
                           <a href='javascript:void(0)' class='badge badge-danger font-weight-light item-delete' id='<?php echo $service['uuid'] ?>'>ลบ</a>
                           <input type="hidden" class="form-control form-control-sm text-center item-sequence" name="item__uuid[]" value="<?php echo $service['uuid'] ?>">
                         </td>
                         <td>
-                          <input type="text" class="form-control form-control-sm text-center item-sequence" name="item__sequence[]" value="<?php echo $service['sequence'] ?>">
+                          <input type="text" class="form-control form-control-sm text-center item-sequence" name="item__sequence[]" value="<?php echo $key ?>">
                         </td>
                         <td>
                           <input type="text" class="form-control form-control-sm text-left item-sequence" name="item__name[]" value="<?php echo $service['name'] ?>">
@@ -113,8 +113,8 @@ $services = $SERVICE->service_read();
   });
 
   $(document).on("blur", ".item-sequence", function() {
-    const sequence = ($(this).val() ? $(this).val() : "");
-    if (sequence) {
+    const sequence = +($(this).val() || 0);
+    if (sequence !== 0) {
       $(".item-name").prop("required", true);
     } else {
       $(".item-name").prop("required", false);

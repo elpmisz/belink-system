@@ -12,7 +12,7 @@ $uuid = (!empty($param[0]) ? $param[0] : "");
 
 $row = $OUTSTANDING->outstanding_view([$uuid]);
 $items = $OUTSTANDING->outstanding_item_view([$uuid]);
-// $files = $OUTSTANDING->outstanding_file_view([$uuid]);
+$files = $OUTSTANDING->outstanding_file_view([$uuid]);
 // $remarks = $OUTSTANDING->outstanding_remark_view([$uuid]);
 ?>
 
@@ -165,6 +165,26 @@ $items = $OUTSTANDING->outstanding_item_view([$uuid]);
         <label class="col-xl-2 offset-xl-2 col-form-label">เอกสารแนบ</label>
         <div class="col-xl-6">
           <table class="table-sm">
+            <?php
+            foreach ($files as $file) :
+              if (!empty($file['name'])) :
+            ?>
+                <tr>
+                  <td>
+                    <a href="/src/Publics/outstanding/<?php echo $file['name'] ?>" class="text-primary" target="_blank">
+                      <span class="badge badge-primary font-weight-light">ดาวน์โหลด!</span>
+                    </a>
+                  </td>
+                  <td>
+                    <a href="javascript:void(0)" class="file-delete" id="<?php echo $file['id'] ?>">
+                      <span class="badge badge-danger font-weight-light">ลบ!</span>
+                    </a>
+                  </td>
+                </tr>
+            <?php
+              endif;
+            endforeach;
+            ?>
             <tr class="file-tr">
               <td>
                 <a href="javascript:void(0)" class="btn btn-success btn-sm file-increase">+</a>
@@ -329,6 +349,92 @@ $items = $OUTSTANDING->outstanding_item_view([$uuid]);
       });
       return $(this).val("");
     }
+  });
+
+  $(document).on("click", ".item-delete", function(e) {
+    let id = $(this).prop("id");
+    e.preventDefault();
+    Swal.fire({
+      title: "ยืนยันที่จะลบ?",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "ยืนยัน",
+      cancelButtonText: "ปิด",
+    }).then((result) => {
+      if (result.value) {
+        axios.post("/outstanding/item-delete", {
+          id
+        }).then((res) => {
+          let result = res.data;
+          if (result === 200) {
+            Swal.fire({
+              title: "ดำเนินการเรียบร้อย!",
+              text: "",
+              icon: "success"
+            }).then((result) => {
+              location.reload()
+            });
+          } else {
+            Swal.fire({
+              title: "ระบบมีปัญหา\nกรุณาลองใหม่อีกครั้ง!",
+              text: "",
+              icon: "error"
+            }).then((result) => {
+              location.reload()
+            });
+          }
+        }).catch((error) => {
+          console.log(error);
+        });
+      } else {
+        return false;
+      }
+    })
+  });
+
+  $(document).on("click", ".file-delete", function(e) {
+    let id = $(this).prop("id");
+    e.preventDefault();
+    Swal.fire({
+      title: "ยืนยันที่จะลบ?",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "ยืนยัน",
+      cancelButtonText: "ปิด",
+    }).then((result) => {
+      if (result.value) {
+        axios.post("/outstanding/file-delete", {
+          id
+        }).then((res) => {
+          let result = res.data;
+          if (result === 200) {
+            Swal.fire({
+              title: "ดำเนินการเรียบร้อย!",
+              text: "",
+              icon: "success"
+            }).then((result) => {
+              location.reload()
+            });
+          } else {
+            Swal.fire({
+              title: "ระบบมีปัญหา\nกรุณาลองใหม่อีกครั้ง!",
+              text: "",
+              icon: "error"
+            }).then((result) => {
+              location.reload()
+            });
+          }
+        }).catch((error) => {
+          console.log(error);
+        });
+      } else {
+        return false;
+      }
+    })
   });
 
   $(".date-select").daterangepicker({

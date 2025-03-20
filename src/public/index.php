@@ -45,6 +45,9 @@ $ROUTER->map("GET", "/outstanding/view/[**:params]", function ($params) {
 $ROUTER->map("GET", "/outstanding/approve/[**:params]", function ($params) {
   require(__DIR__ . "/src/Views/outstanding/approve.php");
 });
+$ROUTER->map("GET", "/outstanding/complete/[**:params]", function ($params) {
+  require(__DIR__ . "/src/Views/outstanding/complete.php");
+});
 $ROUTER->map("GET", "/outstanding/print/[**:params]", function ($params) {
   require(__DIR__ . "/src/Views/outstanding/print.php");
 });

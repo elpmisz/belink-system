@@ -21,7 +21,7 @@ class Advance
     FROM belink.advance_request a
     WHERE a.status = 1
     AND a.login_id = ?
-    AND a.department = ?
+    AND a.department_number = ?
     AND a.doc_date = ?
     AND a.finish = ?
     AND a.objective = ?";

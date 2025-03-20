@@ -152,6 +152,18 @@ class Outstanding
     return $stmt->fetch();
   }
 
+  public function outstanding_update($data)
+  {
+    $sql = "UPDATE belink.outstanding_request SET
+    `department_number` = ?,
+    `doc_date` = ?,
+    `text` = ?,
+    `updated` = NOW()
+    WHERE `uuid` = ?";
+    $stmt = $this->dbcon->prepare($sql);
+    return $stmt->execute($data);
+  }
+
   public function outstanding_item_count($data)
   {
     $sql = "SELECT 
@@ -166,6 +178,20 @@ class Outstanding
     $stmt = $this->dbcon->prepare($sql);
     $stmt->execute($data);
     return $stmt->fetchColumn();
+  }
+
+  public function outstanding_item_total($data)
+  {
+    $sql = "SELECT SUM(b.estimate) total
+    FROM belink.outstanding_request a
+    LEFT JOIN belink.outstanding_item b
+    ON a.id = b.request_id
+    WHERE a.`uuid` = ?
+    AND b.`status` = 1
+    ORDER BY b.id ASC";
+    $stmt = $this->dbcon->prepare($sql);
+    $stmt->execute($data);
+    return $stmt->fetch();
   }
 
   public function outstanding_item_insert($data)
@@ -193,6 +219,27 @@ class Outstanding
     $stmt = $this->dbcon->prepare($sql);
     $stmt->execute($data);
     return $stmt->fetchAll();
+  }
+
+  public function outstanding_item_update($data)
+  {
+    $sql = "UPDATE belink.outstanding_item SET
+    `unit` = ?,
+    `estimate` = ?,
+    `updated` = NOW()
+    WHERE id = ?";
+    $stmt = $this->dbcon->prepare($sql);
+    return $stmt->execute($data);
+  }
+
+  public function outstanding_item_delete($data)
+  {
+    $sql = "UPDATE belink.outstanding_item SET
+    status = 0,
+    updated = NOW()
+    WHERE id = ?";
+    $stmt = $this->dbcon->prepare($sql);
+    return $stmt->execute($data);
   }
 
   public function outstanding_file_count($data)
@@ -241,6 +288,55 @@ class Outstanding
     $stmt = $this->dbcon->prepare($sql);
     return $stmt->execute($data);
   }
+
+  public function outstanding_approve($data)
+  {
+    $sql = "UPDATE belink.outstanding_request SET
+    action = ?,
+    status = ?,
+    updated = NOW()
+    WHERE uuid = ?";
+    $stmt = $this->dbcon->prepare($sql);
+    return $stmt->execute($data);
+  }
+
+  public function outstanding_remark_insert($data)
+  {
+    $sql = "INSERT INTO belink.outstanding_remark(`request_id`, `login_id`, `text`, `status`) VALUES(?,?,?,?)";
+    $stmt = $this->dbcon->prepare($sql);
+    return $stmt->execute($data);
+  }
+
+  public function outstanding_remark_view($data)
+  {
+    $sql = "SELECT CONCAT(c.firstname,' ',c.lastname) username,a.text,
+    (
+    CASE
+      WHEN a.`status` = 1 AND b.action = 1 THEN 'ดำเนินการแก้ไขเรียบร้อย'
+      WHEN a.`status` = 1 AND b.action = 2 THEN 'ไม่ผ่านอนุมัติ รอผู้ใช้บริการแก้ไข'
+      WHEN a.`status` = 2 THEN 'ผ่านการอนุมัติจากผู้อนุมัติ'
+    END
+    ) status_name,
+    (
+    CASE
+      WHEN a.`status` = 1 AND b.action = 1 THEN 'primary'
+      WHEN a.`status` = 1 AND b.action = 2 THEN 'danger'
+      WHEN a.`status` = 2 THEN 'success'
+    END
+    ) status_color,
+    DATE_FORMAT(a.created,'%d/%m/%Y, %H:%i น.') created
+    FROM belink.outstanding_remark a
+    LEFT JOIN belink.outstanding_request b
+    ON a.request_id = b.id
+    LEFT JOIN belink.`user` c
+    ON a.login_id = c.login
+    WHERE b.`uuid` = ?
+    ORDER BY a.created DESC";
+    $stmt = $this->dbcon->prepare($sql);
+    $stmt->execute($data);
+    return $stmt->fetchAll();
+  }
+
 
   public function request_data()
   {

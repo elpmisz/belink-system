@@ -1,23 +1,18 @@
 <?php
 $menu = "Service";
-$page = "ServicePurchase";
+$page = "ServiceOutstanding";
 
-use App\Classes\Purchase;
+use App\Classes\Outstanding;
 use App\Classes\Validation;
 
-$PURCHASE = new Purchase();
+$OUTSTANDING = new Outstanding();
 $VALIDATION = new Validation();
 
 $param = (isset($params) ? explode("/", $params) : "");
 $uuid = (!empty($param[0]) ? $param[0] : "");
 
-$row = $PURCHASE->purchase_view([$uuid]);
-$total = $PURCHASE->purchase_item_total([$uuid]);
-
-$signature_1 = $_SERVER['DOCUMENT_ROOT'] . "/src/Publics/signature/signature-demo-1.jpg";
-$signature_2 = $_SERVER['DOCUMENT_ROOT'] . "/src/Publics/signature/signature-demo-2.jpg";
-$signature_3 = $_SERVER['DOCUMENT_ROOT'] . "/src/Publics/signature/signature-demo-3.jpg";
-
+$row = $OUTSTANDING->outstanding_view([$uuid]);
+$total = $OUTSTANDING->outstanding_item_total([$uuid]);
 
 ob_start();
 ?>
@@ -26,7 +21,7 @@ ob_start();
 
 <head>
   <meta charset="utf-8">
-  <title>ระบบใบขอซื้อ Purchase Request</title>
+  <title>ระบบใบค้างจ่าย Outstanding Invoice</title>
   <style>
     table {
       width: 100%;
@@ -67,12 +62,6 @@ ob_start();
       vertical-align: middle;
       text-align: right;
     }
-
-    .signature {
-      width: 100px;
-      height: 60px;
-      background-size: cover;
-    }
   </style>
 </head>
 
@@ -93,7 +82,7 @@ ob_start();
     <tr>
       <td class="text-left no-border" width="10%"></td>
       <td class="text-center no-border" width="50%">
-        <h2>ใบขอซื้อ Purchase Request</h2>
+        <h2>ระบบใบค้างจ่าย Outstanding Invoice</h2>
       </td>
       <td class="no-border" width="20%">วันที่</td>
       <td class="bottom-border" width="20%">
@@ -103,30 +92,14 @@ ob_start();
     <tr>
       <td class="text-left no-border" width="10%"></td>
       <td class="text-center no-border" width="50%"></td>
-      <td class="no-border" width="20%">เลขที่ PO</td>
-      <td class="bottom-border" width="20%"></td>
+      <td class="no-border" width="20%">เลขที่ SO</td>
+      <td class="bottom-border" width="20%">
+        <?php echo htmlspecialchars($row['order_number'], ENT_QUOTES, 'UTF-8'); ?>
+      </td>
     </tr>
   </table>
 
   <table>
-    <tr>
-      <td class="no-border" width="20%">หน่วยงานที่ขอซื้อ</td>
-      <td class="bottom-border" width="30%">
-        <?php echo htmlspecialchars($row['department'], ENT_QUOTES, 'UTF-8'); ?>
-      </td>
-      <td class="no-border" width="20%">วันที่ต้องการใช้</td>
-      <td class="bottom-border" width="30%">
-        <?php echo htmlspecialchars($row['date'], ENT_QUOTES, 'UTF-8'); ?>
-      </td>
-    </tr>
-    <tr>
-      <td class="no-border" width="20%">วัตถุประสงค์</td>
-      <td class="bottom-border" width="30%">
-        <?php echo str_replace("\n", "<br>", $row['objective']) ?>
-      </td>
-      <td class="no-border" width="20%"></td>
-      <td class="no-border" width="30%"></td>
-    </tr>
     <tr>
       <td class="no-border" width="20%">เลขที่ SO</td>
       <td class="bottom-border" width="30%">
@@ -136,17 +109,9 @@ ob_start();
       <td class="no-border" width="30%"></td>
     </tr>
     <tr>
-      <td class="no-border" width="20%">เลขที่สัญญา</td>
+      <td class="no-border" width="20%">รายละเอียด</td>
       <td class="bottom-border" width="30%">
-        <?php echo htmlspecialchars($row['customer_name'], ENT_QUOTES, 'UTF-8'); ?>
-      </td>
-      <td class="no-border" width="20%"></td>
-      <td class="no-border" width="30%"></td>
-    </tr>
-    <tr>
-      <td class="no-border" width="20%">ชื่อลูกค้า</td>
-      <td class="bottom-border" width="30%">
-        <?php echo htmlspecialchars($row['product_name'], ENT_QUOTES, 'UTF-8'); ?>
+        <?php echo str_replace("\n", "<br>", $row['text']) ?>
       </td>
       <td class="no-border" width="20%"></td>
       <td class="no-border" width="30%"></td>
@@ -163,7 +128,7 @@ ob_start();
       <th width="10%">ราคา</th>
     </tr>
     <?php
-    $items = $PURCHASE->purchase_item_view([$uuid]);
+    $items = $OUTSTANDING->outstanding_item_view([$uuid]);
     foreach ($items as $key => $item) :
       $key++;
     ?>
@@ -196,15 +161,9 @@ ob_start();
   <!-- Footer Section -->
   <table style="margin-top: 10px;">
     <tr>
-      <td rowspan="2" class="text-center" width="30%"><br><br>
-        <img src="<?php echo $signature_1 ?>" alt="signature" class="signature"><br>ผู้ขอเบิก<br><br>วันที่____________
-      </td>
-      <td rowspan="2" class="text-center" width="30%"><br><br>
-        <img src="<?php echo $signature_2 ?>" alt="signature" class="signature"><br>ผู้อนุมัติ<br><br>วันที่____________
-      </td>
-      <td rowspan="2" class="text-center" width="30%"><br><br>
-        <img src="<?php echo $signature_3 ?>" alt="signature" class="signature"><br>ผู้ตรวจสอบ<br><br>วันที่____________
-      </td>
+      <td rowspan="2" class="text-center" width="30%"><br><br>____________<br>ผู้ขอเบิก<br><br>วันที่____________</td>
+      <td rowspan="2" class="text-center" width="30%"><br><br>____________<br>ผู้อนุมัติ<br><br>วันที่____________</td>
+      <td rowspan="2" class="text-center" width="30%"><br><br>____________<br>ผู้ตรวจสอบ<br><br>วันที่____________</td>
     </tr>
   </table>
 
