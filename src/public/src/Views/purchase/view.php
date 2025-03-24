@@ -66,6 +66,15 @@ $files = $PURCHASE->purchase_file_view([$uuid]);
         </div>
       </div>
       <div class="row mb-2">
+        <label class="col-xl-2 offset-xl-2 col-form-label">เลขที่ PO</label>
+        <div class="col-xl-4">
+          <input type="text" class="form-control form-control-sm" name="po" value="<?php echo $row['po'] ?>">
+          <div class="invalid-feedback">
+            กรุณากรอกข้อมูล!
+          </div>
+        </div>
+      </div>
+      <div class="row mb-2">
         <label class="col-xl-2 offset-xl-2 col-form-label">หน่วยงานที่ขอซื้อ</label>
         <div class="col-xl-4">
           <input type="text" class="form-control form-control-sm" name="department" value="<?php echo $row['department'] ?>" required>
@@ -84,7 +93,7 @@ $files = $PURCHASE->purchase_file_view([$uuid]);
         </div>
       </div>
       <div class="row mb-2">
-        <label class="col-xl-2 offset-xl-2 col-form-label">เลขที่สัญญา</label>
+        <label class="col-xl-2 offset-xl-2 col-form-label">เลขที่สัญญา SO</label>
         <div class="col-xl-4">
           <select class="form-control form-control-sm order-select" name="order_number">
             <?php
@@ -115,9 +124,27 @@ $files = $PURCHASE->purchase_file_view([$uuid]);
         </div>
       <?php endif; ?>
       <div class="row mb-2">
-        <label class="col-xl-2 offset-xl-2 col-form-label">วัตถุประสงค์</label>
+        <label class="col-xl-2 offset-xl-2 col-form-label">อ้างอิงเอกสาร(ถ้ามี)</label>
+        <div class="col-xl-4">
+          <input type="text" class="form-control form-control-sm" name="reference" value="<?php echo $row['reference'] ?>">
+          <div class="invalid-feedback">
+            กรุณากรอกข้อมูล!
+          </div>
+        </div>
+      </div>
+      <div class="row mb-2">
+        <label class="col-xl-2 offset-xl-2 col-form-label">เหตุผลในการขอซื้อ <br>/ งบประมาณที่เตรียมไว้</label>
         <div class="col-xl-6">
           <textarea class="form-control form-control-sm" rows="5" name="objective" required><?php echo $row['objective'] ?></textarea>
+          <div class="invalid-feedback">
+            กรุณา กรอกข้อมูล!
+          </div>
+        </div>
+      </div>
+      <div class="row mb-2">
+        <label class="col-xl-2 offset-xl-2 col-form-label">หมายเหตุ</label>
+        <div class="col-xl-6">
+          <textarea class="form-control form-control-sm" rows="5" name="remark" required><?php echo $row['remark'] ?></textarea>
           <div class="invalid-feedback">
             กรุณา กรอกข้อมูล!
           </div>

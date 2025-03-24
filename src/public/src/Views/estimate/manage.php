@@ -11,11 +11,11 @@ include_once(__DIR__ . "/../layout/header.php");
   <div class="card-body">
 
     <div class="row justify-content-end mb-2">
-      <div class="col-xl-3 mb-2">
+      <!-- <div class="col-xl-3 mb-2">
         <a href="/estimate/authorize" class="btn btn-primary btn-sm btn-block">
           <i class="fas fa-bars pr-2"></i>สิทธิ์
         </a>
-      </div>
+      </div> -->
     </div>
 
     <div class="row mb-2">
@@ -49,3 +49,39 @@ include_once(__DIR__ . "/../layout/header.php");
 </div>
 
 <?php include_once(__DIR__ . "/../layout/footer.php"); ?>
+<script>
+  filter_datatable();
+
+  function filter_datatable() {
+    $(".manage-data").DataTable({
+      serverSide: true,
+      searching: false,
+      order: [],
+      ajax: {
+        url: "/estimate/manage-data",
+        type: "POST",
+      },
+      columnDefs: [{
+        targets: [0, 1, 2],
+        className: "text-center",
+      }, {
+        targets: [3, 4, 5],
+        className: "text-left",
+      }],
+      "oLanguage": {
+        "sLengthMenu": "แสดง _MENU_ ลำดับ ต่อหน้า",
+        "sZeroRecords": "ไม่พบข้อมูลที่ค้นหา",
+        "sInfo": "แสดง _START_ ถึง _END_ ของ _TOTAL_ ลำดับ",
+        "sInfoEmpty": "แสดง 0 ถึง 0 ของ 0 ลำดับ",
+        "sInfoFiltered": "",
+        "sSearch": "ค้นหา :",
+        "oPaginate": {
+          "sFirst": "หน้าแรก",
+          "sLast": "หน้าสุดท้าย",
+          "sNext": "ถัดไป",
+          "sPrevious": "ก่อนหน้า"
+        }
+      },
+    });
+  };
+</script>

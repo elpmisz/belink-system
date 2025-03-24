@@ -10,7 +10,7 @@ include_once(__DIR__ . "/../layout/header.php");
 
     <form action="/estimate/estimate-create" method="POST" class="needs-validation" novalidate enctype="multipart/form-data">
       <div class="row mb-2">
-        <label class="col-xl-2 offset-xl-2 col-form-label">พนักงานขาย</label>
+        <label class="col-xl-2 offset-xl-2 col-form-label">ชื่อพนักงานขาย</label>
         <div class="col-xl-4 text-underline">
           <?php echo $user['fullname'] ?>
         </div>
@@ -45,7 +45,7 @@ include_once(__DIR__ . "/../layout/header.php");
         </div>
       </div>
       <div class="row mb-2">
-        <label class="col-xl-2 offset-xl-2 col-form-label">เลขที่สัญญา</label>
+        <label class="col-xl-2 offset-xl-2 col-form-label">เลขที่สัญญา SO</label>
         <div class="col-xl-4">
           <input type="text" class="form-control form-control-sm" name="order_number" required>
           <div class="invalid-feedback">
@@ -54,7 +54,7 @@ include_once(__DIR__ . "/../layout/header.php");
         </div>
       </div>
       <div class="row mb-2">
-        <label class="col-xl-2 offset-xl-2 col-form-label">สินค้า</label>
+        <label class="col-xl-2 offset-xl-2 col-form-label">ชื่อสินค้า</label>
         <div class="col-xl-4">
           <input type="text" class="form-control form-control-sm" name="product_name" required>
           <div class="invalid-feedback">
@@ -63,7 +63,7 @@ include_once(__DIR__ . "/../layout/header.php");
         </div>
       </div>
       <div class="row mb-2">
-        <label class="col-xl-2 offset-xl-2 col-form-label">หัวข้อเรื่อง</label>
+        <label class="col-xl-2 offset-xl-2 col-form-label">ชื่องาน</label>
         <div class="col-xl-4">
           <input type="text" class="form-control form-control-sm" name="title_name" required>
           <div class="invalid-feedback">
@@ -81,7 +81,7 @@ include_once(__DIR__ . "/../layout/header.php");
         </div>
       </div>
       <div class="row mb-2">
-        <label class="col-xl-2 offset-xl-2 col-form-label">งบประมาณ</label>
+        <label class="col-xl-2 offset-xl-2 col-form-label">Total Sales</label>
         <div class="col-xl-4">
           <input type="number" class="form-control form-control-sm" name="budget" min="0" step="0.01" required>
           <div class="invalid-feedback">
@@ -93,13 +93,13 @@ include_once(__DIR__ . "/../layout/header.php");
         <label class="col-xl-2 offset-xl-2 col-form-label">ประเภท</label>
         <div class="col-xl-8">
           <div class="row pb-2">
-            <div class="col-xl-3">
+            <div class="col-xl-2">
               <label class="form-check-label px-3">
                 <input class="form-check-input" type="radio" name="type" value="1" required>
                 <span class="text-success">Event</span>
               </label>
             </div>
-            <div class="col-xl-3">
+            <div class="col-xl-2">
               <label class="form-check-label px-3">
                 <input class="form-check-input" type="radio" name="type" value="2" required>
                 <span class="text-danger">Online</span>
@@ -111,9 +111,15 @@ include_once(__DIR__ . "/../layout/header.php");
                 <span class="text-primary">รับจ้างผลิต</span>
               </label>
             </div>
-            <div class="col-xl-3">
+            <div class="col-xl-2">
               <label class="form-check-label px-3">
                 <input class="form-check-input" type="radio" name="type" value="4" required>
+                <span class="text-warning">Media</span>
+              </label>
+            </div>
+            <div class="col-xl-2">
+              <label class="form-check-label px-3">
+                <input class="form-check-input" type="radio" name="type" value="5" required>
                 <span class="text-info">อื่นๆ</span>
               </label>
             </div>

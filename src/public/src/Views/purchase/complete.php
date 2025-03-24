@@ -61,6 +61,12 @@ $remarks = $PURCHASE->purchase_remark_view([$uuid]);
         </div>
       </div>
       <div class="row mb-2">
+        <label class="col-xl-2 offset-xl-2 col-form-label">เลขที่ PO</label>
+        <div class="col-xl-4 text-underline">
+          <?php echo $row['po'] ?>
+        </div>
+      </div>
+      <div class="row mb-2">
         <label class="col-xl-2 offset-xl-2 col-form-label">หน่วยงานที่ขอซื้อ</label>
         <div class="col-xl-4 text-underline">
           <?php echo $row['department'] ?>
@@ -73,7 +79,7 @@ $remarks = $PURCHASE->purchase_remark_view([$uuid]);
         </div>
       </div>
       <div class="row mb-2">
-        <label class="col-xl-2 offset-xl-2 col-form-label">เลขที่สัญญา</label>
+        <label class="col-xl-2 offset-xl-2 col-form-label">เลขที่สัญญา SO</label>
         <div class="col-xl-4 text-underline">
           <?php echo $row['order_number'] ?>
         </div>
@@ -95,9 +101,21 @@ $remarks = $PURCHASE->purchase_remark_view([$uuid]);
         </div>
       <?php endif; ?>
       <div class="row mb-2">
-        <label class="col-xl-2 offset-xl-2 col-form-label">วัตถุประสงค์</label>
+        <label class="col-xl-2 offset-xl-2 col-form-label">อ้างอิงเอกสาร(ถ้ามี)</label>
+        <div class="col-xl-4 text-underline">
+          <?php echo $row['reference'] ?>
+        </div>
+      </div>
+      <div class="row mb-2">
+        <label class="col-xl-2 offset-xl-2 col-form-label">เหตุผลในการขอซื้อ <br>/ งบประมาณที่เตรียมไว้</label>
         <div class="col-xl-6 text-underline">
           <?php echo str_replace("\n", "<br>", $row['objective']) ?>
+        </div>
+      </div>
+      <div class="row mb-2">
+        <label class="col-xl-2 offset-xl-2 col-form-label">หมายเหตุ</label>
+        <div class="col-xl-6 text-underline">
+          <?php echo str_replace("\n", "<br>", $row['remark']) ?>
         </div>
       </div>
 

@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.1.1
+-- version 5.2.2
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost
--- Generation Time: Mar 20, 2025 at 08:28 PM
--- Server version: 8.0.41-0ubuntu0.24.04.1
--- PHP Version: 7.4.33
+-- Host: database
+-- Generation Time: Mar 24, 2025 at 02:22 PM
+-- Server version: 11.6.2-MariaDB-ubu2404
+-- PHP Version: 8.2.27
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -28,12 +28,12 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `advance_clear_file` (
-  `id` int NOT NULL,
-  `request_id` int NOT NULL,
-  `name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `status` int NOT NULL DEFAULT '1',
+  `id` int(11) NOT NULL,
+  `request_id` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `status` int(11) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
-  `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -43,16 +43,16 @@ CREATE TABLE `advance_clear_file` (
 --
 
 CREATE TABLE `advance_clear_item` (
-  `id` int NOT NULL,
-  `request_id` int NOT NULL,
-  `expense_id` int NOT NULL,
-  `text` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `id` int(11) NOT NULL,
+  `request_id` int(11) NOT NULL,
+  `expense_id` int(11) NOT NULL,
+  `text` varchar(100) NOT NULL,
   `amount` decimal(20,2) NOT NULL,
   `vat` decimal(20,2) NOT NULL,
   `wt` decimal(20,2) NOT NULL,
-  `status` int NOT NULL DEFAULT '1',
+  `status` int(11) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
-  `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -62,12 +62,12 @@ CREATE TABLE `advance_clear_item` (
 --
 
 CREATE TABLE `advance_clear_remark` (
-  `id` int NOT NULL,
-  `request_id` int NOT NULL,
-  `login_id` int NOT NULL,
-  `text` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `status` int NOT NULL,
-  `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `id` int(11) NOT NULL,
+  `request_id` int(11) NOT NULL,
+  `login_id` int(11) NOT NULL,
+  `text` varchar(200) NOT NULL,
+  `status` int(11) NOT NULL,
+  `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -77,18 +77,18 @@ CREATE TABLE `advance_clear_remark` (
 --
 
 CREATE TABLE `advance_clear_request` (
-  `id` int NOT NULL,
-  `uuid` varchar(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `last` int NOT NULL,
-  `login_id` int NOT NULL,
-  `department_number` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `id` int(11) NOT NULL,
+  `uuid` varchar(36) NOT NULL,
+  `last` int(11) NOT NULL,
+  `login_id` int(11) NOT NULL,
+  `department_number` varchar(20) NOT NULL,
   `doc_date` date NOT NULL,
-  `advance_id` int NOT NULL,
+  `advance_id` int(11) NOT NULL,
   `amount` decimal(20,2) NOT NULL,
-  `action` int NOT NULL DEFAULT '1',
-  `status` int NOT NULL DEFAULT '1',
+  `action` int(11) NOT NULL DEFAULT 1,
+  `status` int(11) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
-  `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -98,12 +98,12 @@ CREATE TABLE `advance_clear_request` (
 --
 
 CREATE TABLE `advance_file` (
-  `id` int NOT NULL,
-  `request_id` int NOT NULL,
-  `name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `status` int NOT NULL DEFAULT '1',
+  `id` int(11) NOT NULL,
+  `request_id` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `status` int(11) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
-  `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -113,14 +113,14 @@ CREATE TABLE `advance_file` (
 --
 
 CREATE TABLE `advance_item` (
-  `id` int NOT NULL,
-  `request_id` int NOT NULL,
-  `expense_id` int NOT NULL,
-  `text` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `id` int(11) NOT NULL,
+  `request_id` int(11) NOT NULL,
+  `expense_id` int(11) NOT NULL,
+  `text` varchar(100) NOT NULL,
   `amount` decimal(20,2) NOT NULL,
-  `status` int NOT NULL DEFAULT '1',
+  `status` int(11) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
-  `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -130,12 +130,12 @@ CREATE TABLE `advance_item` (
 --
 
 CREATE TABLE `advance_remark` (
-  `id` int NOT NULL,
-  `request_id` int NOT NULL,
-  `login_id` int NOT NULL,
-  `text` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `status` int NOT NULL,
-  `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `id` int(11) NOT NULL,
+  `request_id` int(11) NOT NULL,
+  `login_id` int(11) NOT NULL,
+  `text` varchar(200) NOT NULL,
+  `status` int(11) NOT NULL,
+  `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -145,18 +145,18 @@ CREATE TABLE `advance_remark` (
 --
 
 CREATE TABLE `advance_request` (
-  `id` int NOT NULL,
-  `uuid` varchar(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `last` int NOT NULL,
-  `login_id` int NOT NULL,
-  `department_number` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `id` int(11) NOT NULL,
+  `uuid` varchar(36) NOT NULL,
+  `last` int(11) NOT NULL,
+  `login_id` int(11) NOT NULL,
+  `department_number` varchar(20) NOT NULL,
   `doc_date` date NOT NULL,
   `finish` date NOT NULL,
-  `objective` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `action` int NOT NULL DEFAULT '1',
-  `status` int NOT NULL DEFAULT '1',
+  `objective` text NOT NULL,
+  `action` int(11) NOT NULL DEFAULT 1,
+  `status` int(11) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
-  `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -166,21 +166,21 @@ CREATE TABLE `advance_request` (
 --
 
 CREATE TABLE `asset` (
-  `id` int NOT NULL,
-  `uuid` varchar(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `name` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `code` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `type_id` int NOT NULL,
-  `warehouse_id` int NOT NULL,
-  `location_id` int NOT NULL,
-  `brand_id` int NOT NULL,
-  `unit_id` int NOT NULL,
-  `size` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `material` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `text` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `status` int NOT NULL DEFAULT '1',
+  `id` int(11) NOT NULL,
+  `uuid` varchar(36) NOT NULL,
+  `name` varchar(200) NOT NULL,
+  `code` varchar(10) NOT NULL,
+  `type_id` int(11) NOT NULL,
+  `warehouse_id` int(11) NOT NULL,
+  `location_id` int(11) NOT NULL,
+  `brand_id` int(11) NOT NULL,
+  `unit_id` int(11) NOT NULL,
+  `size` varchar(100) NOT NULL,
+  `material` varchar(100) NOT NULL,
+  `text` text NOT NULL,
+  `status` int(11) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
-  `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -391,11 +391,11 @@ INSERT INTO `asset` (`id`, `uuid`, `name`, `code`, `type_id`, `warehouse_id`, `l
 --
 
 CREATE TABLE `asset_brand` (
-  `id` int NOT NULL,
-  `name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `status` int NOT NULL DEFAULT '1',
+  `id` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `status` int(11) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
-  `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -419,12 +419,12 @@ INSERT INTO `asset_brand` (`id`, `name`, `status`, `updated`, `created`) VALUES
 --
 
 CREATE TABLE `asset_file` (
-  `id` int NOT NULL,
-  `asset_id` int NOT NULL,
-  `name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `status` int NOT NULL DEFAULT '1',
+  `id` int(11) NOT NULL,
+  `asset_id` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `status` int(11) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
-  `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -467,11 +467,11 @@ INSERT INTO `asset_file` (`id`, `asset_id`, `name`, `status`, `updated`, `create
 --
 
 CREATE TABLE `asset_location` (
-  `id` int NOT NULL,
-  `name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `status` int NOT NULL DEFAULT '1',
+  `id` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `status` int(11) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
-  `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -488,11 +488,11 @@ INSERT INTO `asset_location` (`id`, `name`, `status`, `updated`, `created`) VALU
 --
 
 CREATE TABLE `asset_type` (
-  `id` int NOT NULL,
-  `name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `status` int NOT NULL DEFAULT '1',
+  `id` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `status` int(11) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
-  `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -514,11 +514,11 @@ INSERT INTO `asset_type` (`id`, `name`, `status`, `updated`, `created`) VALUES
 --
 
 CREATE TABLE `asset_unit` (
-  `id` int NOT NULL,
-  `name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `status` int NOT NULL DEFAULT '1',
+  `id` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `status` int(11) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
-  `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -537,11 +537,11 @@ INSERT INTO `asset_unit` (`id`, `name`, `status`, `updated`, `created`) VALUES
 --
 
 CREATE TABLE `asset_warehouse` (
-  `id` int NOT NULL,
-  `name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `status` int NOT NULL DEFAULT '1',
+  `id` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `status` int(11) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
-  `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -559,12 +559,12 @@ INSERT INTO `asset_warehouse` (`id`, `name`, `status`, `updated`, `created`) VAL
 --
 
 CREATE TABLE `borrow_authorize` (
-  `id` int NOT NULL,
-  `login_id` int NOT NULL,
-  `type` int NOT NULL,
-  `status` int NOT NULL DEFAULT '1',
+  `id` int(11) NOT NULL,
+  `login_id` int(11) NOT NULL,
+  `type` int(11) NOT NULL,
+  `status` int(11) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
-  `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -587,12 +587,12 @@ INSERT INTO `borrow_authorize` (`id`, `login_id`, `type`, `status`, `updated`, `
 --
 
 CREATE TABLE `borrow_file` (
-  `id` int NOT NULL,
-  `request_id` int NOT NULL,
-  `name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `status` int NOT NULL DEFAULT '1',
+  `id` int(11) NOT NULL,
+  `request_id` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `status` int(11) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
-  `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -626,13 +626,13 @@ INSERT INTO `borrow_file` (`id`, `request_id`, `name`, `status`, `updated`, `cre
 --
 
 CREATE TABLE `borrow_item` (
-  `id` int NOT NULL,
-  `request_id` int NOT NULL,
-  `asset_id` int NOT NULL,
-  `text` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `status` int NOT NULL DEFAULT '1',
+  `id` int(11) NOT NULL,
+  `request_id` int(11) NOT NULL,
+  `asset_id` int(11) NOT NULL,
+  `text` varchar(100) NOT NULL,
+  `status` int(11) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
-  `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -864,13 +864,13 @@ INSERT INTO `borrow_item` (`id`, `request_id`, `asset_id`, `text`, `status`, `up
 --
 
 CREATE TABLE `borrow_remark` (
-  `id` int NOT NULL,
-  `request_id` int NOT NULL,
-  `login_id` int NOT NULL,
+  `id` int(11) NOT NULL,
+  `request_id` int(11) NOT NULL,
+  `login_id` int(11) NOT NULL,
   `date` date NOT NULL,
-  `text` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `status` int NOT NULL,
-  `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `text` varchar(200) NOT NULL,
+  `status` int(11) NOT NULL,
+  `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -924,22 +924,22 @@ INSERT INTO `borrow_remark` (`id`, `request_id`, `login_id`, `date`, `text`, `st
 --
 
 CREATE TABLE `borrow_request` (
-  `id` int NOT NULL,
-  `uuid` varchar(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `last` int NOT NULL,
-  `login_id` int NOT NULL,
+  `id` int(11) NOT NULL,
+  `uuid` varchar(36) NOT NULL,
+  `last` int(11) NOT NULL,
+  `login_id` int(11) NOT NULL,
   `date` date NOT NULL,
-  `event_date` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `event_date` varchar(50) NOT NULL,
   `event_start` date NOT NULL,
   `event_end` date NOT NULL,
-  `event_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `sale` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `location_start` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `location_end` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `objective` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `status` int NOT NULL DEFAULT '1',
+  `event_name` varchar(100) NOT NULL,
+  `sale` varchar(50) NOT NULL,
+  `location_start` varchar(50) NOT NULL,
+  `location_end` varchar(50) NOT NULL,
+  `objective` text NOT NULL,
+  `status` int(11) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
-  `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -987,15 +987,15 @@ INSERT INTO `borrow_request` (`id`, `uuid`, `last`, `login_id`, `date`, `event_d
 --
 
 CREATE TABLE `customer` (
-  `id` int NOT NULL,
-  `uuid` varchar(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `code` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `name` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `contact` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `status` int NOT NULL DEFAULT '1',
-  `login_id` int DEFAULT NULL,
+  `id` int(11) NOT NULL,
+  `uuid` varchar(36) NOT NULL,
+  `code` varchar(10) NOT NULL,
+  `name` varchar(200) NOT NULL,
+  `contact` varchar(100) NOT NULL,
+  `status` int(11) NOT NULL DEFAULT 1,
+  `login_id` int(11) DEFAULT NULL,
   `updated` datetime DEFAULT NULL,
-  `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -1118,11 +1118,11 @@ INSERT INTO `customer` (`id`, `uuid`, `code`, `name`, `contact`, `status`, `logi
 --
 
 CREATE TABLE `department` (
-  `id` int NOT NULL,
-  `name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `status` int NOT NULL DEFAULT '1',
+  `id` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `status` int(11) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
-  `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -1141,12 +1141,12 @@ INSERT INTO `department` (`id`, `name`, `status`, `updated`, `created`) VALUES
 --
 
 CREATE TABLE `estimate_file` (
-  `id` int NOT NULL,
-  `request_id` int NOT NULL,
-  `name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `status` int NOT NULL DEFAULT '1',
+  `id` int(11) NOT NULL,
+  `request_id` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `status` int(11) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
-  `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -1156,28 +1156,30 @@ CREATE TABLE `estimate_file` (
 --
 
 CREATE TABLE `estimate_item` (
-  `id` int NOT NULL,
-  `request_id` int NOT NULL,
-  `expense_id` int NOT NULL,
+  `id` int(11) NOT NULL,
+  `request_id` int(11) NOT NULL,
+  `expense_id` int(11) NOT NULL,
+  `text` varchar(100) NOT NULL,
+  `text2` varchar(100) NOT NULL,
   `estimate` decimal(20,2) NOT NULL,
-  `status` int NOT NULL DEFAULT '1',
+  `status` int(11) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
-  `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `estimate_item`
 --
 
-INSERT INTO `estimate_item` (`id`, `request_id`, `expense_id`, `estimate`, `status`, `updated`, `created`) VALUES
-(1, 1, 5, '100000.00', 1, NULL, '2025-03-20 10:17:38'),
-(2, 1, 6, '5000.00', 1, NULL, '2025-03-20 10:17:38'),
-(3, 1, 9, '10000.00', 1, NULL, '2025-03-20 10:17:38'),
-(4, 1, 15, '10000.00', 1, NULL, '2025-03-20 10:17:38'),
-(5, 1, 14, '5000.00', 1, NULL, '2025-03-20 10:17:38'),
-(6, 1, 12, '100000.00', 1, NULL, '2025-03-20 10:17:38'),
-(7, 2, 5, '5000.00', 1, NULL, '2025-03-20 11:23:03'),
-(8, 2, 8, '7500.00', 1, NULL, '2025-03-20 11:23:03');
+INSERT INTO `estimate_item` (`id`, `request_id`, `expense_id`, `text`, `text2`, `estimate`, `status`, `updated`, `created`) VALUES
+(1, 1, 5, '', '', 100000.00, 1, NULL, '2025-03-20 10:17:38'),
+(2, 1, 6, '', '', 5000.00, 1, NULL, '2025-03-20 10:17:38'),
+(3, 1, 9, '', '', 10000.00, 1, NULL, '2025-03-20 10:17:38'),
+(4, 1, 15, '', '', 10000.00, 1, NULL, '2025-03-20 10:17:38'),
+(5, 1, 14, '', '', 5000.00, 1, NULL, '2025-03-20 10:17:38'),
+(6, 1, 12, '', '', 100000.00, 1, NULL, '2025-03-20 10:17:38'),
+(7, 2, 5, '', '', 5000.00, 1, NULL, '2025-03-20 11:23:03'),
+(8, 2, 8, '', '', 7500.00, 1, NULL, '2025-03-20 11:23:03');
 
 -- --------------------------------------------------------
 
@@ -1186,12 +1188,12 @@ INSERT INTO `estimate_item` (`id`, `request_id`, `expense_id`, `estimate`, `stat
 --
 
 CREATE TABLE `estimate_remark` (
-  `id` int NOT NULL,
-  `request_id` int NOT NULL,
-  `login_id` int NOT NULL,
-  `text` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `status` int NOT NULL,
-  `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `id` int(11) NOT NULL,
+  `request_id` int(11) NOT NULL,
+  `login_id` int(11) NOT NULL,
+  `text` varchar(200) NOT NULL,
+  `status` int(11) NOT NULL,
+  `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -1213,24 +1215,24 @@ INSERT INTO `estimate_remark` (`id`, `request_id`, `login_id`, `text`, `status`,
 --
 
 CREATE TABLE `estimate_request` (
-  `id` int NOT NULL,
-  `uuid` varchar(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `last` int NOT NULL,
-  `login_id` int NOT NULL,
-  `department_number` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `customer_id` int NOT NULL,
+  `id` int(11) NOT NULL,
+  `uuid` varchar(36) NOT NULL,
+  `last` int(11) NOT NULL,
+  `login_id` int(11) NOT NULL,
+  `department_number` varchar(20) NOT NULL,
+  `customer_id` int(11) NOT NULL,
   `doc_date` date NOT NULL,
-  `order_number` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `product_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `title_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `sales_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `order_number` varchar(20) NOT NULL,
+  `product_name` varchar(100) NOT NULL,
+  `title_name` varchar(100) NOT NULL,
+  `sales_name` varchar(100) NOT NULL,
   `budget` decimal(20,2) NOT NULL,
-  `type` int NOT NULL,
-  `remark` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `action` int NOT NULL DEFAULT '1',
-  `status` int NOT NULL DEFAULT '1',
+  `type` int(11) NOT NULL,
+  `remark` varchar(200) NOT NULL,
+  `action` int(11) NOT NULL DEFAULT 1,
+  `status` int(11) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
-  `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -1238,8 +1240,8 @@ CREATE TABLE `estimate_request` (
 --
 
 INSERT INTO `estimate_request` (`id`, `uuid`, `last`, `login_id`, `department_number`, `customer_id`, `doc_date`, `order_number`, `product_name`, `title_name`, `sales_name`, `budget`, `type`, `remark`, `action`, `status`, `updated`, `created`) VALUES
-(1, '117ce5c9-0539-11f0-a87c-2ad6c30b0fff', 1, 1, '123', 1, '2025-03-20', 'so 45566', 'Event การไฟฟ้า', 'Event การไฟฟ้า', 'Event การไฟฟ้า', '300000.00', 1, '', 1, 4, '2025-03-20 10:34:35', '2025-03-20 10:11:51'),
-(2, '948276fa-0542-11f0-a87c-2ad6c30b0fff', 2, 2, 'SO68030017', 77, '2025-03-20', 'SO68030017', 'Cerave', 'Cerave La Roche Posay', 'Hen Night Mahidol University', '33824.00', 1, '', 1, 4, '2025-03-20 11:24:58', '2025-03-20 11:19:56');
+(1, '117ce5c9-0539-11f0-a87c-2ad6c30b0fff', 1, 1, '123', 1, '2025-03-20', 'so 45566', 'Event การไฟฟ้า', 'Event การไฟฟ้า', 'Event การไฟฟ้า', 300000.00, 1, '', 1, 4, '2025-03-20 10:34:35', '2025-03-20 10:11:51'),
+(2, '948276fa-0542-11f0-a87c-2ad6c30b0fff', 2, 2, 'SO68030017', 77, '2025-03-20', 'SO68030017', 'Cerave', 'Cerave La Roche Posay', 'Hen Night Mahidol University', 33824.00, 1, '', 1, 4, '2025-03-20 11:24:58', '2025-03-20 11:19:56');
 
 -- --------------------------------------------------------
 
@@ -1248,16 +1250,16 @@ INSERT INTO `estimate_request` (`id`, `uuid`, `last`, `login_id`, `department_nu
 --
 
 CREATE TABLE `expense` (
-  `id` int NOT NULL,
-  `uuid` varchar(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `code` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `name` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `type` int NOT NULL,
-  `reference` int DEFAULT NULL,
-  `status` int NOT NULL DEFAULT '1',
-  `login_id` int DEFAULT NULL,
+  `id` int(11) NOT NULL,
+  `uuid` varchar(36) NOT NULL,
+  `code` varchar(10) NOT NULL,
+  `name` varchar(200) NOT NULL,
+  `type` int(11) NOT NULL,
+  `reference` int(11) DEFAULT NULL,
+  `status` int(11) NOT NULL DEFAULT 1,
+  `login_id` int(11) DEFAULT NULL,
   `updated` datetime DEFAULT NULL,
-  `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -1289,12 +1291,12 @@ INSERT INTO `expense` (`id`, `uuid`, `code`, `name`, `type`, `reference`, `statu
 --
 
 CREATE TABLE `issue_authorize` (
-  `id` int NOT NULL,
-  `login_id` int NOT NULL,
-  `type` int NOT NULL,
-  `status` int NOT NULL DEFAULT '1',
+  `id` int(11) NOT NULL,
+  `login_id` int(11) NOT NULL,
+  `type` int(11) NOT NULL,
+  `status` int(11) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
-  `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -1319,12 +1321,12 @@ INSERT INTO `issue_authorize` (`id`, `login_id`, `type`, `status`, `updated`, `c
 --
 
 CREATE TABLE `issue_file` (
-  `id` int NOT NULL,
-  `request_id` int NOT NULL,
-  `name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `status` int NOT NULL DEFAULT '1',
+  `id` int(11) NOT NULL,
+  `request_id` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `status` int(11) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
-  `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -1375,16 +1377,16 @@ INSERT INTO `issue_file` (`id`, `request_id`, `name`, `status`, `updated`, `crea
 --
 
 CREATE TABLE `issue_item` (
-  `id` int NOT NULL,
-  `request_id` int NOT NULL,
-  `product_id` int NOT NULL,
-  `warehouse_id` int NOT NULL,
-  `type` int NOT NULL,
+  `id` int(11) NOT NULL,
+  `request_id` int(11) NOT NULL,
+  `product_id` int(11) NOT NULL,
+  `warehouse_id` int(11) NOT NULL,
+  `type` int(11) NOT NULL,
   `amount` decimal(20,2) NOT NULL,
   `confirm` decimal(20,2) NOT NULL,
-  `status` int NOT NULL DEFAULT '1',
+  `status` int(11) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
-  `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -1392,190 +1394,190 @@ CREATE TABLE `issue_item` (
 --
 
 INSERT INTO `issue_item` (`id`, `request_id`, `product_id`, `warehouse_id`, `type`, `amount`, `confirm`, `status`, `updated`, `created`) VALUES
-(1, 1, 2, 1, 1, '48.00', '48.00', 1, '2025-02-17 09:14:05', '2025-02-17 09:10:17'),
-(2, 1, 10, 1, 1, '648.00', '648.00', 1, '2025-02-17 09:14:05', '2025-02-17 09:10:18'),
-(3, 1, 27, 1, 1, '340.00', '340.00', 1, '2025-02-17 09:14:05', '2025-02-17 09:10:18'),
-(4, 1, 28, 1, 1, '300.00', '300.00', 1, '2025-02-17 09:14:05', '2025-02-17 09:10:18'),
-(5, 1, 29, 1, 1, '300.00', '300.00', 1, '2025-02-17 09:14:05', '2025-02-17 09:10:18'),
-(6, 1, 37, 1, 1, '66.00', '66.00', 1, '2025-02-17 09:14:05', '2025-02-17 09:10:18'),
-(7, 1, 38, 1, 1, '2592.00', '2592.00', 1, '2025-02-17 09:14:05', '2025-02-17 09:10:18'),
-(8, 1, 39, 1, 1, '1418.00', '1418.00', 1, '2025-02-17 09:14:05', '2025-02-17 09:10:18'),
-(9, 1, 40, 1, 1, '56.00', '56.00', 1, '2025-02-17 09:14:05', '2025-02-17 09:10:18'),
-(10, 1, 43, 1, 1, '502.00', '502.00', 1, '2025-02-17 09:14:05', '2025-02-17 09:10:18'),
-(11, 1, 44, 1, 1, '161.00', '161.00', 1, '2025-02-17 09:14:05', '2025-02-17 09:10:18'),
-(12, 1, 45, 1, 1, '1300.00', '1300.00', 1, '2025-02-17 09:14:05', '2025-02-17 09:10:18'),
-(13, 2, 38, 1, 2, '432.00', '432.00', 1, '2025-02-20 07:05:08', '2025-02-18 04:03:18'),
-(14, 2, 39, 1, 2, '144.00', '144.00', 1, '2025-02-20 07:05:08', '2025-02-18 04:03:18'),
-(15, 3, 38, 1, 2, '432.00', '432.00', 1, '2025-02-20 07:05:14', '2025-02-18 04:14:50'),
-(16, 3, 39, 1, 2, '144.00', '144.00', 1, '2025-02-20 07:05:14', '2025-02-18 04:14:50'),
-(17, 4, 46, 1, 1, '7.00', '7.00', 1, '2025-02-20 06:54:09', '2025-02-18 04:28:27'),
-(18, 5, 47, 1, 1, '16.00', '15.00', 1, '2025-02-20 07:00:06', '2025-02-19 03:57:20'),
-(19, 6, 48, 1, 1, '31.00', '32.00', 1, '2025-02-20 06:56:45', '2025-02-19 04:11:11'),
-(20, 7, 52, 1, 1, '4000.00', '4000.00', 1, '2025-02-20 07:00:13', '2025-02-20 03:55:01'),
-(21, 8, 38, 1, 2, '864.00', '864.00', 1, '2025-02-21 10:32:49', '2025-02-20 07:13:46'),
-(22, 8, 39, 1, 2, '288.00', '288.00', 1, '2025-02-21 10:32:49', '2025-02-20 07:13:46'),
-(23, 8, 46, 1, 2, '2.00', '2.00', 1, '2025-02-21 10:32:49', '2025-02-20 07:13:46'),
-(24, 8, 47, 1, 2, '8.00', '8.00', 1, '2025-02-21 10:32:49', '2025-02-20 07:13:46'),
-(25, 8, 48, 1, 2, '8.00', '8.00', 1, '2025-02-21 10:32:49', '2025-02-20 07:13:46'),
-(26, 9, 39, 1, 2, '216.00', '216.00', 1, '2025-02-20 07:22:17', '2025-02-20 07:20:46'),
-(27, 9, 38, 1, 2, '432.00', '432.00', 1, '2025-02-20 07:22:17', '2025-02-20 07:20:46'),
-(28, 10, 38, 1, 2, '432.00', '432.00', 1, '2025-02-21 10:32:34', '2025-02-20 08:19:05'),
-(29, 10, 39, 1, 2, '144.00', '144.00', 1, '2025-02-21 10:32:34', '2025-02-20 08:19:05'),
-(30, 10, 46, 1, 2, '5.00', '5.00', 1, '2025-02-21 10:32:34', '2025-02-20 08:19:05'),
-(31, 10, 48, 1, 2, '23.00', '24.00', 1, '2025-02-21 10:32:34', '2025-02-20 08:19:05'),
-(32, 10, 47, 1, 2, '8.00', '7.00', 1, '2025-02-21 10:32:34', '2025-02-20 08:19:05'),
-(33, 11, 58, 1, 1, '20.00', '20.00', 1, '2025-02-20 10:07:41', '2025-02-20 09:42:59'),
-(34, 12, 56, 1, 1, '40.00', '40.00', 1, '2025-02-20 10:12:12', '2025-02-20 09:43:18'),
-(35, 13, 57, 1, 1, '40.00', '40.00', 1, '2025-02-20 10:12:16', '2025-02-20 09:43:49'),
-(36, 14, 55, 1, 1, '7.00', '7.00', 1, '2025-02-20 10:12:26', '2025-02-20 09:44:18'),
-(37, 15, 54, 1, 1, '12.00', '12.00', 1, '2025-02-20 10:12:55', '2025-02-20 09:44:44'),
-(38, 16, 53, 1, 1, '12.00', '12.00', 1, '2025-02-20 10:13:04', '2025-02-20 09:45:25'),
-(39, 17, 59, 1, 1, '8000.00', '8000.00', 1, '2025-02-24 14:05:43', '2025-02-24 11:37:03'),
-(40, 18, 61, 1, 1, '14000.00', '14000.00', 1, '2025-02-24 17:32:20', '2025-02-24 17:29:52'),
-(41, 19, 62, 1, 1, '1500.00', '0.00', 1, NULL, '2025-02-24 17:31:43'),
-(42, 20, 64, 1, 1, '1850.00', '1850.00', 1, '2025-02-24 17:46:08', '2025-02-24 17:38:22'),
-(43, 21, 63, 1, 1, '1900.00', '1900.00', 1, '2025-02-24 17:46:17', '2025-02-24 17:39:02'),
-(44, 22, 62, 1, 1, '1573.00', '1573.00', 1, '2025-02-24 18:13:56', '2025-02-24 18:12:53'),
-(45, 23, 65, 1, 1, '1400.00', '1400.00', 1, '2025-02-24 22:11:36', '2025-02-24 22:10:58'),
-(46, 24, 66, 1, 1, '2400.00', '2400.00', 1, '2025-02-25 13:25:36', '2025-02-25 10:40:21'),
-(47, 25, 67, 1, 1, '2400.00', '2400.00', 1, '2025-02-25 13:25:43', '2025-02-25 10:42:17'),
-(48, 26, 65, 1, 2, '100.00', '100.00', 1, '2025-02-25 13:22:00', '2025-02-25 11:13:36'),
-(49, 26, 62, 1, 2, '100.00', '100.00', 1, '2025-02-25 13:22:00', '2025-02-25 11:13:36'),
-(50, 26, 63, 1, 2, '150.00', '150.00', 1, '2025-02-25 13:22:00', '2025-02-25 11:13:36'),
-(51, 26, 64, 1, 2, '100.00', '100.00', 1, '2025-02-25 13:22:00', '2025-02-25 11:13:36'),
-(52, 27, 61, 1, 2, '10.00', '0.00', 1, NULL, '2025-02-25 11:17:25'),
-(53, 28, 68, 1, 1, '20016.00', '20016.00', 1, '2025-02-25 13:24:52', '2025-02-25 13:12:42'),
-(54, 29, 67, 1, 2, '720.00', '720.00', 1, '2025-02-25 14:00:21', '2025-02-25 13:44:08'),
-(55, 29, 66, 1, 2, '720.00', '720.00', 1, '2025-02-25 14:00:21', '2025-02-25 13:44:08'),
-(56, 30, 69, 1, 1, '45.00', '45.00', 1, '2025-02-26 11:53:10', '2025-02-25 16:34:28'),
-(57, 31, 70, 1, 1, '76.00', '76.00', 1, '2025-02-26 11:53:00', '2025-02-25 16:37:44'),
-(58, 32, 43, 1, 1, '92.00', '47.00', 1, '2025-02-26 12:06:04', '2025-02-25 16:42:38'),
-(59, 32, 63, 1, 1, '229.00', '228.00', 1, '2025-02-26 12:06:04', '2025-02-25 16:42:38'),
-(60, 32, 64, 1, 1, '60.00', '60.00', 1, '2025-02-26 12:06:04', '2025-02-25 16:42:38'),
-(61, 32, 65, 1, 1, '39.00', '39.00', 1, '2025-02-26 12:06:04', '2025-02-25 16:42:38'),
-(62, 32, 45, 1, 1, '188.00', '190.00', 1, '2025-02-26 12:06:04', '2025-02-25 16:42:38'),
-(63, 33, 68, 1, 2, '4920.00', '4920.00', 1, '2025-02-26 11:42:27', '2025-02-25 20:30:54'),
-(64, 34, 68, 1, 2, '6888.00', '6888.00', 1, '2025-02-26 11:42:32', '2025-02-25 20:34:47'),
-(65, 35, 68, 1, 2, '5904.00', '5904.00', 1, '2025-02-26 11:42:39', '2025-02-25 20:37:38'),
-(66, 36, 68, 1, 2, '1968.00', '1968.00', 1, '2025-02-26 11:42:43', '2025-02-25 20:39:05'),
-(67, 37, 67, 1, 2, '144.00', '144.00', 1, '2025-02-26 16:36:12', '2025-02-26 12:44:34'),
-(68, 37, 66, 1, 2, '144.00', '144.00', 1, '2025-02-26 16:36:12', '2025-02-26 12:44:34'),
-(69, 38, 67, 1, 2, '192.00', '192.00', 1, '2025-02-28 11:08:53', '2025-02-27 14:50:55'),
-(70, 38, 66, 1, 2, '192.00', '192.00', 1, '2025-02-28 11:08:53', '2025-02-27 14:50:55'),
-(71, 39, 10, 1, 2, '100.00', '100.00', 1, '2025-03-05 11:38:40', '2025-03-03 10:31:04'),
-(72, 39, 29, 1, 2, '50.00', '50.00', 1, '2025-03-05 11:38:40', '2025-03-03 10:31:04'),
-(73, 39, 28, 1, 2, '50.00', '50.00', 1, '2025-03-05 11:38:40', '2025-03-03 10:31:04'),
-(74, 39, 27, 1, 2, '60.00', '60.00', 1, '2025-03-05 11:38:40', '2025-03-03 10:31:04'),
-(75, 40, 52, 1, 2, '1000.00', '1000.00', 1, '2025-03-14 11:28:42', '2025-03-04 17:21:03'),
-(76, 40, 59, 1, 2, '2000.00', '2000.00', 1, '2025-03-14 11:28:42', '2025-03-04 17:21:03'),
-(77, 41, 52, 1, 2, '1000.00', '1000.00', 1, '2025-03-18 11:36:16', '2025-03-04 17:24:58'),
-(78, 41, 59, 1, 2, '2000.00', '2000.00', 1, '2025-03-18 11:36:16', '2025-03-04 17:24:58'),
-(79, 42, 52, 1, 2, '1000.00', '0.00', 1, NULL, '2025-03-04 17:26:16'),
-(80, 42, 59, 1, 2, '2000.00', '0.00', 1, NULL, '2025-03-04 17:26:16'),
-(81, 43, 52, 1, 2, '1000.00', '0.00', 1, NULL, '2025-03-04 17:27:53'),
-(82, 43, 59, 1, 2, '2000.00', '0.00', 1, NULL, '2025-03-04 17:27:53'),
-(83, 44, 43, 1, 2, '100.00', '100.00', 1, '2025-03-05 12:49:06', '2025-03-05 12:39:32'),
-(84, 44, 44, 1, 2, '39.00', '39.00', 1, '2025-03-05 12:49:06', '2025-03-05 12:39:32'),
-(85, 44, 65, 1, 2, '50.00', '50.00', 1, '2025-03-05 12:49:06', '2025-03-05 12:39:32'),
-(86, 44, 64, 1, 2, '100.00', '100.00', 1, '2025-03-05 12:49:06', '2025-03-05 12:39:32'),
-(87, 44, 63, 1, 2, '100.00', '100.00', 1, '2025-03-05 12:49:06', '2025-03-05 12:39:32'),
-(88, 44, 45, 1, 2, '200.00', '200.00', 1, '2025-03-05 12:49:06', '2025-03-05 12:39:32'),
-(89, 44, 70, 1, 2, '76.00', '76.00', 1, '2025-03-05 12:49:06', '2025-03-05 12:39:32'),
-(90, 45, 67, 1, 2, '15.00', '0.00', 1, NULL, '2025-03-05 17:16:57'),
-(91, 45, 66, 1, 2, '15.00', '0.00', 1, NULL, '2025-03-05 17:16:57'),
-(92, 46, 67, 1, 2, '720.00', '720.00', 1, '2025-03-07 16:46:27', '2025-03-06 09:52:55'),
-(93, 46, 66, 1, 2, '720.00', '720.00', 1, '2025-03-07 16:46:27', '2025-03-06 09:52:55'),
-(94, 47, 67, 1, 2, '624.00', '624.00', 1, '2025-03-10 09:39:36', '2025-03-08 12:59:11'),
-(95, 47, 66, 1, 2, '624.00', '624.00', 1, '2025-03-10 09:39:36', '2025-03-08 12:59:11'),
-(96, 48, 63, 1, 1, '16.00', '34.00', 1, '2025-03-11 10:52:57', '2025-03-10 15:09:30'),
-(97, 48, 43, 1, 1, '28.00', '28.00', 1, '2025-03-11 10:52:57', '2025-03-10 15:09:30'),
-(98, 48, 44, 1, 1, '5.00', '5.00', 1, '2025-03-11 10:52:57', '2025-03-10 15:09:30'),
-(99, 48, 45, 1, 1, '159.00', '186.00', 1, '2025-03-11 10:52:57', '2025-03-10 15:09:30'),
-(100, 49, 71, 1, 1, '85.00', '85.00', 1, '2025-03-12 16:46:10', '2025-03-11 19:00:22'),
-(101, 50, 72, 1, 1, '50.00', '50.00', 1, '2025-03-12 17:45:22', '2025-03-12 16:47:54'),
-(102, 50, 73, 1, 1, '70.00', '70.00', 1, '2025-03-12 17:45:22', '2025-03-12 16:47:54'),
-(103, 51, 74, 1, 1, '17424.00', '17424.00', 1, '2025-03-12 18:02:10', '2025-03-12 16:57:55'),
-(104, 52, 74, 1, 2, '17124.00', '17124.00', 1, '2025-03-12 20:23:08', '2025-03-12 18:05:54'),
-(105, 53, 29, 1, 2, '50.00', '50.00', 1, '2025-03-17 14:14:10', '2025-03-13 10:50:17'),
-(106, 53, 28, 1, 2, '50.00', '50.00', 1, '2025-03-17 14:14:10', '2025-03-13 10:50:17'),
-(107, 53, 27, 1, 2, '60.00', '60.00', 1, '2025-03-17 14:14:10', '2025-03-13 10:50:17'),
-(108, 53, 10, 1, 2, '100.00', '100.00', 1, '2025-03-17 14:14:10', '2025-03-13 10:50:17'),
-(109, 54, 75, 1, 1, '16000.00', '16000.00', 1, '2025-03-13 14:36:31', '2025-03-13 11:30:12'),
-(110, 55, 76, 1, 1, '22000.00', '22000.00', 1, '2025-03-13 14:37:05', '2025-03-13 11:41:58'),
-(111, 56, 77, 1, 1, '4469.00', '4469.00', 1, '2025-03-13 14:35:44', '2025-03-13 11:44:45'),
-(112, 57, 62, 1, 2, '12.00', '12.00', 1, '2025-03-13 14:33:45', '2025-03-13 12:33:08'),
-(113, 58, 44, 1, 2, '39.00', '39.00', 1, '2025-03-14 11:34:13', '2025-03-13 12:58:30'),
-(114, 58, 43, 1, 2, '100.00', '100.00', 1, '2025-03-14 11:34:13', '2025-03-13 12:58:30'),
-(115, 58, 65, 1, 2, '50.00', '50.00', 1, '2025-03-14 11:34:13', '2025-03-13 12:58:30'),
-(116, 58, 45, 1, 2, '200.00', '200.00', 1, '2025-03-14 11:34:13', '2025-03-13 12:58:30'),
-(117, 58, 63, 1, 2, '100.00', '100.00', 1, '2025-03-14 11:34:13', '2025-03-13 12:58:30'),
-(118, 58, 64, 1, 2, '100.00', '100.00', 1, '2025-03-14 11:34:13', '2025-03-13 12:58:30'),
-(119, 59, 72, 1, 2, '30.00', '30.00', 1, '2025-03-13 19:17:57', '2025-03-13 17:20:04'),
-(120, 60, 73, 1, 2, '30.00', '30.00', 1, '2025-03-13 19:17:59', '2025-03-13 17:20:57'),
-(121, 61, 73, 1, 1, '30.00', '30.00', 1, '2025-03-17 11:40:55', '2025-03-17 08:30:45'),
-(122, 62, 72, 1, 1, '30.00', '30.00', 1, '2025-03-17 11:40:58', '2025-03-17 08:33:34'),
-(123, 63, 74, 1, 1, '13700.00', '13700.00', 1, '2025-03-17 11:41:05', '2025-03-17 08:36:32'),
-(124, 64, 78, 1, 1, '13900.00', '13900.00', 1, '2025-03-17 15:58:49', '2025-03-17 14:06:18'),
-(125, 65, 76, 1, 2, '10.00', '10.00', 1, '2025-03-18 11:35:59', '2025-03-18 10:53:49'),
-(126, 65, 78, 1, 2, '10.00', '10.00', 1, '2025-03-18 11:35:59', '2025-03-18 10:53:49'),
-(127, 65, 75, 1, 2, '10.00', '10.00', 1, '2025-03-18 11:35:59', '2025-03-18 10:53:49'),
-(128, 66, 10, 1, 2, '200.00', '0.00', 1, NULL, '2025-03-18 18:13:47'),
-(129, 66, 29, 1, 2, '100.00', '0.00', 1, NULL, '2025-03-18 18:13:47'),
-(130, 66, 28, 1, 2, '100.00', '0.00', 1, NULL, '2025-03-18 18:13:48'),
-(131, 66, 27, 1, 2, '100.00', '0.00', 1, NULL, '2025-03-18 18:13:48'),
-(132, 67, 78, 1, 2, '1000.00', '1000.00', 1, '2025-03-19 11:57:14', '2025-03-19 10:55:05'),
-(133, 67, 76, 1, 2, '1000.00', '1000.00', 1, '2025-03-19 11:57:14', '2025-03-19 10:55:05'),
-(134, 67, 75, 1, 2, '1000.00', '1000.00', 1, '2025-03-19 11:57:14', '2025-03-19 10:55:05'),
-(135, 68, 70, 1, 1, '130.00', '130.00', 1, '2025-03-19 15:54:39', '2025-03-19 15:00:45'),
-(136, 68, 63, 1, 1, '96.00', '96.00', 1, '2025-03-19 15:54:39', '2025-03-19 15:00:45'),
-(137, 68, 64, 1, 1, '15.00', '15.00', 1, '2025-03-19 15:54:39', '2025-03-19 15:00:45'),
-(138, 68, 44, 1, 1, '7.00', '7.00', 1, '2025-03-19 15:54:39', '2025-03-19 15:00:45'),
-(139, 68, 43, 1, 1, '51.00', '51.00', 1, '2025-03-19 15:54:39', '2025-03-19 15:00:45'),
-(140, 68, 45, 1, 1, '184.00', '182.00', 1, '2025-03-19 15:54:39', '2025-03-19 15:00:45'),
-(141, 69, 74, 1, 2, '300.00', '300.00', 1, '2025-03-19 17:49:32', '2025-03-19 15:28:25'),
-(142, 69, 73, 1, 2, '70.00', '70.00', 1, '2025-03-19 17:49:32', '2025-03-19 15:28:25'),
-(143, 69, 72, 1, 2, '50.00', '50.00', 1, '2025-03-19 17:49:32', '2025-03-19 15:28:26'),
-(144, 70, 79, 1, 1, '930.00', '0.00', 1, NULL, '2025-03-19 16:30:03'),
-(145, 71, 80, 1, 1, '930.00', '0.00', 1, NULL, '2025-03-19 16:33:24'),
-(146, 71, 81, 1, 1, '930.00', '0.00', 1, NULL, '2025-03-19 16:33:24'),
-(147, 71, 82, 1, 1, '930.00', '0.00', 1, NULL, '2025-03-19 16:33:24'),
-(148, 72, 66, 1, 1, '2400.00', '0.00', 0, '2025-03-19 18:43:53', '2025-03-19 18:41:01'),
-(149, 72, 66, 1, 1, '2400.00', '2400.00', 1, '2025-03-19 19:00:50', '2025-03-19 18:44:28'),
-(150, 72, 67, 1, 1, '2400.00', '2400.00', 1, '2025-03-19 19:00:50', '2025-03-19 18:44:28'),
-(151, 73, 83, 1, 1, '81504.00', '81504.00', 1, '2025-03-19 19:03:46', '2025-03-19 18:48:41'),
-(152, 73, 84, 1, 1, '95664.00', '95664.00', 1, '2025-03-19 19:03:46', '2025-03-19 18:48:41'),
-(153, 74, 86, 1, 1, '120.00', '120.00', 1, '2025-03-19 19:21:15', '2025-03-19 19:05:42'),
-(154, 74, 85, 1, 1, '40.00', '40.00', 1, '2025-03-19 19:21:15', '2025-03-19 19:05:42'),
-(155, 75, 83, 1, 2, '11520.00', '11520.00', 1, '2025-03-20 12:42:35', '2025-03-19 19:10:29'),
-(156, 75, 84, 1, 2, '11520.00', '11520.00', 1, '2025-03-20 12:42:35', '2025-03-19 19:10:29'),
-(157, 76, 83, 1, 2, '240.00', '240.00', 1, '2025-03-20 11:05:21', '2025-03-19 19:12:12'),
-(158, 76, 84, 1, 2, '240.00', '240.00', 1, '2025-03-20 11:05:21', '2025-03-19 19:12:12'),
-(159, 77, 43, 1, 2, '100.00', '0.00', 1, NULL, '2025-03-19 21:06:08'),
-(160, 77, 44, 1, 2, '39.00', '0.00', 1, NULL, '2025-03-19 21:06:08'),
-(161, 77, 64, 1, 2, '100.00', '0.00', 1, NULL, '2025-03-19 21:06:08'),
-(162, 77, 63, 1, 2, '100.00', '0.00', 1, NULL, '2025-03-19 21:06:08'),
-(163, 77, 45, 1, 2, '200.00', '0.00', 1, NULL, '2025-03-19 21:06:08'),
-(164, 77, 65, 1, 2, '50.00', '0.00', 1, NULL, '2025-03-19 21:06:08'),
-(165, 77, 70, 1, 2, '65.00', '0.00', 1, NULL, '2025-03-19 21:06:08'),
-(166, 78, 43, 1, 2, '100.00', '0.00', 1, NULL, '2025-03-19 21:08:32'),
-(167, 78, 44, 1, 2, '39.00', '0.00', 1, NULL, '2025-03-19 21:08:32'),
-(168, 78, 64, 1, 2, '100.00', '0.00', 1, NULL, '2025-03-19 21:08:32'),
-(169, 78, 63, 1, 2, '100.00', '0.00', 1, NULL, '2025-03-19 21:08:32'),
-(170, 78, 45, 1, 2, '200.00', '0.00', 1, NULL, '2025-03-19 21:08:32'),
-(171, 78, 65, 1, 2, '50.00', '0.00', 1, NULL, '2025-03-19 21:08:32'),
-(172, 78, 70, 1, 2, '65.00', '0.00', 1, NULL, '2025-03-19 21:08:32'),
-(173, 79, 78, 1, 1, '1100.00', '1100.00', 1, '2025-03-19 22:23:59', '2025-03-19 22:05:56'),
-(174, 80, 91, 1, 1, '200.00', '200.00', 1, '2025-03-19 22:22:52', '2025-03-19 22:08:04'),
-(175, 81, 92, 1, 1, '198.00', '198.00', 1, '2025-03-19 22:20:52', '2025-03-19 22:10:07'),
-(176, 82, 93, 1, 1, '1210.00', '1210.00', 1, '2025-03-19 22:22:30', '2025-03-19 22:12:22'),
-(177, 83, 94, 1, 1, '1.00', '1.00', 1, '2025-03-19 22:24:23', '2025-03-19 22:14:36'),
-(178, 84, 95, 1, 1, '2000.00', '2000.00', 1, '2025-03-20 14:43:58', '2025-03-20 14:42:13'),
-(179, 84, 96, 1, 1, '4000.00', '4000.00', 1, '2025-03-20 14:43:58', '2025-03-20 14:42:13'),
-(180, 84, 97, 1, 1, '10000.00', '10000.00', 1, '2025-03-20 14:43:58', '2025-03-20 14:42:13'),
-(181, 85, 95, 1, 2, '2000.00', '0.00', 1, NULL, '2025-03-20 14:49:08'),
-(182, 85, 96, 1, 2, '4000.00', '0.00', 1, NULL, '2025-03-20 14:49:08'),
-(183, 85, 97, 1, 2, '10000.00', '0.00', 1, NULL, '2025-03-20 14:49:08'),
-(184, 86, 74, 1, 2, '1000.00', '0.00', 1, NULL, '2025-03-20 15:06:28');
+(1, 1, 2, 1, 1, 48.00, 48.00, 1, '2025-02-17 09:14:05', '2025-02-17 09:10:17'),
+(2, 1, 10, 1, 1, 648.00, 648.00, 1, '2025-02-17 09:14:05', '2025-02-17 09:10:18'),
+(3, 1, 27, 1, 1, 340.00, 340.00, 1, '2025-02-17 09:14:05', '2025-02-17 09:10:18'),
+(4, 1, 28, 1, 1, 300.00, 300.00, 1, '2025-02-17 09:14:05', '2025-02-17 09:10:18'),
+(5, 1, 29, 1, 1, 300.00, 300.00, 1, '2025-02-17 09:14:05', '2025-02-17 09:10:18'),
+(6, 1, 37, 1, 1, 66.00, 66.00, 1, '2025-02-17 09:14:05', '2025-02-17 09:10:18'),
+(7, 1, 38, 1, 1, 2592.00, 2592.00, 1, '2025-02-17 09:14:05', '2025-02-17 09:10:18'),
+(8, 1, 39, 1, 1, 1418.00, 1418.00, 1, '2025-02-17 09:14:05', '2025-02-17 09:10:18'),
+(9, 1, 40, 1, 1, 56.00, 56.00, 1, '2025-02-17 09:14:05', '2025-02-17 09:10:18'),
+(10, 1, 43, 1, 1, 502.00, 502.00, 1, '2025-02-17 09:14:05', '2025-02-17 09:10:18'),
+(11, 1, 44, 1, 1, 161.00, 161.00, 1, '2025-02-17 09:14:05', '2025-02-17 09:10:18'),
+(12, 1, 45, 1, 1, 1300.00, 1300.00, 1, '2025-02-17 09:14:05', '2025-02-17 09:10:18'),
+(13, 2, 38, 1, 2, 432.00, 432.00, 1, '2025-02-20 07:05:08', '2025-02-18 04:03:18'),
+(14, 2, 39, 1, 2, 144.00, 144.00, 1, '2025-02-20 07:05:08', '2025-02-18 04:03:18'),
+(15, 3, 38, 1, 2, 432.00, 432.00, 1, '2025-02-20 07:05:14', '2025-02-18 04:14:50'),
+(16, 3, 39, 1, 2, 144.00, 144.00, 1, '2025-02-20 07:05:14', '2025-02-18 04:14:50'),
+(17, 4, 46, 1, 1, 7.00, 7.00, 1, '2025-02-20 06:54:09', '2025-02-18 04:28:27'),
+(18, 5, 47, 1, 1, 16.00, 15.00, 1, '2025-02-20 07:00:06', '2025-02-19 03:57:20'),
+(19, 6, 48, 1, 1, 31.00, 32.00, 1, '2025-02-20 06:56:45', '2025-02-19 04:11:11'),
+(20, 7, 52, 1, 1, 4000.00, 4000.00, 1, '2025-02-20 07:00:13', '2025-02-20 03:55:01'),
+(21, 8, 38, 1, 2, 864.00, 864.00, 1, '2025-02-21 10:32:49', '2025-02-20 07:13:46'),
+(22, 8, 39, 1, 2, 288.00, 288.00, 1, '2025-02-21 10:32:49', '2025-02-20 07:13:46'),
+(23, 8, 46, 1, 2, 2.00, 2.00, 1, '2025-02-21 10:32:49', '2025-02-20 07:13:46'),
+(24, 8, 47, 1, 2, 8.00, 8.00, 1, '2025-02-21 10:32:49', '2025-02-20 07:13:46'),
+(25, 8, 48, 1, 2, 8.00, 8.00, 1, '2025-02-21 10:32:49', '2025-02-20 07:13:46'),
+(26, 9, 39, 1, 2, 216.00, 216.00, 1, '2025-02-20 07:22:17', '2025-02-20 07:20:46'),
+(27, 9, 38, 1, 2, 432.00, 432.00, 1, '2025-02-20 07:22:17', '2025-02-20 07:20:46'),
+(28, 10, 38, 1, 2, 432.00, 432.00, 1, '2025-02-21 10:32:34', '2025-02-20 08:19:05'),
+(29, 10, 39, 1, 2, 144.00, 144.00, 1, '2025-02-21 10:32:34', '2025-02-20 08:19:05'),
+(30, 10, 46, 1, 2, 5.00, 5.00, 1, '2025-02-21 10:32:34', '2025-02-20 08:19:05'),
+(31, 10, 48, 1, 2, 23.00, 24.00, 1, '2025-02-21 10:32:34', '2025-02-20 08:19:05'),
+(32, 10, 47, 1, 2, 8.00, 7.00, 1, '2025-02-21 10:32:34', '2025-02-20 08:19:05'),
+(33, 11, 58, 1, 1, 20.00, 20.00, 1, '2025-02-20 10:07:41', '2025-02-20 09:42:59'),
+(34, 12, 56, 1, 1, 40.00, 40.00, 1, '2025-02-20 10:12:12', '2025-02-20 09:43:18'),
+(35, 13, 57, 1, 1, 40.00, 40.00, 1, '2025-02-20 10:12:16', '2025-02-20 09:43:49'),
+(36, 14, 55, 1, 1, 7.00, 7.00, 1, '2025-02-20 10:12:26', '2025-02-20 09:44:18'),
+(37, 15, 54, 1, 1, 12.00, 12.00, 1, '2025-02-20 10:12:55', '2025-02-20 09:44:44'),
+(38, 16, 53, 1, 1, 12.00, 12.00, 1, '2025-02-20 10:13:04', '2025-02-20 09:45:25'),
+(39, 17, 59, 1, 1, 8000.00, 8000.00, 1, '2025-02-24 14:05:43', '2025-02-24 11:37:03'),
+(40, 18, 61, 1, 1, 14000.00, 14000.00, 1, '2025-02-24 17:32:20', '2025-02-24 17:29:52'),
+(41, 19, 62, 1, 1, 1500.00, 0.00, 1, NULL, '2025-02-24 17:31:43'),
+(42, 20, 64, 1, 1, 1850.00, 1850.00, 1, '2025-02-24 17:46:08', '2025-02-24 17:38:22'),
+(43, 21, 63, 1, 1, 1900.00, 1900.00, 1, '2025-02-24 17:46:17', '2025-02-24 17:39:02'),
+(44, 22, 62, 1, 1, 1573.00, 1573.00, 1, '2025-02-24 18:13:56', '2025-02-24 18:12:53'),
+(45, 23, 65, 1, 1, 1400.00, 1400.00, 1, '2025-02-24 22:11:36', '2025-02-24 22:10:58'),
+(46, 24, 66, 1, 1, 2400.00, 2400.00, 1, '2025-02-25 13:25:36', '2025-02-25 10:40:21'),
+(47, 25, 67, 1, 1, 2400.00, 2400.00, 1, '2025-02-25 13:25:43', '2025-02-25 10:42:17'),
+(48, 26, 65, 1, 2, 100.00, 100.00, 1, '2025-02-25 13:22:00', '2025-02-25 11:13:36'),
+(49, 26, 62, 1, 2, 100.00, 100.00, 1, '2025-02-25 13:22:00', '2025-02-25 11:13:36'),
+(50, 26, 63, 1, 2, 150.00, 150.00, 1, '2025-02-25 13:22:00', '2025-02-25 11:13:36'),
+(51, 26, 64, 1, 2, 100.00, 100.00, 1, '2025-02-25 13:22:00', '2025-02-25 11:13:36'),
+(52, 27, 61, 1, 2, 10.00, 0.00, 1, NULL, '2025-02-25 11:17:25'),
+(53, 28, 68, 1, 1, 20016.00, 20016.00, 1, '2025-02-25 13:24:52', '2025-02-25 13:12:42'),
+(54, 29, 67, 1, 2, 720.00, 720.00, 1, '2025-02-25 14:00:21', '2025-02-25 13:44:08'),
+(55, 29, 66, 1, 2, 720.00, 720.00, 1, '2025-02-25 14:00:21', '2025-02-25 13:44:08'),
+(56, 30, 69, 1, 1, 45.00, 45.00, 1, '2025-02-26 11:53:10', '2025-02-25 16:34:28'),
+(57, 31, 70, 1, 1, 76.00, 76.00, 1, '2025-02-26 11:53:00', '2025-02-25 16:37:44'),
+(58, 32, 43, 1, 1, 92.00, 47.00, 1, '2025-02-26 12:06:04', '2025-02-25 16:42:38'),
+(59, 32, 63, 1, 1, 229.00, 228.00, 1, '2025-02-26 12:06:04', '2025-02-25 16:42:38'),
+(60, 32, 64, 1, 1, 60.00, 60.00, 1, '2025-02-26 12:06:04', '2025-02-25 16:42:38'),
+(61, 32, 65, 1, 1, 39.00, 39.00, 1, '2025-02-26 12:06:04', '2025-02-25 16:42:38'),
+(62, 32, 45, 1, 1, 188.00, 190.00, 1, '2025-02-26 12:06:04', '2025-02-25 16:42:38'),
+(63, 33, 68, 1, 2, 4920.00, 4920.00, 1, '2025-02-26 11:42:27', '2025-02-25 20:30:54'),
+(64, 34, 68, 1, 2, 6888.00, 6888.00, 1, '2025-02-26 11:42:32', '2025-02-25 20:34:47'),
+(65, 35, 68, 1, 2, 5904.00, 5904.00, 1, '2025-02-26 11:42:39', '2025-02-25 20:37:38'),
+(66, 36, 68, 1, 2, 1968.00, 1968.00, 1, '2025-02-26 11:42:43', '2025-02-25 20:39:05'),
+(67, 37, 67, 1, 2, 144.00, 144.00, 1, '2025-02-26 16:36:12', '2025-02-26 12:44:34'),
+(68, 37, 66, 1, 2, 144.00, 144.00, 1, '2025-02-26 16:36:12', '2025-02-26 12:44:34'),
+(69, 38, 67, 1, 2, 192.00, 192.00, 1, '2025-02-28 11:08:53', '2025-02-27 14:50:55'),
+(70, 38, 66, 1, 2, 192.00, 192.00, 1, '2025-02-28 11:08:53', '2025-02-27 14:50:55'),
+(71, 39, 10, 1, 2, 100.00, 100.00, 1, '2025-03-05 11:38:40', '2025-03-03 10:31:04'),
+(72, 39, 29, 1, 2, 50.00, 50.00, 1, '2025-03-05 11:38:40', '2025-03-03 10:31:04'),
+(73, 39, 28, 1, 2, 50.00, 50.00, 1, '2025-03-05 11:38:40', '2025-03-03 10:31:04'),
+(74, 39, 27, 1, 2, 60.00, 60.00, 1, '2025-03-05 11:38:40', '2025-03-03 10:31:04'),
+(75, 40, 52, 1, 2, 1000.00, 1000.00, 1, '2025-03-14 11:28:42', '2025-03-04 17:21:03'),
+(76, 40, 59, 1, 2, 2000.00, 2000.00, 1, '2025-03-14 11:28:42', '2025-03-04 17:21:03'),
+(77, 41, 52, 1, 2, 1000.00, 1000.00, 1, '2025-03-18 11:36:16', '2025-03-04 17:24:58'),
+(78, 41, 59, 1, 2, 2000.00, 2000.00, 1, '2025-03-18 11:36:16', '2025-03-04 17:24:58'),
+(79, 42, 52, 1, 2, 1000.00, 0.00, 1, NULL, '2025-03-04 17:26:16'),
+(80, 42, 59, 1, 2, 2000.00, 0.00, 1, NULL, '2025-03-04 17:26:16'),
+(81, 43, 52, 1, 2, 1000.00, 0.00, 1, NULL, '2025-03-04 17:27:53'),
+(82, 43, 59, 1, 2, 2000.00, 0.00, 1, NULL, '2025-03-04 17:27:53'),
+(83, 44, 43, 1, 2, 100.00, 100.00, 1, '2025-03-05 12:49:06', '2025-03-05 12:39:32'),
+(84, 44, 44, 1, 2, 39.00, 39.00, 1, '2025-03-05 12:49:06', '2025-03-05 12:39:32'),
+(85, 44, 65, 1, 2, 50.00, 50.00, 1, '2025-03-05 12:49:06', '2025-03-05 12:39:32'),
+(86, 44, 64, 1, 2, 100.00, 100.00, 1, '2025-03-05 12:49:06', '2025-03-05 12:39:32'),
+(87, 44, 63, 1, 2, 100.00, 100.00, 1, '2025-03-05 12:49:06', '2025-03-05 12:39:32'),
+(88, 44, 45, 1, 2, 200.00, 200.00, 1, '2025-03-05 12:49:06', '2025-03-05 12:39:32'),
+(89, 44, 70, 1, 2, 76.00, 76.00, 1, '2025-03-05 12:49:06', '2025-03-05 12:39:32'),
+(90, 45, 67, 1, 2, 15.00, 0.00, 1, NULL, '2025-03-05 17:16:57'),
+(91, 45, 66, 1, 2, 15.00, 0.00, 1, NULL, '2025-03-05 17:16:57'),
+(92, 46, 67, 1, 2, 720.00, 720.00, 1, '2025-03-07 16:46:27', '2025-03-06 09:52:55'),
+(93, 46, 66, 1, 2, 720.00, 720.00, 1, '2025-03-07 16:46:27', '2025-03-06 09:52:55'),
+(94, 47, 67, 1, 2, 624.00, 624.00, 1, '2025-03-10 09:39:36', '2025-03-08 12:59:11'),
+(95, 47, 66, 1, 2, 624.00, 624.00, 1, '2025-03-10 09:39:36', '2025-03-08 12:59:11'),
+(96, 48, 63, 1, 1, 16.00, 34.00, 1, '2025-03-11 10:52:57', '2025-03-10 15:09:30'),
+(97, 48, 43, 1, 1, 28.00, 28.00, 1, '2025-03-11 10:52:57', '2025-03-10 15:09:30'),
+(98, 48, 44, 1, 1, 5.00, 5.00, 1, '2025-03-11 10:52:57', '2025-03-10 15:09:30'),
+(99, 48, 45, 1, 1, 159.00, 186.00, 1, '2025-03-11 10:52:57', '2025-03-10 15:09:30'),
+(100, 49, 71, 1, 1, 85.00, 85.00, 1, '2025-03-12 16:46:10', '2025-03-11 19:00:22'),
+(101, 50, 72, 1, 1, 50.00, 50.00, 1, '2025-03-12 17:45:22', '2025-03-12 16:47:54'),
+(102, 50, 73, 1, 1, 70.00, 70.00, 1, '2025-03-12 17:45:22', '2025-03-12 16:47:54'),
+(103, 51, 74, 1, 1, 17424.00, 17424.00, 1, '2025-03-12 18:02:10', '2025-03-12 16:57:55'),
+(104, 52, 74, 1, 2, 17124.00, 17124.00, 1, '2025-03-12 20:23:08', '2025-03-12 18:05:54'),
+(105, 53, 29, 1, 2, 50.00, 50.00, 1, '2025-03-17 14:14:10', '2025-03-13 10:50:17'),
+(106, 53, 28, 1, 2, 50.00, 50.00, 1, '2025-03-17 14:14:10', '2025-03-13 10:50:17'),
+(107, 53, 27, 1, 2, 60.00, 60.00, 1, '2025-03-17 14:14:10', '2025-03-13 10:50:17'),
+(108, 53, 10, 1, 2, 100.00, 100.00, 1, '2025-03-17 14:14:10', '2025-03-13 10:50:17'),
+(109, 54, 75, 1, 1, 16000.00, 16000.00, 1, '2025-03-13 14:36:31', '2025-03-13 11:30:12'),
+(110, 55, 76, 1, 1, 22000.00, 22000.00, 1, '2025-03-13 14:37:05', '2025-03-13 11:41:58'),
+(111, 56, 77, 1, 1, 4469.00, 4469.00, 1, '2025-03-13 14:35:44', '2025-03-13 11:44:45'),
+(112, 57, 62, 1, 2, 12.00, 12.00, 1, '2025-03-13 14:33:45', '2025-03-13 12:33:08'),
+(113, 58, 44, 1, 2, 39.00, 39.00, 1, '2025-03-14 11:34:13', '2025-03-13 12:58:30'),
+(114, 58, 43, 1, 2, 100.00, 100.00, 1, '2025-03-14 11:34:13', '2025-03-13 12:58:30'),
+(115, 58, 65, 1, 2, 50.00, 50.00, 1, '2025-03-14 11:34:13', '2025-03-13 12:58:30'),
+(116, 58, 45, 1, 2, 200.00, 200.00, 1, '2025-03-14 11:34:13', '2025-03-13 12:58:30'),
+(117, 58, 63, 1, 2, 100.00, 100.00, 1, '2025-03-14 11:34:13', '2025-03-13 12:58:30'),
+(118, 58, 64, 1, 2, 100.00, 100.00, 1, '2025-03-14 11:34:13', '2025-03-13 12:58:30'),
+(119, 59, 72, 1, 2, 30.00, 30.00, 1, '2025-03-13 19:17:57', '2025-03-13 17:20:04'),
+(120, 60, 73, 1, 2, 30.00, 30.00, 1, '2025-03-13 19:17:59', '2025-03-13 17:20:57'),
+(121, 61, 73, 1, 1, 30.00, 30.00, 1, '2025-03-17 11:40:55', '2025-03-17 08:30:45'),
+(122, 62, 72, 1, 1, 30.00, 30.00, 1, '2025-03-17 11:40:58', '2025-03-17 08:33:34'),
+(123, 63, 74, 1, 1, 13700.00, 13700.00, 1, '2025-03-17 11:41:05', '2025-03-17 08:36:32'),
+(124, 64, 78, 1, 1, 13900.00, 13900.00, 1, '2025-03-17 15:58:49', '2025-03-17 14:06:18'),
+(125, 65, 76, 1, 2, 10.00, 10.00, 1, '2025-03-18 11:35:59', '2025-03-18 10:53:49'),
+(126, 65, 78, 1, 2, 10.00, 10.00, 1, '2025-03-18 11:35:59', '2025-03-18 10:53:49'),
+(127, 65, 75, 1, 2, 10.00, 10.00, 1, '2025-03-18 11:35:59', '2025-03-18 10:53:49'),
+(128, 66, 10, 1, 2, 200.00, 0.00, 1, NULL, '2025-03-18 18:13:47'),
+(129, 66, 29, 1, 2, 100.00, 0.00, 1, NULL, '2025-03-18 18:13:47'),
+(130, 66, 28, 1, 2, 100.00, 0.00, 1, NULL, '2025-03-18 18:13:48'),
+(131, 66, 27, 1, 2, 100.00, 0.00, 1, NULL, '2025-03-18 18:13:48'),
+(132, 67, 78, 1, 2, 1000.00, 1000.00, 1, '2025-03-19 11:57:14', '2025-03-19 10:55:05'),
+(133, 67, 76, 1, 2, 1000.00, 1000.00, 1, '2025-03-19 11:57:14', '2025-03-19 10:55:05'),
+(134, 67, 75, 1, 2, 1000.00, 1000.00, 1, '2025-03-19 11:57:14', '2025-03-19 10:55:05'),
+(135, 68, 70, 1, 1, 130.00, 130.00, 1, '2025-03-19 15:54:39', '2025-03-19 15:00:45'),
+(136, 68, 63, 1, 1, 96.00, 96.00, 1, '2025-03-19 15:54:39', '2025-03-19 15:00:45'),
+(137, 68, 64, 1, 1, 15.00, 15.00, 1, '2025-03-19 15:54:39', '2025-03-19 15:00:45'),
+(138, 68, 44, 1, 1, 7.00, 7.00, 1, '2025-03-19 15:54:39', '2025-03-19 15:00:45'),
+(139, 68, 43, 1, 1, 51.00, 51.00, 1, '2025-03-19 15:54:39', '2025-03-19 15:00:45'),
+(140, 68, 45, 1, 1, 184.00, 182.00, 1, '2025-03-19 15:54:39', '2025-03-19 15:00:45'),
+(141, 69, 74, 1, 2, 300.00, 300.00, 1, '2025-03-19 17:49:32', '2025-03-19 15:28:25'),
+(142, 69, 73, 1, 2, 70.00, 70.00, 1, '2025-03-19 17:49:32', '2025-03-19 15:28:25'),
+(143, 69, 72, 1, 2, 50.00, 50.00, 1, '2025-03-19 17:49:32', '2025-03-19 15:28:26'),
+(144, 70, 79, 1, 1, 930.00, 0.00, 1, NULL, '2025-03-19 16:30:03'),
+(145, 71, 80, 1, 1, 930.00, 0.00, 1, NULL, '2025-03-19 16:33:24'),
+(146, 71, 81, 1, 1, 930.00, 0.00, 1, NULL, '2025-03-19 16:33:24'),
+(147, 71, 82, 1, 1, 930.00, 0.00, 1, NULL, '2025-03-19 16:33:24'),
+(148, 72, 66, 1, 1, 2400.00, 0.00, 0, '2025-03-19 18:43:53', '2025-03-19 18:41:01'),
+(149, 72, 66, 1, 1, 2400.00, 2400.00, 1, '2025-03-19 19:00:50', '2025-03-19 18:44:28'),
+(150, 72, 67, 1, 1, 2400.00, 2400.00, 1, '2025-03-19 19:00:50', '2025-03-19 18:44:28'),
+(151, 73, 83, 1, 1, 81504.00, 81504.00, 1, '2025-03-19 19:03:46', '2025-03-19 18:48:41'),
+(152, 73, 84, 1, 1, 95664.00, 95664.00, 1, '2025-03-19 19:03:46', '2025-03-19 18:48:41'),
+(153, 74, 86, 1, 1, 120.00, 120.00, 1, '2025-03-19 19:21:15', '2025-03-19 19:05:42'),
+(154, 74, 85, 1, 1, 40.00, 40.00, 1, '2025-03-19 19:21:15', '2025-03-19 19:05:42'),
+(155, 75, 83, 1, 2, 11520.00, 11520.00, 1, '2025-03-20 12:42:35', '2025-03-19 19:10:29'),
+(156, 75, 84, 1, 2, 11520.00, 11520.00, 1, '2025-03-20 12:42:35', '2025-03-19 19:10:29'),
+(157, 76, 83, 1, 2, 240.00, 240.00, 1, '2025-03-20 11:05:21', '2025-03-19 19:12:12'),
+(158, 76, 84, 1, 2, 240.00, 240.00, 1, '2025-03-20 11:05:21', '2025-03-19 19:12:12'),
+(159, 77, 43, 1, 2, 100.00, 0.00, 1, NULL, '2025-03-19 21:06:08'),
+(160, 77, 44, 1, 2, 39.00, 0.00, 1, NULL, '2025-03-19 21:06:08'),
+(161, 77, 64, 1, 2, 100.00, 0.00, 1, NULL, '2025-03-19 21:06:08'),
+(162, 77, 63, 1, 2, 100.00, 0.00, 1, NULL, '2025-03-19 21:06:08'),
+(163, 77, 45, 1, 2, 200.00, 0.00, 1, NULL, '2025-03-19 21:06:08'),
+(164, 77, 65, 1, 2, 50.00, 0.00, 1, NULL, '2025-03-19 21:06:08'),
+(165, 77, 70, 1, 2, 65.00, 0.00, 1, NULL, '2025-03-19 21:06:08'),
+(166, 78, 43, 1, 2, 100.00, 0.00, 1, NULL, '2025-03-19 21:08:32'),
+(167, 78, 44, 1, 2, 39.00, 0.00, 1, NULL, '2025-03-19 21:08:32'),
+(168, 78, 64, 1, 2, 100.00, 0.00, 1, NULL, '2025-03-19 21:08:32'),
+(169, 78, 63, 1, 2, 100.00, 0.00, 1, NULL, '2025-03-19 21:08:32'),
+(170, 78, 45, 1, 2, 200.00, 0.00, 1, NULL, '2025-03-19 21:08:32'),
+(171, 78, 65, 1, 2, 50.00, 0.00, 1, NULL, '2025-03-19 21:08:32'),
+(172, 78, 70, 1, 2, 65.00, 0.00, 1, NULL, '2025-03-19 21:08:32'),
+(173, 79, 78, 1, 1, 1100.00, 1100.00, 1, '2025-03-19 22:23:59', '2025-03-19 22:05:56'),
+(174, 80, 91, 1, 1, 200.00, 200.00, 1, '2025-03-19 22:22:52', '2025-03-19 22:08:04'),
+(175, 81, 92, 1, 1, 198.00, 198.00, 1, '2025-03-19 22:20:52', '2025-03-19 22:10:07'),
+(176, 82, 93, 1, 1, 1210.00, 1210.00, 1, '2025-03-19 22:22:30', '2025-03-19 22:12:22'),
+(177, 83, 94, 1, 1, 1.00, 1.00, 1, '2025-03-19 22:24:23', '2025-03-19 22:14:36'),
+(178, 84, 95, 1, 1, 2000.00, 2000.00, 1, '2025-03-20 14:43:58', '2025-03-20 14:42:13'),
+(179, 84, 96, 1, 1, 4000.00, 4000.00, 1, '2025-03-20 14:43:58', '2025-03-20 14:42:13'),
+(180, 84, 97, 1, 1, 10000.00, 10000.00, 1, '2025-03-20 14:43:58', '2025-03-20 14:42:13'),
+(181, 85, 95, 1, 2, 2000.00, 0.00, 1, NULL, '2025-03-20 14:49:08'),
+(182, 85, 96, 1, 2, 4000.00, 0.00, 1, NULL, '2025-03-20 14:49:08'),
+(183, 85, 97, 1, 2, 10000.00, 0.00, 1, NULL, '2025-03-20 14:49:08'),
+(184, 86, 74, 1, 2, 1000.00, 0.00, 1, NULL, '2025-03-20 15:06:28');
 
 -- --------------------------------------------------------
 
@@ -1584,12 +1586,12 @@ INSERT INTO `issue_item` (`id`, `request_id`, `product_id`, `warehouse_id`, `typ
 --
 
 CREATE TABLE `issue_remark` (
-  `id` int NOT NULL,
-  `request_id` int NOT NULL,
-  `login_id` int NOT NULL,
-  `text` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `status` int NOT NULL,
-  `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `id` int(11) NOT NULL,
+  `request_id` int(11) NOT NULL,
+  `login_id` int(11) NOT NULL,
+  `text` varchar(200) NOT NULL,
+  `status` int(11) NOT NULL,
+  `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -1679,24 +1681,24 @@ INSERT INTO `issue_remark` (`id`, `request_id`, `login_id`, `text`, `status`, `c
 --
 
 CREATE TABLE `issue_request` (
-  `id` int NOT NULL,
-  `uuid` varchar(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `last` int NOT NULL,
-  `login_id` int NOT NULL,
-  `type` int NOT NULL,
+  `id` int(11) NOT NULL,
+  `uuid` varchar(36) NOT NULL,
+  `last` int(11) NOT NULL,
+  `login_id` int(11) NOT NULL,
+  `type` int(11) NOT NULL,
   `date` date NOT NULL,
-  `event_date` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `event_date` varchar(50) DEFAULT NULL,
   `event_start` date DEFAULT NULL,
   `event_end` date DEFAULT NULL,
-  `event_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `sale` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `location_start` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `location_end` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `outcome` int DEFAULT NULL,
-  `text` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `status` int NOT NULL DEFAULT '1',
+  `event_name` varchar(100) DEFAULT NULL,
+  `sale` varchar(50) DEFAULT NULL,
+  `location_start` varchar(50) DEFAULT NULL,
+  `location_end` varchar(50) DEFAULT NULL,
+  `outcome` int(11) DEFAULT NULL,
+  `text` text NOT NULL,
+  `status` int(11) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
-  `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -1798,15 +1800,15 @@ INSERT INTO `issue_request` (`id`, `uuid`, `last`, `login_id`, `type`, `date`, `
 --
 
 CREATE TABLE `login` (
-  `id` int NOT NULL,
-  `uuid` varchar(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `username` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `email` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `password` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `level` int NOT NULL DEFAULT '1',
-  `status` int NOT NULL DEFAULT '1',
+  `id` int(11) NOT NULL,
+  `uuid` varchar(36) DEFAULT NULL,
+  `username` varchar(50) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `password` varchar(200) NOT NULL,
+  `level` int(11) NOT NULL DEFAULT 1,
+  `status` int(11) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
-  `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -1839,12 +1841,12 @@ INSERT INTO `login` (`id`, `uuid`, `username`, `email`, `password`, `level`, `st
 --
 
 CREATE TABLE `outstanding_file` (
-  `id` int NOT NULL,
-  `request_id` int NOT NULL,
-  `name` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `status` int NOT NULL DEFAULT '1',
+  `id` int(11) NOT NULL,
+  `request_id` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `status` int(11) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
-  `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -1861,15 +1863,15 @@ INSERT INTO `outstanding_file` (`id`, `request_id`, `name`, `status`, `updated`,
 --
 
 CREATE TABLE `outstanding_item` (
-  `id` int NOT NULL,
-  `request_id` int NOT NULL,
-  `name` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `amount` int NOT NULL,
-  `unit` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
+  `id` int(11) NOT NULL,
+  `request_id` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `amount` int(11) NOT NULL,
+  `unit` varchar(50) NOT NULL,
   `estimate` decimal(20,2) NOT NULL,
-  `status` int NOT NULL DEFAULT '1',
+  `status` int(11) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
-  `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -1877,11 +1879,11 @@ CREATE TABLE `outstanding_item` (
 --
 
 INSERT INTO `outstanding_item` (`id`, `request_id`, `name`, `amount`, `unit`, `estimate`, `status`, `updated`, `created`) VALUES
-(1, 1, '[ค่าเดินทาง] aaaa aaa', 1, '', '3000.00', 1, '2025-03-20 19:46:03', '2025-03-19 20:22:54'),
-(2, 1, '[ค่าที่พัก] bbbb bbb', 1, '', '4000.00', 1, '2025-03-20 19:46:03', '2025-03-19 20:22:54'),
-(3, 1, '[ค่าอาหาร] cccc ccc', 1, '', '2000.00', 1, '2025-03-20 19:46:03', '2025-03-19 20:22:54'),
-(8, 1, 'Notebook', 2, 'เครื่อง', '20000.00', 0, '2025-03-20 19:43:02', '2025-03-20 19:41:54'),
-(9, 1, 'Notebook', 2, 'เครื่อง', '20000.00', 1, '2025-03-20 19:46:03', '2025-03-20 19:43:05');
+(1, 1, '[ค่าเดินทาง] aaaa aaa', 1, '', 3000.00, 1, '2025-03-20 19:46:03', '2025-03-19 20:22:54'),
+(2, 1, '[ค่าที่พัก] bbbb bbb', 1, '', 4000.00, 1, '2025-03-20 19:46:03', '2025-03-19 20:22:54'),
+(3, 1, '[ค่าอาหาร] cccc ccc', 1, '', 2000.00, 1, '2025-03-20 19:46:03', '2025-03-19 20:22:54'),
+(8, 1, 'Notebook', 2, 'เครื่อง', 20000.00, 0, '2025-03-20 19:43:02', '2025-03-20 19:41:54'),
+(9, 1, 'Notebook', 2, 'เครื่อง', 20000.00, 1, '2025-03-20 19:46:03', '2025-03-20 19:43:05');
 
 -- --------------------------------------------------------
 
@@ -1890,12 +1892,12 @@ INSERT INTO `outstanding_item` (`id`, `request_id`, `name`, `amount`, `unit`, `e
 --
 
 CREATE TABLE `outstanding_remark` (
-  `id` int NOT NULL,
-  `request_id` int NOT NULL,
-  `login_id` int NOT NULL,
-  `text` varchar(200) COLLATE utf8mb4_general_ci NOT NULL,
-  `status` int NOT NULL,
-  `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `id` int(11) NOT NULL,
+  `request_id` int(11) NOT NULL,
+  `login_id` int(11) NOT NULL,
+  `text` varchar(200) NOT NULL,
+  `status` int(11) NOT NULL,
+  `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -1912,18 +1914,18 @@ INSERT INTO `outstanding_remark` (`id`, `request_id`, `login_id`, `text`, `statu
 --
 
 CREATE TABLE `outstanding_request` (
-  `id` int NOT NULL,
-  `uuid` varchar(36) COLLATE utf8mb4_general_ci NOT NULL,
-  `last` int NOT NULL,
-  `login_id` int NOT NULL,
-  `department_number` varchar(20) COLLATE utf8mb4_general_ci NOT NULL,
+  `id` int(11) NOT NULL,
+  `uuid` varchar(36) NOT NULL,
+  `last` int(11) NOT NULL,
+  `login_id` int(11) NOT NULL,
+  `department_number` varchar(20) NOT NULL,
   `doc_date` date NOT NULL,
-  `order_number` varchar(20) COLLATE utf8mb4_general_ci NOT NULL,
-  `text` text COLLATE utf8mb4_general_ci NOT NULL,
-  `action` int NOT NULL DEFAULT '1',
-  `status` int NOT NULL DEFAULT '1',
+  `order_number` varchar(20) NOT NULL,
+  `text` text NOT NULL,
+  `action` int(11) NOT NULL DEFAULT 1,
+  `status` int(11) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
-  `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -1940,12 +1942,12 @@ INSERT INTO `outstanding_request` (`id`, `uuid`, `last`, `login_id`, `department
 --
 
 CREATE TABLE `payment_file` (
-  `id` int NOT NULL,
-  `request_id` int NOT NULL,
-  `name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `status` int NOT NULL DEFAULT '1',
+  `id` int(11) NOT NULL,
+  `request_id` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `status` int(11) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
-  `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -1962,17 +1964,17 @@ INSERT INTO `payment_file` (`id`, `request_id`, `name`, `status`, `updated`, `cr
 --
 
 CREATE TABLE `payment_item` (
-  `id` int NOT NULL,
-  `request_id` int NOT NULL,
-  `expense_id` int NOT NULL,
-  `text` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `text2` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `id` int(11) NOT NULL,
+  `request_id` int(11) NOT NULL,
+  `expense_id` int(11) NOT NULL,
+  `text` varchar(100) NOT NULL,
+  `text2` varchar(100) NOT NULL,
   `amount` decimal(20,2) NOT NULL,
   `vat` decimal(20,2) NOT NULL,
   `wt` decimal(20,2) NOT NULL,
-  `status` int NOT NULL DEFAULT '1',
+  `status` int(11) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
-  `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -1980,10 +1982,10 @@ CREATE TABLE `payment_item` (
 --
 
 INSERT INTO `payment_item` (`id`, `request_id`, `expense_id`, `text`, `text2`, `amount`, `vat`, `wt`, `status`, `updated`, `created`) VALUES
-(1, 1, 5, 'บูธ ป้าย', 'บูธ 50000 ป้าย 20000', '70000.00', '0.00', '0.00', 1, NULL, '2025-03-20 12:13:23'),
-(2, 1, 6, 'ขาไป', 'รถตู้ 2 คัน 1500', '3000.00', '0.00', '0.00', 1, NULL, '2025-03-20 12:13:23'),
-(3, 1, 15, 'เสื้อ 200', 'เสื้อตัวละ 200', '4000.00', '0.00', '0.00', 1, NULL, '2025-03-20 12:13:23'),
-(4, 2, 5, 'งานโครงสร้าง', 'ขนาด 1 x 1', '100.00', '7.00', '0.00', 1, NULL, '2025-03-20 16:50:46');
+(1, 1, 5, 'บูธ ป้าย', 'บูธ 50000 ป้าย 20000', 70000.00, 0.00, 0.00, 1, NULL, '2025-03-20 12:13:23'),
+(2, 1, 6, 'ขาไป', 'รถตู้ 2 คัน 1500', 3000.00, 0.00, 0.00, 1, NULL, '2025-03-20 12:13:23'),
+(3, 1, 15, 'เสื้อ 200', 'เสื้อตัวละ 200', 4000.00, 0.00, 0.00, 1, NULL, '2025-03-20 12:13:23'),
+(4, 2, 5, 'งานโครงสร้าง', 'ขนาด 1 x 1', 100.00, 7.00, 0.00, 1, NULL, '2025-03-20 16:50:46');
 
 -- --------------------------------------------------------
 
@@ -1992,12 +1994,12 @@ INSERT INTO `payment_item` (`id`, `request_id`, `expense_id`, `text`, `text2`, `
 --
 
 CREATE TABLE `payment_remark` (
-  `id` int NOT NULL,
-  `request_id` int NOT NULL,
-  `login_id` int NOT NULL,
-  `text` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `status` int NOT NULL,
-  `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `id` int(11) NOT NULL,
+  `request_id` int(11) NOT NULL,
+  `login_id` int(11) NOT NULL,
+  `text` varchar(200) NOT NULL,
+  `status` int(11) NOT NULL,
+  `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -2020,23 +2022,23 @@ INSERT INTO `payment_remark` (`id`, `request_id`, `login_id`, `text`, `status`, 
 --
 
 CREATE TABLE `payment_request` (
-  `id` int NOT NULL,
-  `uuid` varchar(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `last` int NOT NULL,
-  `login_id` int NOT NULL,
-  `department_number` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `id` int(11) NOT NULL,
+  `uuid` varchar(36) NOT NULL,
+  `last` int(11) NOT NULL,
+  `login_id` int(11) NOT NULL,
+  `department_number` varchar(20) NOT NULL,
   `doc_date` date NOT NULL,
-  `order_number` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `receiver` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `type` int NOT NULL,
-  `cheque_bank` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `cheque_branch` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `cheque_number` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `order_number` varchar(20) NOT NULL,
+  `receiver` varchar(100) NOT NULL,
+  `type` int(11) NOT NULL,
+  `cheque_bank` varchar(100) DEFAULT NULL,
+  `cheque_branch` varchar(100) DEFAULT NULL,
+  `cheque_number` varchar(100) DEFAULT NULL,
   `cheque_date` date DEFAULT NULL,
-  `action` int NOT NULL DEFAULT '1',
-  `status` int NOT NULL DEFAULT '1',
+  `action` int(11) NOT NULL DEFAULT 1,
+  `status` int(11) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
-  `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -2054,12 +2056,12 @@ INSERT INTO `payment_request` (`id`, `uuid`, `last`, `login_id`, `department_num
 --
 
 CREATE TABLE `petty_file` (
-  `id` int NOT NULL,
-  `request_id` int NOT NULL,
-  `name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `status` int NOT NULL DEFAULT '1',
+  `id` int(11) NOT NULL,
+  `request_id` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `status` int(11) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
-  `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -2069,13 +2071,13 @@ CREATE TABLE `petty_file` (
 --
 
 CREATE TABLE `petty_item` (
-  `id` int NOT NULL,
-  `request_id` int NOT NULL,
-  `text` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `id` int(11) NOT NULL,
+  `request_id` int(11) NOT NULL,
+  `text` varchar(100) NOT NULL,
   `amount` decimal(20,2) NOT NULL,
-  `status` int NOT NULL DEFAULT '1',
+  `status` int(11) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
-  `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -2085,12 +2087,12 @@ CREATE TABLE `petty_item` (
 --
 
 CREATE TABLE `petty_remark` (
-  `id` int NOT NULL,
-  `request_id` int NOT NULL,
-  `login_id` int NOT NULL,
-  `text` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `status` int NOT NULL,
-  `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `id` int(11) NOT NULL,
+  `request_id` int(11) NOT NULL,
+  `login_id` int(11) NOT NULL,
+  `text` varchar(200) NOT NULL,
+  `status` int(11) NOT NULL,
+  `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -2100,17 +2102,17 @@ CREATE TABLE `petty_remark` (
 --
 
 CREATE TABLE `petty_request` (
-  `id` int NOT NULL,
-  `uuid` varchar(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `last` int NOT NULL,
-  `login_id` int NOT NULL,
-  `department_number` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `id` int(11) NOT NULL,
+  `uuid` varchar(36) NOT NULL,
+  `last` int(11) NOT NULL,
+  `login_id` int(11) NOT NULL,
+  `department_number` varchar(20) NOT NULL,
   `doc_date` date NOT NULL,
-  `objective` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `action` int NOT NULL DEFAULT '1',
-  `status` int NOT NULL DEFAULT '1',
+  `objective` text NOT NULL,
+  `action` int(11) NOT NULL DEFAULT 1,
+  `status` int(11) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
-  `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -2120,14 +2122,14 @@ CREATE TABLE `petty_request` (
 --
 
 CREATE TABLE `position` (
-  `id` int NOT NULL,
-  `name_th` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `name_en` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `amount_min` int NOT NULL,
-  `amount_max` int NOT NULL,
-  `status` int NOT NULL DEFAULT '1',
+  `id` int(11) NOT NULL,
+  `name_th` varchar(100) NOT NULL,
+  `name_en` varchar(100) NOT NULL,
+  `amount_min` int(11) NOT NULL,
+  `amount_max` int(11) NOT NULL,
+  `status` int(11) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
-  `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -2149,19 +2151,19 @@ INSERT INTO `position` (`id`, `name_th`, `name_en`, `amount_min`, `amount_max`, 
 --
 
 CREATE TABLE `product` (
-  `id` int NOT NULL,
-  `uuid` varchar(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `name` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `code` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `type_id` int NOT NULL,
-  `warehouse_id` int NOT NULL,
-  `location_id` int NOT NULL,
-  `brand_id` int NOT NULL,
-  `unit_id` int NOT NULL,
-  `text` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `status` int NOT NULL DEFAULT '1',
+  `id` int(11) NOT NULL,
+  `uuid` varchar(36) NOT NULL,
+  `name` varchar(200) NOT NULL,
+  `code` varchar(10) NOT NULL,
+  `type_id` int(11) NOT NULL,
+  `warehouse_id` int(11) NOT NULL,
+  `location_id` int(11) NOT NULL,
+  `brand_id` int(11) NOT NULL,
+  `unit_id` int(11) NOT NULL,
+  `text` text NOT NULL,
+  `status` int(11) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
-  `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -2272,11 +2274,11 @@ INSERT INTO `product` (`id`, `uuid`, `name`, `code`, `type_id`, `warehouse_id`, 
 --
 
 CREATE TABLE `product_brand` (
-  `id` int NOT NULL,
-  `name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `status` int NOT NULL DEFAULT '1',
+  `id` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `status` int(11) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
-  `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -2303,12 +2305,12 @@ INSERT INTO `product_brand` (`id`, `name`, `status`, `updated`, `created`) VALUE
 --
 
 CREATE TABLE `product_file` (
-  `id` int NOT NULL,
-  `product_id` int NOT NULL,
-  `name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `status` int NOT NULL DEFAULT '1',
+  `id` int(11) NOT NULL,
+  `product_id` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `status` int(11) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
-  `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -2359,11 +2361,11 @@ INSERT INTO `product_file` (`id`, `product_id`, `name`, `status`, `updated`, `cr
 --
 
 CREATE TABLE `product_location` (
-  `id` int NOT NULL,
-  `name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `status` int NOT NULL DEFAULT '1',
+  `id` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `status` int(11) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
-  `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -2389,11 +2391,11 @@ INSERT INTO `product_location` (`id`, `name`, `status`, `updated`, `created`) VA
 --
 
 CREATE TABLE `product_type` (
-  `id` int NOT NULL,
-  `name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `status` int NOT NULL DEFAULT '1',
+  `id` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `status` int(11) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
-  `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -2415,11 +2417,11 @@ INSERT INTO `product_type` (`id`, `name`, `status`, `updated`, `created`) VALUES
 --
 
 CREATE TABLE `product_unit` (
-  `id` int NOT NULL,
-  `name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `status` int NOT NULL DEFAULT '1',
+  `id` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `status` int(11) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
-  `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -2437,11 +2439,11 @@ INSERT INTO `product_unit` (`id`, `name`, `status`, `updated`, `created`) VALUES
 --
 
 CREATE TABLE `product_warehouse` (
-  `id` int NOT NULL,
-  `name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `status` int NOT NULL DEFAULT '1',
+  `id` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `status` int(11) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
-  `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -2459,12 +2461,12 @@ INSERT INTO `product_warehouse` (`id`, `name`, `status`, `updated`, `created`) V
 --
 
 CREATE TABLE `purchase_file` (
-  `id` int NOT NULL,
-  `request_id` int NOT NULL,
-  `name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `status` int NOT NULL DEFAULT '1',
+  `id` int(11) NOT NULL,
+  `request_id` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `status` int(11) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
-  `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -2474,15 +2476,15 @@ CREATE TABLE `purchase_file` (
 --
 
 CREATE TABLE `purchase_item` (
-  `id` int NOT NULL,
-  `request_id` int NOT NULL,
-  `name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `amount` int NOT NULL,
-  `unit` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `id` int(11) NOT NULL,
+  `request_id` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `amount` int(11) NOT NULL,
+  `unit` varchar(50) NOT NULL,
   `estimate` decimal(20,2) NOT NULL,
-  `status` int NOT NULL DEFAULT '1',
+  `status` int(11) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
-  `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -2490,8 +2492,8 @@ CREATE TABLE `purchase_item` (
 --
 
 INSERT INTO `purchase_item` (`id`, `request_id`, `name`, `amount`, `unit`, `estimate`, `status`, `updated`, `created`) VALUES
-(1, 1, 'เก้าอี้สำนักงาน', 5, 'ชิ้น', '4500.00', 1, '2025-03-20 11:19:56', '2025-03-20 10:52:36'),
-(2, 1, 'Monitor', 3, 'ชิ้น', '10000.00', 1, '2025-03-20 11:19:56', '2025-03-20 10:52:36');
+(1, 1, 'เก้าอี้สำนักงาน', 5, 'ชิ้น', 4500.00, 1, '2025-03-24 21:17:33', '2025-03-20 10:52:36'),
+(2, 1, 'Monitor', 3, 'ชิ้น', 10000.00, 1, '2025-03-24 21:17:33', '2025-03-20 10:52:36');
 
 -- --------------------------------------------------------
 
@@ -2500,12 +2502,12 @@ INSERT INTO `purchase_item` (`id`, `request_id`, `name`, `amount`, `unit`, `esti
 --
 
 CREATE TABLE `purchase_remark` (
-  `id` int NOT NULL,
-  `request_id` int NOT NULL,
-  `login_id` int NOT NULL,
-  `text` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `status` int NOT NULL,
-  `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `id` int(11) NOT NULL,
+  `request_id` int(11) NOT NULL,
+  `login_id` int(11) NOT NULL,
+  `text` varchar(200) NOT NULL,
+  `status` int(11) NOT NULL,
+  `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -2522,28 +2524,31 @@ INSERT INTO `purchase_remark` (`id`, `request_id`, `login_id`, `text`, `status`,
 --
 
 CREATE TABLE `purchase_request` (
-  `id` int NOT NULL,
-  `uuid` varchar(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `last` int NOT NULL,
-  `login_id` int NOT NULL,
-  `department_number` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `id` int(11) NOT NULL,
+  `uuid` varchar(36) NOT NULL,
+  `last` int(11) NOT NULL,
+  `login_id` int(11) NOT NULL,
+  `department_number` varchar(20) NOT NULL,
   `doc_date` date NOT NULL,
-  `department` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `po` varchar(20) NOT NULL,
+  `department` varchar(200) NOT NULL,
   `date` date NOT NULL,
-  `order_number` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `objective` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `action` int NOT NULL DEFAULT '1',
-  `status` int NOT NULL DEFAULT '1',
+  `order_number` varchar(20) NOT NULL,
+  `reference` varchar(50) NOT NULL,
+  `objective` text NOT NULL,
+  `remark` text NOT NULL,
+  `action` int(11) NOT NULL DEFAULT 1,
+  `status` int(11) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
-  `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `purchase_request`
 --
 
-INSERT INTO `purchase_request` (`id`, `uuid`, `last`, `login_id`, `department_number`, `doc_date`, `department`, `date`, `order_number`, `objective`, `action`, `status`, `updated`, `created`) VALUES
-(1, 'c2a1b7b5-053e-11f0-a87c-2ad6c30b0fff', 1, 1, 'IT6677', '2025-03-20', 'ตลาด', '2025-03-24', '', 'ดำเนินการตาม รายการ ที่จะใช้งานจริง', 1, 2, '2025-03-20 11:51:56', '2025-03-20 10:52:35');
+INSERT INTO `purchase_request` (`id`, `uuid`, `last`, `login_id`, `department_number`, `doc_date`, `po`, `department`, `date`, `order_number`, `reference`, `objective`, `remark`, `action`, `status`, `updated`, `created`) VALUES
+(1, 'c2a1b7b5-053e-11f0-a87c-2ad6c30b0fff', 1, 1, 'IT6677', '2025-03-20', '', 'ตลาด', '2025-03-24', '', '', 'ดำเนินการตาม รายการ ที่จะใช้งานจริง', 'TEST', 1, 2, '2025-03-24 21:17:33', '2025-03-20 10:52:35');
 
 -- --------------------------------------------------------
 
@@ -2552,12 +2557,12 @@ INSERT INTO `purchase_request` (`id`, `uuid`, `last`, `login_id`, `department_nu
 --
 
 CREATE TABLE `quotation_file` (
-  `id` int NOT NULL,
-  `request_id` int NOT NULL,
-  `name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `status` int NOT NULL DEFAULT '1',
+  `id` int(11) NOT NULL,
+  `request_id` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `status` int(11) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
-  `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -2567,15 +2572,15 @@ CREATE TABLE `quotation_file` (
 --
 
 CREATE TABLE `quotation_item` (
-  `id` int NOT NULL,
-  `request_id` int NOT NULL,
-  `product` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `id` int(11) NOT NULL,
+  `request_id` int(11) NOT NULL,
+  `product` varchar(100) NOT NULL,
   `price` decimal(20,2) NOT NULL,
-  `discount` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `amount` int NOT NULL,
-  `status` int NOT NULL DEFAULT '1',
+  `discount` varchar(10) NOT NULL,
+  `amount` int(11) NOT NULL,
+  `status` int(11) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
-  `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -2585,20 +2590,20 @@ CREATE TABLE `quotation_item` (
 --
 
 CREATE TABLE `quotation_request` (
-  `id` int NOT NULL,
-  `uuid` varchar(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `last` int NOT NULL,
-  `login_id` int NOT NULL,
+  `id` int(11) NOT NULL,
+  `uuid` varchar(36) NOT NULL,
+  `last` int(11) NOT NULL,
+  `login_id` int(11) NOT NULL,
   `doc_date` date NOT NULL,
-  `biller_id` int NOT NULL,
-  `customer_type` int NOT NULL,
-  `customer_id` int DEFAULT NULL,
-  `customer_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `customer_address` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `text` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `status` int NOT NULL DEFAULT '1',
+  `biller_id` int(11) NOT NULL,
+  `customer_type` int(11) NOT NULL,
+  `customer_id` int(11) DEFAULT NULL,
+  `customer_name` varchar(100) NOT NULL,
+  `customer_address` text NOT NULL,
+  `text` text NOT NULL,
+  `status` int(11) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
-  `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -2608,14 +2613,14 @@ CREATE TABLE `quotation_request` (
 --
 
 CREATE TABLE `service` (
-  `id` int NOT NULL,
-  `uuid` varchar(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `sequence` int NOT NULL,
-  `name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `url` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `status` int NOT NULL DEFAULT '1',
+  `id` int(11) NOT NULL,
+  `uuid` varchar(36) NOT NULL,
+  `sequence` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `url` varchar(200) NOT NULL,
+  `status` int(11) NOT NULL DEFAULT 1,
   `updated` datetime DEFAULT NULL,
-  `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -2646,11 +2651,11 @@ INSERT INTO `service` (`id`, `uuid`, `sequence`, `name`, `url`, `status`, `updat
 --
 
 CREATE TABLE `service_authorize` (
-  `id` int NOT NULL,
-  `login_id` int NOT NULL,
-  `service` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `id` int(11) NOT NULL,
+  `login_id` int(11) NOT NULL,
+  `service` varchar(50) NOT NULL,
   `updated` datetime DEFAULT NULL,
-  `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -2683,11 +2688,11 @@ INSERT INTO `service_authorize` (`id`, `login_id`, `service`, `updated`, `create
 --
 
 CREATE TABLE `system` (
-  `id` int NOT NULL,
-  `name` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `email` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `password_email` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `password_default` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `id` int(11) NOT NULL,
+  `name` varchar(200) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `password_email` varchar(200) NOT NULL,
+  `password_default` varchar(50) NOT NULL,
   `updated` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -2705,15 +2710,15 @@ INSERT INTO `system` (`id`, `name`, `email`, `password_email`, `password_default
 --
 
 CREATE TABLE `user` (
-  `id` int NOT NULL,
-  `login` int NOT NULL,
-  `firstname` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `lastname` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `department_id` int NOT NULL,
-  `position_id` int NOT NULL,
-  `manager_id` int DEFAULT NULL,
-  `manager_id2` int DEFAULT NULL,
-  `contact` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL
+  `id` int(11) NOT NULL,
+  `login` int(11) NOT NULL,
+  `firstname` varchar(100) NOT NULL,
+  `lastname` varchar(100) NOT NULL,
+  `department_id` int(11) NOT NULL,
+  `position_id` int(11) NOT NULL,
+  `manager_id` int(11) DEFAULT NULL,
+  `manager_id2` int(11) DEFAULT NULL,
+  `contact` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -3136,385 +3141,385 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `advance_clear_file`
 --
 ALTER TABLE `advance_clear_file`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `advance_clear_item`
 --
 ALTER TABLE `advance_clear_item`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `advance_clear_remark`
 --
 ALTER TABLE `advance_clear_remark`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `advance_clear_request`
 --
 ALTER TABLE `advance_clear_request`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `advance_file`
 --
 ALTER TABLE `advance_file`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `advance_item`
 --
 ALTER TABLE `advance_item`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `advance_remark`
 --
 ALTER TABLE `advance_remark`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `advance_request`
 --
 ALTER TABLE `advance_request`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `asset`
 --
 ALTER TABLE `asset`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=385;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=385;
 
 --
 -- AUTO_INCREMENT for table `asset_brand`
 --
 ALTER TABLE `asset_brand`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `asset_file`
 --
 ALTER TABLE `asset_file`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- AUTO_INCREMENT for table `asset_location`
 --
 ALTER TABLE `asset_location`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `asset_type`
 --
 ALTER TABLE `asset_type`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `asset_unit`
 --
 ALTER TABLE `asset_unit`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `asset_warehouse`
 --
 ALTER TABLE `asset_warehouse`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `borrow_authorize`
 --
 ALTER TABLE `borrow_authorize`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `borrow_file`
 --
 ALTER TABLE `borrow_file`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT for table `borrow_item`
 --
 ALTER TABLE `borrow_item`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=217;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=217;
 
 --
 -- AUTO_INCREMENT for table `borrow_remark`
 --
 ALTER TABLE `borrow_remark`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
 
 --
 -- AUTO_INCREMENT for table `borrow_request`
 --
 ALTER TABLE `borrow_request`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
 
 --
 -- AUTO_INCREMENT for table `customer`
 --
 ALTER TABLE `customer`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=108;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=108;
 
 --
 -- AUTO_INCREMENT for table `department`
 --
 ALTER TABLE `department`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `estimate_file`
 --
 ALTER TABLE `estimate_file`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `estimate_item`
 --
 ALTER TABLE `estimate_item`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `estimate_remark`
 --
 ALTER TABLE `estimate_remark`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `estimate_request`
 --
 ALTER TABLE `estimate_request`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `expense`
 --
 ALTER TABLE `expense`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `issue_authorize`
 --
 ALTER TABLE `issue_authorize`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `issue_file`
 --
 ALTER TABLE `issue_file`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
 
 --
 -- AUTO_INCREMENT for table `issue_item`
 --
 ALTER TABLE `issue_item`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=185;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=185;
 
 --
 -- AUTO_INCREMENT for table `issue_remark`
 --
 ALTER TABLE `issue_remark`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=75;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=75;
 
 --
 -- AUTO_INCREMENT for table `issue_request`
 --
 ALTER TABLE `issue_request`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=87;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=87;
 
 --
 -- AUTO_INCREMENT for table `login`
 --
 ALTER TABLE `login`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `outstanding_file`
 --
 ALTER TABLE `outstanding_file`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `outstanding_item`
 --
 ALTER TABLE `outstanding_item`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `outstanding_remark`
 --
 ALTER TABLE `outstanding_remark`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `outstanding_request`
 --
 ALTER TABLE `outstanding_request`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `payment_file`
 --
 ALTER TABLE `payment_file`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `payment_item`
 --
 ALTER TABLE `payment_item`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `payment_remark`
 --
 ALTER TABLE `payment_remark`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `payment_request`
 --
 ALTER TABLE `payment_request`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `petty_file`
 --
 ALTER TABLE `petty_file`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `petty_item`
 --
 ALTER TABLE `petty_item`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `petty_remark`
 --
 ALTER TABLE `petty_remark`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `petty_request`
 --
 ALTER TABLE `petty_request`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `position`
 --
 ALTER TABLE `position`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `product`
 --
 ALTER TABLE `product`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=98;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=98;
 
 --
 -- AUTO_INCREMENT for table `product_brand`
 --
 ALTER TABLE `product_brand`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `product_file`
 --
 ALTER TABLE `product_file`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
 
 --
 -- AUTO_INCREMENT for table `product_location`
 --
 ALTER TABLE `product_location`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `product_type`
 --
 ALTER TABLE `product_type`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `product_unit`
 --
 ALTER TABLE `product_unit`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `product_warehouse`
 --
 ALTER TABLE `product_warehouse`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `purchase_file`
 --
 ALTER TABLE `purchase_file`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `purchase_item`
 --
 ALTER TABLE `purchase_item`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `purchase_remark`
 --
 ALTER TABLE `purchase_remark`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `purchase_request`
 --
 ALTER TABLE `purchase_request`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `quotation_file`
 --
 ALTER TABLE `quotation_file`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `quotation_item`
 --
 ALTER TABLE `quotation_item`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `quotation_request`
 --
 ALTER TABLE `quotation_request`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `service`
 --
 ALTER TABLE `service`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `service_authorize`
 --
 ALTER TABLE `service_authorize`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `system`
 --
 ALTER TABLE `system`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

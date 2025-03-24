@@ -90,7 +90,7 @@ if ($action === "estimate-create") {
         }
       }
     }
-    
+
     $VALIDATION->alert("success", "ดำเนินการเรียบร้อย!", "/estimate");
   } catch (PDOException $e) {
     die($e->getMessage());
@@ -160,11 +160,13 @@ if ($action === "sale-update") {
 
     foreach ($_POST['item_expense'] as $key => $row) {
       $item_expense = (isset($_POST['item_expense'][$key]) ? $VALIDATION->input($_POST['item_expense'][$key]) : "");
+      $item_text = (isset($_POST['item_text'][$key]) ? $VALIDATION->input($_POST['item_text'][$key]) : "");
+      $item_text2 = (isset($_POST['item_text2'][$key]) ? $VALIDATION->input($_POST['item_text2'][$key]) : "");
       $item_estimate = (isset($_POST['item_estimate'][$key]) ? $VALIDATION->input($_POST['item_estimate'][$key]) : "");
 
-      $estimate_item_count = $ESTIMATE->estimate_item_count([$request_id, $item_expense, $item_estimate]);
+      $estimate_item_count = $ESTIMATE->estimate_item_count([$request_id, $item_expense, $item_text, $item_text2, $item_estimate]);
       if (intval($estimate_item_count) === 0) {
-        $ESTIMATE->estimate_item_insert([$request_id, $item_expense, $item_estimate]);
+        $ESTIMATE->estimate_item_insert([$request_id, $item_expense, $item_text, $item_text2, $item_estimate]);
       }
     }
 
@@ -228,6 +230,16 @@ if ($action === "budget-data") {
 if ($action === "approve-data") {
   try {
     $result = $ESTIMATE->approve_data(3);
+
+    echo json_encode($result);
+  } catch (PDOException $e) {
+    die($e->getMessage());
+  }
+}
+
+if ($action === "manage-data") {
+  try {
+    $result = $ESTIMATE->manage_data();
 
     echo json_encode($result);
   } catch (PDOException $e) {

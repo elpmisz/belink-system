@@ -49,7 +49,7 @@ $payments = $ESTIMATE->payment_order([$row['order_number']]);
         </div>
       </div>
       <div class="row mb-2">
-        <label class="col-xl-2 offset-xl-2 col-form-label">พนักงานขาย</label>
+        <label class="col-xl-2 offset-xl-2 col-form-label">ชื่อพนักงานขาย</label>
         <div class="col-xl-4 text-underline">
           <?php echo $row['username'] ?>
         </div>
@@ -69,19 +69,19 @@ $payments = $ESTIMATE->payment_order([$row['order_number']]);
         </div>
       </div>
       <div class="row mb-2">
-        <label class="col-xl-2 offset-xl-2 col-form-label">เลขที่สัญญา</label>
+        <label class="col-xl-2 offset-xl-2 col-form-label">เลขที่สัญญา SO</label>
         <div class="col-xl-4 text-underline">
           <?php echo $row['order_number'] ?>
         </div>
       </div>
       <div class="row mb-2">
-        <label class="col-xl-2 offset-xl-2 col-form-label">สินค้า</label>
+        <label class="col-xl-2 offset-xl-2 col-form-label">ชื่อสินค้า</label>
         <div class="col-xl-4 text-underline">
           <?php echo $row['product_name'] ?>
         </div>
       </div>
       <div class="row mb-2">
-        <label class="col-xl-2 offset-xl-2 col-form-label">หัวข้อเรื่อง</label>
+        <label class="col-xl-2 offset-xl-2 col-form-label">ชื่องาน</label>
         <div class="col-xl-4 text-underline">
           <?php echo $row['title_name'] ?>
         </div>
@@ -93,7 +93,7 @@ $payments = $ESTIMATE->payment_order([$row['order_number']]);
         </div>
       </div>
       <div class="row mb-2">
-        <label class="col-xl-2 offset-xl-2 col-form-label">งบประมาณ</label>
+        <label class="col-xl-2 offset-xl-2 col-form-label">Total Sales</label>
         <div class="col-xl-4 text-underline">
           <?php echo number_format($row['budget'], 2) ?>
         </div>

@@ -14,6 +14,11 @@ include_once(__DIR__ . "/../layout/header.php");
 
         <div class="row justify-content-end mb-2">
           <div class="col-xl-3 mb-2">
+            <a href="/estimate/manage" class="btn btn-primary btn-sm btn-block">
+              <i class="fas fa-plus pr-2"></i>หน้าจัดการ
+            </a>
+          </div>
+          <div class="col-xl-3 mb-2">
             <a href="/estimate/create" class="btn btn-success btn-sm btn-block">
               <i class="fas fa-plus pr-2"></i>เพิ่ม
             </a>

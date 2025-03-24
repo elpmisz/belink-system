@@ -34,6 +34,15 @@ include_once(__DIR__ . "/../layout/header.php");
         </div>
       </div>
       <div class="row mb-2">
+        <label class="col-xl-2 offset-xl-2 col-form-label">เลขที่ PO</label>
+        <div class="col-xl-4">
+          <input type="text" class="form-control form-control-sm" name="po">
+          <div class="invalid-feedback">
+            กรุณากรอกข้อมูล!
+          </div>
+        </div>
+      </div>
+      <div class="row mb-2">
         <label class="col-xl-2 offset-xl-2 col-form-label">หน่วยงานที่ขอซื้อ</label>
         <div class="col-xl-4">
           <input type="text" class="form-control form-control-sm" name="department" required>
@@ -52,7 +61,7 @@ include_once(__DIR__ . "/../layout/header.php");
         </div>
       </div>
       <div class="row mb-2">
-        <label class="col-xl-2 offset-xl-2 col-form-label">เลขที่สัญญา</label>
+        <label class="col-xl-2 offset-xl-2 col-form-label">เลขที่สัญญา SO</label>
         <div class="col-xl-4">
           <select class="form-control form-control-sm order-select" name="order_number"></select>
           <div class="invalid-feedback">
@@ -75,9 +84,27 @@ include_once(__DIR__ . "/../layout/header.php");
         </div>
       </div>
       <div class="row mb-2">
-        <label class="col-xl-2 offset-xl-2 col-form-label">วัตถุประสงค์</label>
+        <label class="col-xl-2 offset-xl-2 col-form-label">อ้างอิงเอกสาร(ถ้ามี)</label>
+        <div class="col-xl-4">
+          <input type="text" class="form-control form-control-sm" name="reference">
+          <div class="invalid-feedback">
+            กรุณากรอกข้อมูล!
+          </div>
+        </div>
+      </div>
+      <div class="row mb-2">
+        <label class="col-xl-2 offset-xl-2 col-form-label">เหตุผลในการขอซื้อ <br>/ งบประมาณที่เตรียมไว้</label>
         <div class="col-xl-6">
           <textarea class="form-control form-control-sm" rows="5" name="objective" required></textarea>
+          <div class="invalid-feedback">
+            กรุณา กรอกข้อมูล!
+          </div>
+        </div>
+      </div>
+      <div class="row mb-2">
+        <label class="col-xl-2 offset-xl-2 col-form-label">หมายเหตุ</label>
+        <div class="col-xl-6">
+          <textarea class="form-control form-control-sm" rows="5" name="remark" required></textarea>
           <div class="invalid-feedback">
             กรุณา กรอกข้อมูล!
           </div>

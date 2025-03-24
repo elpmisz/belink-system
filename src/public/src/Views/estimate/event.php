@@ -48,7 +48,7 @@ $reference = $ESTIMATE->estimate_item_reference([$uuid]);
         </div>
       </div>
       <div class="row mb-2">
-        <label class="col-xl-2 offset-xl-2 col-form-label">พนักงานขาย</label>
+        <label class="col-xl-2 offset-xl-2 col-form-label">ชื่อพนักงานขาย</label>
         <div class="col-xl-4 text-underline">
           <?php echo $row['username'] ?>
         </div>
@@ -74,19 +74,19 @@ $reference = $ESTIMATE->estimate_item_reference([$uuid]);
         </div>
       </div>
       <div class="row mb-2">
-        <label class="col-xl-2 offset-xl-2 col-form-label">เลขที่สัญญา</label>
+        <label class="col-xl-2 offset-xl-2 col-form-label">เลขที่สัญญา SO</label>
         <div class="col-xl-4 text-underline">
           <?php echo $row['order_number'] ?>
         </div>
       </div>
       <div class="row mb-2">
-        <label class="col-xl-2 offset-xl-2 col-form-label">สินค้า</label>
+        <label class="col-xl-2 offset-xl-2 col-form-label">ชื่อสินค้า</label>
         <div class="col-xl-4 text-underline">
           <?php echo $row['product_name'] ?>
         </div>
       </div>
       <div class="row mb-2">
-        <label class="col-xl-2 offset-xl-2 col-form-label">หัวข้อเรื่อง</label>
+        <label class="col-xl-2 offset-xl-2 col-form-label">ชื่องาน</label>
         <div class="col-xl-4 text-underline">
           <?php echo $row['title_name'] ?>
         </div>
@@ -140,8 +140,10 @@ $reference = $ESTIMATE->estimate_item_reference([$uuid]);
               <thead>
                 <tr>
                   <th width="10%">#</th>
-                  <th width="40%">รายจ่าย</th>
-                  <th width="20%">งบประมาณ</th>
+                  <th width="30%">Item Description</th>
+                  <th width="20%">Detail 1</th>
+                  <th width="20%">Detail 2</th>
+                  <th width="20%">Amount (THB)</th>
                 </tr>
               </thead>
               <tbody>
@@ -157,6 +159,18 @@ $reference = $ESTIMATE->estimate_item_reference([$uuid]);
                     </div>
                   </td>
                   <td>
+                    <input type="text" class="form-control form-control-sm text-left text-item" name="item_text[]" required>
+                    <div class="invalid-feedback">
+                      กรุณากรอกข้อมูล!
+                    </div>
+                  </td>
+                  <td>
+                    <input type="text" class="form-control form-control-sm text-left text2-item" name="item_text2[]" required>
+                    <div class="invalid-feedback">
+                      กรุณากรอกข้อมูล!
+                    </div>
+                  </td>
+                  <td>
                     <input type="number" class="form-control form-control-sm text-right item-estimate" name="item_estimate[]" min="1" required>
                     <div class="invalid-feedback">
                       กรุณากรอกข้อมูล!
@@ -164,7 +178,7 @@ $reference = $ESTIMATE->estimate_item_reference([$uuid]);
                   </td>
                 </tr>
                 <tr>
-                  <td colspan="2" class="text-right">รวมทั้งสิ้น</td>
+                  <td colspan="4" class="text-right">รวมทั้งสิ้น</td>
                   <td class="text-right">
                     <span class="item-total"></span>
                   </td>

@@ -179,7 +179,7 @@ include_once(__DIR__ . "/../layout/header.php");
         })
         .then((res) => {
           const items = res.data;
-
+          console.log(items)
           let tableContent = '';
           if (items.length > 0) {
             tableContent = `

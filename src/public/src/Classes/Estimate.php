@@ -136,6 +136,8 @@ class Estimate
     WHERE a.status = 1
     AND a.request_id = ?
     AND a.expense_id = ?
+    AND a.text = ?
+    AND a.text2 = ?
     AND a.estimate = ?";
     $stmt = $this->dbcon->prepare($sql);
     $stmt->execute($data);
@@ -144,7 +146,7 @@ class Estimate
 
   public function estimate_item_insert($data)
   {
-    $sql = "INSERT INTO belink.estimate_item(`request_id`, `expense_id`, `estimate`) VALUES(?,?,?)";
+    $sql = "INSERT INTO belink.estimate_item(`request_id`, `expense_id`, `text`, `text2`, `estimate`) VALUES(?,?,?,?,?)";
     $stmt = $this->dbcon->prepare($sql);
     return $stmt->execute($data);
   }
@@ -155,6 +157,8 @@ class Estimate
     a.`uuid`,
     a.expense_id,
     CONCAT('[',a.code,'] ',a.expense_name) expense_name,
+    a.text,
+    a.text2,
     a.estimate,
     IFNULL(b.count,0) `count`,
     IFNULL(b.usage,0) `usage`,
@@ -166,6 +170,8 @@ class Estimate
       a.order_number,
       b.expense_id,
       c.`name` expense_name,
+      b.text,
+      b.text2,
       b.estimate,
       c.`reference`,
       c.`code`
@@ -652,6 +658,128 @@ class Estimate
     $data = [];
     foreach ($result as $row) {
       $action = "<a href='/estimate/{$row['page']}/{$row['uuid']}' class='badge badge-{$row['status_color']} font-weight-light'>{$row['status_name']}</a>";
+
+      $data[] = [
+        $action,
+        $row['ticket'],
+        $row['department_number'],
+        $row['order_number'],
+        $row['product_name'],
+        $row['title_name'],
+        $row['created'],
+      ];
+    }
+
+    $output = [
+      "draw" => $draw,
+      "recordsTotal" =>  $total,
+      "recordsFiltered" => $filter,
+      "data" => $data
+    ];
+    return $output;
+  }
+
+  public function manage_data()
+  {
+    $sql = "SELECT COUNT(*) FROM belink.estimate_request a WHERE a.status IN (1,2,3,4,5)";
+    $stmt = $this->dbcon->prepare($sql);
+    $stmt->execute();
+    $total = $stmt->fetchColumn();
+
+    $column = ["a.id", "a.last", "a.order_number", "a.product_name", "a.title_name", "a.budget"];
+
+    $keyword = (isset($_POST['search']['value']) ? trim($_POST['search']['value']) : "");
+    $filter_order = (isset($_POST['order']) ? $_POST['order'] : "");
+    $order_column = (isset($_POST['order']['0']['column']) ? $_POST['order']['0']['column'] : "");
+    $order_dir = (isset($_POST['order']['0']['dir']) ? $_POST['order']['0']['dir'] : "");
+    $limit_start = (isset($_POST['start']) ? $_POST['start'] : "");
+    $limit_length = (isset($_POST['length']) ? $_POST['length'] : "");
+    $draw = (isset($_REQUEST['draw']) ? $_REQUEST['draw'] : "");
+
+    $sql = "SELECT 
+      a.id,
+      a.`uuid`,
+      CONCAT('EB-',RIGHT((YEAR(a.created) + 543),2),LPAD(a.`last`,4,'0')) ticket,
+      a.department_number,
+      a.login_id,
+      CONCAT(c.firstname,' ',c.lastname) username,
+      a.customer_id,
+      b.`name` customer_name,
+      a.order_number,
+      a.product_name,
+      a.title_name,
+      a.sales_name,
+      a.budget,
+      a.`type`,
+      (
+      CASE
+        WHEN a.`type` = 1 THEN 'Event'
+        WHEN a.`type` = 2 THEN 'Online'
+        WHEN a.`type` = 3 THEN 'รับจ้างผลิต'
+        WHEN a.`type` = 4 THEN 'อื่นๆ'
+      END
+      ) type_name,
+      a.remark,
+      a.`status`,
+      (
+      CASE
+        WHEN a.`status` = 1 AND a.action = 1 THEN 'รอฝ่าย Event ดำเนินการ'
+        WHEN a.`status` = 1 AND a.action = 2 THEN 'รอผู้ขอใช้บริการแก้ไข'
+        WHEN a.`status` = 2 THEN 'รอฝ่ายงบประมาณดำเนินการ'
+        WHEN a.`status` = 3 THEN 'รอผู้อนุมัติดำเนินการ'
+        WHEN a.`status` = 4 THEN 'ผ่านการอนุมัติ'
+        WHEN a.`status` = 5 THEN 'รายการถูกยกเลิก'
+      END
+      ) status_name,
+      (
+      CASE
+        WHEN a.`status` = 1 AND a.action = 1 THEN 'primary'
+        WHEN a.`status` = 1 AND a.action = 2 THEN 'danger'
+        WHEN a.`status` = 2 THEN 'info'
+        WHEN a.`status` = 3 THEN 'warning'
+        WHEN a.`status` = 4 THEN 'success'
+        WHEN a.`status` = 5 THEN 'danger'
+      END
+      ) status_color,
+      (
+      CASE
+        WHEN a.`status` = 1 THEN 'view'
+        ELSE 'complete'
+      END
+      ) `page`,
+      DATE_FORMAT(a.created,'%d/%m/%Y, %H:%i น.') created
+    FROM belink.estimate_request a
+    LEFT JOIN belink.customer b
+    ON a.customer_id = b.id
+    LEFT JOIN belink.user c
+    ON a.login_id = c.login
+    WHERE a.`status` IN (1,2,3,4,5) ";
+
+    if (!empty($keyword)) {
+      $sql .= " AND (b.name LIKE '%{$keyword}%' OR a.order_number LIKE '%{$keyword}%' OR a.product_name LIKE '%{$keyword}%' OR a.title_name LIKE '%{$keyword}%' OR a.sales_name LIKE '%{$keyword}%') ";
+    }
+
+    if ($filter_order) {
+      $sql .= " ORDER BY {$column[$order_column]} {$order_dir} ";
+    } else {
+      $sql .= " ORDER BY a.status ASC, a.created DESC ";
+    }
+
+    $sql2 = "";
+    if ($limit_length) {
+      $sql2 .= "LIMIT {$limit_start}, {$limit_length}";
+    }
+
+    $stmt = $this->dbcon->prepare($sql);
+    $stmt->execute();
+    $filter = $stmt->rowCount();
+    $stmt = $this->dbcon->prepare($sql . $sql2);
+    $stmt->execute();
+    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    $data = [];
+    foreach ($result as $row) {
+      $action = "<a href='/estimate/edit/{$row['uuid']}' class='badge badge-primary font-weight-light'>{$row['status_name']}</a>";
 
       $data[] = [
         $action,

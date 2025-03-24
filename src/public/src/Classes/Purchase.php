@@ -41,10 +41,13 @@ class Purchase
     AND a.login_id = ?
     AND a.department_number = ?
     AND a.doc_date = ?
+    AND a.po = ?
     AND a.department = ?
     AND a.date = ?
     AND a.order_number = ?
-    AND a.objective = ?";
+    AND a.reference = ?
+    AND a.objective = ?
+    AND a.remark = ?";
     $stmt = $this->dbcon->prepare($sql);
     $stmt->execute($data);
     return $stmt->fetchColumn();
@@ -66,7 +69,7 @@ class Purchase
 
   public function purchase_insert($data)
   {
-    $sql = "INSERT INTO belink.purchase_request( `uuid`, `last`, `login_id`, `department_number`, `doc_date`, `department`, `date`, `order_number`, `objective`) VALUES(uuid(),?,?,?,?,?,?,?,?)";
+    $sql = "INSERT INTO belink.purchase_request( `uuid`, `last`, `login_id`, `department_number`, `doc_date`, `po`, `department`, `date`, `order_number`, `reference`, `objective`, `remark`) VALUES(uuid(),?,?,?,?,?,?,?,?,?,?,?)";
     $stmt = $this->dbcon->prepare($sql);
     return $stmt->execute($data);
   }
@@ -81,10 +84,13 @@ class Purchase
     a.department,
     DATE_FORMAT(a.doc_date, '%d/%m/%Y') `doc_date`,
     DATE_FORMAT(a.date, '%d/%m/%Y') `date`,
+    a.po,
     a.order_number,
+    a.reference,
     e.`name` customer_name,
     d.product_name,
     a.objective,
+    a.remark,
     c.total,
     DATE_FORMAT(a.created, '%d/%m/%Y, %H:%i น.') created
     FROM belink.purchase_request a
@@ -112,10 +118,13 @@ class Purchase
   {
     $sql = "UPDATE belink.purchase_request SET
     doc_date = ?,
+    po = ?,
     department =?,
     `date` = ?,
     order_number = ?,
+    reference = ?,
     objective = ?,
+    remark = ?,
     `action` = 1,
     updated = NOW()
     WHERE uuid = ?";

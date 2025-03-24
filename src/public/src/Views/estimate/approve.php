@@ -50,7 +50,7 @@ $gp = (($profit * 100) / $row['budget']);
         </div>
       </div>
       <div class="row mb-2">
-        <label class="col-xl-2 offset-xl-2 col-form-label">พนักงานขาย</label>
+        <label class="col-xl-2 offset-xl-2 col-form-label">ชื่อพนักงานขาย</label>
         <div class="col-xl-4 text-underline">
           <?php echo $row['username'] ?>
         </div>
@@ -70,19 +70,19 @@ $gp = (($profit * 100) / $row['budget']);
         </div>
       </div>
       <div class="row mb-2">
-        <label class="col-xl-2 offset-xl-2 col-form-label">เลขที่สัญญา</label>
+        <label class="col-xl-2 offset-xl-2 col-form-label">เลขที่สัญญา SO</label>
         <div class="col-xl-4 text-underline">
           <?php echo $row['order_number'] ?>
         </div>
       </div>
       <div class="row mb-2">
-        <label class="col-xl-2 offset-xl-2 col-form-label">สินค้า</label>
+        <label class="col-xl-2 offset-xl-2 col-form-label">ชื่อสินค้า</label>
         <div class="col-xl-4 text-underline">
           <?php echo $row['product_name'] ?>
         </div>
       </div>
       <div class="row mb-2">
-        <label class="col-xl-2 offset-xl-2 col-form-label">หัวข้อเรื่อง</label>
+        <label class="col-xl-2 offset-xl-2 col-form-label">ชื่องาน</label>
         <div class="col-xl-4 text-underline">
           <?php echo $row['title_name'] ?>
         </div>
@@ -94,13 +94,13 @@ $gp = (($profit * 100) / $row['budget']);
         </div>
       </div>
       <div class="row mb-2">
-        <label class="col-xl-2 offset-xl-2 col-form-label">งบประมาณ</label>
+        <label class="col-xl-2 offset-xl-2 col-form-label">Total Sales</label>
         <div class="col-xl-4 text-underline text-primary">
           <?php echo number_format($row['budget'], 2) ?>
         </div>
       </div>
       <div class="row mb-2">
-        <label class="col-xl-2 offset-xl-2 col-form-label">รายจ่าย</label>
+        <label class="col-xl-2 offset-xl-2 col-form-label">Total Amount</label>
         <div class="col-xl-4 text-underline text-danger">
           <?php echo number_format($row['cost'], 2) ?>
         </div>
@@ -108,7 +108,7 @@ $gp = (($profit * 100) / $row['budget']);
       <div class="row mb-2">
         <label class="col-xl-2 offset-xl-2 col-form-label">GP</label>
         <div class="col-xl-4 text-underline text-success">
-          <?php echo number_format($profit, 2) . ' (' . $gp . '% )' ?>
+          <?php echo number_format($profit, 2) . ' (' . round($gp, 2) . '% )' ?>
         </div>
       </div>
       <div class="row mb-2">
@@ -130,8 +130,10 @@ $gp = (($profit * 100) / $row['budget']);
                   <thead>
                     <tr>
                       <th width="10%">#</th>
-                      <th width="40%">รายจ่าย</th>
-                      <th width="20%">งบประมาณ</th>
+                      <th width="30%">Item Description</th>
+                      <th width="20%">Detail 1</th>
+                      <th width="20%">Detail 2</th>
+                      <th width="20%">Amount (THB)</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -145,11 +147,13 @@ $gp = (($profit * 100) / $row['budget']);
                       <tr>
                         <td class="text-center"><?php echo $key ?></td>
                         <td class="text-left"><?php echo $item['expense_name'] ?></td>
+                        <td class="text-left"><?php echo $item['text'] ?></td>
+                        <td class="text-left"><?php echo $item['text2'] ?></td>
                         <td class="text-right"><?php echo number_format($item['estimate'], 2) ?></td>
                       </tr>
                     <?php endforeach; ?>
                     <tr>
-                      <td class="text-center h5" colspan="2">รวม</td>
+                      <td class="text-right h5" colspan="4">รวม</td>
                       <td class="text-right h5"><?php echo number_format($total, 2) ?></td>
                     </tr>
                   </tbody>

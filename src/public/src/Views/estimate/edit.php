@@ -109,7 +109,7 @@ $gp = (($profit * 100) / $row['budget']);
       <div class="row mb-2">
         <label class="col-xl-2 offset-xl-2 col-form-label">GP</label>
         <div class="col-xl-4 text-underline text-success">
-          <?php echo number_format($profit, 2) . ' (' . $gp . '% )' ?>
+          <?php echo number_format($profit, 2) . ' (' . round($gp, 2) . '% )' ?>
         </div>
       </div>
       <div class="row mb-2">
@@ -281,7 +281,7 @@ $gp = (($profit * 100) / $row['budget']);
           </a>
         </div>
         <div class="col-xl-3 mb-2">
-          <a class="btn btn-danger btn-sm btn-block" href="/estimate">
+          <a class="btn btn-danger btn-sm btn-block" href="/estimate/manage">
             <i class="fas fa-arrow-left pr-2"></i>หน้าหลัก
           </a>
         </div>

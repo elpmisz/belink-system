@@ -41,20 +41,26 @@ $VALIDATION = new Validation();
 
 if ($action === "create") {
   try {
+    echo "<pre>";
+    print_r($_POST);
+    die();
     $login_id = (isset($user['login_id']) ? $VALIDATION->input($user['login_id']) : "");
     $department_number = (isset($_POST['department_number']) ? $VALIDATION->input($_POST['department_number']) : "");
     $department = (isset($_POST['department']) ? $VALIDATION->input($_POST['department']) : "");
     $doc_date = (isset($_POST['doc_date']) ? $VALIDATION->input($_POST['doc_date']) : "");
     $doc_date = (!empty($doc_date) ? date("Y-m-d", strtotime(str_replace("/", "-", $doc_date))) : "");
+    $po = (isset($_POST['po']) ? $VALIDATION->input($_POST['po']) : "");
     $date = (isset($_POST['date']) ? $VALIDATION->input($_POST['date']) : "");
     $date = (!empty($date) ? date("Y-m-d", strtotime(str_replace("/", "-", $date))) : "");
     $order_number = (isset($_POST['order_number']) ? $VALIDATION->input($_POST['order_number']) : "");
+    $reference = (isset($_POST['reference']) ? $VALIDATION->input($_POST['reference']) : "");
     $objective = (isset($_POST['objective']) ? $VALIDATION->input($_POST['objective']) : "");
+    $remark = (isset($_POST['remark']) ? $VALIDATION->input($_POST['remark']) : "");
     $purchase_last = $PURCHASE->purchase_last();
 
-    $purchase_count = $PURCHASE->purchase_count([$login_id, $department_number, $doc_date, $department, $date, $order_number, $objective]);
+    $purchase_count = $PURCHASE->purchase_count([$login_id, $department_number, $doc_date, $po, $department, $date, $order_number, $reference, $objective, $remark]);
     if (intval($purchase_count) === 0) {
-      $PURCHASE->purchase_insert([$purchase_last, $login_id, $department_number, $doc_date, $department, $date, $order_number, $objective]);
+      $PURCHASE->purchase_insert([$purchase_last, $login_id, $department_number, $doc_date, $po, $department, $date, $order_number, $reference, $objective, $remark]);
       $request_id = $PURCHASE->last_insert_id();
 
       foreach ($_POST['item_name'] as $key => $row) {
@@ -112,11 +118,14 @@ if ($action === "update") {
     $department = (isset($_POST['department']) ? $VALIDATION->input($_POST['department']) : "");
     $doc_date = (isset($_POST['doc_date']) ? $VALIDATION->input($_POST['doc_date']) : "");
     $doc_date = (!empty($doc_date) ? date("Y-m-d", strtotime(str_replace("/", "-", $doc_date))) : "");
+    $po = (isset($_POST['po']) ? $VALIDATION->input($_POST['po']) : "");
     $date = (isset($_POST['date']) ? $VALIDATION->input($_POST['date']) : "");
     $date = (!empty($date) ? date("Y-m-d", strtotime(str_replace("/", "-", $date))) : "");
     $order_number = (isset($_POST['order_number']) ? $VALIDATION->input($_POST['order_number']) : "");
+    $reference = (isset($_POST['reference']) ? $VALIDATION->input($_POST['reference']) : "");
     $objective = (isset($_POST['objective']) ? $VALIDATION->input($_POST['objective']) : "");
-    $PURCHASE->purchase_update([$doc_date, $department, $date, $order_number, $objective, $uuid]);
+    $remark = (isset($_POST['remark']) ? $VALIDATION->input($_POST['remark']) : "");
+    $PURCHASE->purchase_update([$doc_date, $po, $department, $date, $order_number, $reference, $objective, $remark, $uuid]);
 
     foreach ($_POST['item__id'] as $key => $row) {
       $item__id = (isset($_POST['item__id'][$key]) ? $VALIDATION->input($_POST['item__id'][$key]) : "");
@@ -128,7 +137,7 @@ if ($action === "update") {
       $PURCHASE->purchase_item_update([$item__name, $item__amount, $item__unit, $item__estimate, $item__id]);
     }
 
-    if (isset($_POST['item_name']) && !empty($_POST['item_name'])) {
+    if (isset($_POST['item_name'])) {
       foreach ($_POST['item_name'] as $key => $row) {
         $item_name = (isset($_POST['item_name'][$key]) ? $VALIDATION->input($_POST['item_name'][$key]) : "");
         $item_amount = (isset($_POST['item_amount'][$key]) ? $VALIDATION->input($_POST['item_amount'][$key]) : "");
