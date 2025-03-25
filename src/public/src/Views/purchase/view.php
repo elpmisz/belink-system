@@ -107,22 +107,20 @@ $files = $PURCHASE->purchase_file_view([$uuid]);
           </div>
         </div>
       </div>
-      <?php if (!empty($row['order_number'])) : ?>
-        <div class="order-div">
-          <div class="row mb-2">
-            <label class="col-xl-2 offset-xl-2 col-form-label">ชื่อลูกค้า</label>
-            <div class="col-xl-4 text-underline">
-              <span class="order-customer"><?php echo $row['customer_name'] ?></span>
-            </div>
-          </div>
-          <div class="row mb-2">
-            <label class="col-xl-2 offset-xl-2 col-form-label">สินค้า</label>
-            <div class="col-xl-4 text-underline">
-              <span class="order-product"><?php echo $row['product_name'] ?></span>
-            </div>
+      <div class="order-div">
+        <div class="row mb-2">
+          <label class="col-xl-2 offset-xl-2 col-form-label">ชื่อลูกค้า</label>
+          <div class="col-xl-4 text-underline">
+            <span class="order-customer"><?php echo $row['customer_name'] ?></span>
           </div>
         </div>
-      <?php endif; ?>
+        <div class="row mb-2">
+          <label class="col-xl-2 offset-xl-2 col-form-label">สินค้า</label>
+          <div class="col-xl-4 text-underline">
+            <span class="order-product"><?php echo $row['product_name'] ?></span>
+          </div>
+        </div>
+      </div>
       <div class="row mb-2">
         <label class="col-xl-2 offset-xl-2 col-form-label">อ้างอิงเอกสาร(ถ้ามี)</label>
         <div class="col-xl-4">

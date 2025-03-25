@@ -185,7 +185,7 @@ class Estimate
     ) a
     LEFT JOIN 
     (
-      SELECT a.order_number,COUNT(b.expense_id) `count`,b.expense_id,(SUM(b.amount) + SUM(b.vat) + SUM(b.wt)) `usage`
+      SELECT a.order_number,COUNT(b.expense_id) `count`,b.expense_id,(SUM(b.amount) + SUM(b.vat) - SUM(b.wt)) `usage`
       FROM belink.payment_request a
       LEFT JOIN belink.payment_item b
       ON a.id = b.request_id

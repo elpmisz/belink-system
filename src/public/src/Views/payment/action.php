@@ -290,6 +290,18 @@ if ($action === "order-select") {
   }
 }
 
+if ($action === 'get-expense') {
+  try {
+    $data = json_decode(file_get_contents("php://input"), true);
+    $order = (isset($data['order']) ? $data['order'] : "");
+    $result = $PAYMENT->get_expense([$order]);
+
+    echo json_encode($result);
+  } catch (PDOException $e) {
+    die($e->getMessage());
+  }
+}
+
 if ($action === 'expense-select') {
   try {
     $keyword = (isset($_POST['keyword']) ? $VALIDATION->input($_POST['keyword']) : "");

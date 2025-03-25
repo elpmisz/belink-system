@@ -79,7 +79,8 @@ class Purchase
     $sql = "SELECT a.id,
     a.`uuid`,
     CONCAT('PR-',RIGHT((YEAR(a.created) + 543),2),LPAD(a.`last`,4,'0')) ticket,
-    CONCAT(b.firstname,' ',b.lastname) username,
+    f.username,
+    CONCAT(b.firstname,' ',b.lastname) fullname,
     a.department_number,
     a.department,
     DATE_FORMAT(a.doc_date, '%d/%m/%Y') `doc_date`,
@@ -108,6 +109,8 @@ class Purchase
     ON a.order_number = d.order_number
     LEFT JOIN belink.customer e
     ON d.customer_id = e.id
+    LEFT JOIN belink.login f
+    ON a.login_id = f.id
     WHERE a.uuid = ?";
     $stmt = $this->dbcon->prepare($sql);
     $stmt->execute($data);
@@ -117,6 +120,7 @@ class Purchase
   public function purchase_update($data)
   {
     $sql = "UPDATE belink.purchase_request SET
+    department_number = ?,
     doc_date = ?,
     po = ?,
     department =?,

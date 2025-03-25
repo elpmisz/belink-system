@@ -34,7 +34,7 @@ include_once(__DIR__ . "/../layout/header.php");
         </div>
       </div>
       <div class="row mb-2">
-        <label class="col-xl-2 offset-xl-2 col-form-label">เลขที่สัญญา</label>
+        <label class="col-xl-2 offset-xl-2 col-form-label">เลขที่สัญญา SO</label>
         <div class="col-xl-4">
           <select class="form-control form-control-sm order-select" name="order_number"></select>
           <div class="invalid-feedback">
@@ -228,7 +228,7 @@ include_once(__DIR__ . "/../layout/header.php");
 
 <?php include_once(__DIR__ . "/../layout/footer.php"); ?>
 <script>
-  initializeSelect2(".order-select", "/payment/order-select", "-- รายชื่อเลขที่สัญญา --");
+  initializeSelect2(".order-select", "/payment/order-select", "-- เลขที่สัญญา SO --");
 
   const order = ($(".order-select").val() || "");
   $(".expense-select").select2({
@@ -284,6 +284,16 @@ include_once(__DIR__ . "/../layout/header.php");
         cache: true
       }
     });
+
+    axios.post("/payment/get-expense", {
+        order,
+      })
+      .then((res) => {
+        let result = res.data;
+        console.log(result);
+      }).catch((error) => {
+        console.log(error);
+      });
   });
 
   $(".item-decrease, .file-decrease").hide();

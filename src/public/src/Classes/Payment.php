@@ -355,6 +355,31 @@ class Payment
     return $stmt->fetchAll();
   }
 
+  public function get_expense($data)
+  {
+    $sql = "SELECT *
+    FROM 
+    (
+      SELECT c.`name` expense_name,b.text,b.text2,b.estimate,a.order_number
+      FROM belink.estimate_request a
+      LEFT JOIN belink.estimate_item b
+      ON a.id = b.request_id
+      LEFT JOIN belink.expense c
+      ON b.expense_id = c.id
+      AND b.`status` = 1
+      UNION
+      SELECT b.`name` expense_name,'' `text`, '' `text2`, b.estimate,a.order_number
+      FROM belink.purchase_request a
+      LEFT JOIN belink.purchase_item b
+      ON a.id = b.request_id
+      WHERE b.`status` = 1
+    ) a 
+    WHERE a.order_number = ?";
+    $stmt = $this->dbcon->prepare($sql);
+    $stmt->execute($data);
+    return $stmt->fetchAll();
+  }
+
   public function expense_select($keyword, $order)
   {
     $sql = "SELECT a.id,CONCAT('[',a.`code`,'] ',a.`name`) `text`

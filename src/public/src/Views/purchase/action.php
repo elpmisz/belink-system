@@ -115,6 +115,7 @@ if ($action === "update") {
   try {
     $request_id = (isset($_POST['id']) ? $VALIDATION->input($_POST['id']) : "");
     $uuid = (isset($_POST['uuid']) ? $VALIDATION->input($_POST['uuid']) : "");
+    $department_number = (isset($_POST['department_number']) ? $VALIDATION->input($_POST['department_number']) : "");
     $department = (isset($_POST['department']) ? $VALIDATION->input($_POST['department']) : "");
     $doc_date = (isset($_POST['doc_date']) ? $VALIDATION->input($_POST['doc_date']) : "");
     $doc_date = (!empty($doc_date) ? date("Y-m-d", strtotime(str_replace("/", "-", $doc_date))) : "");
@@ -125,7 +126,7 @@ if ($action === "update") {
     $reference = (isset($_POST['reference']) ? $VALIDATION->input($_POST['reference']) : "");
     $objective = (isset($_POST['objective']) ? $VALIDATION->input($_POST['objective']) : "");
     $remark = (isset($_POST['remark']) ? $VALIDATION->input($_POST['remark']) : "");
-    $PURCHASE->purchase_update([$doc_date, $po, $department, $date, $order_number, $reference, $objective, $remark, $uuid]);
+    $PURCHASE->purchase_update([$department_number, $doc_date, $po, $department, $date, $order_number, $reference, $objective, $remark, $uuid]);
 
     foreach ($_POST['item__id'] as $key => $row) {
       $item__id = (isset($_POST['item__id'][$key]) ? $VALIDATION->input($_POST['item__id'][$key]) : "");

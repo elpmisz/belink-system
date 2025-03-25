@@ -48,6 +48,14 @@ ob_start();
       border: 0 !important;
     }
 
+    .no-border-right {
+      border-right: 1px solid #FFF !important;
+    }
+
+    .no-border-bottom {
+      border-bottom: 1px solid #FFF !important;
+    }
+
     .bottom-border {
       border: 0;
       border-bottom: 1px solid #000 !important;
@@ -87,7 +95,7 @@ ob_start();
       </td>
       <td class="no-border" width="20%">เลขที่เอกสาร</td>
       <td class="bottom-border" width="20%">
-        <?php echo htmlspecialchars($row['ticket'], ENT_QUOTES, 'UTF-8'); ?>
+        <?php echo htmlspecialchars($row['department_number'], ENT_QUOTES, 'UTF-8'); ?>
       </td>
     </tr>
     <tr>
@@ -104,7 +112,9 @@ ob_start();
       <td class="text-left no-border" width="10%"></td>
       <td class="text-center no-border" width="50%"></td>
       <td class="no-border" width="20%">เลขที่ PO</td>
-      <td class="bottom-border" width="20%"></td>
+      <td class="bottom-border" width="20%">
+        <?php echo htmlspecialchars($row['po'], ENT_QUOTES, 'UTF-8'); ?>
+      </td>
     </tr>
   </table>
 
@@ -120,9 +130,15 @@ ob_start();
       </td>
     </tr>
     <tr>
-      <td class="no-border" width="20%">วัตถุประสงค์</td>
-      <td class="bottom-border" width="30%">
+      <td class="no-border" width="20%">เหตุผลในการขอซื้อ /<br> งบประมาณที่เตรียมไว้</td>
+      <td colspan="3" class="bottom-border" width="80%">
         <?php echo str_replace("\n", "<br>", $row['objective']) ?>
+      </td>
+    </tr>
+    <tr>
+      <td class="no-border" width="20%">อ้างอิงเอกสาร(ถ้ามี)</td>
+      <td class="bottom-border" width="30%">
+        <?php echo htmlspecialchars($row['reference'], ENT_QUOTES, 'UTF-8'); ?>
       </td>
       <td class="no-border" width="20%"></td>
       <td class="no-border" width="30%"></td>
@@ -136,7 +152,7 @@ ob_start();
       <td class="no-border" width="30%"></td>
     </tr>
     <tr>
-      <td class="no-border" width="20%">เลขที่สัญญา</td>
+      <td class="no-border" width="20%">ชื่อลูกค้า</td>
       <td class="bottom-border" width="30%">
         <?php echo htmlspecialchars($row['customer_name'], ENT_QUOTES, 'UTF-8'); ?>
       </td>
@@ -144,7 +160,7 @@ ob_start();
       <td class="no-border" width="30%"></td>
     </tr>
     <tr>
-      <td class="no-border" width="20%">ชื่อลูกค้า</td>
+      <td class="no-border" width="20%">สินค้า</td>
       <td class="bottom-border" width="30%">
         <?php echo htmlspecialchars($row['product_name'], ENT_QUOTES, 'UTF-8'); ?>
       </td>
@@ -193,18 +209,51 @@ ob_start();
     </tr>
   </table>
 
+  <table style="margin-top: 10px;">
+    <tr>
+      <td class="no-border" width="20%">หมายเหตุ</td>
+      <td colspan="3" class="bottom-border" width="80%">
+        <?php echo str_replace("\n", "<br>", $row['remark']) ?>
+      </td>
+    </tr>
+  </table>
+
   <!-- Footer Section -->
   <table style="margin-top: 10px;">
     <tr>
-      <td rowspan="2" class="text-center" width="30%"><br><br>
-        <img src="<?php echo $signature_1 ?>" alt="signature" class="signature"><br>ผู้ขอเบิก<br><br>วันที่____________
+      <td class="text-center no-border-bottom" colspan="2">
+        หน่วยงานที่ขอซื้อ
       </td>
-      <td rowspan="2" class="text-center" width="30%"><br><br>
-        <img src="<?php echo $signature_2 ?>" alt="signature" class="signature"><br>ผู้อนุมัติ<br><br>วันที่____________
+      <td class="text-center no-border-bottom">
+        หน่วยงานที่จัดซื้อ
       </td>
-      <td rowspan="2" class="text-center" width="30%"><br><br>
-        <img src="<?php echo $signature_3 ?>" alt="signature" class="signature"><br>ผู้ตรวจสอบ<br><br>วันที่____________
+    </tr>
+    <tr>
+      <td class="text-center no-border-bottom no-border-right">
+        <?php echo $row['username'] ?>
       </td>
+      <td class="text-center no-border-bottom">
+        <img src="<?php echo $signature_2 ?>" alt="signature" class="signature">
+      </td>
+      <td class="text-center no-border-bottom">
+        <img src="<?php echo $signature_3 ?>" alt="signature" class="signature">
+      </td>
+    </tr>
+    <tr>
+      <td class="text-center no-border-bottom no-border-right">
+        (<?php echo "คุณ{$row['fullname']}" ?>)
+      </td>
+      <td class="text-center no-border-bottom">
+        (<?php echo "คุณ{$row['fullname']}" ?>)
+      </td>
+      <td class="text-center no-border-bottom">
+        (<?php echo "คุณ{$row['fullname']}" ?>)
+      </td>
+    </tr>
+    <tr>
+      <td class="text-center no-border-right">ผู้จัดทำ</td>
+      <td class="text-center">ผู้มีอำนาจอนุมัติ</td>
+      <td class="text-center">ผู้ตรวจสอบ</td>
     </tr>
   </table>
 
