@@ -94,13 +94,13 @@ $gp = (($profit * 100) / $row['budget']);
         </div>
       </div>
       <div class="row mb-2">
-        <label class="col-xl-2 offset-xl-2 col-form-label">Total Sales</label>
+        <label class="col-xl-2 offset-xl-2 col-form-label">ยอดขาย</label>
         <div class="col-xl-4 text-underline text-primary">
           <?php echo number_format($row['budget'], 2) ?>
         </div>
       </div>
       <div class="row mb-2">
-        <label class="col-xl-2 offset-xl-2 col-form-label">Total Amount</label>
+        <label class="col-xl-2 offset-xl-2 col-form-label">รายจ่าย</label>
         <div class="col-xl-4 text-underline text-danger">
           <?php echo number_format($row['cost'], 2) ?>
         </div>

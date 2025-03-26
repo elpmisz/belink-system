@@ -134,3 +134,63 @@ if ($action === "user-select") {
     die($e->getMessage());
   }
 }
+
+if ($action === "upload") {
+  try {
+    $file_name = (isset($_FILES['file']['name']) ? $_FILES['file']['name'] : '');
+    $file_tmp = (isset($_FILES['file']['tmp_name']) ? $_FILES['file']['tmp_name'] : '');
+    $file_allow = ["xls", "xlsx", "csv"];
+    $file_extension = pathinfo($file_name, PATHINFO_EXTENSION);
+
+    if (!in_array($file_extension, $file_allow)) :
+      $VALIDATION->alert("danger", "เฉพาะเอกสาร XLS XLSX CSV!", "/customer");
+    endif;
+
+    if ($file_extension === "xls") {
+      $READER = new \PhpOffice\PhpSpreadsheet\Reader\Xls();
+    } elseif ($file_extension === "xlsx") {
+      $READER = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
+    } else {
+      $READER = new \PhpOffice\PhpSpreadsheet\Reader\Csv();
+    }
+
+    $READ = $READER->load($file_tmp);
+    $result = $READ->getActiveSheet()->toArray();
+
+    $data = [];
+    foreach ($result as $value) {
+      $data[] = array_map("trim", $value);
+    }
+
+    foreach ($data as $key => $value) {
+      if (!in_array($key, [0])) {
+        $email = "";
+        $firstname = (isset($value[0]) ? $value[0] : "");
+        $lastname = (isset($value[1]) ? $value[1] : "");
+        $nickname = (isset($value[2]) ? $value[2] : "");
+        $department = (isset($value[3]) ? $value[3] : "");
+        $department_id = (!empty($department) ? $USER->department_id([$department]) : "");
+        $username = (isset($value[4]) ? $value[4] : "");
+        $position_id = "";
+        $manager_id = "";
+        $manager_id2 = "";
+        $manager_id3 = "";
+        $contact = "";
+
+        $upload_count = $USER->upload_count([$firstname, $lastname]);
+        if (!empty($firstname) && !empty($lastname) && intval($upload_count) === 0) {
+          $default_password = $USER->default_password();
+          $hash_password = password_hash($default_password, PASSWORD_DEFAULT);
+
+          $USER->login_insert([$username, $email, $hash_password]);
+          $login = $USER->last_insert_id();
+          $USER->user_insert([$login, $firstname, $lastname, $department_id, $position_id, $manager_id, $manager_id2, $manager_id3, $contact]);
+        }
+      }
+    }
+
+    $VALIDATION->alert("success", "ดำเนินการเรียบร้อย!", "/user");
+  } catch (PDOException $e) {
+    die($e->getMessage());
+  }
+}

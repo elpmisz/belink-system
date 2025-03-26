@@ -176,13 +176,13 @@ class Payment
       WHERE a.order_number = d.order_number
       and b.`status` = 1
       AND c.`status` = 1
-      GROUP BY b.expense_id
+      GROUP BY a.order_number,b.expense_id
     ) d
     ON a.order_number = d.order_number
     AND b.expense_id = d.expense_id
     WHERE a.`uuid` = ?
     AND b.`status` = 1
-    ORDER BY c.reference ASC, c.code ASC";
+    ORDER BY c.reference ASC, c.code ASC, b.id ASC";
     $stmt = $this->dbcon->prepare($sql);
     $stmt->execute($data);
     return $stmt->fetchAll();
@@ -327,7 +327,7 @@ class Payment
       LEFT JOIN belink.payment_item b
       ON a.id = b.request_id
       WHERE b.status = 1
-      GROUP BY b.request_id,b.expense_id
+      GROUP BY a.order_number,b.expense_id
     ) d
     ON a.order_number = d.order_number
     AND b.expense_id = d.expense_id
@@ -357,24 +357,29 @@ class Payment
 
   public function get_expense($data)
   {
-    $sql = "SELECT *
-    FROM 
+    $sql = "SELECT b.expense_id,
+      CONCAT('[',c.`code`,'] ',c.`name`) expense_name,
+      b.estimate,
+      IFNULL(d.payment,0) payment,
+      IFNULL((b.estimate - IFNULL(d.payment,0)),0) remain
+    FROM belink.estimate_request a
+    LEFT JOIN belink.estimate_item b
+    ON a.id = b.request_id
+    LEFT JOIN belink.expense c
+    ON b.expense_id = c.id
+    LEFT JOIN 
     (
-      SELECT c.`name` expense_name,b.text,b.text2,b.estimate,a.order_number
-      FROM belink.estimate_request a
-      LEFT JOIN belink.estimate_item b
+      SELECT a.order_number,b.expense_id,(SUM(b.amount) + SUM(b.vat) - SUM(b.wt)) payment
+      FROM belink.payment_request a
+      LEFT JOIN belink.payment_item b
       ON a.id = b.request_id
-      LEFT JOIN belink.expense c
-      ON b.expense_id = c.id
-      AND b.`status` = 1
-      UNION
-      SELECT b.`name` expense_name,'' `text`, '' `text2`, b.estimate,a.order_number
-      FROM belink.purchase_request a
-      LEFT JOIN belink.purchase_item b
-      ON a.id = b.request_id
-      WHERE b.`status` = 1
-    ) a 
-    WHERE a.order_number = ?";
+      WHERE b.status = 1
+      GROUP BY a.order_number,b.expense_id
+    ) d
+    ON a.order_number = d.order_number
+    AND b.expense_id = d.expense_id
+    WHERE a.order_number = ?
+    AND b.`status` = 1";
     $stmt = $this->dbcon->prepare($sql);
     $stmt->execute($data);
     return $stmt->fetchAll();

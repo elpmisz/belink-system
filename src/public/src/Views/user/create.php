@@ -94,6 +94,15 @@ include_once(__DIR__ . "/../layout/header.php");
               </div>
             </div>
           </div>
+          <div class="row mb-2">
+            <label class="col-xl-2 offset-xl-2 col-form-label">ผู้จัดการ / ผู้อนุมัติ 3</label>
+            <div class="col-xl-4">
+              <select class="form-control form-control-sm user-select" name="manager_id3" required></select>
+              <div class="invalid-feedback">
+                กรุณา กรอกข้อมูล!
+              </div>
+            </div>
+          </div>
 
           <div class="row justify-content-center mb-2">
             <div class="col-xl-3 mb-2">

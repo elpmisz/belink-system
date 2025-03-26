@@ -24,6 +24,11 @@ include_once(__DIR__ . "/../layout/header.php");
             </a>
           </div>
           <div class="col-xl-3 mb-2">
+            <button class="btn btn-primary btn-sm btn-block" data-toggle="modal" data-target="#modal-upload">
+              <i class="fas fa-upload pr-2"></i>นำข้อมูลเข้า
+            </button>
+          </div>
+          <div class="col-xl-3 mb-2">
             <a href="/user/create" class="btn btn-success btn-sm btn-block">
               <i class="fas fa-plus pr-2"></i>เพิ่ม
             </a>
@@ -55,6 +60,37 @@ include_once(__DIR__ . "/../layout/header.php");
   </div>
 </div>
 
+<div class="modal fade" id="modal-upload" data-backdrop="static">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body">
+        <form action="/user/upload" method="POST" class="needs-validation" novalidate enctype="multipart/form-data">
+          <div class="row mb-2">
+            <label class="col-xl-4 col-form-label text-right">เอกสาร</label>
+            <div class="col-xl-8">
+              <input type="file" class="form-control form-control-sm" name="file" required>
+              <div class="invalid-feedback">
+                กรุณาเลือกเอกสาร!
+              </div>
+            </div>
+          </div>
+          <div class="row justify-content-center mb-2">
+            <div class="col-xl-4 mb-2">
+              <button type="submit" class="btn btn-success btn-sm btn-block btn-submit">
+                <i class="fas fa-check pr-2"></i>ยืนยัน
+              </button>
+            </div>
+            <div class="col-xl-4 mb-2">
+              <button class="btn btn-danger btn-sm btn-block" data-dismiss="modal">
+                <i class="fa fa-times mr-2"></i>ปิด
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
 
 <?php include_once(__DIR__ . "/../layout/footer.php"); ?>
 <script>

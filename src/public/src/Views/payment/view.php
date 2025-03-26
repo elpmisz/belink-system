@@ -354,6 +354,23 @@ $remarks = $PAYMENT->payment_remark_view([$uuid]);
 
 <?php include_once(__DIR__ . "/../layout/footer.php"); ?>
 <script>
+  $('.amount-item, .vat-item, .wt-item').on('blur', function() {
+    var value = $(this).val();
+
+    value = value.replace(/[^0-9.]/g, '');
+
+    var parts = value.split('.');
+    if (parts.length > 2) {
+      value = parts[0] + '.' + parts.slice(1).join('');
+    }
+
+    if (value) {
+      value = parseFloat(value).toFixed(2);
+    }
+
+    $(this).val(value);
+  });
+
   const order = ($(".order-select").val() || "");
   $(".expense-select").select2({
     placeholder: "-- รายจ่าย --",
@@ -421,6 +438,24 @@ $remarks = $PAYMENT->payment_remark_view([$uuid]);
         cache: true
       }
     });
+
+    $('.amount-item, .vat-item, .wt-item').on('blur', function() {
+      var value = $(this).val();
+
+      value = value.replace(/[^0-9.]/g, '');
+
+      var parts = value.split('.');
+      if (parts.length > 2) {
+        value = parts[0] + '.' + parts.slice(1).join('');
+      }
+
+      if (value) {
+        value = parseFloat(value).toFixed(2);
+      }
+
+      $(this).val(value);
+    });
+
     updateTotal();
   });
 
@@ -447,8 +482,6 @@ $remarks = $PAYMENT->payment_remark_view([$uuid]);
     row.find(".text-item, .text2-item, .amount-item, .vat-item, .wt-item").val("");
     row.find(".total-item").text("");
 
-    console.log(order)
-
     if (expense) {
       axios.post("/payment/order-view", {
           expense,
@@ -456,7 +489,11 @@ $remarks = $PAYMENT->payment_remark_view([$uuid]);
         })
         .then((res) => {
           const result = res.data;
-          row.find(".remain-item").text(result.remain);
+          const remain = parseFloat(result.remain).toLocaleString('th-TH', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+          });
+          row.find(".remain-item").text(remain);
         })
         .catch((error) => {
           console.error(error);
@@ -473,7 +510,8 @@ $remarks = $PAYMENT->payment_remark_view([$uuid]);
     const amount = parseFloat(row.find(".amount-item").val() || 0);
     const vat = parseFloat(row.find(".vat-item").val() || 0);
     const wt = parseFloat(row.find(".wt-item").val() || 0);
-    const remain = parseFloat(row.find(".remain-item").text() || "");
+    let remain = (row.find(".remain-item").text() || 0);
+    remain = remain.replace(/,/g, '');
     const total = (amount + vat - wt);
 
     row.find(".amount-item").attr("max", remain);

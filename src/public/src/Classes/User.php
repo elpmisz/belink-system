@@ -60,7 +60,7 @@ class User
   public function user_insert($data)
   {
 
-    $sql = "INSERT INTO belink.user(`login`, `firstname`, `lastname`, `department_id`, `position_id`, `manager_id`, `manager_id2`, `contact`) VALUES(?,?,?,?,?,?,?,?)";
+    $sql = "INSERT INTO belink.user(`login`, `firstname`, `lastname`, `department_id`, `position_id`, `manager_id`, `manager_id2`, `manager_id3`, `contact`) VALUES(?,?,?,?,?,?,?,?,?)";
     $stmt = $this->dbcon->prepare($sql);
     return $stmt->execute($data);
   }
@@ -176,6 +176,25 @@ class User
     WHERE a.uuid = ?";
     $stmt = $this->dbcon->prepare($sql);
     return $stmt->execute($data);
+  }
+
+  public function department_id($data)
+  {
+    $sql = "SELECT id
+    FROM belink.department 
+    WHERE name = ?";
+    $stmt = $this->dbcon->prepare($sql);
+    $stmt->execute($data);
+    $row = $stmt->fetch();
+    return (isset($row['id']) ? $row['id'] : "");
+  }
+
+  public function upload_count($data)
+  {
+    $sql = "SELECT COUNT(*) FROM belink.user WHERE firstname = ? AND lastname = ?";
+    $stmt = $this->dbcon->prepare($sql);
+    $stmt->execute($data);
+    return $stmt->fetchColumn();
   }
 
   public function user_select($keyword)

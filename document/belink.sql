@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: database
--- Generation Time: Mar 25, 2025 at 03:04 PM
+-- Generation Time: Mar 26, 2025 at 03:26 PM
 -- Server version: 11.6.2-MariaDB-ubu2404
 -- PHP Version: 8.2.27
 
@@ -1130,9 +1130,16 @@ CREATE TABLE `department` (
 --
 
 INSERT INTO `department` (`id`, `name`, `status`, `updated`, `created`) VALUES
-(1, 'IT', 1, '2025-03-11 20:06:24', '2025-03-11 20:03:23'),
+(1, 'Accounting', 1, '2025-03-26 22:02:21', '2025-03-11 20:03:23'),
 (2, 'Finance', 1, NULL, '2025-03-11 20:03:40'),
-(3, 'Account', 1, NULL, '2025-03-11 20:03:44');
+(3, 'Management', 1, '2025-03-26 22:02:12', '2025-03-11 20:03:44'),
+(4, 'BD', 1, NULL, '2025-03-26 22:02:31'),
+(5, 'Event', 1, NULL, '2025-03-26 22:02:39'),
+(6, 'HR', 1, NULL, '2025-03-26 22:02:45'),
+(7, 'IT', 1, NULL, '2025-03-26 22:02:52'),
+(8, 'Sales', 1, NULL, '2025-03-26 22:02:57'),
+(9, 'Content Online', 1, NULL, '2025-03-26 22:03:03'),
+(10, 'Warehouse', 1, NULL, '2025-03-26 22:03:41');
 
 -- --------------------------------------------------------
 
@@ -1816,23 +1823,71 @@ CREATE TABLE `login` (
 --
 
 INSERT INTO `login` (`id`, `uuid`, `username`, `email`, `password`, `level`, `status`, `updated`, `created`) VALUES
-(1, '8578263a-d0ae-11ef-91c3-0242ac120002', 'admin.test', 'admin@test.com', '$2y$10$W08w.crPDLXzroZDNFirJObaHK91H.0D7ZszaRR6iQQi9W32.tnci', 9, 1, '2025-03-11 20:15:32', '2023-11-23 09:42:54'),
-(2, '857827b5-d0ae-11ef-91c3-0242ac120002', '', 'user@test.com', '$2y$10$jwAmc2BoS2EwrzfL2LkYOel9FZHc9LSbRn4sge.SvmPiOyjoSgLVq', 1, 1, '2025-02-11 00:38:49', '2025-01-03 08:42:52'),
-(3, '088ace55-e80f-11ef-8583-2ad6c30b0fff', '', 'n0866881414@gmail.com', '$2y$10$wH1zRiGz7/.zwlccIxlKoOW2Ph2g061zMc5PBs9a.5zaYhOCH9XpO', 1, 1, '2025-02-11 00:39:00', '2025-02-11 00:27:53'),
-(4, '333f7a89-e80f-11ef-8583-2ad6c30b0fff', '', 'acount@test.com', '$2y$10$PWvUBBWbA.X8Z6sK1.g9jOAesSlGUgIVUMGaJQwY3yYiBnGsUKRre', 1, 1, '2025-02-11 00:39:21', '2025-02-11 00:29:05'),
+(1, '8578263a-d0ae-11ef-91c3-0242ac120002', 'admin', 'admin@test.com', '$2y$10$W08w.crPDLXzroZDNFirJObaHK91H.0D7ZszaRR6iQQi9W32.tnci', 9, 1, '2025-03-11 20:15:32', '2023-11-23 09:42:54'),
+(2, '857827b5-d0ae-11ef-91c3-0242ac120002', 'user', 'user@test.com', '$2y$10$jwAmc2BoS2EwrzfL2LkYOel9FZHc9LSbRn4sge.SvmPiOyjoSgLVq', 1, 1, '2025-02-11 00:38:49', '2025-01-03 08:42:52'),
+(3, '088ace55-e80f-11ef-8583-2ad6c30b0fff', 'n0866881414', 'n0866881414@test.com', '$2y$10$wH1zRiGz7/.zwlccIxlKoOW2Ph2g061zMc5PBs9a.5zaYhOCH9XpO', 1, 1, '2025-02-11 00:39:00', '2025-02-11 00:27:53'),
+(4, '333f7a89-e80f-11ef-8583-2ad6c30b0fff', 'acount', 'acount@test.com', '$2y$10$PWvUBBWbA.X8Z6sK1.g9jOAesSlGUgIVUMGaJQwY3yYiBnGsUKRre', 1, 1, '2025-02-11 00:39:21', '2025-02-11 00:29:05'),
 (5, '7313af95-e810-11ef-8583-2ad6c30b0fff', 'store', 'store@test.com', '$2y$10$AFRyl5Hh9/sGPXMbyuA/Bum78re.OqMxnWPS2J8Rn.ca4R9ppm4da', 1, 1, '2025-02-17 11:18:15', '2025-02-11 00:38:01'),
-(6, '7bc14cfa-e868-11ef-8583-2ad6c30b0fff', '', 'jutamas.pu@test.com', '$2y$10$RlzJAiuhr0uZmr3XEC/unuuP5bKENxpuqeOfZ408S3qey60si.e72', 1, 1, '2025-02-13 07:41:29', '2025-02-11 11:08:12'),
-(7, '967c4eaf-e868-11ef-8583-2ad6c30b0fff', '', 'supanida.ja@test.com', '$2y$10$pkvurqhgZowu8eCRfcURE.XDkj4nkWXezT8cqxCQ66WwYbDyzo5t.', 1, 1, '2025-02-13 07:48:55', '2025-02-11 11:08:57'),
-(8, 'a6193884-e868-11ef-8583-2ad6c30b0fff', '', 'kamonwan.su@test.com', '$2y$10$1acy0dPFTfWspyBU.bOodeyxT9V0JHFl5WNkakH4CeCnnWAB4dWhS', 1, 1, '2025-03-20 18:55:15', '2025-02-11 11:09:23'),
-(9, 'b3949d98-e868-11ef-8583-2ad6c30b0fff', '', 'thaipat.me@test.com', '$2y$10$1aGlCnD4SlcGCwzU2TmGHuYbKmLWPlaQCEcvtRjFNrl.nWXOd1JFW', 1, 1, '2025-02-13 07:50:16', '2025-02-11 11:09:45'),
-(10, 'c1ce63be-e868-11ef-8583-2ad6c30b0fff', '', 'emika.ar@test.com', '$2y$10$ndlgSQz1231CGFXwRruPLORQjhtc5VheVBilXZ0T1tokkBCrsp4w2', 1, 1, '2025-02-13 07:49:56', '2025-02-11 11:10:09'),
-(11, 'ce2f3f16-e868-11ef-8583-2ad6c30b0fff', '', 'phichayapha.bu@test.com', '$2y$10$1LqOGFQM9pq30NKOLEGrkeM./Fs3bXwIIkMakjY74n2HurC60ioCy', 1, 1, '2025-02-13 07:48:20', '2025-02-11 11:10:30'),
-(12, 'db468f94-e868-11ef-8583-2ad6c30b0fff', '', 'charuwan.bo@test.com', '$2y$10$vidiV3dSnSaCUUqQls5.9O7aX66eOwV5u6x1/3guMuqNcjd/lIRDa', 1, 1, '2025-02-13 07:42:53', '2025-02-11 11:10:52'),
-(13, 'e83837b7-e868-11ef-8583-2ad6c30b0fff', '', 'boonyakorn.be@test.com', '$2y$10$1R8E0nyEqq8YmiCf7ySkouECesAyEYQzqB7fKVC5/CuS.xhvKkHMq', 1, 1, '2025-02-13 07:43:29', '2025-02-11 11:11:14'),
-(14, 'fd5dd5d9-e868-11ef-8583-2ad6c30b0fff', '', 'jakawan.ch@test.com', '$2y$10$DHf9sF7RA/mOuhl5Ec.aD.LBO45SPb7bB0K3A7A.Ro6Cvpxw5gXja', 1, 1, '2025-02-13 07:42:30', '2025-02-11 11:11:49'),
-(15, 'd06a19f1-e869-11ef-8583-2ad6c30b0fff', '', 'arthid.na@test.com', '$2y$10$.7dOngLcasBWq5HU1h1MV.I9MKO6oDEz0cw/7nZAuuD9LGJQu.XAm', 1, 1, '2025-02-13 07:49:33', '2025-02-11 11:17:43'),
-(16, 'ef7d1fc6-e869-11ef-8583-2ad6c30b0fff', '', 'phadung.bo@test.com', '$2y$10$85.aIJqQN.Ad/iT9wj60Nuxb3fvo.6rg4iGU0v6BDBmiIe6PfM7nC', 1, 1, '2025-02-13 07:47:45', '2025-02-11 11:18:35'),
-(17, '887b64c0-e9df-11ef-8583-2ad6c30b0fff', 'onuma.th', 'onuma.th@test.com', '$2y$10$0jmZsM.7VX3Ro/B0KuLHT.PNZgvN.VFwt8muVDrAOwhXKW8WGXZAy', 9, 1, '2025-02-20 09:38:38', '2025-02-13 07:52:54');
+(6, '7bc14cfa-e868-11ef-8583-2ad6c30b0fff', 'jutamas.pu', 'jutamas.pu@test.com', '$2y$10$RlzJAiuhr0uZmr3XEC/unuuP5bKENxpuqeOfZ408S3qey60si.e72', 1, 1, '2025-02-13 07:41:29', '2025-02-11 11:08:12'),
+(7, '967c4eaf-e868-11ef-8583-2ad6c30b0fff', 'supanida.ja', 'supanida.ja@test.com', '$2y$10$pkvurqhgZowu8eCRfcURE.XDkj4nkWXezT8cqxCQ66WwYbDyzo5t.', 1, 1, '2025-02-13 07:48:55', '2025-02-11 11:08:57'),
+(8, 'a6193884-e868-11ef-8583-2ad6c30b0fff', 'kamonwan.su', 'kamonwan.su@test.com', '$2y$10$1acy0dPFTfWspyBU.bOodeyxT9V0JHFl5WNkakH4CeCnnWAB4dWhS', 1, 1, '2025-03-20 18:55:15', '2025-02-11 11:09:23'),
+(9, 'b3949d98-e868-11ef-8583-2ad6c30b0fff', 'thaipat.me', 'thaipat.me@test.com', '$2y$10$1aGlCnD4SlcGCwzU2TmGHuYbKmLWPlaQCEcvtRjFNrl.nWXOd1JFW', 1, 1, '2025-02-13 07:50:16', '2025-02-11 11:09:45'),
+(10, 'c1ce63be-e868-11ef-8583-2ad6c30b0fff', 'emika.ar', 'emika.ar@test.com', '$2y$10$ndlgSQz1231CGFXwRruPLORQjhtc5VheVBilXZ0T1tokkBCrsp4w2', 1, 1, '2025-02-13 07:49:56', '2025-02-11 11:10:09'),
+(11, 'ce2f3f16-e868-11ef-8583-2ad6c30b0fff', 'phichayapha.bu', 'phichayapha.bu@test.com', '$2y$10$1LqOGFQM9pq30NKOLEGrkeM./Fs3bXwIIkMakjY74n2HurC60ioCy', 1, 1, '2025-02-13 07:48:20', '2025-02-11 11:10:30'),
+(12, 'db468f94-e868-11ef-8583-2ad6c30b0fff', 'charuwan.bo', 'charuwan.bo@test.com', '$2y$10$vidiV3dSnSaCUUqQls5.9O7aX66eOwV5u6x1/3guMuqNcjd/lIRDa', 1, 1, '2025-02-13 07:42:53', '2025-02-11 11:10:52'),
+(13, 'e83837b7-e868-11ef-8583-2ad6c30b0fff', 'boonyakorn.be', 'boonyakorn.be@test.com', '$2y$10$1R8E0nyEqq8YmiCf7ySkouECesAyEYQzqB7fKVC5/CuS.xhvKkHMq', 1, 1, '2025-02-13 07:43:29', '2025-02-11 11:11:14'),
+(14, 'fd5dd5d9-e868-11ef-8583-2ad6c30b0fff', 'jakawan.ch', 'jakawan.ch@test.com', '$2y$10$DHf9sF7RA/mOuhl5Ec.aD.LBO45SPb7bB0K3A7A.Ro6Cvpxw5gXja', 1, 1, '2025-02-13 07:42:30', '2025-02-11 11:11:49'),
+(15, 'd06a19f1-e869-11ef-8583-2ad6c30b0fff', 'arthid.na', 'arthid.na@test.com', '$2y$10$.7dOngLcasBWq5HU1h1MV.I9MKO6oDEz0cw/7nZAuuD9LGJQu.XAm', 1, 1, '2025-02-13 07:49:33', '2025-02-11 11:17:43'),
+(16, 'ef7d1fc6-e869-11ef-8583-2ad6c30b0fff', 'phadung.bo', 'phadung.bo@test.com', '$2y$10$85.aIJqQN.Ad/iT9wj60Nuxb3fvo.6rg4iGU0v6BDBmiIe6PfM7nC', 1, 1, '2025-02-13 07:47:45', '2025-02-11 11:18:35'),
+(17, '887b64c0-e9df-11ef-8583-2ad6c30b0fff', 'onuma.th', 'onuma.th@test.com', '$2y$10$0jmZsM.7VX3Ro/B0KuLHT.PNZgvN.VFwt8muVDrAOwhXKW8WGXZAy', 9, 1, '2025-02-20 09:38:38', '2025-02-13 07:52:54'),
+(18, '9c467273-0a55-11f0-97c4-0242ac120002', 'krisana.th', 'krisana.th@test.com', '$2y$10$zBj9.LvabiwSuHWfwEps0.BPAO3m7.DBrUuEZiZxgrSUTJTc/Xqmi', 1, 1, NULL, '2025-03-26 22:18:37'),
+(19, '9c4fafd8-0a55-11f0-97c4-0242ac120002', 'tanachai.th', 'tanachai.th@test.com', '$2y$10$0xPv8SMt6RCnHj9VPfuIXOEOMgSGgHF3hROt6F4sFWw9NSRQPm/Hq', 1, 1, NULL, '2025-03-26 22:18:38'),
+(20, '9c58ba3b-0a55-11f0-97c4-0242ac120002', 'pimwadee.mo', 'pimwadee.mo@test.com', '$2y$10$l5waG1hCwVGP8ZM8FSM7CuRsoPcZvNJOKX.e1rc1pHrbPRjE0dt7K', 1, 1, NULL, '2025-03-26 22:18:38'),
+(21, '9c61b8e0-0a55-11f0-97c4-0242ac120002', 'rattana.sa', 'rattana.sa@test.com', '$2y$10$T5sgW0el4cW/x8Rf6Kcy8O2lPl.n9EMBQP0gDZjOUcXYEcjVkCnJ2', 1, 1, NULL, '2025-03-26 22:18:38'),
+(22, '9c6b1c51-0a55-11f0-97c4-0242ac120002', 'navaporn.du', 'navaporn.du@test.com', '$2y$10$ZrZmWMs6SOjkV3mZGA6WJOdpTFX7ijG6j5OQLrKLnApqMbslTp62e', 1, 1, NULL, '2025-03-26 22:18:38'),
+(23, '9c740079-0a55-11f0-97c4-0242ac120002', 'choompon.va', 'choompon.va@test.com', '$2y$10$M5XaAmpFaEu6MH.eUa7yseWVmMc3iievKXdsFX/xyfdl4iJGJYSQW', 1, 1, NULL, '2025-03-26 22:18:38'),
+(24, '9c7d2a4f-0a55-11f0-97c4-0242ac120002', 'phatthana.am', 'phatthana.am@test.com', '$2y$10$9s5dAjB8uVmQ3nbSfs5lOeNQmPDlwahDIfhZfdIGIGheSEHV29e0W', 1, 1, NULL, '2025-03-26 22:18:38'),
+(25, '9c862b0b-0a55-11f0-97c4-0242ac120002', 'neeracha.no', 'neeracha.no@test.com', '$2y$10$r/Ri8ELz4keeEcfpVbrlLevjLExXK7wlpEK9yios3dsxVk/1d0kdC', 1, 1, NULL, '2025-03-26 22:18:38'),
+(26, '9c8f2481-0a55-11f0-97c4-0242ac120002', 'kanyanat.su', 'kanyanat.su@test.com', '$2y$10$26z24jYtO8yb9YtjUVFQbuUkb6mWpXAMfCLSV8AnnPHGc3ceGBOk6', 1, 1, NULL, '2025-03-26 22:18:38'),
+(27, '9c98042d-0a55-11f0-97c4-0242ac120002', 'titiworada.tu', 'titiworada.tu@test.com', '$2y$10$9//O69y.fLnUYKsQ.I9A3e6AgZqYcoZwlaBbjaqbyvfMUiD8eefhC', 1, 1, NULL, '2025-03-26 22:18:38'),
+(28, '9ca0e680-0a55-11f0-97c4-0242ac120002', 'sujitra .ho', 'sujitra .ho@test.com', '$2y$10$rZA9cRBcEfBQVYtDsMlwC.r8oEKoSM8QOasHkAfYEkq/yh3/kozXS', 1, 1, NULL, '2025-03-26 22:18:38'),
+(29, '9ca9e14d-0a55-11f0-97c4-0242ac120002', 'pichai .hu', 'pichai .hu@test.com', '$2y$10$zEFAw0CVv7MLMBZz4GpdtOioijLlb1FjOUOeeHfdudCoKUj57hmWy', 1, 1, NULL, '2025-03-26 22:18:38'),
+(30, '9cb2eace-0a55-11f0-97c4-0242ac120002', 'nannaphat .kh', 'nannaphat .kh@test.com', '$2y$10$o.ufeAzZmoUj3oIG7X8FOeuz8AQ5.el1vyEAMABglASjTnc.loMS.', 1, 1, NULL, '2025-03-26 22:18:38'),
+(31, '9cbbf294-0a55-11f0-97c4-0242ac120002', 'wanwipa.sr', 'wanwipa.sr@test.com', '$2y$10$AnzZw49C/7f5Hqf4Y/veBeFeJHc4ggP9DMJPsfp/7esCelX6U9FkK', 1, 1, NULL, '2025-03-26 22:18:38'),
+(32, '9cc50926-0a55-11f0-97c4-0242ac120002', 'sarocha .wo', 'sarocha .wo@test.com', '$2y$10$HeylgQRwiYpDSxszhmb2eenhabH5tGxEqQnhO2pz5P7qpypwNqkzK', 1, 1, NULL, '2025-03-26 22:18:38'),
+(33, '9cce0642-0a55-11f0-97c4-0242ac120002', 'pornthip.ta', 'pornthip.ta@test.com', '$2y$10$bujvOF0mjXLOsS8m8NwXuOJeRjs7tTCK9zSLz750IR2JPmzBfPv0.', 1, 1, NULL, '2025-03-26 22:18:38'),
+(34, '9cd6cc1b-0a55-11f0-97c4-0242ac120002', 'tussanee.du', 'tussanee.du@test.com', '$2y$10$qLvGcCpY2D1cymBwkGHVLeb6kT665aB4hDzI0XQim9HqK6iOnYtgS', 1, 1, NULL, '2025-03-26 22:18:38'),
+(35, '9cdfcb76-0a55-11f0-97c4-0242ac120002', 'wanlop.ia', 'wanlop.ia@test.com', '$2y$10$tFk7Piehddlsv.WAQklJGeFFi07qMVrDmR/y6Ox5y7Y0rrX/BLz4q', 1, 1, NULL, '2025-03-26 22:18:38'),
+(36, '9ce8c30d-0a55-11f0-97c4-0242ac120002', 'peerapong.ki', 'peerapong.ki@test.com', '$2y$10$MvL7yLSFsmADPye4tbBYG.orM4TfB/hA60PtsCK0LGctPMtrJIIRq', 1, 1, NULL, '2025-03-26 22:18:39'),
+(37, '9cf1ccdf-0a55-11f0-97c4-0242ac120002', 'sukrutai.im', 'sukrutai.im@test.com', '$2y$10$inzpsWCk9g77YDcPUFbgAOf3p0uNkW8w1JX3bgePF0jwn/6VW/Gxu', 1, 1, NULL, '2025-03-26 22:18:39'),
+(38, '9cfa9942-0a55-11f0-97c4-0242ac120002', 'chutima.in', 'chutima.in@test.com', '$2y$10$3uVJj3kHtx/dZPWDKrXmWO5GyIOalbiuZm8xw9KwB8..KwGZUuTku', 1, 1, NULL, '2025-03-26 22:18:39'),
+(39, '9d0366ed-0a55-11f0-97c4-0242ac120002', 'pichaya.ch', 'pichaya.ch@test.com', '$2y$10$0E7Ni3kxOPpBGw/2iFLT2OAPtQiAoQrolNJebJr06Ngo4eiPW7WSO', 1, 1, NULL, '2025-03-26 22:18:39'),
+(40, '9d0c50d7-0a55-11f0-97c4-0242ac120002', 'monrada.ph', 'monrada.ph@test.com', '$2y$10$lfv3er420XYDhsNIDhIL3OPK9BfJPzwrHuVc0mLOrZgdSc9PrH9sW', 1, 1, NULL, '2025-03-26 22:18:39'),
+(41, '9d151676-0a55-11f0-97c4-0242ac120002', 'watcharakon.mi', 'watcharakon.mi@test.com', '$2y$10$QlAPq3MSXLl6zxpkeWfpD.lmbfQOQfBBwg0b6cFisuVT.1VEGFLuO', 1, 1, NULL, '2025-03-26 22:18:39'),
+(42, '9d1e0dc3-0a55-11f0-97c4-0242ac120002', 'wicha.th', 'wicha.th@test.com', '$2y$10$Fc7r1m4Cjxm/yLj1kIHiLuZ3ahCTsxLsIw7DL2qcoU/txu9UqWllm', 1, 1, NULL, '2025-03-26 22:18:39'),
+(43, '9d2757f1-0a55-11f0-97c4-0242ac120002', 'faseera.al', 'faseera.al@test.com', '$2y$10$ZFzuxc61kMtQ7rr7aKjexOcP40UmUuVLAy/zPTES4/CPoQT.9FslC', 1, 1, NULL, '2025-03-26 22:18:39'),
+(44, '9d305154-0a55-11f0-97c4-0242ac120002', 'narin.su', 'narin.su@test.com', '$2y$10$iitVw5jC1aGA2rvXMF906OZ/pVz7/1V0bhopI3QqESS5P3PmRUkDi', 1, 1, NULL, '2025-03-26 22:18:39'),
+(45, '9d39566e-0a55-11f0-97c4-0242ac120002', 'krittaya.pi', 'krittaya.pi@test.com', '$2y$10$k3eajJc194W1.WS4OfWijO5Jmh.Cuo36eDiU7ZwlrTh7rfQUxonNW', 1, 1, NULL, '2025-03-26 22:18:39'),
+(46, '9d42613d-0a55-11f0-97c4-0242ac120002', 'ronnachai.la', 'ronnachai.la@test.com', '$2y$10$zmDDJ79P7gYySZ7r16WJ4OdnJBlYg8Qu.xj3H2pwtxnSD379NN5Jy', 1, 1, NULL, '2025-03-26 22:18:39'),
+(47, '9d4b6e5b-0a55-11f0-97c4-0242ac120002', 'natkrita.ji', 'natkrita.ji@test.com', '$2y$10$obSE0QiEWCo.czc6aNx.4e9SdGIQfN4xyP418DOGvKlEodgwgnnKK', 1, 1, NULL, '2025-03-26 22:18:39'),
+(48, '9d545bba-0a55-11f0-97c4-0242ac120002', 'alisa.pu', 'alisa.pu@test.com', '$2y$10$6tpa.3cKHIVjEvg1qCXYguDSX8cDWLakK1VtRE.wooDYLJWo5xdVS', 1, 1, NULL, '2025-03-26 22:18:39'),
+(49, '9d5d18bc-0a55-11f0-97c4-0242ac120002', 'fakthong.ro', 'fakthong.ro@test.com', '$2y$10$huASNHY9YCP4GE67qeSm7OYd3VE6.aUioiRBeXTFQ6Cy8x5XJ0IFC', 1, 1, NULL, '2025-03-26 22:18:39'),
+(50, '9d65d6b2-0a55-11f0-97c4-0242ac120002', 'jutamas.pu', 'jutamas.pu@test.com', '$2y$10$vrXZ37jyaws1zQIbhWRZNenVmpv8IFVRu/DwAtDkSVa5wq7E5eZFO', 1, 1, NULL, '2025-03-26 22:18:39'),
+(51, '9d6ee1c1-0a55-11f0-97c4-0242ac120002', 'jittima.pe', 'jittima.pe@test.com', '$2y$10$vS8PA.8TJFhZ5bZML9ezmeNiJW8g5mcUuVIAJOonphjYRwyF7kkqO', 1, 1, NULL, '2025-03-26 22:18:39'),
+(52, '9d781bd8-0a55-11f0-97c4-0242ac120002', 'thunyawan.de', 'thunyawan.de@test.com', '$2y$10$WkomuuYxmX75vDMgju7b4uv35r2icYJmbWfo0O2VKetUQwLcT/JuC', 1, 1, NULL, '2025-03-26 22:18:39'),
+(53, '9d811b78-0a55-11f0-97c4-0242ac120002', 'wanatchaporn.us', 'wanatchaporn.us@test.com', '$2y$10$RAd/tdldzfB1gyKSF2BAkOlfLszJbDS3g8Lk/FkwlhDdN7K/1HlEC', 1, 1, NULL, '2025-03-26 22:18:40'),
+(54, '9d8a411a-0a55-11f0-97c4-0242ac120002', 'alongkorn.ch', 'alongkorn.ch@test.com', '$2y$10$SRCw3vKeDpKsZo23h2vm5.dcJzQ0u9hFGyxSs7XNFdjnlETW18fou', 1, 1, NULL, '2025-03-26 22:18:40'),
+(55, '9d931d3b-0a55-11f0-97c4-0242ac120002', 'supichya.th', 'supichya.th@test.com', '$2y$10$WH95FnNwBu138fSTahmfD.jXRmgrR33qXJKKJuxoYSEVjpA9OP.tG', 1, 1, NULL, '2025-03-26 22:18:40'),
+(56, '9d9be3a1-0a55-11f0-97c4-0242ac120002', 'patcharada.up', 'patcharada.up@test.com', '$2y$10$uzRml6cQYO3ar4iY9TPTnO6IjM9jF25/H9JYJXGq6rlsSU97CGJWm', 1, 1, NULL, '2025-03-26 22:18:40'),
+(57, '9da4972c-0a55-11f0-97c4-0242ac120002', 'narumon.ma', 'narumon.ma@test.com', '$2y$10$3JG9WaV.twWF79QXlJ6Pa.qbyrMgsQeLtrXLnAeHYGG5nlJMj2pte', 1, 1, NULL, '2025-03-26 22:18:40'),
+(58, '9dad6139-0a55-11f0-97c4-0242ac120002', 'kavisara.ch', 'kavisara.ch@test.com', '$2y$10$c.bYiQnq6SFRMuAXBE2Kf.7JIgBbkdgtj.eXDfm6ppdIhue8gkp.y', 1, 1, NULL, '2025-03-26 22:18:40'),
+(59, '9db62f67-0a55-11f0-97c4-0242ac120002', 'wutthimet.wo', 'wutthimet.wo@test.com', '$2y$10$lDKTfDJTBdaaDmDc2a3sZ.2fWLHmHu1w4dB5ezDf44UNs5Xooo.LK', 1, 1, NULL, '2025-03-26 22:18:40'),
+(60, '9dbf7299-0a55-11f0-97c4-0242ac120002', 'chattama.su', 'chattama.su@test.com', '$2y$10$krIzjUz5DCcEmbpC86AYK.92oYwFAFaGFpbNqSfhYe4DNS5Vsp0Oi', 1, 1, NULL, '2025-03-26 22:18:40'),
+(61, '9dc87d55-0a55-11f0-97c4-0242ac120002', 'namfon.kl', 'namfon.kl@test.com', '$2y$10$SFwOSKEPpVYiSgx.k1WBjODeOfxfujHyu2BO8lrdygViwgwuArVRW', 1, 1, NULL, '2025-03-26 22:18:40'),
+(62, '9dd15131-0a55-11f0-97c4-0242ac120002', 'sirorat.ke', 'sirorat.ke@test.com', '$2y$10$kZ7NATqRkbcthuKbfUF.FOooN79dTV7DXfoNHhjVxARfdmm4YM.7y', 1, 1, NULL, '2025-03-26 22:18:40'),
+(63, '9dda32d7-0a55-11f0-97c4-0242ac120002', 'natcha.ru', 'natcha.ru@test.com', '$2y$10$2TU5PhiW0MlgWcu15CPbCeqijfCP8sf2QFg8nrLtS9vw1Mb1zVVwy', 1, 1, NULL, '2025-03-26 22:18:40'),
+(64, '9de3276f-0a55-11f0-97c4-0242ac120002', 'lalada.ra', 'lalada.ra@test.com', '$2y$10$r6zTE8R9IGQJhzLw/wbHQuHDu.rqZCii8WvTp4xsSvBKk0SSXikeS', 1, 1, NULL, '2025-03-26 22:18:40'),
+(65, '9dec376a-0a55-11f0-97c4-0242ac120002', 'sirawich.ke', 'sirawich.ke@test.com', '$2y$10$NLGOugrHsMLlXqtGTdpLte/999RQ4M2anDhSCQC/ND7vyk6MioxFC', 1, 1, NULL, '2025-03-26 22:18:40');
 
 -- --------------------------------------------------------
 
@@ -1985,7 +2040,13 @@ INSERT INTO `payment_item` (`id`, `request_id`, `expense_id`, `text`, `text2`, `
 (1, 1, 5, 'บูธ ป้าย', 'บูธ 50000 ป้าย 20000', 70000.00, 0.00, 0.00, 1, NULL, '2025-03-20 12:13:23'),
 (2, 1, 6, 'ขาไป', 'รถตู้ 2 คัน 1500', 3000.00, 0.00, 0.00, 1, NULL, '2025-03-20 12:13:23'),
 (3, 1, 15, 'เสื้อ 200', 'เสื้อตัวละ 200', 4000.00, 0.00, 0.00, 1, NULL, '2025-03-20 12:13:23'),
-(4, 2, 5, 'งานโครงสร้าง', 'ขนาด 1 x 1', 100.00, 7.00, 0.00, 1, NULL, '2025-03-20 16:50:46');
+(4, 2, 5, 'งานโครงสร้าง', 'ขนาด 1 x 1', 100.00, 7.00, 0.00, 1, NULL, '2025-03-20 16:50:46'),
+(5, 3, 5, 'aaaa', 'aa', 1000.00, 70.00, 0.00, 1, NULL, '2025-03-26 20:37:39'),
+(6, 3, 8, 'bbbb', 'bb', 1000.00, 70.00, 0.00, 1, NULL, '2025-03-26 20:37:39'),
+(7, 3, 5, 'cccc', 'cc', 2000.00, 140.00, 0.00, 1, NULL, '2025-03-26 20:37:39'),
+(8, 3, 8, 'dddd', 'dd', 2000.00, 140.00, 0.00, 1, NULL, '2025-03-26 20:37:39'),
+(9, 3, 5, 'eeee', 'ee', 1000.00, 70.00, 0.00, 1, NULL, '2025-03-26 21:05:09'),
+(10, 3, 8, 'ffff', 'ff', 1000.00, 70.00, 0.00, 1, NULL, '2025-03-26 21:05:09');
 
 -- --------------------------------------------------------
 
@@ -2013,7 +2074,10 @@ INSERT INTO `payment_remark` (`id`, `request_id`, `login_id`, `text`, `status`, 
 (4, 2, 2, 'ไม่ได้แนบเอกสาร', 1, '2025-03-20 16:56:04'),
 (5, 2, 2, '', 2, '2025-03-20 16:57:13'),
 (6, 2, 2, '', 3, '2025-03-20 16:57:41'),
-(7, 2, 2, 'อนุมัติ', 4, '2025-03-20 16:57:59');
+(7, 2, 2, 'อนุมัติ', 4, '2025-03-20 16:57:59'),
+(8, 3, 1, '', 2, '2025-03-26 21:08:35'),
+(9, 3, 1, '', 3, '2025-03-26 21:09:03'),
+(10, 3, 1, '', 4, '2025-03-26 21:09:32');
 
 -- --------------------------------------------------------
 
@@ -2047,7 +2111,8 @@ CREATE TABLE `payment_request` (
 
 INSERT INTO `payment_request` (`id`, `uuid`, `last`, `login_id`, `department_number`, `doc_date`, `order_number`, `receiver`, `type`, `cheque_bank`, `cheque_branch`, `cheque_number`, `cheque_date`, `action`, `status`, `updated`, `created`) VALUES
 (1, '0c1c3544-054a-11f0-a87c-2ad6c30b0fff', 1, 1, 'MKt22222', '2025-03-20', 'so 45566', 'teerapat', 1, '', '', '', '1970-01-01', 1, 4, '2025-03-20 12:16:37', '2025-03-20 12:13:23'),
-(2, 'cc26505c-0570-11f0-a87c-2ad6c30b0fff', 2, 2, 'PV-6800XX', '2025-03-20', 'SO68030017', 'นาย A', 1, '', '', '', '1970-01-01', 1, 4, '2025-03-20 16:57:59', '2025-03-20 16:50:46');
+(2, 'cc26505c-0570-11f0-a87c-2ad6c30b0fff', 2, 2, 'PV-6800XX', '2025-03-20', 'SO68030017', 'นาย A', 1, '', '', '', '1970-01-01', 1, 4, '2025-03-20 16:57:59', '2025-03-20 16:50:46'),
+(3, '7d98e783-0a47-11f0-97c4-0242ac120002', 3, 1, 'IT-680009', '2025-03-26', 'SO68030017', 'IT', 1, '', '', '', '1970-01-01', 1, 4, '2025-03-26 21:09:32', '2025-03-26 20:37:39');
 
 -- --------------------------------------------------------
 
@@ -2718,6 +2783,7 @@ CREATE TABLE `user` (
   `position_id` int(11) NOT NULL,
   `manager_id` int(11) DEFAULT NULL,
   `manager_id2` int(11) DEFAULT NULL,
+  `manager_id3` int(11) DEFAULT NULL,
   `contact` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -2725,24 +2791,72 @@ CREATE TABLE `user` (
 -- Dumping data for table `user`
 --
 
-INSERT INTO `user` (`id`, `login`, `firstname`, `lastname`, `department_id`, `position_id`, `manager_id`, `manager_id2`, `contact`) VALUES
-(1, 1, 'Admin', 'System', 1, 0, 1, 2, ''),
-(2, 2, 'User', 'System', 0, 0, 5, 0, ''),
-(3, 3, 'ธีรพัฒน์', 'ทองสุโชติ', 0, 0, 5, 0, 'Admin'),
-(4, 4, 'บัญชี', 'บัญชี', 0, 0, 5, 0, '044444'),
-(5, 5, 'คลังสินค้า', 'คลังสินค้า', 0, 0, 1, 0, 'คลังสินค้า'),
-(6, 6, 'จุฑามาศ', 'พันธุ์สกุล', 0, 0, 2, 0, ''),
-(7, 7, 'สุภนิดา', 'จันทร์หอม', 0, 0, 2, 0, ''),
-(8, 8, 'กมลวรรณ', 'สุขสำราญ', 0, 0, 2, 0, ''),
-(9, 9, 'ไธพัตย์', 'เมฆจรัสวิทย์', 0, 0, 2, 0, ''),
-(10, 10, 'เอมิกา', 'อรุณสิคะพันธ์', 0, 0, 2, 0, ''),
-(11, 11, 'พิชญาภา', 'บุญมา', 0, 0, 2, 0, ''),
-(12, 12, 'จารุวรรณ', 'บุญยาน', 0, 0, 2, 0, ''),
-(13, 13, 'บุญญากร', 'เบ็ญสตาล', 0, 0, 2, 0, ''),
-(14, 14, 'จักรวาล', 'จันทร์นุช', 0, 0, 5, 0, ''),
-(15, 15, 'อาทิตย์', 'นาพรม', 0, 0, 5, 0, ''),
-(16, 16, 'ผดุง', 'บุญส่ง', 0, 0, 5, 0, ''),
-(17, 17, 'อรอุมา', 'ทองช้อย', 0, 0, 1, 0, '');
+INSERT INTO `user` (`id`, `login`, `firstname`, `lastname`, `department_id`, `position_id`, `manager_id`, `manager_id2`, `manager_id3`, `contact`) VALUES
+(1, 1, 'Admin', 'System', 1, 0, 1, 2, 0, ''),
+(2, 2, 'User', 'System', 0, 0, 5, 0, 0, ''),
+(3, 3, 'ธีรพัฒน์', 'ทองสุโชติ', 0, 0, 5, 0, 0, 'Admin'),
+(4, 4, 'บัญชี', 'บัญชี', 0, 0, 5, 0, 0, '044444'),
+(5, 5, 'คลังสินค้า', 'คลังสินค้า', 0, 0, 1, 0, 0, 'คลังสินค้า'),
+(6, 6, 'จุฑามาศ', 'พันธุ์สกุล', 0, 0, 2, 0, 0, ''),
+(7, 7, 'สุภนิดา', 'จันทร์หอม', 0, 0, 2, 0, 0, ''),
+(8, 8, 'กมลวรรณ', 'สุขสำราญ', 0, 0, 2, 0, 0, ''),
+(9, 9, 'ไธพัตย์', 'เมฆจรัสวิทย์', 0, 0, 2, 0, 0, ''),
+(10, 10, 'เอมิกา', 'อรุณสิคะพันธ์', 0, 0, 2, 0, 0, ''),
+(11, 11, 'พิชญาภา', 'บุญมา', 0, 0, 2, 0, 0, ''),
+(12, 12, 'จารุวรรณ', 'บุญยาน', 0, 0, 2, 0, 0, ''),
+(13, 13, 'บุญญากร', 'เบ็ญสตาล', 0, 0, 2, 0, 0, ''),
+(14, 14, 'จักรวาล', 'จันทร์นุช', 0, 0, 5, 0, 0, ''),
+(15, 15, 'อาทิตย์', 'นาพรม', 0, 0, 5, 0, 0, ''),
+(16, 16, 'ผดุง', 'บุญส่ง', 0, 0, 5, 0, 0, ''),
+(17, 17, 'อรอุมา', 'ทองช้อย', 0, 0, 1, 0, 0, ''),
+(18, 18, 'กฤษณะ', 'ถนอมทรัพย์', 3, 0, 0, 0, 0, ''),
+(19, 19, 'ธนชัย', 'ถนอมทรัพย์', 3, 0, 0, 0, 0, ''),
+(20, 20, 'พิมพ์วดี', 'มนต์อภิวันท์', 1, 0, 0, 0, 0, ''),
+(21, 21, 'รัตนา', 'สะอาด', 1, 0, 0, 0, 0, ''),
+(22, 22, 'นวพร', 'ดุลอำนวย', 1, 0, 0, 0, 0, ''),
+(23, 23, 'ชุมพล', 'วันนิ', 1, 0, 0, 0, 0, ''),
+(24, 24, 'พัฒนา', 'อ่ำพันธ์', 1, 0, 0, 0, 0, ''),
+(25, 25, 'ณีรฌา', 'หนูหริ่ง', 1, 0, 0, 0, 0, ''),
+(26, 26, 'กัญญาณัฐ', 'สุขนาแซง', 1, 0, 0, 0, 0, ''),
+(27, 27, 'ฐิติวรดา', 'ตันทองมาก', 1, 0, 0, 0, 0, ''),
+(28, 28, 'สุจิตรา', 'หงสา', 1, 0, 0, 0, 0, ''),
+(29, 29, 'พิชัย', 'หันตุลา', 1, 0, 0, 0, 0, ''),
+(30, 30, 'นันท์นภัส', 'โฆษิตรัฐฐิติกุล', 1, 0, 0, 0, 0, ''),
+(31, 31, 'วัลวิภา', 'ศรีกุตา', 1, 0, 0, 0, 0, ''),
+(32, 32, 'สโรชา', 'วงษ์ทอง', 1, 0, 0, 0, 0, ''),
+(33, 33, 'พรทิพย์', 'ธรรมาภิรมย์', 2, 0, 0, 0, 0, ''),
+(34, 34, 'ทัศนีย์', 'ดวงดีวงค์', 2, 0, 0, 0, 0, ''),
+(35, 35, 'วัลลภ', 'เอี่ยมศิริกุลมิตร', 4, 0, 0, 0, 0, ''),
+(36, 36, 'พีรพงศ์', 'กิจทรานันชัย', 4, 0, 0, 0, 0, ''),
+(37, 37, 'สุขฤทัย', 'อิ่มเอม', 4, 0, 0, 0, 0, ''),
+(38, 38, 'ชุติมา', 'อินทร์ภักดี', 4, 0, 0, 0, 0, ''),
+(39, 39, 'พิชญา', 'ปลื้มปัญญา', 4, 0, 0, 0, 0, ''),
+(40, 40, 'มนรดา', 'ปั้นอุทัย', 4, 0, 0, 0, 0, ''),
+(41, 41, 'วัชรากร', 'มีสัตย์', 4, 0, 0, 0, 0, ''),
+(42, 42, 'วิชา', 'ธนาพันธ์สิน', 4, 0, 0, 0, 0, ''),
+(43, 43, 'ฟาซีรา', 'อาลี', 5, 0, 0, 0, 0, ''),
+(44, 44, 'ณรินร์', 'สุขสงวน', 5, 0, 0, 0, 0, ''),
+(45, 45, 'กฤตยา', 'พินิจพงษ์', 5, 0, 0, 0, 0, ''),
+(46, 46, 'รณชัย', 'ละหงษ์', 5, 0, 0, 0, 0, ''),
+(47, 47, 'ณัฐกฤตา', 'จินาวงค์', 5, 0, 0, 0, 0, ''),
+(48, 48, 'อลิษา', 'พันเทศ', 5, 0, 0, 0, 0, ''),
+(49, 49, 'ฟักทอง', 'รอดเรืองฤทธิ์', 5, 0, 0, 0, 0, ''),
+(50, 50, 'จุฑามาศ', 'พันธุ์กุล', 5, 0, 0, 0, 0, ''),
+(51, 51, 'จิตติมา', 'เพิ่มกาวี', 6, 0, 0, 0, 0, ''),
+(52, 52, 'ธัญวรรณ', 'ดีชัยยะ', 6, 0, 0, 0, 0, ''),
+(53, 53, 'วนัชพร', 'อุสมร', 6, 0, 0, 0, 0, ''),
+(54, 54, 'อลงกรณ์', 'เชื้อกรด', 7, 0, 0, 0, 0, ''),
+(55, 55, 'สุพิชญา', 'ถนัดวณิชย์', 8, 0, 0, 0, 0, ''),
+(56, 56, 'พัชรดา', 'อุปลกะลิน', 8, 0, 0, 0, 0, ''),
+(57, 57, 'นฤมล', 'มณีชัย', 8, 0, 0, 0, 0, ''),
+(58, 58, 'กวิสรา', 'จันทร์เปรม', 8, 0, 0, 0, 0, ''),
+(59, 59, 'วุฒิเมศร์', 'วงษ์กิตติ์ดนัย', 8, 0, 0, 0, 0, ''),
+(60, 60, 'ฉัฐมา', 'สุทธิพงษ์คูณ', 8, 0, 0, 0, 0, ''),
+(61, 61, 'น้ำฝน', 'คล้ายเปีย', 8, 0, 0, 0, 0, ''),
+(62, 62, 'ศิโรรัตน์', 'เกษรังสรรค์', 8, 0, 0, 0, 0, ''),
+(63, 63, 'ณัชชา', 'เรืองมโนธรรม', 8, 0, 0, 0, 0, ''),
+(64, 64, 'ลลดา', 'รัตนวันธุ์', 8, 0, 0, 0, 0, ''),
+(65, 65, 'ณัฐพล', 'เลิศปัญญา', 9, 0, 0, 0, 0, '');
 
 --
 -- Indexes for dumped tables
@@ -3267,7 +3381,7 @@ ALTER TABLE `customer`
 -- AUTO_INCREMENT for table `department`
 --
 ALTER TABLE `department`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `estimate_file`
@@ -3333,7 +3447,7 @@ ALTER TABLE `issue_request`
 -- AUTO_INCREMENT for table `login`
 --
 ALTER TABLE `login`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=66;
 
 --
 -- AUTO_INCREMENT for table `outstanding_file`
@@ -3369,19 +3483,19 @@ ALTER TABLE `payment_file`
 -- AUTO_INCREMENT for table `payment_item`
 --
 ALTER TABLE `payment_item`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `payment_remark`
 --
 ALTER TABLE `payment_remark`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `payment_request`
 --
 ALTER TABLE `payment_request`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `petty_file`
@@ -3519,7 +3633,7 @@ ALTER TABLE `system`
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=66;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

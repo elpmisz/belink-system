@@ -81,7 +81,7 @@ include_once(__DIR__ . "/../layout/header.php");
         </div>
       </div>
       <div class="row mb-2">
-        <label class="col-xl-2 offset-xl-2 col-form-label">Total Sales</label>
+        <label class="col-xl-2 offset-xl-2 col-form-label">ยอดขาย</label>
         <div class="col-xl-4">
           <input type="number" class="form-control form-control-sm" name="budget" min="0" step="0.01" required>
           <div class="invalid-feedback">

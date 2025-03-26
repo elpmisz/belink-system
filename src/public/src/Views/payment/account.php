@@ -128,11 +128,6 @@ $remarks = $PAYMENT->payment_remark_view([$uuid]);
                   <th width="10%">VAT 7%</th>
                   <th width="10%">W/T</th>
                   <th width="10%">ยอดสุทธิ</th>
-                  <?php
-                  if (!empty($row['order_number'])) {
-                    echo '<th width="10%">ยอดคงเหลือ</th>';
-                  }
-                  ?>
                 </tr>
               </thead>
               <tbody>
@@ -148,11 +143,6 @@ $remarks = $PAYMENT->payment_remark_view([$uuid]);
                     <td class="text-right">
                       <?php echo number_format($item['total'], 2) ?>
                     </td>
-                    <?php
-                    if (!empty($row['order_number'])) {
-                      echo '<td class="text-right">' . number_format($item['remain'], 2) . '</td>';
-                    }
-                    ?>
                   </tr>
                 <?php endforeach; ?>
                 <tr>
