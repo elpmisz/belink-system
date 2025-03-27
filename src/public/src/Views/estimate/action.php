@@ -298,3 +298,14 @@ if ($action === "expense-select") {
     die($e->getMessage());
   }
 }
+
+if ($action === "order-select") {
+  try {
+    $keyword = (isset($_POST['q']) ? $VALIDATION->input($_POST['q']) : "");
+    $result = $ESTIMATE->order_select($keyword);
+
+    echo json_encode($result);
+  } catch (PDOException $e) {
+    die($e->getMessage());
+  }
+}

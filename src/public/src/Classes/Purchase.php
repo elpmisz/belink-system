@@ -143,7 +143,8 @@ class Purchase
     FROM belink.purchase_item a
     WHERE a.status = 1
     AND a.request_id = ?
-    AND a.name = ?
+    AND a.expense_id = ?
+    AND a.text = ?
     AND a.amount = ?
     AND a.unit = ?
     AND a.estimate = ?";
@@ -154,7 +155,7 @@ class Purchase
 
   public function purchase_item_insert($data)
   {
-    $sql = "INSERT INTO belink.purchase_item(`request_id`, `name`, `amount`, `unit`, `estimate`) VALUES(?,?,?,?,?)";
+    $sql = "INSERT INTO belink.purchase_item(`request_id`, `expense_id`, `text`, `amount`, `unit`, `estimate`) VALUES(?,?,?,?,?,?)";
     $stmt = $this->dbcon->prepare($sql);
     return $stmt->execute($data);
   }
@@ -162,13 +163,17 @@ class Purchase
   public function purchase_item_view($data)
   {
     $sql = "SELECT b.id,
-    b.`name`,
+    b.expense_id,
+    CONCAT('[',c.code,'] ',c.name) expense_name,
+    b.`text`,
     b.amount,
     b.unit,
     b.estimate
     FROM belink.purchase_request a
     LEFT JOIN belink.purchase_item b
     ON a.id = b.request_id
+    LEFT JOIN belink.expense c
+    ON b.expense_id = c.id
     WHERE a.`uuid` = ?
     AND b.`status` = 1
     ORDER BY b.id ASC";
@@ -194,7 +199,8 @@ class Purchase
   public function purchase_item_update($data)
   {
     $sql = "UPDATE belink.purchase_item SET
-    `name` = ?,
+    `expense_id` = ?,
+    `text` = ?,
     `amount` = ?,
     `unit` = ?,
     estimate = ?,
@@ -302,6 +308,88 @@ class Purchase
     ON a.login_id = c.login
     WHERE b.`uuid` = ?
     ORDER BY a.created DESC";
+    $stmt = $this->dbcon->prepare($sql);
+    $stmt->execute($data);
+    return $stmt->fetchAll();
+  }
+
+  public function expense_select($keyword, $order)
+  {
+    $sql = "SELECT a.id,CONCAT('[',a.`code`,'] ',a.`name`) `text`
+    FROM belink.expense a
+    WHERE a.`status` = 1
+    AND a.`type` = 2 ";
+    if (!empty($keyword)) {
+      $sql .= " AND (a.code LIKE '%{$keyword}%' OR a.name LIKE '%{$keyword}%') ";
+    }
+    if (!empty($order)) {
+      $sql .= " AND b.order_number = '{$order}' ";
+    }
+    $stmt = $this->dbcon->prepare($sql);
+    $stmt->execute();
+    return $stmt->fetchAll();
+  }
+
+  public function purchase_select($keyword)
+  {
+    $sql = "SELECT a.department_number `id`,
+    a.department_number `text`
+    FROM belink.purchase_request a  ";
+    if (!empty($keyword)) {
+      $sql .= " WHERE (a.department_number LIKE '%{$keyword}%') ";
+    }
+    $sql .= " GROUP BY a.department_number ORDER BY a.department_number ASC ";
+    $stmt = $this->dbcon->prepare($sql);
+    $stmt->execute();
+    return $stmt->fetchAll();
+  }
+
+  public function expense_fix_select($keyword, $order)
+  {
+    $sql = "SELECT a.expense_id id,
+    CONCAT('[',c.`code`,'] ',c.`name`) `text`
+    FROM belink.estimate_item a
+    LEFT JOIN belink.estimate_request b
+    ON a.request_id = b.id
+    LEFT JOIN belink.expense c
+    ON a.expense_id = c.id
+    WHERE a.`status` = 1 ";
+    if (!empty($keyword)) {
+      $sql .= " AND (c.code LIKE '%{$keyword}%' OR c.name LIKE '%{$keyword}%') ";
+    }
+    if (!empty($order)) {
+      $sql .= " AND b.order_number = '{$order}' ";
+    }
+    $stmt = $this->dbcon->prepare($sql);
+    $stmt->execute();
+    return $stmt->fetchAll();
+  }
+
+  public function get_expense($data)
+  {
+    $sql = "SELECT b.expense_id,
+      CONCAT('[',c.`code`,'] ',c.`name`) expense_name,
+      b.estimate,
+      IFNULL(d.payment,0) payment,
+      IFNULL((b.estimate - IFNULL(d.payment,0)),0) remain
+    FROM belink.estimate_request a
+    LEFT JOIN belink.estimate_item b
+    ON a.id = b.request_id
+    LEFT JOIN belink.expense c
+    ON b.expense_id = c.id
+    LEFT JOIN 
+    (
+      SELECT a.order_number,b.expense_id,(SUM(b.amount) + SUM(b.vat) - SUM(b.wt)) payment
+      FROM belink.payment_request a
+      LEFT JOIN belink.payment_item b
+      ON a.id = b.request_id
+      WHERE b.status = 1
+      GROUP BY a.order_number,b.expense_id
+    ) d
+    ON a.order_number = d.order_number
+    AND b.expense_id = d.expense_id
+    WHERE a.order_number = ?
+    AND b.`status` = 1";
     $stmt = $this->dbcon->prepare($sql);
     $stmt->execute($data);
     return $stmt->fetchAll();

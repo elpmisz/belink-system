@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: database
--- Generation Time: Mar 26, 2025 at 03:26 PM
+-- Generation Time: Mar 27, 2025 at 03:00 PM
 -- Server version: 11.6.2-MariaDB-ubu2404
 -- PHP Version: 8.2.27
 
@@ -1823,7 +1823,7 @@ CREATE TABLE `login` (
 --
 
 INSERT INTO `login` (`id`, `uuid`, `username`, `email`, `password`, `level`, `status`, `updated`, `created`) VALUES
-(1, '8578263a-d0ae-11ef-91c3-0242ac120002', 'admin', 'admin@test.com', '$2y$10$W08w.crPDLXzroZDNFirJObaHK91H.0D7ZszaRR6iQQi9W32.tnci', 9, 1, '2025-03-11 20:15:32', '2023-11-23 09:42:54'),
+(1, '8578263a-d0ae-11ef-91c3-0242ac120002', 'admin.test', 'admin@test.com', '$2y$10$W08w.crPDLXzroZDNFirJObaHK91H.0D7ZszaRR6iQQi9W32.tnci', 9, 1, '2025-03-27 11:08:47', '2023-11-23 09:42:54'),
 (2, '857827b5-d0ae-11ef-91c3-0242ac120002', 'user', 'user@test.com', '$2y$10$jwAmc2BoS2EwrzfL2LkYOel9FZHc9LSbRn4sge.SvmPiOyjoSgLVq', 1, 1, '2025-02-11 00:38:49', '2025-01-03 08:42:52'),
 (3, '088ace55-e80f-11ef-8583-2ad6c30b0fff', 'n0866881414', 'n0866881414@test.com', '$2y$10$wH1zRiGz7/.zwlccIxlKoOW2Ph2g061zMc5PBs9a.5zaYhOCH9XpO', 1, 1, '2025-02-11 00:39:00', '2025-02-11 00:27:53'),
 (4, '333f7a89-e80f-11ef-8583-2ad6c30b0fff', 'acount', 'acount@test.com', '$2y$10$PWvUBBWbA.X8Z6sK1.g9jOAesSlGUgIVUMGaJQwY3yYiBnGsUKRre', 1, 1, '2025-02-11 00:39:21', '2025-02-11 00:29:05'),
@@ -2005,13 +2005,6 @@ CREATE TABLE `payment_file` (
   `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `payment_file`
---
-
-INSERT INTO `payment_file` (`id`, `request_id`, `name`, `status`, `updated`, `created`) VALUES
-(1, 2, '815c143ae5911cbd7e9369bbe3ffa1f4.webp', 1, NULL, '2025-03-20 16:56:45');
-
 -- --------------------------------------------------------
 
 --
@@ -2032,22 +2025,6 @@ CREATE TABLE `payment_item` (
   `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `payment_item`
---
-
-INSERT INTO `payment_item` (`id`, `request_id`, `expense_id`, `text`, `text2`, `amount`, `vat`, `wt`, `status`, `updated`, `created`) VALUES
-(1, 1, 5, 'บูธ ป้าย', 'บูธ 50000 ป้าย 20000', 70000.00, 0.00, 0.00, 1, NULL, '2025-03-20 12:13:23'),
-(2, 1, 6, 'ขาไป', 'รถตู้ 2 คัน 1500', 3000.00, 0.00, 0.00, 1, NULL, '2025-03-20 12:13:23'),
-(3, 1, 15, 'เสื้อ 200', 'เสื้อตัวละ 200', 4000.00, 0.00, 0.00, 1, NULL, '2025-03-20 12:13:23'),
-(4, 2, 5, 'งานโครงสร้าง', 'ขนาด 1 x 1', 100.00, 7.00, 0.00, 1, NULL, '2025-03-20 16:50:46'),
-(5, 3, 5, 'aaaa', 'aa', 1000.00, 70.00, 0.00, 1, NULL, '2025-03-26 20:37:39'),
-(6, 3, 8, 'bbbb', 'bb', 1000.00, 70.00, 0.00, 1, NULL, '2025-03-26 20:37:39'),
-(7, 3, 5, 'cccc', 'cc', 2000.00, 140.00, 0.00, 1, NULL, '2025-03-26 20:37:39'),
-(8, 3, 8, 'dddd', 'dd', 2000.00, 140.00, 0.00, 1, NULL, '2025-03-26 20:37:39'),
-(9, 3, 5, 'eeee', 'ee', 1000.00, 70.00, 0.00, 1, NULL, '2025-03-26 21:05:09'),
-(10, 3, 8, 'ffff', 'ff', 1000.00, 70.00, 0.00, 1, NULL, '2025-03-26 21:05:09');
-
 -- --------------------------------------------------------
 
 --
@@ -2062,22 +2039,6 @@ CREATE TABLE `payment_remark` (
   `status` int(11) NOT NULL,
   `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `payment_remark`
---
-
-INSERT INTO `payment_remark` (`id`, `request_id`, `login_id`, `text`, `status`, `created`) VALUES
-(1, 1, 1, '', 2, '2025-03-20 12:16:15'),
-(2, 1, 1, '', 3, '2025-03-20 12:16:28'),
-(3, 1, 1, '', 4, '2025-03-20 12:16:37'),
-(4, 2, 2, 'ไม่ได้แนบเอกสาร', 1, '2025-03-20 16:56:04'),
-(5, 2, 2, '', 2, '2025-03-20 16:57:13'),
-(6, 2, 2, '', 3, '2025-03-20 16:57:41'),
-(7, 2, 2, 'อนุมัติ', 4, '2025-03-20 16:57:59'),
-(8, 3, 1, '', 2, '2025-03-26 21:08:35'),
-(9, 3, 1, '', 3, '2025-03-26 21:09:03'),
-(10, 3, 1, '', 4, '2025-03-26 21:09:32');
 
 -- --------------------------------------------------------
 
@@ -2104,15 +2065,6 @@ CREATE TABLE `payment_request` (
   `updated` datetime DEFAULT NULL,
   `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `payment_request`
---
-
-INSERT INTO `payment_request` (`id`, `uuid`, `last`, `login_id`, `department_number`, `doc_date`, `order_number`, `receiver`, `type`, `cheque_bank`, `cheque_branch`, `cheque_number`, `cheque_date`, `action`, `status`, `updated`, `created`) VALUES
-(1, '0c1c3544-054a-11f0-a87c-2ad6c30b0fff', 1, 1, 'MKt22222', '2025-03-20', 'so 45566', 'teerapat', 1, '', '', '', '1970-01-01', 1, 4, '2025-03-20 12:16:37', '2025-03-20 12:13:23'),
-(2, 'cc26505c-0570-11f0-a87c-2ad6c30b0fff', 2, 2, 'PV-6800XX', '2025-03-20', 'SO68030017', 'นาย A', 1, '', '', '', '1970-01-01', 1, 4, '2025-03-20 16:57:59', '2025-03-20 16:50:46'),
-(3, '7d98e783-0a47-11f0-97c4-0242ac120002', 3, 1, 'IT-680009', '2025-03-26', 'SO68030017', 'IT', 1, '', '', '', '1970-01-01', 1, 4, '2025-03-26 21:09:32', '2025-03-26 20:37:39');
 
 -- --------------------------------------------------------
 
@@ -2534,6 +2486,13 @@ CREATE TABLE `purchase_file` (
   `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `purchase_file`
+--
+
+INSERT INTO `purchase_file` (`id`, `request_id`, `name`, `status`, `updated`, `created`) VALUES
+(1, 1, 'c03188368ae68854af85b7d3fc0b9e3e.pdf', 1, NULL, '2025-03-27 17:13:03');
+
 -- --------------------------------------------------------
 
 --
@@ -2543,8 +2502,9 @@ CREATE TABLE `purchase_file` (
 CREATE TABLE `purchase_item` (
   `id` int(11) NOT NULL,
   `request_id` int(11) NOT NULL,
-  `name` varchar(100) NOT NULL,
-  `amount` int(11) NOT NULL,
+  `expense_id` int(11) NOT NULL,
+  `text` varchar(100) NOT NULL,
+  `amount` decimal(20,2) NOT NULL,
   `unit` varchar(50) NOT NULL,
   `estimate` decimal(20,2) NOT NULL,
   `status` int(11) NOT NULL DEFAULT 1,
@@ -2556,9 +2516,11 @@ CREATE TABLE `purchase_item` (
 -- Dumping data for table `purchase_item`
 --
 
-INSERT INTO `purchase_item` (`id`, `request_id`, `name`, `amount`, `unit`, `estimate`, `status`, `updated`, `created`) VALUES
-(1, 1, 'เก้าอี้สำนักงาน', 5, 'ชิ้น', 4500.00, 1, '2025-03-25 20:28:22', '2025-03-20 10:52:36'),
-(2, 1, 'Monitor', 3, 'ชิ้น', 10000.00, 1, '2025-03-25 20:28:22', '2025-03-20 10:52:36');
+INSERT INTO `purchase_item` (`id`, `request_id`, `expense_id`, `text`, `amount`, `unit`, `estimate`, `status`, `updated`, `created`) VALUES
+(1, 1, 5, 'aaa', 1500.00, 'ea', 1500.00, 1, '2025-03-27 18:52:41', '2025-03-27 17:13:03'),
+(2, 1, 8, 'bbb', 1000.00, 'ea', 1000.00, 1, '2025-03-27 18:52:41', '2025-03-27 17:13:03'),
+(3, 1, 5, 'ccc', 1000.00, 'ea', 1000.00, 1, '2025-03-27 18:52:41', '2025-03-27 17:13:03'),
+(4, 1, 8, 'ddd', 1500.00, 'ea', 1500.00, 1, '2025-03-27 18:52:41', '2025-03-27 18:50:41');
 
 -- --------------------------------------------------------
 
@@ -2580,7 +2542,7 @@ CREATE TABLE `purchase_remark` (
 --
 
 INSERT INTO `purchase_remark` (`id`, `request_id`, `login_id`, `text`, `status`, `created`) VALUES
-(1, 1, 1, '', 2, '2025-03-20 11:51:56');
+(1, 1, 1, '', 2, '2025-03-27 18:54:52');
 
 -- --------------------------------------------------------
 
@@ -2613,7 +2575,7 @@ CREATE TABLE `purchase_request` (
 --
 
 INSERT INTO `purchase_request` (`id`, `uuid`, `last`, `login_id`, `department_number`, `doc_date`, `po`, `department`, `date`, `order_number`, `reference`, `objective`, `remark`, `action`, `status`, `updated`, `created`) VALUES
-(1, 'c2a1b7b5-053e-11f0-a87c-2ad6c30b0fff', 1, 1, 'dep-test', '2025-03-20', 'po-test', 'it-test', '2025-03-24', 'SO68030017', 'refer-test', 'reason-test', 'remark-test', 1, 2, '2025-03-25 20:28:22', '2025-03-20 10:52:35');
+(1, '34a9bced-0af4-11f0-914b-0242ac120005', 1, 1, 'it-test', '2025-03-27', 'po-test', 'it-test', '2025-03-27', 'SO68030017', 'refer-test', 'reason-test', 'remark-test', 1, 2, '2025-03-27 18:54:52', '2025-03-27 17:13:03');
 
 -- --------------------------------------------------------
 
@@ -3477,25 +3439,25 @@ ALTER TABLE `outstanding_request`
 -- AUTO_INCREMENT for table `payment_file`
 --
 ALTER TABLE `payment_file`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `payment_item`
 --
 ALTER TABLE `payment_item`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `payment_remark`
 --
 ALTER TABLE `payment_remark`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `payment_request`
 --
 ALTER TABLE `payment_request`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `petty_file`
@@ -3573,13 +3535,13 @@ ALTER TABLE `product_warehouse`
 -- AUTO_INCREMENT for table `purchase_file`
 --
 ALTER TABLE `purchase_file`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `purchase_item`
 --
 ALTER TABLE `purchase_item`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `purchase_remark`

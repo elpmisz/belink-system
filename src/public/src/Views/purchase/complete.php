@@ -125,25 +125,27 @@ $remarks = $PURCHASE->purchase_remark_view([$uuid]);
             <table class="table table-bordered">
               <thead>
                 <tr>
-                  <th width="10%">#</th>
-                  <th width="50%">รายการสินค้า/บริการ</th>
-                  <th width="10%">จำนวน</th>
+                  <th width="5%">#</th>
+                  <th width="20%">รายจ่าย</th>
+                  <th width="20%">รายละเอียด</th>
+                  <th width="10%">จำนวนเงิน</th>
                   <th width="10%">หน่วย</th>
-                  <th width="10%">ราคา</th>
+                  <th width="10%">ประมาณการ<br>ราคา</th>
                 </tr>
               </thead>
               <tbody>
                 <?php foreach ($items as $key => $item) : $key++; ?>
                   <tr>
                     <td class="text-center"><?php echo $key ?></td>
-                    <td class="text-left"><?php echo $item['name'] ?></td>
-                    <td class="text-center"><?php echo $item['amount'] ?></td>
+                    <td class="text-left"><?php echo $item['expense_name'] ?></td>
+                    <td class="text-left"><?php echo $item['text'] ?></td>
+                    <td class="text-right"><?php echo $item['amount'] ?></td>
                     <td class="text-center"><?php echo $item['unit'] ?></td>
                     <td class="text-right"><?php echo number_format($item['estimate'], 2) ?></td>
                   </tr>
                 <?php endforeach; ?>
                 <tr>
-                  <td colspan="4" class="text-right">รวมทั้งสิ้น</td>
+                  <td colspan="5" class="text-right">รวมทั้งสิ้น</td>
                   <td class="text-right">
                     <span class="all-total"><?php echo number_format($total['total'], 2) ?></span>
                   </td>

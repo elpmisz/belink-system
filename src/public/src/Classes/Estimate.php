@@ -433,6 +433,21 @@ class Estimate
     return $stmt->fetchAll();
   }
 
+  public function order_select($keyword)
+  {
+    $sql = "SELECT a.order_number `id`, 
+    a.order_number `text`
+    FROM belink.estimate_request a
+    ";
+    if (!empty($keyword)) {
+      $sql .= " WHERE (a.order_number LIKE '%{$keyword}%') ";
+    }
+    $sql .= " GROUP BY a.order_number ORDER BY a.order_number ASC ";
+    $stmt = $this->dbcon->prepare($sql);
+    $stmt->execute();
+    return $stmt->fetchAll();
+  }
+
   public function request_data()
   {
     $sql = "SELECT COUNT(*) FROM belink.estimate_request a WHERE a.status IN (1,2,3,4,5)";

@@ -106,10 +106,13 @@ class Payment
     $sql = "SELECT SUM(a.amount) amount, 
       SUM(a.vat) vat, 
       SUM(a.wt) wt,
-      (SUM(a.amount) + SUM(a.vat) - SUM(a.wt)) total
+      (SUM(a.amount) + SUM(a.vat) - SUM(a.wt)) total,
+      c.budget
     FROM belink.payment_item a
     LEFT JOIN belink.payment_request b
     ON a.request_id = b.id
+    LEFT JOIN belink.estimate_request c
+    ON b.order_number = c.order_number
     WHERE b.`uuid` = ?
     AND a.`status` = 1";
     $stmt = $this->dbcon->prepare($sql);
@@ -308,19 +311,23 @@ class Payment
     return $stmt->fetchAll();
   }
 
-  public function order_view($data)
+  public function order_view($expense, $order, $purchase)
   {
-    $sql = "SELECT b.expense_id,
-      CONCAT('[',c.`code`,'] ',c.`name`) expense_name,
-      b.estimate,
-      IFNULL(d.payment,0) payment,
-      IFNULL((b.estimate - IFNULL(d.payment,0)),0) remain
+    $sql = "SELECT b.expense_id `id`,
+    CONCAT('[',c.code,'] ',c.name) `text`,
+    b.estimate,
+    IFNULL(f.payment,0) payment,
+    IFNULL((b.estimate - IFNULL(f.payment,0)),0) remain
     FROM belink.estimate_request a
     LEFT JOIN belink.estimate_item b
     ON a.id = b.request_id
     LEFT JOIN belink.expense c
     ON b.expense_id = c.id
-    LEFT JOIN 
+    LEFT JOIN belink.purchase_request d
+    ON a.order_number = d.order_number
+    LEFT JOIN belink.purchase_item e
+    ON d.id = e.request_id
+    LEFT JOIN
     (
       SELECT a.order_number,b.expense_id,(SUM(b.amount) + SUM(b.vat) - SUM(b.wt)) payment
       FROM belink.payment_request a
@@ -328,60 +335,150 @@ class Payment
       ON a.id = b.request_id
       WHERE b.status = 1
       GROUP BY a.order_number,b.expense_id
-    ) d
-    ON a.order_number = d.order_number
-    AND b.expense_id = d.expense_id
-    WHERE a.order_number = ?
-    AND b.expense_id = ?
-    AND b.`status` = 1
-    ORDER BY c.`reference` ASC, b.id ASC";
+    ) f
+    ON b.expense_id = f.expense_id
+    AND a.order_number = f.order_number
+    WHERE b.`status` = 1
+    AND b.expense_id = '{$expense}' ";
+    if (!empty($order)) {
+      $sql .= " AND a.order_number = '{$order}' ";
+    }
+    if (!empty($purchase)) {
+      $sql .= " AND d.department_number = '{$purchase}' ";
+    }
+    $sql .= " GROUP BY b.expense_id";
     $stmt = $this->dbcon->prepare($sql);
-    $stmt->execute($data);
+    $stmt->execute();
     return $stmt->fetch();
   }
 
-  public function order_select($keyword)
+  public function get_expense($order, $purchase)
   {
-    $sql = "SELECT 
-      a.order_number id, 
-      a.order_number `text`
-    FROM belink.estimate_request a
-    WHERE a.`status` NOT IN (5) ";
-    if (!empty($keyword)) {
-      $sql .= " AND (a.order_number LIKE '%{$keyword}%') ";
+    if (!empty($order) && !empty($purchase)) {
+      $sql = "SELECT b.expense_id,
+        CONCAT('[',c.`code`,'] ',c.`name`) expense_name,
+        '' `text`,
+        b.estimate,
+        IFNULL(d.payment,0) payment,
+        IFNULL((b.estimate - IFNULL(d.payment,0)),0) remain
+      FROM belink.estimate_request a
+      LEFT JOIN belink.estimate_item b
+      ON a.id = b.request_id
+      LEFT JOIN belink.expense c
+      ON b.expense_id = c.id
+      LEFT JOIN 
+      (
+        SELECT a.order_number,b.expense_id,(SUM(b.amount) + SUM(b.vat) - SUM(b.wt)) payment
+        FROM belink.payment_request a
+        LEFT JOIN belink.payment_item b
+        ON a.id = b.request_id
+        WHERE b.status = 1
+        GROUP BY a.order_number,b.expense_id
+      ) d
+      ON a.order_number = d.order_number
+      AND b.expense_id = d.expense_id
+      WHERE a.order_number = '{$order}'
+      AND b.`status` = 1
+      UNION
+      SELECT b.expense_id,
+        CONCAT('[',c.`code`,'] ',c.`name`) expense_name,
+        b.text,d.estimate,
+        IFNULL(e.payment,0) payment,
+        IFNULL((d.estimate - IFNULL(e.payment,0)),0) remain
+      FROM belink.purchase_request a
+      LEFT JOIN belink.purchase_item b
+      ON a.id = b.request_id
+      LEFT JOIN belink.expense c
+      ON b.expense_id = c.id
+      LEFT JOIN
+      (
+        SELECT b.expense_id,
+          b.estimate,
+          a.order_number
+        FROM belink.estimate_request a
+        LEFT JOIN belink.estimate_item b
+        ON a.id = b.request_id
+      ) d
+      ON b.expense_id = d.expense_id
+      AND a.order_number = d.order_number
+      LEFT JOIN
+      (
+        SELECT a.order_number,b.expense_id,(SUM(b.amount) + SUM(b.vat) - SUM(b.wt)) payment
+        FROM belink.payment_request a
+        LEFT JOIN belink.payment_item b
+        ON a.id = b.request_id
+        WHERE b.status = 1
+        GROUP BY a.order_number,b.expense_id
+      ) e
+      ON b.expense_id = e.expense_id
+      AND a.order_number = e.order_number
+      WHERE a.department_number = '{$purchase}'
+      AND b.`status` = 1";
+    } elseif (!empty($order) && empty($purchase)) {
+      $sql = "SELECT b.expense_id,
+        CONCAT('[',c.`code`,'] ',c.`name`) expense_name,
+        '' `text`,
+        b.estimate,
+        IFNULL(d.payment,0) payment,
+        IFNULL((b.estimate - IFNULL(d.payment,0)),0) remain
+      FROM belink.estimate_request a
+      LEFT JOIN belink.estimate_item b
+      ON a.id = b.request_id
+      LEFT JOIN belink.expense c
+      ON b.expense_id = c.id
+      LEFT JOIN 
+      (
+        SELECT a.order_number,b.expense_id,(SUM(b.amount) + SUM(b.vat) - SUM(b.wt)) payment
+        FROM belink.payment_request a
+        LEFT JOIN belink.payment_item b
+        ON a.id = b.request_id
+        WHERE b.status = 1
+        GROUP BY a.order_number,b.expense_id
+      ) d
+      ON a.order_number = d.order_number
+      AND b.expense_id = d.expense_id
+      WHERE a.order_number = '{$order}'
+      AND b.`status` = 1";
+    } elseif (empty($order) && !empty($purchase)) {
+      $sql = "SELECT b.expense_id,
+        CONCAT('[',c.`code`,'] ',c.`name`) expense_name,
+        b.text,d.estimate,
+        IFNULL(e.payment,0) payment,
+        IFNULL((d.estimate - IFNULL(e.payment,0)),0) remain
+      FROM belink.purchase_request a
+      LEFT JOIN belink.purchase_item b
+      ON a.id = b.request_id
+      LEFT JOIN belink.expense c
+      ON b.expense_id = c.id
+      LEFT JOIN
+      (
+        SELECT b.expense_id,
+          b.estimate,
+          a.order_number
+        FROM belink.estimate_request a
+        LEFT JOIN belink.estimate_item b
+        ON a.id = b.request_id
+      ) d
+      ON b.expense_id = d.expense_id
+      AND a.order_number = d.order_number
+      LEFT JOIN
+      (
+        SELECT a.order_number,b.expense_id,(SUM(b.amount) + SUM(b.vat) - SUM(b.wt)) payment
+        FROM belink.payment_request a
+        LEFT JOIN belink.payment_item b
+        ON a.id = b.request_id
+        WHERE b.status = 1
+        GROUP BY a.order_number,b.expense_id
+      ) e
+      ON b.expense_id = e.expense_id
+      AND a.order_number = e.order_number
+      WHERE a.department_number = '{$purchase}'
+      AND b.`status` = 1";
+    } else {
+      $sql = NULL;
     }
     $stmt = $this->dbcon->prepare($sql);
     $stmt->execute();
-    return $stmt->fetchAll();
-  }
-
-  public function get_expense($data)
-  {
-    $sql = "SELECT b.expense_id,
-      CONCAT('[',c.`code`,'] ',c.`name`) expense_name,
-      b.estimate,
-      IFNULL(d.payment,0) payment,
-      IFNULL((b.estimate - IFNULL(d.payment,0)),0) remain
-    FROM belink.estimate_request a
-    LEFT JOIN belink.estimate_item b
-    ON a.id = b.request_id
-    LEFT JOIN belink.expense c
-    ON b.expense_id = c.id
-    LEFT JOIN 
-    (
-      SELECT a.order_number,b.expense_id,(SUM(b.amount) + SUM(b.vat) - SUM(b.wt)) payment
-      FROM belink.payment_request a
-      LEFT JOIN belink.payment_item b
-      ON a.id = b.request_id
-      WHERE b.status = 1
-      GROUP BY a.order_number,b.expense_id
-    ) d
-    ON a.order_number = d.order_number
-    AND b.expense_id = d.expense_id
-    WHERE a.order_number = ?
-    AND b.`status` = 1";
-    $stmt = $this->dbcon->prepare($sql);
-    $stmt->execute($data);
     return $stmt->fetchAll();
   }
 
@@ -402,22 +499,30 @@ class Payment
     return $stmt->fetchAll();
   }
 
-  public function expense_fix_select($keyword, $order)
+  public function expense_order_select($keyword, $order, $purchase)
   {
-    $sql = "SELECT a.expense_id id,
-    CONCAT('[',c.`code`,'] ',c.`name`) `text`
-    FROM belink.estimate_item a
-    LEFT JOIN belink.estimate_request b
-    ON a.request_id = b.id
+    $sql = "SELECT b.expense_id `id`,
+    CONCAT('[',c.code,'] ',c.name) `text`
+    FROM belink.estimate_request a
+    LEFT JOIN belink.estimate_item b
+    ON a.id = b.request_id
     LEFT JOIN belink.expense c
-    ON a.expense_id = c.id
-    WHERE a.`status` = 1 ";
+    ON b.expense_id = c.id
+    LEFT JOIN belink.purchase_request d
+    ON a.order_number = d.order_number
+    LEFT JOIN belink.purchase_item e
+    ON d.id = e.request_id
+    WHERE b.`status` = 1 ";
     if (!empty($keyword)) {
       $sql .= " AND (c.code LIKE '%{$keyword}%' OR c.name LIKE '%{$keyword}%') ";
     }
     if (!empty($order)) {
-      $sql .= " AND b.order_number = '{$order}' ";
+      $sql .= " AND a.order_number = '{$order}' ";
     }
+    if (!empty($purchase)) {
+      $sql .= " AND d.department_number = '{$purchase}' ";
+    }
+    $sql .= " GROUP BY b.expense_id ";
     $stmt = $this->dbcon->prepare($sql);
     $stmt->execute();
     return $stmt->fetchAll();

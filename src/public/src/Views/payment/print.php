@@ -76,7 +76,7 @@ ob_start();
       </td>
       <td class="no-border" width="20%">เลขที่เอกสาร</td>
       <td class="bottom-border" width="20%">
-        <?php echo htmlspecialchars($row['ticket'], ENT_QUOTES, 'UTF-8'); ?>
+        <?php echo htmlspecialchars($row['department_number'], ENT_QUOTES, 'UTF-8'); ?>
       </td>
     </tr>
     <tr>
@@ -89,13 +89,42 @@ ob_start();
         <?php echo htmlspecialchars($row['doc_date'], ENT_QUOTES, 'UTF-8'); ?>
       </td>
     </tr>
+  </table>
+
+  <table style="margin-top: 10px;">
     <tr>
-      <td class="text-left no-border" width="10%"></td>
-      <td class="text-center no-border" width="50%"></td>
-      <td class="no-border" width="20%">เลขที่สัญญา</td>
-      <td class="bottom-border" width="20%">
-        <?php echo htmlspecialchars($row['order_number'], ENT_QUOTES, 'UTF-8'); ?>
+      <td class="no-border" width="20%">จ่ายให้</td>
+      <td class="bottom-border" width="30%">
+        <?php echo htmlspecialchars($row['receiver'], ENT_QUOTES, 'UTF-8'); ?>
       </td>
+      <td class="no-border" width="20%">จำนวนเงิน</td>
+      <td class="bottom-border" width="30%">
+        <?php echo htmlspecialchars(number_format($total['total'], 2), ENT_QUOTES, 'UTF-8'); ?>
+      </td>
+    </tr>
+    <tr>
+      <td class="no-border" width="20%">งบประมาณ /<br> ค่าใช้จ่ายของฝ่าย</td>
+      <td colspan="3" class="bottom-border" width="80%">
+        <?php echo htmlspecialchars(number_format($total['budget'], 2), ENT_QUOTES, 'UTF-8'); ?>
+      </td>
+    </tr>
+  </table>
+
+  <table style="margin-top: 10px;">
+    <tr>
+      <td width="10%" class="text-center no-border">[<?php echo (intval($row['type']) === 1 ? "/" : "") ?>]</td>
+      <td colspan="8" class="no-border">เงินสด/โอนเข้าบัญชี</td>
+    </tr>
+    <tr>
+      <td width="10%" class="text-center no-border">[<?php echo (intval($row['type']) === 1 ? "/" : "") ?>]</td>
+      <td width="10%" class="no-border">เช็คธนาคาร</td>
+      <td width="10%" class="bottom-border"></td>
+      <td width="10%" class="text-center no-border">สาขา</td>
+      <td width="10%" class="bottom-border"></td>
+      <td width="10%" class="text-center no-border">เลขที่เช็ค</td>
+      <td width="10%" class="bottom-border"></td>
+      <td width="10%" class="text-center no-border">ลงวันที่</td>
+      <td width="10%" class="bottom-border"></td>
     </tr>
   </table>
 
@@ -155,7 +184,6 @@ ob_start();
   <table style="margin-top: 10px;">
     <tr>
       <td rowspan="2" class="text-center" width="20%"><br><br>____________<br>ผู้ขอเบิก<br><br>วันที่____________</td>
-      <td rowspan="2" class="text-center" width="20%"><br><br>____________<br>ฝ่ายบัญชี<br><br>วันที่____________</td>
       <td rowspan="2" class="text-center" width="20%"><br><br>____________<br>ผู้อนุมัติ<br><br>วันที่____________</td>
       <td rowspan="2" class="text-center" width="20%"><br><br>____________<br>ผู้รับเงิน<br><br>วันที่____________</td>
     </tr>

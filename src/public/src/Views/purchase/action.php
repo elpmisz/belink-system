@@ -41,9 +41,6 @@ $VALIDATION = new Validation();
 
 if ($action === "create") {
   try {
-    echo "<pre>";
-    print_r($_POST);
-    die();
     $login_id = (isset($user['login_id']) ? $VALIDATION->input($user['login_id']) : "");
     $department_number = (isset($_POST['department_number']) ? $VALIDATION->input($_POST['department_number']) : "");
     $department = (isset($_POST['department']) ? $VALIDATION->input($_POST['department']) : "");
@@ -59,53 +56,54 @@ if ($action === "create") {
     $purchase_last = $PURCHASE->purchase_last();
 
     $purchase_count = $PURCHASE->purchase_count([$login_id, $department_number, $doc_date, $po, $department, $date, $order_number, $reference, $objective, $remark]);
-    if (intval($purchase_count) === 0) {
-      $PURCHASE->purchase_insert([$purchase_last, $login_id, $department_number, $doc_date, $po, $department, $date, $order_number, $reference, $objective, $remark]);
-      $request_id = $PURCHASE->last_insert_id();
-
-      foreach ($_POST['item_name'] as $key => $row) {
-        $item_name = (isset($_POST['item_name'][$key]) ? $VALIDATION->input($_POST['item_name'][$key]) : "");
-        $item_amount = (isset($_POST['item_amount'][$key]) ? $VALIDATION->input($_POST['item_amount'][$key]) : "");
-        $item_unit = (isset($_POST['item_unit'][$key]) ? $VALIDATION->input($_POST['item_unit'][$key]) : "");
-        $item_estimate = (isset($_POST['item_estimate'][$key]) ? $VALIDATION->input($_POST['item_estimate'][$key]) : "");
-
-        $purchase_item_count = $PURCHASE->purchase_item_count([$request_id, $item_name, $item_amount, $item_unit, $item_estimate]);
-        if (intval($purchase_item_count) === 0) {
-          $PURCHASE->purchase_item_insert([$request_id, $item_name, $item_amount, $item_unit, $item_estimate]);
-        }
-      }
-
-      foreach ($_FILES['file']['name'] as $key => $row) {
-        $file_name = (isset($_FILES['file']['name']) ? $_FILES['file']['name'][$key] : "");
-        $file_tmp = (isset($_FILES['file']['tmp_name']) ? $_FILES['file']['tmp_name'][$key] : "");
-        $file_random = md5(microtime());
-        $file_image = ["png", "jpeg", "jpg"];
-        $file_document = ["pdf", "doc", "docx", "xls", "xlsx"];
-        $file_allow = array_merge($file_image, $file_document);
-        $file_extension = pathinfo(strtolower($file_name), PATHINFO_EXTENSION);
-
-        if (!empty($file_name) && in_array($file_extension, $file_allow)) {
-          if (in_array($file_extension, $file_document)) {
-            $file_rename = "{$file_random}.{$file_extension}";
-            $file_path = (__DIR__ . "/../../Publics/purchase/{$file_rename}");
-            move_uploaded_file($file_tmp, $file_path);
-          }
-          if (in_array($file_extension, $file_image)) {
-            $file_rename = "{$file_random}.webp";
-            $file_path = (__DIR__ . "/../../Publics/purchase/{$file_rename}");
-            $VALIDATION->image_upload($file_tmp, $file_path);
-          }
-
-          $purchase_file_count = $PURCHASE->purchase_file_count([$request_id, $file_rename]);
-          if (intval($purchase_file_count) === 0) {
-            $PURCHASE->purchase_file_insert([$request_id, $file_rename]);
-          }
-        }
-      }
-      $VALIDATION->alert("success", "ดำเนินการเรียบร้อย!", "/purchase");
-    } else {
+    if (intval($purchase_count) > 0) {
       $VALIDATION->alert("danger", "ข้อมูลซ้ำในระบบ!", "/purchase");
     }
+
+    $PURCHASE->purchase_insert([$purchase_last, $login_id, $department_number, $doc_date, $po, $department, $date, $order_number, $reference, $objective, $remark]);
+    $request_id = $PURCHASE->last_insert_id();
+
+    foreach ($_POST['expense_id'] as $key => $row) {
+      $expense_id = (isset($_POST['expense_id'][$key]) ? $VALIDATION->input($_POST['expense_id'][$key]) : "");
+      $item_text = (isset($_POST['item_text'][$key]) ? $VALIDATION->input($_POST['item_text'][$key]) : "");
+      $item_amount = (isset($_POST['item_amount'][$key]) ? $VALIDATION->input($_POST['item_amount'][$key]) : "");
+      $item_unit = (isset($_POST['item_unit'][$key]) ? $VALIDATION->input($_POST['item_unit'][$key]) : "");
+      $item_estimate = (isset($_POST['item_estimate'][$key]) ? $VALIDATION->input($_POST['item_estimate'][$key]) : "");
+
+      $purchase_item_count = $PURCHASE->purchase_item_count([$request_id, $expense_id, $item_text, $item_amount, $item_unit, $item_estimate]);
+      if (intval($purchase_item_count) === 0) {
+        $PURCHASE->purchase_item_insert([$request_id, $expense_id, $item_text, $item_amount, $item_unit, $item_estimate]);
+      }
+    }
+
+    foreach ($_FILES['file']['name'] as $key => $row) {
+      $file_name = (isset($_FILES['file']['name']) ? $_FILES['file']['name'][$key] : "");
+      $file_tmp = (isset($_FILES['file']['tmp_name']) ? $_FILES['file']['tmp_name'][$key] : "");
+      $file_random = md5(microtime());
+      $file_image = ["png", "jpeg", "jpg"];
+      $file_document = ["pdf", "doc", "docx", "xls", "xlsx"];
+      $file_allow = array_merge($file_image, $file_document);
+      $file_extension = pathinfo(strtolower($file_name), PATHINFO_EXTENSION);
+
+      if (!empty($file_name) && in_array($file_extension, $file_allow)) {
+        if (in_array($file_extension, $file_document)) {
+          $file_rename = "{$file_random}.{$file_extension}";
+          $file_path = (__DIR__ . "/../../Publics/purchase/{$file_rename}");
+          move_uploaded_file($file_tmp, $file_path);
+        }
+        if (in_array($file_extension, $file_image)) {
+          $file_rename = "{$file_random}.webp";
+          $file_path = (__DIR__ . "/../../Publics/purchase/{$file_rename}");
+          $VALIDATION->image_upload($file_tmp, $file_path);
+        }
+
+        $purchase_file_count = $PURCHASE->purchase_file_count([$request_id, $file_rename]);
+        if (intval($purchase_file_count) === 0) {
+          $PURCHASE->purchase_file_insert([$request_id, $file_rename]);
+        }
+      }
+    }
+    $VALIDATION->alert("success", "ดำเนินการเรียบร้อย!", "/purchase");
   } catch (PDOException $e) {
     die($e->getMessage());
   }
@@ -130,24 +128,26 @@ if ($action === "update") {
 
     foreach ($_POST['item__id'] as $key => $row) {
       $item__id = (isset($_POST['item__id'][$key]) ? $VALIDATION->input($_POST['item__id'][$key]) : "");
-      $item__name = (isset($_POST['item__name'][$key]) ? $VALIDATION->input($_POST['item__name'][$key]) : "");
+      $expense__id = (isset($_POST['expense__id'][$key]) ? $VALIDATION->input($_POST['expense__id'][$key]) : "");
+      $item__text = (isset($_POST['item__text'][$key]) ? $VALIDATION->input($_POST['item__text'][$key]) : "");
       $item__amount = (isset($_POST['item__amount'][$key]) ? $VALIDATION->input($_POST['item__amount'][$key]) : "");
       $item__unit = (isset($_POST['item__unit'][$key]) ? $VALIDATION->input($_POST['item__unit'][$key]) : "");
       $item__estimate = (isset($_POST['item__estimate'][$key]) ? $VALIDATION->input($_POST['item__estimate'][$key]) : "");
 
-      $PURCHASE->purchase_item_update([$item__name, $item__amount, $item__unit, $item__estimate, $item__id]);
+      $PURCHASE->purchase_item_update([$expense__id, $item__text, $item__amount, $item__unit, $item__estimate, $item__id]);
     }
 
-    if (isset($_POST['item_name'])) {
-      foreach ($_POST['item_name'] as $key => $row) {
-        $item_name = (isset($_POST['item_name'][$key]) ? $VALIDATION->input($_POST['item_name'][$key]) : "");
+    if (isset($_POST['expense_id'])) {
+      foreach ($_POST['expense_id'] as $key => $row) {
+        $expense_id = (isset($_POST['expense_id'][$key]) ? $VALIDATION->input($_POST['expense_id'][$key]) : "");
+        $item_text = (isset($_POST['item_text'][$key]) ? $VALIDATION->input($_POST['item_text'][$key]) : "");
         $item_amount = (isset($_POST['item_amount'][$key]) ? $VALIDATION->input($_POST['item_amount'][$key]) : "");
         $item_unit = (isset($_POST['item_unit'][$key]) ? $VALIDATION->input($_POST['item_unit'][$key]) : "");
         $item_estimate = (isset($_POST['item_estimate'][$key]) ? $VALIDATION->input($_POST['item_estimate'][$key]) : "");
 
-        $purchase_item_count = $PURCHASE->purchase_item_count([$request_id, $item_name, $item_amount, $item_unit, $item_estimate]);
-        if (!empty($item_name) && intval($purchase_item_count) === 0) {
-          $PURCHASE->purchase_item_insert([$request_id, $item_name, $item_amount, $item_unit, $item_estimate]);
+        $purchase_item_count = $PURCHASE->purchase_item_count([$request_id, $expense_id, $item_text, $item_amount, $item_unit, $item_estimate]);
+        if (intval($purchase_item_count) === 0) {
+          $PURCHASE->purchase_item_insert([$request_id, $expense_id, $item_text, $item_amount, $item_unit, $item_estimate]);
         }
       }
     }
@@ -259,6 +259,45 @@ if ($action === "order-view") {
     $data = json_decode(file_get_contents("php://input"), true);
     $order = $data['order'];
     $result = $PURCHASE->order_view([$order]);
+
+    echo json_encode($result);
+  } catch (PDOException $e) {
+    die($e->getMessage());
+  }
+}
+
+if ($action === 'expense-select') {
+  try {
+    $keyword = (isset($_POST['keyword']) ? $VALIDATION->input($_POST['keyword']) : "");
+    $order = (isset($_POST['order']) ? $VALIDATION->input($_POST['order']) : "");
+    if (!empty($order) && $order !== "") {
+      $result = $PURCHASE->expense_fix_select($keyword, $order);
+    } else {
+      $result = $PURCHASE->expense_select($keyword, $order);
+    }
+
+    echo json_encode($result);
+  } catch (PDOException $e) {
+    die($e->getMessage());
+  }
+}
+
+if ($action === 'get-expense') {
+  try {
+    $data = json_decode(file_get_contents("php://input"), true);
+    $order = (isset($data['order']) ? $data['order'] : "");
+    $result = $PURCHASE->get_expense([$order]);
+
+    echo json_encode($result);
+  } catch (PDOException $e) {
+    die($e->getMessage());
+  }
+}
+
+if ($action === "purchase-select") {
+  try {
+    $keyword = (isset($_POST['q']) ? $VALIDATION->input($_POST['q']) : "");
+    $result = $PURCHASE->purchase_select($keyword);
 
     echo json_encode($result);
   } catch (PDOException $e) {

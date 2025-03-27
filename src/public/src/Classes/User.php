@@ -81,6 +81,8 @@ class User
     CONCAT(c.firstname,' ',c.lastname) manager_name,
     b.manager_id2,
     CONCAT(e.firstname,' ',e.lastname) manager_name2,
+    b.manager_id3,
+    CONCAT(e.firstname,' ',e.lastname) manager_name3,
     d.service,
     b.department_id,f.name department_name,
     b.position_id,CONCAT('[',g.name_en,'] ',g.name_th) position_name
@@ -97,6 +99,8 @@ class User
     ON b.department_id = f.id
     LEFT JOIN belink.position g
     ON b.position_id = g.id
+    LEFT JOIN belink.user h
+    ON b.manager_id3 = h.login
     WHERE (a.uuid = ? OR a.email = ?)";
     $stmt = $this->dbcon->prepare($sql);
     $stmt->execute($data);

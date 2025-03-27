@@ -41,6 +41,9 @@ $VALIDATION = new Validation();
 
 if ($action === "create") {
   try {
+    echo "<pre>";
+    print_r($_POST);
+    die();
     $login_id = (isset($user['login_id']) ? $VALIDATION->input($user['login_id']) : "");
     $department_number = (isset($_POST['department_number']) ? $VALIDATION->input($_POST['department_number']) : "");
     $doc_date = (isset($_POST['doc_date']) ? $VALIDATION->input($_POST['doc_date']) : "");
@@ -271,18 +274,8 @@ if ($action === "order-view") {
     $data = json_decode(file_get_contents("php://input"), true);
     $expense = $data['expense'];
     $order = $data['order'];
-    $result = $PAYMENT->order_view([$order, $expense]);
-
-    echo json_encode($result);
-  } catch (PDOException $e) {
-    die($e->getMessage());
-  }
-}
-
-if ($action === "order-select") {
-  try {
-    $keyword = (isset($_POST['q']) ? $VALIDATION->input($_POST['q']) : "");
-    $result = $PAYMENT->order_select($keyword);
+    $purchase = $data['purchase'];
+    $result = $PAYMENT->order_view($expense, $order, $purchase);
 
     echo json_encode($result);
   } catch (PDOException $e) {
@@ -294,7 +287,8 @@ if ($action === 'get-expense') {
   try {
     $data = json_decode(file_get_contents("php://input"), true);
     $order = (isset($data['order']) ? $data['order'] : "");
-    $result = $PAYMENT->get_expense([$order]);
+    $purchase = (isset($data['purchase']) ? $data['purchase'] : "");
+    $result = $PAYMENT->get_expense($order, $purchase);
 
     echo json_encode($result);
   } catch (PDOException $e) {
@@ -306,8 +300,9 @@ if ($action === 'expense-select') {
   try {
     $keyword = (isset($_POST['keyword']) ? $VALIDATION->input($_POST['keyword']) : "");
     $order = (isset($_POST['order']) ? $VALIDATION->input($_POST['order']) : "");
-    if (!empty($order) && $order !== "") {
-      $result = $PAYMENT->expense_fix_select($keyword, $order);
+    $purchase = (isset($_POST['purchase']) ? $VALIDATION->input($_POST['purchase']) : "");
+    if (!empty($order) || !empty($purchase)) {
+      $result = $PAYMENT->expense_order_select($keyword, $order, $purchase);
     } else {
       $result = $PAYMENT->expense_select($keyword, $order);
     }

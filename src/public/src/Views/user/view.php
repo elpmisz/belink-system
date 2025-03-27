@@ -82,7 +82,7 @@ $row = $USER->user_view([$uuid, $uuid]);
           <div class="row mb-2">
             <label class="col-xl-2 offset-xl-2 col-form-label">ตำแหน่ง</label>
             <div class="col-xl-4">
-              <select class="form-control form-control-sm position-select" name="position_id" required>
+              <select class="form-control form-control-sm position-select" name="position_id">
                 <?php
                 if (!empty($row['position_id'])) {
                   echo "<option value='{$row['position_id']}' selected>{$row['position_name']}</option>";
@@ -125,6 +125,21 @@ $row = $USER->user_view([$uuid, $uuid]);
                 <?php
                 if (!empty($row['manager_id2'])) {
                   echo "<option value='{$row['manager_id2']}' selected>{$row['manager_name2']}</option>";
+                }
+                ?>
+              </select>
+              <div class="invalid-feedback">
+                กรุณา กรอกข้อมูล!
+              </div>
+            </div>
+          </div>
+          <div class="row mb-2">
+            <label class="col-xl-2 offset-xl-2 col-form-label">ผู้จัดการ / ผู้อนุมัติ 3</label>
+            <div class="col-xl-4">
+              <select class="form-control form-control-sm user-select" name="manager_id3">
+                <?php
+                if (!empty($row['manager_id3'])) {
+                  echo "<option value='{$row['manager_id3']}' selected>{$row['manager_name3']}</option>";
                 }
                 ?>
               </select>
