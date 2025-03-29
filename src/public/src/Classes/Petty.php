@@ -45,7 +45,7 @@ class Petty
 
   public function petty_insert($data)
   {
-    $sql = "INSERT INTO belink.petty_request(`uuid`, `last`, `department_number`, `login_id`, `doc_date`, `objective`) VALUES(uuid(),?,?,?,?,?)";
+    $sql = "INSERT INTO belink.petty_request(`uuid`, `last`, `login_id`, `department_number`, `doc_date`, `objective`) VALUES(uuid(),?,?,?,?,?)";
     $stmt = $this->dbcon->prepare($sql);
     return $stmt->execute($data);
   }
@@ -89,8 +89,8 @@ class Petty
     FROM belink.petty_item a
     WHERE a.status = 1
     AND a.request_id = ?
-    AND a.expense_id = ?
-    AND a.text = ?";
+    AND a.text = ?
+    AND a.amount = ?";
     $stmt = $this->dbcon->prepare($sql);
     $stmt->execute($data);
     return $stmt->fetchColumn();
@@ -98,7 +98,7 @@ class Petty
 
   public function petty_item_insert($data)
   {
-    $sql = "INSERT INTO belink.petty_item( `request_id`, `expense_id`, `text`, `amount`) VALUES(?,?,?,?)";
+    $sql = "INSERT INTO belink.petty_item(`request_id`, `text`, `amount`) VALUES(?,?,?)";
     $stmt = $this->dbcon->prepare($sql);
     return $stmt->execute($data);
   }

@@ -24,6 +24,7 @@ class Payment
     AND a.department_number = ?
     AND a.doc_date = ?
     AND a.order_number = ?
+    AND a.purchase_number = ?
     AND a.receiver = ?
     AND a.type = ?
     AND a.cheque_bank = ?
@@ -51,7 +52,7 @@ class Payment
 
   public function payment_insert($data)
   {
-    $sql = "INSERT INTO belink.payment_request(`uuid`, `last`, `login_id`, `department_number`, `doc_date`, `order_number`, `receiver`, `type`, `cheque_bank`, `cheque_branch`, `cheque_number`, `cheque_date`) VALUES(uuid(),?,?,?,?,?,?,?,?,?,?,?)";
+    $sql = "INSERT INTO belink.payment_request(`uuid`, `last`, `login_id`, `department_number`, `doc_date`, `order_number`, `purchase_number`, `receiver`, `type`, `cheque_bank`, `cheque_branch`, `cheque_number`, `cheque_date`) VALUES(uuid(),?,?,?,?,?,?,?,?,?,?,?,?)";
     $stmt = $this->dbcon->prepare($sql);
     return $stmt->execute($data);
   }
@@ -65,6 +66,7 @@ class Payment
       CONCAT(b.firstname,' ',b.lastname) username,
       a.department_number,
       a.order_number,
+      a.purchase_number,
       a.receiver,
       a.`type`,
       IF(a.type = 1,'เงินสด / โอนเข้าบัญชี','เช็ค') type_name,
@@ -313,7 +315,7 @@ class Payment
 
   public function order_view($expense, $order, $purchase)
   {
-    $sql = "SELECT b.expense_id `id`,
+    $sql = "SELECT b.expense_id `id`,d.department_number,f.purchase_number,
     CONCAT('[',c.code,'] ',c.name) `text`,
     b.estimate,
     IFNULL(f.payment,0) payment,
@@ -329,15 +331,44 @@ class Payment
     ON d.id = e.request_id
     LEFT JOIN
     (
-      SELECT a.order_number,b.expense_id,(SUM(b.amount) + SUM(b.vat) - SUM(b.wt)) payment
-      FROM belink.payment_request a
-      LEFT JOIN belink.payment_item b
-      ON a.id = b.request_id
-      WHERE b.status = 1
-      GROUP BY a.order_number,b.expense_id
+      SELECT a.order_number,a.purchase_number,a.expense_id,(a.payment + IFNULL(b.amount, 0) + IFNULL(c.amount,0)) payment
+      FROM 
+      (
+        SELECT IF(a.order_number = '',c.order_number,a.order_number) order_number,a.purchase_number,b.expense_id,
+        (SUM(b.amount) + SUM(b.vat) - SUM(b.wt)) payment
+        FROM belink.payment_request a
+        LEFT JOIN belink.payment_item b
+        ON a.id = b.request_id
+        LEFT JOIN belink.purchase_request c
+        ON a.purchase_number = c.department_number
+        WHERE b.status = 1
+        GROUP BY a.order_number,a.purchase_number,b.expense_id
+      ) a
+      LEFT JOIN
+      (
+        SELECT a.order_number,b.expense_id,SUM(b.amount) amount
+        FROM belink.advance_request a
+        LEFT JOIN belink.advance_item b
+        ON a.id = b.request_id
+        WHERE b.`status` = 1
+        GROUP BY a.order_number,b.expense_id
+      ) b
+      ON a.order_number = b.order_number 
+      AND a.expense_id = b.expense_id
+      LEFT JOIN
+      (
+        SELECT a.order_number,b.expense_id,SUM(b.estimate) amount
+        FROM belink.outstanding_request a
+        LEFT JOIN belink.outstanding_item b
+        ON a.id = b.request_id
+        WHERE b.`status` = 1
+        GROUP BY a.order_number,b.expense_id
+      ) c
+      ON a.order_number = c.order_number
+      AND a.expense_id = c.expense_id
     ) f
     ON b.expense_id = f.expense_id
-    AND a.order_number = f.order_number
+    AND (a.order_number = f.order_number OR d.department_number = f.purchase_number)
     WHERE b.`status` = 1
     AND b.expense_id = '{$expense}' ";
     if (!empty($order)) {
@@ -368,12 +399,41 @@ class Payment
       ON b.expense_id = c.id
       LEFT JOIN 
       (
-        SELECT a.order_number,b.expense_id,(SUM(b.amount) + SUM(b.vat) - SUM(b.wt)) payment
-        FROM belink.payment_request a
-        LEFT JOIN belink.payment_item b
-        ON a.id = b.request_id
-        WHERE b.status = 1
-        GROUP BY a.order_number,b.expense_id
+        SELECT a.order_number,a.purchase_number,a.expense_id,(a.payment + IFNULL(b.amount, 0) + IFNULL(c.amount,0)) payment
+        FROM 
+        (
+          SELECT IF(a.order_number = '',c.order_number,a.order_number) order_number,a.purchase_number,b.expense_id,
+          (SUM(b.amount) + SUM(b.vat) - SUM(b.wt)) payment
+          FROM belink.payment_request a
+          LEFT JOIN belink.payment_item b
+          ON a.id = b.request_id
+          LEFT JOIN belink.purchase_request c
+          ON a.purchase_number = c.department_number
+          WHERE b.status = 1
+          GROUP BY a.order_number,a.purchase_number,b.expense_id
+        ) a
+        LEFT JOIN
+        (
+          SELECT a.order_number,b.expense_id,SUM(b.amount) amount
+          FROM belink.advance_request a
+          LEFT JOIN belink.advance_item b
+          ON a.id = b.request_id
+          WHERE b.`status` = 1
+          GROUP BY a.order_number,b.expense_id
+        ) b
+        ON a.order_number = b.order_number 
+        AND a.expense_id = b.expense_id
+        LEFT JOIN
+        (
+          SELECT a.order_number,b.expense_id,SUM(b.estimate) amount
+          FROM belink.outstanding_request a
+          LEFT JOIN belink.outstanding_item b
+          ON a.id = b.request_id
+          WHERE b.`status` = 1
+          GROUP BY a.order_number,b.expense_id
+        ) c
+        ON a.order_number = c.order_number
+        AND a.expense_id = c.expense_id
       ) d
       ON a.order_number = d.order_number
       AND b.expense_id = d.expense_id
@@ -403,12 +463,41 @@ class Payment
       AND a.order_number = d.order_number
       LEFT JOIN
       (
-        SELECT a.order_number,b.expense_id,(SUM(b.amount) + SUM(b.vat) - SUM(b.wt)) payment
-        FROM belink.payment_request a
-        LEFT JOIN belink.payment_item b
-        ON a.id = b.request_id
-        WHERE b.status = 1
-        GROUP BY a.order_number,b.expense_id
+        SELECT a.order_number,a.purchase_number,a.expense_id,(a.payment + IFNULL(b.amount, 0) + IFNULL(c.amount,0)) payment
+        FROM 
+        (
+          SELECT IF(a.order_number = '',c.order_number,a.order_number) order_number,a.purchase_number,b.expense_id,
+          (SUM(b.amount) + SUM(b.vat) - SUM(b.wt)) payment
+          FROM belink.payment_request a
+          LEFT JOIN belink.payment_item b
+          ON a.id = b.request_id
+          LEFT JOIN belink.purchase_request c
+          ON a.purchase_number = c.department_number
+          WHERE b.status = 1
+          GROUP BY a.order_number,a.purchase_number,b.expense_id
+        ) a
+        LEFT JOIN
+        (
+          SELECT a.order_number,b.expense_id,SUM(b.amount) amount
+          FROM belink.advance_request a
+          LEFT JOIN belink.advance_item b
+          ON a.id = b.request_id
+          WHERE b.`status` = 1
+          GROUP BY a.order_number,b.expense_id
+        ) b
+        ON a.order_number = b.order_number 
+        AND a.expense_id = b.expense_id
+        LEFT JOIN
+        (
+          SELECT a.order_number,b.expense_id,SUM(b.estimate) amount
+          FROM belink.outstanding_request a
+          LEFT JOIN belink.outstanding_item b
+          ON a.id = b.request_id
+          WHERE b.`status` = 1
+          GROUP BY a.order_number,b.expense_id
+        ) c
+        ON a.order_number = c.order_number
+        AND a.expense_id = c.expense_id
       ) e
       ON b.expense_id = e.expense_id
       AND a.order_number = e.order_number
@@ -428,12 +517,41 @@ class Payment
       ON b.expense_id = c.id
       LEFT JOIN 
       (
-        SELECT a.order_number,b.expense_id,(SUM(b.amount) + SUM(b.vat) - SUM(b.wt)) payment
-        FROM belink.payment_request a
-        LEFT JOIN belink.payment_item b
-        ON a.id = b.request_id
-        WHERE b.status = 1
-        GROUP BY a.order_number,b.expense_id
+        SELECT a.order_number,a.purchase_number,a.expense_id,(a.payment + IFNULL(b.amount, 0) + IFNULL(c.amount,0)) payment
+        FROM 
+        (
+          SELECT IF(a.order_number = '',c.order_number,a.order_number) order_number,a.purchase_number,b.expense_id,
+          (SUM(b.amount) + SUM(b.vat) - SUM(b.wt)) payment
+          FROM belink.payment_request a
+          LEFT JOIN belink.payment_item b
+          ON a.id = b.request_id
+          LEFT JOIN belink.purchase_request c
+          ON a.purchase_number = c.department_number
+          WHERE b.status = 1
+          GROUP BY a.order_number,a.purchase_number,b.expense_id
+        ) a
+        LEFT JOIN
+        (
+          SELECT a.order_number,b.expense_id,SUM(b.amount) amount
+          FROM belink.advance_request a
+          LEFT JOIN belink.advance_item b
+          ON a.id = b.request_id
+          WHERE b.`status` = 1
+          GROUP BY a.order_number,b.expense_id
+        ) b
+        ON a.order_number = b.order_number 
+        AND a.expense_id = b.expense_id
+        LEFT JOIN
+        (
+          SELECT a.order_number,b.expense_id,SUM(b.estimate) amount
+          FROM belink.outstanding_request a
+          LEFT JOIN belink.outstanding_item b
+          ON a.id = b.request_id
+          WHERE b.`status` = 1
+          GROUP BY a.order_number,b.expense_id
+        ) c
+        ON a.order_number = c.order_number
+        AND a.expense_id = c.expense_id
       ) d
       ON a.order_number = d.order_number
       AND b.expense_id = d.expense_id
@@ -463,12 +581,41 @@ class Payment
       AND a.order_number = d.order_number
       LEFT JOIN
       (
-        SELECT a.order_number,b.expense_id,(SUM(b.amount) + SUM(b.vat) - SUM(b.wt)) payment
-        FROM belink.payment_request a
-        LEFT JOIN belink.payment_item b
-        ON a.id = b.request_id
-        WHERE b.status = 1
-        GROUP BY a.order_number,b.expense_id
+        SELECT a.order_number,a.purchase_number,a.expense_id,(a.payment + IFNULL(b.amount, 0) + IFNULL(c.amount,0)) payment
+        FROM 
+        (
+          SELECT IF(a.order_number = '',c.order_number,a.order_number) order_number,a.purchase_number,b.expense_id,
+          (SUM(b.amount) + SUM(b.vat) - SUM(b.wt)) payment
+          FROM belink.payment_request a
+          LEFT JOIN belink.payment_item b
+          ON a.id = b.request_id
+          LEFT JOIN belink.purchase_request c
+          ON a.purchase_number = c.department_number
+          WHERE b.status = 1
+          GROUP BY a.order_number,a.purchase_number,b.expense_id
+        ) a
+        LEFT JOIN
+        (
+          SELECT a.order_number,b.expense_id,SUM(b.amount) amount
+          FROM belink.advance_request a
+          LEFT JOIN belink.advance_item b
+          ON a.id = b.request_id
+          WHERE b.`status` = 1
+          GROUP BY a.order_number,b.expense_id
+        ) b
+        ON a.order_number = b.order_number 
+        AND a.expense_id = b.expense_id
+        LEFT JOIN
+        (
+          SELECT a.order_number,b.expense_id,SUM(b.estimate) amount
+          FROM belink.outstanding_request a
+          LEFT JOIN belink.outstanding_item b
+          ON a.id = b.request_id
+          WHERE b.`status` = 1
+          GROUP BY a.order_number,b.expense_id
+        ) c
+        ON a.order_number = c.order_number
+        AND a.expense_id = c.expense_id
       ) e
       ON b.expense_id = e.expense_id
       AND a.order_number = e.order_number
@@ -494,6 +641,7 @@ class Payment
     if (!empty($order)) {
       $sql .= " AND b.order_number = '{$order}' ";
     }
+    $sql .= " ORDER BY a.code ASC";
     $stmt = $this->dbcon->prepare($sql);
     $stmt->execute();
     return $stmt->fetchAll();

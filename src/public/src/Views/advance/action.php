@@ -43,6 +43,7 @@ if ($action === "create") {
   try {
     $login_id = (isset($user['login_id']) ? $VALIDATION->input($user['login_id']) : "");
     $department_number = (isset($_POST['department_number']) ? $VALIDATION->input($_POST['department_number']) : "");
+    $order_number = (isset($_POST['order_number']) ? $VALIDATION->input($_POST['order_number']) : "");
     $doc_date = (isset($_POST['doc_date']) ? $VALIDATION->input($_POST['doc_date']) : "");
     $doc_date = (!empty($doc_date) ? DateTime::createFromFormat('d/m/Y', $doc_date)->format('Y-m-d') : "");
     $finish = (isset($_POST['finish']) ? $VALIDATION->input($_POST['finish']) : "");
@@ -50,53 +51,53 @@ if ($action === "create") {
     $objective = (isset($_POST['objective']) ? $VALIDATION->input($_POST['objective']) : "");
     $advance_last = $ADVANCE->advance_last();
 
-    $advance_count = $ADVANCE->advance_count([$login_id, $department_number, $doc_date, $finish, $objective]);
-    if (intval($advance_count) === 0) {
-      $ADVANCE->advance_insert([$advance_last, $login_id, $department_number, $doc_date, $finish, $objective]);
-      $request_id = $ADVANCE->last_insert_id();
-
-      foreach ($_POST['expense_id'] as $key => $row) {
-        $expense_id = (isset($_POST['expense_id'][$key]) ? $VALIDATION->input($_POST['expense_id'][$key]) : "");
-        $item_text = (isset($_POST['item_text'][$key]) ? $VALIDATION->input($_POST['item_text'][$key]) : "");
-        $item_amount = (isset($_POST['item_amount'][$key]) ? $VALIDATION->input($_POST['item_amount'][$key]) : "");
-
-        $advance_item_count = $ADVANCE->advance_item_count([$request_id, $expense_id, $item_text]);
-        if (intval($advance_item_count) === 0) {
-          $ADVANCE->advance_item_insert([$request_id, $expense_id, $item_text, $item_amount]);
-        }
-      }
-
-      foreach ($_FILES['file']['name'] as $key => $row) {
-        $file_name = (isset($_FILES['file']['name']) ? $_FILES['file']['name'][$key] : "");
-        $file_tmp = (isset($_FILES['file']['tmp_name']) ? $_FILES['file']['tmp_name'][$key] : "");
-        $file_random = md5(microtime());
-        $file_image = ["png", "jpeg", "jpg"];
-        $file_document = ["pdf", "doc", "docx", "xls", "xlsx"];
-        $file_allow = array_merge($file_image, $file_document);
-        $file_extension = pathinfo(strtolower($file_name), PATHINFO_EXTENSION);
-
-        if (!empty($file_name) && in_array($file_extension, $file_allow)) {
-          if (in_array($file_extension, $file_document)) {
-            $file_rename = "{$file_random}.{$file_extension}";
-            $file_path = (__DIR__ . "/../../Publics/advance/{$file_rename}");
-            move_uploaded_file($file_tmp, $file_path);
-          }
-          if (in_array($file_extension, $file_image)) {
-            $file_rename = "{$file_random}.webp";
-            $file_path = (__DIR__ . "/../../Publics/advance/{$file_rename}");
-            $VALIDATION->image_upload($file_tmp, $file_path);
-          }
-
-          $advance_file_count = $ADVANCE->advance_file_count([$request_id, $file_rename]);
-          if (intval($advance_file_count) === 0) {
-            $ADVANCE->advance_file_insert([$request_id, $file_rename]);
-          }
-        }
-      }
-      $VALIDATION->alert("success", "ดำเนินการเรียบร้อย!", "/advance");
-    } else {
+    $advance_count = $ADVANCE->advance_count([$login_id, $department_number, $order_number, $doc_date, $finish, $objective]);
+    if (intval($advance_count) > 0) {
       $VALIDATION->alert("danger", "ข้อมูลซ้ำในระบบ!", "/advance");
     }
+
+    $ADVANCE->advance_insert([$advance_last, $login_id, $department_number, $order_number, $doc_date, $finish, $objective]);
+    $request_id = $ADVANCE->last_insert_id();
+
+    foreach ($_POST['expense_id'] as $key => $row) {
+      $expense_id = (isset($_POST['expense_id'][$key]) ? $VALIDATION->input($_POST['expense_id'][$key]) : "");
+      $item_text = (isset($_POST['item_text'][$key]) ? $VALIDATION->input($_POST['item_text'][$key]) : "");
+      $item_amount = (isset($_POST['item_amount'][$key]) ? $VALIDATION->input($_POST['item_amount'][$key]) : "");
+
+      $advance_item_count = $ADVANCE->advance_item_count([$request_id, $expense_id, $item_text, $item_amount]);
+      if (intval($advance_item_count) === 0 && !empty($item_text) && !empty($item_amount)) {
+        $ADVANCE->advance_item_insert([$request_id, $expense_id, $item_text, $item_amount]);
+      }
+    }
+
+    foreach ($_FILES['file']['name'] as $key => $row) {
+      $file_name = (isset($_FILES['file']['name']) ? $_FILES['file']['name'][$key] : "");
+      $file_tmp = (isset($_FILES['file']['tmp_name']) ? $_FILES['file']['tmp_name'][$key] : "");
+      $file_random = md5(microtime());
+      $file_image = ["png", "jpeg", "jpg"];
+      $file_document = ["pdf", "doc", "docx", "xls", "xlsx"];
+      $file_allow = array_merge($file_image, $file_document);
+      $file_extension = pathinfo(strtolower($file_name), PATHINFO_EXTENSION);
+
+      if (!empty($file_name) && in_array($file_extension, $file_allow)) {
+        if (in_array($file_extension, $file_document)) {
+          $file_rename = "{$file_random}.{$file_extension}";
+          $file_path = (__DIR__ . "/../../Publics/advance/{$file_rename}");
+          move_uploaded_file($file_tmp, $file_path);
+        }
+        if (in_array($file_extension, $file_image)) {
+          $file_rename = "{$file_random}.webp";
+          $file_path = (__DIR__ . "/../../Publics/advance/{$file_rename}");
+          $VALIDATION->image_upload($file_tmp, $file_path);
+        }
+
+        $advance_file_count = $ADVANCE->advance_file_count([$request_id, $file_rename]);
+        if (intval($advance_file_count) === 0) {
+          $ADVANCE->advance_file_insert([$request_id, $file_rename]);
+        }
+      }
+    }
+    $VALIDATION->alert("success", "ดำเนินการเรียบร้อย!", "/advance");
   } catch (PDOException $e) {
     die($e->getMessage());
   }
@@ -128,8 +129,8 @@ if ($action === "update") {
         $item_text = (isset($_POST['item_text'][$key]) ? $VALIDATION->input($_POST['item_text'][$key]) : "");
         $item_amount = (isset($_POST['item_amount'][$key]) ? $VALIDATION->input($_POST['item_amount'][$key]) : "");
 
-        $advance_item_count = $ADVANCE->advance_item_count([$request_id, $expense_id, $item_text]);
-        if (intval($advance_item_count) === 0) {
+        $advance_item_count = $ADVANCE->advance_item_count([$request_id, $expense_id, $item_text, $item_amount]);
+        if (intval($advance_item_count) === 0 && !empty($item_text) && !empty($item_amount)) {
           $ADVANCE->advance_item_insert([$request_id, $expense_id, $item_text, $item_amount]);
         }
       }
@@ -232,6 +233,17 @@ if ($action === "file-delete") {
     } else {
       echo json_encode(500);
     }
+  } catch (PDOException $e) {
+    die($e->getMessage());
+  }
+}
+
+if ($action === "order-select") {
+  try {
+    $keyword = (isset($_POST['q']) ? $VALIDATION->input($_POST['q']) : "");
+    $result = $ADVANCE->order_select($keyword);
+
+    echo json_encode($result);
   } catch (PDOException $e) {
     die($e->getMessage());
   }

@@ -36,7 +36,7 @@ include_once(__DIR__ . "/../layout/header.php");
         </div>
       </div>
       <div class="row mb-2">
-        <label class="col-xl-2 offset-xl-2 col-form-label">เลขที่สัญญา</label>
+        <label class="col-xl-2 offset-xl-2 col-form-label">เลขที่สัญญา SO</label>
         <div class="col-xl-4">
           <select class="form-control form-control-sm order-select" name="order_number"></select>
           <div class="invalid-feedback">
@@ -58,6 +58,71 @@ include_once(__DIR__ . "/../layout/header.php");
         <div class="col-xl-12">
           <div class="table-responsive">
             <table class="table table-bordered table-sm items-table"></table>
+          </div>
+        </div>
+      </div>
+
+      <div class="row mb-2 items-custom-div">
+        <div class="col-xl-12">
+          <div class="table-responsive">
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th width="10%">#</th>
+                  <th width="20%">รายจ่าย</th>
+                  <th width="20%">รายละเอียด</th>
+                  <th width="10%">จำนวน</th>
+                  <th width="10%">หน่วย</th>
+                  <th width="10%">จำนวนเงิน</th>
+                  <th width="10%">ยอดคงเหลือ</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="item-tr">
+                  <td class="text-center">
+                    <button type="button" class="btn btn-sm btn-success item-increase">+</button>
+                    <button type="button" class="btn btn-sm btn-danger item-decrease">-</button>
+                  </td>
+                  <td>
+                    <select class="form-control form-control-sm expense-select" name="expense_id[]" required></select>
+                    <div class="invalid-feedback">
+                      กรุณากรอกข้อมูล!
+                    </div>
+                  </td>
+                  <td>
+                    <input type="text" class="form-control form-control-sm text-left item-text" name="item_text[]" required>
+                    <div class="invalid-feedback">
+                      กรุณากรอกข้อมูล!
+                    </div>
+                  </td>
+                  <td>
+                    <input type="number" class="form-control form-control-sm text-right item-amount" name="item_amount[]" min="1" step="0.01">
+                    <div class="invalid-feedback">
+                      กรุณากรอกข้อมูล!
+                    </div>
+                  </td>
+                  <td>
+                    <input type="text" class="form-control form-control-sm text-left item-unit" name="item_unit[]">
+                    <div class="invalid-feedback">
+                      กรุณากรอกข้อมูล!
+                    </div>
+                  </td>
+                  <td>
+                    <input type="number" class="form-control form-control-sm text-right item-estimate" name="item_estimate[]" min="1" step="0.01">
+                    <div class="invalid-feedback">
+                      กรุณากรอกข้อมูล!
+                    </div>
+                  </td>
+                  <td class="text-right"><span class="item-remain"></span></td>
+                </tr>
+                <tr>
+                  <td colspan="5" class="text-right">รวมทั้งสิ้น</td>
+                  <td class="text-right">
+                    <span class="total-all"></span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
@@ -99,13 +164,56 @@ include_once(__DIR__ . "/../layout/header.php");
 
 <?php include_once(__DIR__ . "/../layout/footer.php"); ?>
 <script>
-  initializeSelect2(".order-select", "/payment/order-select", "-- รายชื่อเลขที่สัญญา --");
+  initializeSelect2(".order-select", "/estimate/order-select", "-- รายชื่อเลขที่สัญญา --");
+
+  const order = ($(".order-select").val() || "");
+  $(".expense-select").select2({
+    placeholder: "-- รายจ่าย --",
+    width: "100%",
+    allowClear: true,
+    ajax: {
+      url: "/purchase/expense-select",
+      method: "POST",
+      data: function(params) {
+        return {
+          keyword: params.term,
+          order
+        };
+      },
+      dataType: "json",
+      delay: 100,
+      processResults: function(data) {
+        return {
+          results: data
+        };
+      },
+      cache: true
+    }
+  });
 
   $(document).on("change", ".order-select", function() {
-    const order = ($(this).val() || '');
+    $(".expense-select").empty();
+    $(".item-text, .item-amount, .item-vat, .item-wt").val("");
+    $(".item-total, .item-remain, .total-amount, .total-vat, .total-wt, .total-all").text("");
+    const order = ($(this).val() || "");
 
-    if (order !== '') {
-      axios.post("/outstanding/get-item-view", {
+    if (order) {
+      $(".order-div, .items-div").show();
+      axios.post("/purchase/order-view", {
+          order
+        })
+        .then((res) => {
+          const result = res.data;
+          if (result) {
+            $(".order-customer").text(result.customer_name);
+            $(".order-product").text(result.product_name);
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+
+      axios.post("/purchase/get-expense", {
           order,
         })
         .then((res) => {
@@ -114,45 +222,256 @@ include_once(__DIR__ . "/../layout/header.php");
           if (result.length > 0) {
             tableContent = `
               <tr>
-                <th width="10%"><input type="checkbox" id="check_all"></th>
-                <th width="50%">รายละเอียด</th>
+                <th width="10%">#</th>
+                <th width="20%">รายจ่าย</th>
+                <th width="20%">รายละเอียด</th>
                 <th width="10%">จำนวน</th>
-                <th width="10%">หน่วยนับ</th>
+                <th width="10%">หน่วย</th>
                 <th width="10%">จำนวนเงิน</th>
+                <th width="10%">ยอดคงเหลือ</th>
               </tr>
             `;
 
             result.forEach((item, index) => {
-              const estimate = parseFloat(item.estimate).toLocaleString('th-TH', {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2
-              });
               tableContent += `
                 <tr class="item-tr">
-                  <td class="text-center">
-                    <input type="checkbox" name="item_index[]" value="${index}">
+                  <td class="text-center">${++index}</td>
+                  <td class="text-left">
+                    ${item.expense_name}
+                    <input type="hidden" class="form-control form-control-sm text-left" name="expense_id[]" value="${item.expense_id}">
                   </td>
-                  <td class="text-left">${item.name}</td>
-                  <td class="text-center">${item.amount}</td>
-                  <td class="text-center">${item.unit}</td>
-                  <td class="text-right">${estimate}</span></td>
+                  <td>
+                    <input type="text" class="form-control form-control-sm text-left item-text" name="item_text[]" required>
+                    <div class="invalid-feedback">
+                      กรุณากรอกข้อมูล!
+                    </div>
+                  </td>
+                  <td>
+                    <input type="number" class="form-control form-control-sm text-right item-amount" name="item_amount[]" min="1" step="0.01">
+                    <div class="invalid-feedback">
+                      กรุณากรอกข้อมูล!
+                    </div>
+                  </td>
+                  <td>
+                    <input type="text" class="form-control form-control-sm text-left item-unit" name="item_unit[]">
+                    <div class="invalid-feedback">
+                      กรุณากรอกข้อมูล!
+                    </div>
+                  </td>
+                  <td>
+                    <input type="number" class="form-control form-control-sm text-right item-estimate" name="item_estimate[]" min="1" step="0.01">
+                    <div class="invalid-feedback">
+                      กรุณากรอกข้อมูล!
+                    </div>
+                  </td>
+                  <td class="text-right"><span class="item-remain">${item.remain}</span></td>
                 </tr>
               `;
             });
-
-            $(".items-div").show();
-          } else {
-            $(".items-div").hide();
           }
 
           $(".items-table").html(tableContent);
         }).catch((error) => {
           console.log(error);
         });
+
+      $(".expense-select").select2({
+        placeholder: "-- รายจ่าย --",
+        width: "100%",
+        allowClear: true,
+        ajax: {
+          url: "/purchase/expense-select",
+          method: "POST",
+          data: function(params) {
+            return {
+              keyword: params.term,
+              order
+            };
+          },
+          dataType: "json",
+          delay: 100,
+          processResults: function(data) {
+            return {
+              results: data
+            };
+          },
+          cache: true
+        }
+      });
+    } else {
+      $(".order-div, .items-div").hide();
+
+      $(".expense-select").select2({
+        placeholder: "-- รายจ่าย --",
+        width: "100%",
+        allowClear: true,
+        ajax: {
+          url: "/purchase/expense-select",
+          method: "POST",
+          data: function(params) {
+            return {
+              keyword: params.term,
+              order
+            };
+          },
+          dataType: "json",
+          delay: 100,
+          processResults: function(data) {
+            return {
+              results: data
+            };
+          },
+          cache: true
+        }
+      });
     }
   });
 
-  $(".file-decrease").hide();
+  $(".item-decrease, .file-decrease").hide();
+  $(document).on("click", ".item-increase", function() {
+    $(".expense-select").select2('destroy');
+
+    let row = $(".item-tr:last");
+    let clone = row.clone();
+    clone.find("input, select").val("").empty();
+    clone.find("span").text("");
+    clone.find(".item-increase").hide();
+    clone.find(".item-decrease").show();
+
+    clone.find(".item-decrease").off("click").on("click", function() {
+      $(this).closest("tr").remove();
+      updateTotal();
+    });
+
+    row.after(clone);
+
+    initializeSelect2(".expense-select", "/estimate/expense-select", "-- รายชื่อรายจ่าย --");
+
+    updateTotal();
+
+    const order = ($(".order-select").val() || "");
+    $(".expense-select").select2({
+      placeholder: "-- รายจ่าย --",
+      width: "100%",
+      allowClear: true,
+      ajax: {
+        url: "/purchase/expense-select",
+        method: "POST",
+        data: function(params) {
+          return {
+            keyword: params.term,
+            order
+          };
+        },
+        dataType: "json",
+        delay: 100,
+        processResults: function(data) {
+          return {
+            results: data
+          };
+        },
+        cache: true
+      }
+    });
+
+    $('.item-amount, .item-estimate').on('blur', function() {
+      var value = $(this).val();
+
+      value = value.replace(/[^0-9.]/g, '');
+
+      var parts = value.split('.');
+      if (parts.length > 2) {
+        value = parts[0] + '.' + parts.slice(1).join('');
+      }
+
+      if (value) {
+        value = parseFloat(value).toFixed(2);
+      }
+
+      $(this).val(value);
+    });
+  });
+
+  $(document).on("change", ".expense-select", function() {
+    const expense = ($(this).val() || "");
+    const order = ($(".order-select").val() || "");
+    const purchase = ($(".purchase-select").val() || "");
+    const row = $(this).closest("tr");
+    row.find(".item-text, .item-amount, .item-vat, .item-wt").val("");
+    row.find(".item-total").text("");
+
+    if (expense && order) {
+      axios.post("/payment/order-view", {
+          expense,
+          order,
+          purchase
+        })
+        .then((res) => {
+          const result = res.data;
+          row.find(".item-remain").text(result.remain);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+
+      row.find(".item-text, .item-amount").prop("required", true);
+    } else {
+      row.find(".item-text, .item-amount").prop("required", false);
+    }
+  });
+
+  $(document).on("input", ".item-estimate", function() {
+    const order = ($(".order-select").val() || "");
+    const row = $(this).closest("tr");
+    const estimate = parseFloat(row.find(".item-estimate").val() || 0);
+    let remain = parseFloat(row.find(".item-remain").text() || 0);
+
+    if (order) {
+      row.find(".item-estimate").prop("max", remain);
+    } else {
+      row.find(".item-estimate").prop("max", false);
+    }
+
+    if (remain && estimate > remain) {
+      Swal.fire({
+        icon: "error",
+        title: "รายจ่ายเกินวงเงิน \nกรุณาตรวจสอบอีกครั้ง!",
+      });
+      row.find(".item-estimate").val("");
+    }
+
+    updateTotal();
+
+    $('.item-amount, .item-estimate').on('blur', function() {
+      var value = $(this).val();
+
+      value = value.replace(/[^0-9.]/g, '');
+
+      var parts = value.split('.');
+      if (parts.length > 2) {
+        value = parts[0] + '.' + parts.slice(1).join('');
+      }
+
+      if (value) {
+        value = parseFloat(value).toFixed(2);
+      }
+
+      $(this).val(value);
+    });
+  });
+
+  function updateTotal() {
+    let totalAmount = 0;
+
+    $("tr.item-tr").each(function() {
+      const amount = parseFloat($(this).find(".item-estimate").val() || 0);
+
+      totalAmount += amount;
+    });
+
+    $(".total-all").text(totalAmount.toFixed(2));
+  }
+
   $(document).on("click", ".file-increase", function() {
     let row = $(".file-tr:last");
     let clone = row.clone();
@@ -218,7 +537,20 @@ include_once(__DIR__ . "/../layout/header.php");
     e.preventDefault();
   });
 
-  $(document).on("change", "#check_all", function() {
-    $("input:checkbox").prop('checked', $(this).prop("checked"));
+  $('.item-amount, .item-estimate').on('blur', function() {
+    var value = $(this).val();
+
+    value = value.replace(/[^0-9.]/g, '');
+
+    var parts = value.split('.');
+    if (parts.length > 2) {
+      value = parts[0] + '.' + parts.slice(1).join('');
+    }
+
+    if (value) {
+      value = parseFloat(value).toFixed(2);
+    }
+
+    $(this).val(value);
   });
 </script>

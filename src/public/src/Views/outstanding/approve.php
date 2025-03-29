@@ -87,9 +87,10 @@ $remarks = $OUTSTANDING->outstanding_remark_view([$uuid]);
               <thead>
                 <tr>
                   <th width="10%">#</th>
-                  <th width="50%">รายละเอียด</th>
+                  <th width="20%">รายจ่าย</th>
+                  <th width="20%">รายละเอียด</th>
                   <th width="10%">จำนวน</th>
-                  <th width="10%">หน่วยนับ</th>
+                  <th width="10%">หน่วย</th>
                   <th width="10%">จำนวนเงิน</th>
                 </tr>
               </thead>
@@ -97,9 +98,10 @@ $remarks = $OUTSTANDING->outstanding_remark_view([$uuid]);
                 <?php foreach ($items as $key => $item) : $key++; ?>
                   <tr>
                     <td class="text-center"><?php echo $key ?></td>
-                    <td class="text-left"><?php echo $item['name'] ?></td>
-                    <td class="text-center"><?php echo $item['amount'] ?></td>
-                    <td class="text-center"><?php echo $item['unit'] ?></td>
+                    <td class="text-left"><?php echo $item['expense_name'] ?></td>
+                    <td class="text-left"><?php echo $item['text'] ?></td>
+                    <td class="text-right"><?php echo $item['amount'] ?></td>
+                    <td class="text-left"><?php echo $item['unit'] ?></td>
                     <td class="text-right"><?php echo number_format($item['estimate'], 2) ?></td>
                   </tr>
                 <?php endforeach; ?>

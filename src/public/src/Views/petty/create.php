@@ -61,13 +61,13 @@ include_once(__DIR__ . "/../layout/header.php");
                     <button type="button" class="btn btn-sm btn-danger item-decrease">-</button>
                   </td>
                   <td>
-                    <input type="text" class="form-control form-control-sm text-left" name="item_text[]" required>
+                    <input type="text" class="form-control form-control-sm text-left item-text" name="item_text[]" required>
                     <div class="invalid-feedback">
                       กรุณากรอกข้อมูล!
                     </div>
                   </td>
                   <td>
-                    <input type="number" class="form-control form-control-sm text-right amount-item" min="1" step="0.01" name="item_amount[]" required>
+                    <input type="number" class="form-control form-control-sm text-right item-amount" min="1" step="0.01" name="item_amount[]" required>
                     <div class="invalid-feedback">
                       กรุณากรอกข้อมูล!
                     </div>
@@ -76,7 +76,7 @@ include_once(__DIR__ . "/../layout/header.php");
                 <tr>
                   <td colspan="2" class="text-right">รวมทั้งสิ้น</td>
                   <td class="text-right">
-                    <span class=" amount-total"></span>
+                    <span class=" total-amount"></span>
                   </td>
                 </tr>
               </tbody>
@@ -140,6 +140,23 @@ include_once(__DIR__ . "/../layout/header.php");
 
     row.after(clone);
     updateTotal();
+
+    $('.item-amount').on('blur', function() {
+      var value = $(this).val();
+
+      value = value.replace(/[^0-9.]/g, '');
+
+      var parts = value.split('.');
+      if (parts.length > 2) {
+        value = parts[0] + '.' + parts.slice(1).join('');
+      }
+
+      if (value) {
+        value = parseFloat(value).toFixed(2);
+      }
+
+      $(this).val(value);
+    });
   });
 
   $(document).on("change", ".expense-select", function() {
@@ -151,9 +168,9 @@ include_once(__DIR__ . "/../layout/header.php");
     }
   });
 
-  $(document).on("blur", ".amount-item", function() {
+  $(document).on("blur", ".item-amount", function() {
     const row = $(this).closest("tr");
-    const amount = parseFloat(row.find(".amount-item").val() || 0);
+    const amount = parseFloat(row.find(".item-amount").val() || 0);
 
     updateTotal();
   });
@@ -162,12 +179,12 @@ include_once(__DIR__ . "/../layout/header.php");
     let totalAmount = 0;
 
     $("tr.item-tr").each(function() {
-      const amount = parseFloat($(this).find(".amount-item").val() || 0);
+      const amount = parseFloat($(this).find(".item-amount").val() || 0);
 
       totalAmount += amount;
     });
 
-    $(".amount-total").text(totalAmount.toFixed(2));
+    $(".total-amount").text(totalAmount.toFixed(2));
   }
 
   $(document).on("click", ".file-increase", function() {
@@ -233,5 +250,22 @@ include_once(__DIR__ . "/../layout/header.php");
 
   $(".date-select").on("keydown paste", function(e) {
     e.preventDefault();
+  });
+
+  $('.item-amount').on('blur', function() {
+    var value = $(this).val();
+
+    value = value.replace(/[^0-9.]/g, '');
+
+    var parts = value.split('.');
+    if (parts.length > 2) {
+      value = parts[0] + '.' + parts.slice(1).join('');
+    }
+
+    if (value) {
+      value = parseFloat(value).toFixed(2);
+    }
+
+    $(this).val(value);
   });
 </script>

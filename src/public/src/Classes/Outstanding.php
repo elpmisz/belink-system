@@ -171,7 +171,8 @@ class Outstanding
     FROM belink.outstanding_item a
     WHERE a.status = 1
     AND a.request_id = ?
-    AND a.name = ?
+    AND a.expense_id = ?
+    AND a.text = ?
     AND a.amount = ?
     AND a.unit = ?
     AND a.estimate = ?";
@@ -187,8 +188,7 @@ class Outstanding
     LEFT JOIN belink.outstanding_item b
     ON a.id = b.request_id
     WHERE a.`uuid` = ?
-    AND b.`status` = 1
-    ORDER BY b.id ASC";
+    AND b.`status` = 1";
     $stmt = $this->dbcon->prepare($sql);
     $stmt->execute($data);
     return $stmt->fetch();
@@ -197,24 +197,23 @@ class Outstanding
   public function outstanding_item_insert($data)
   {
     $sql = "INSERT INTO belink.outstanding_item
-    (`request_id`, `name`, `amount`, `unit`, `estimate`)
-    VALUES (?, ?, ?, ?, ?)";
+    (`request_id`, `expense_id`, `text`, `amount`, `unit`, `estimate`)
+    VALUES (?, ?, ?, ?, ?, ?)";
     $stmt = $this->dbcon->prepare($sql);
     $stmt->execute($data);
   }
 
   public function outstanding_item_view($data)
   {
-    $sql = "SELECT b.id,
-    b.name,
-    b.amount,
-    b.unit,
-    b.estimate
+    $sql = "SELECT b.id, b.expense_id, CONCAT('[',c.`code`,'] ',c.`name`) expense_name,
+    b.text,b.amount,b.unit,b.estimate
     FROM belink.outstanding_request a
     LEFT JOIN belink.outstanding_item b
     ON a.id = b.request_id
-    WHERE a.`uuid` = ?
-    AND b.`status` = 1
+    LEFT JOIN belink.expense c
+    ON b.expense_id = c.id
+    WHERE b.`status` = 1
+    AND a.`uuid` = ?
     ORDER BY b.id ASC";
     $stmt = $this->dbcon->prepare($sql);
     $stmt->execute($data);
@@ -224,6 +223,7 @@ class Outstanding
   public function outstanding_item_update($data)
   {
     $sql = "UPDATE belink.outstanding_item SET
+    `amount` = ?,
     `unit` = ?,
     `estimate` = ?,
     `updated` = NOW()

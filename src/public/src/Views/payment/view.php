@@ -47,6 +47,12 @@ $remarks = $PAYMENT->payment_remark_view([$uuid]);
             <input type="text" class="form-control form-control-sm order-select" value="<?php echo $row['order_number'] ?>" readonly>
           </div>
         </div>
+        <div class="row mb-2">
+          <label class="col-xl-2 offset-xl-2 col-form-label">PURCHASE NUMBER</label>
+          <div class="col-xl-4">
+            <input type="text" class="form-control form-control-sm purchase-select" value="<?php echo $row['purchase_number'] ?>" readonly>
+          </div>
+        </div>
       </div>
       <div class="row mb-2">
         <label class="col-xl-2 offset-xl-2 col-form-label">เลขที่เอกสาร</label>
@@ -80,8 +86,14 @@ $remarks = $PAYMENT->payment_remark_view([$uuid]);
       </div>
       <div class="row mb-2">
         <label class="col-xl-2 offset-xl-2 col-form-label">เลขที่สัญญา SO</label>
-        <div class="col-xl-4 text-underline-link">
-          <a href="/estimate/complete/<?php echo $row['estimate_uuid'] ?>" target="_blank"><?php echo $row['order_number'] ?></a>
+        <div class="col-xl-4 text-underline">
+          <?php echo $row['order_number'] ?>
+        </div>
+      </div>
+      <div class="row mb-2">
+        <label class="col-xl-2 offset-xl-2 col-form-label">เลขที่ใบขอซื้อ PR</label>
+        <div class="col-xl-4 text-underline">
+          <?php echo $row['purchase_number'] ?>
         </div>
       </div>
       <div class="row mb-2">
@@ -178,13 +190,13 @@ $remarks = $PAYMENT->payment_remark_view([$uuid]);
                     <td class="text-left"><?php echo $item['text'] ?></td>
                     <td class="text-left"><?php echo $item['text2'] ?></td>
                     <td class="text-right">
-                      <input type="text" class="form-control from-control-sm text-right amount-item" value="<?php echo $item['amount'] ?>" readonly>
+                      <input type="text" class="form-control from-control-sm text-right item-amount" value="<?php echo $item['amount'] ?>" readonly>
                     </td>
                     <td class="text-right">
-                      <input type="text" class="form-control from-control-sm text-right vat-item" value="<?php echo $item['vat'] ?>" readonly>
+                      <input type="text" class="form-control from-control-sm text-right item-vat" value="<?php echo $item['vat'] ?>" readonly>
                     </td>
                     <td class="text-right">
-                      <input type="text" class="form-control from-control-sm text-right wt-item" value="<?php echo $item['wt'] ?>" readonly>
+                      <input type="text" class="form-control from-control-sm text-right item-wt" value="<?php echo $item['wt'] ?>" readonly>
                     </td>
                     <td class="text-right">
                       <?php echo number_format($item['total'], 2) ?>
@@ -204,51 +216,51 @@ $remarks = $PAYMENT->payment_remark_view([$uuid]);
                     </div>
                   </td>
                   <td>
-                    <input type="text" class="form-control form-control-sm text-left text-item" name="item_text[]">
+                    <input type="text" class="form-control form-control-sm text-left item-text" name="item_text[]">
                     <div class="invalid-feedback">
                       กรุณากรอกข้อมูล!
                     </div>
                   </td>
                   <td>
-                    <input type="text" class="form-control form-control-sm text-left text2-item" name="item_text2[]">
-                    <div class="invalid-feedback">
-                      กรุณากรอกข้อมูล!
-                    </div>
-                  </td>
-                  </td>
-                  <td>
-                    <input type="number" class="form-control form-control-sm text-right amount-item" min="1" step="0.01" name="item_amount[]">
+                    <input type="text" class="form-control form-control-sm text-left item-text" name="item_text2[]">
                     <div class="invalid-feedback">
                       กรุณากรอกข้อมูล!
                     </div>
                   </td>
                   </td>
                   <td>
-                    <input type="number" class="form-control form-control-sm text-right vat-item" min="1" step="0.01" name="item_vat[]">
+                    <input type="number" class="form-control form-control-sm text-right item-amount" min="1" step="0.01" name="item_amount[]">
+                    <div class="invalid-feedback">
+                      กรุณากรอกข้อมูล!
+                    </div>
+                  </td>
                   </td>
                   <td>
-                    <input type="number" class="form-control form-control-sm text-right wt-item" min="1" step="0.01" name="item_wt[]">
+                    <input type="number" class="form-control form-control-sm text-right item-vat" min="1" step="0.01" name="item_vat[]">
+                  </td>
+                  <td>
+                    <input type="number" class="form-control form-control-sm text-right item-wt" min="1" step="0.01" name="item_wt[]">
                   </td>
                   <td class="text-right">
-                    <span class="total-item"></span>
+                    <span class="item-total"></span>
                   </td>
                   <td class="text-right">
-                    <span class="remain-item"></span>
+                    <span class="item-remain"></span>
                   </td>
                 </tr>
                 <tr>
                   <td colspan="4" class="text-right">รวมทั้งสิ้น</td>
                   <td class="text-right">
-                    <span class="amount-total"><?php echo number_format($total['amount'], 2) ?></span>
+                    <span class="total-amount"><?php echo number_format($total['amount'], 2) ?></span>
                   </td>
                   <td class="text-right">
-                    <span class="vat-total"><?php echo number_format($total['vat'], 2) ?></span>
+                    <span class="total-vat"><?php echo number_format($total['vat'], 2) ?></span>
                   </td>
                   <td class="text-right">
-                    <span class="wt-total"><?php echo number_format($total['wt'], 2) ?></span>
+                    <span class="total-wt"><?php echo number_format($total['wt'], 2) ?></span>
                   </td>
                   <td class="text-right">
-                    <span class="all-total"><?php echo number_format($total['total'], 2) ?></span>
+                    <span class="total-all"><?php echo number_format($total['total'], 2) ?></span>
                   </td>
                 </tr>
               </tbody>
@@ -354,24 +366,8 @@ $remarks = $PAYMENT->payment_remark_view([$uuid]);
 
 <?php include_once(__DIR__ . "/../layout/footer.php"); ?>
 <script>
-  $('.amount-item, .vat-item, .wt-item').on('blur', function() {
-    var value = $(this).val();
-
-    value = value.replace(/[^0-9.]/g, '');
-
-    var parts = value.split('.');
-    if (parts.length > 2) {
-      value = parts[0] + '.' + parts.slice(1).join('');
-    }
-
-    if (value) {
-      value = parseFloat(value).toFixed(2);
-    }
-
-    $(this).val(value);
-  });
-
   const order = ($(".order-select").val() || "");
+  const purchase = ($(".purchase-select").val() || "");
   $(".expense-select").select2({
     placeholder: "-- รายจ่าย --",
     width: "100%",
@@ -382,7 +378,8 @@ $remarks = $PAYMENT->payment_remark_view([$uuid]);
       data: function(params) {
         return {
           keyword: params.term,
-          order
+          order,
+          purchase
         };
       },
       dataType: "json",
@@ -415,6 +412,7 @@ $remarks = $PAYMENT->payment_remark_view([$uuid]);
     row.after(clone);
 
     const order = ($(".order-select").val() || "");
+    const purchase = ($(".purchase-select").val() || "");
     $(".expense-select").select2({
       placeholder: "-- รายจ่าย --",
       width: "100%",
@@ -425,7 +423,8 @@ $remarks = $PAYMENT->payment_remark_view([$uuid]);
         data: function(params) {
           return {
             keyword: params.term,
-            order
+            order,
+            purchase
           };
         },
         dataType: "json",
@@ -439,7 +438,7 @@ $remarks = $PAYMENT->payment_remark_view([$uuid]);
       }
     });
 
-    $('.amount-item, .vat-item, .wt-item').on('blur', function() {
+    $('.item-amount, .item-vat, .item-wt').on('blur', function() {
       var value = $(this).val();
 
       value = value.replace(/[^0-9.]/g, '');
@@ -478,53 +477,56 @@ $remarks = $PAYMENT->payment_remark_view([$uuid]);
   $(document).on("change", ".expense-select", function() {
     const expense = ($(this).val() || "");
     const order = ($(".order-select").val() || "");
+    const purchase = ($(".purchase-select").val() || "");
     const row = $(this).closest("tr");
-    row.find(".text-item, .text2-item, .amount-item, .vat-item, .wt-item").val("");
-    row.find(".total-item").text("");
+    row.find(".item-text, .item-amount, .item-vat, .item-wt").val("");
+    row.find(".item-total").text("");
 
-    if (expense) {
+    if (expense && (order || purchase)) {
       axios.post("/payment/order-view", {
           expense,
-          order
+          order,
+          purchase
         })
         .then((res) => {
           const result = res.data;
-          const remain = parseFloat(result.remain).toLocaleString('th-TH', {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2
-          });
-          row.find(".remain-item").text(remain);
+          row.find(".item-remain").text(result.remain);
         })
         .catch((error) => {
           console.error(error);
         });
 
-      row.find(".text-item, .text2-item, .amount-item").prop("required", true);
+      row.find(".item-text, .item-amount").prop("required", true);
     } else {
-      row.find(".text-item, .text2-item, .amount-item").prop("required", false);
+      row.find(".item-text, .item-amount").prop("required", false);
     }
   });
 
-  $(document).on("input", ".amount-item, .vat-item, .wt-item", function() {
+  $(document).on("input", ".item-amount, .item-vat, .item-wt", function() {
+    const order = ($(".order-select").val() || "");
+    const purchase = ($(".purchase-select").val() || "");
     const row = $(this).closest("tr");
-    const amount = parseFloat(row.find(".amount-item").val() || 0);
-    const vat = parseFloat(row.find(".vat-item").val() || 0);
-    const wt = parseFloat(row.find(".wt-item").val() || 0);
-    let remain = (row.find(".remain-item").text() || 0);
-    remain = remain.replace(/,/g, '');
+    const amount = parseFloat(row.find(".item-amount").val() || 0);
+    const vat = parseFloat(row.find(".item-vat").val() || 0);
+    const wt = parseFloat(row.find(".item-wt").val() || 0);
+    let remain = parseFloat(row.find(".item-remain").text() || 0);
     const total = (amount + vat - wt);
 
-    row.find(".amount-item").attr("max", remain);
+    if (order || purchase) {
+      row.find(".item-amount").prop("max", remain);
+    } else {
+      row.find(".item-amount").prop("max", false);
+    }
 
     if (remain && total > remain) {
       Swal.fire({
         icon: "error",
         title: "รายจ่ายเกินวงเงิน \nกรุณาตรวจสอบอีกครั้ง!",
       });
-      row.find(".amount-item, .vat-item, .wt-item").val("");
-      row.find(".total-item").text("");
+      row.find(".item-amount, .item-vat, .item-wt").val("");
+      row.find(".item-total").text("");
     } else {
-      row.find(".total-item").text(total.toFixed(2));
+      row.find(".item-total").text(total.toFixed(2));
     }
 
     updateTotal();
@@ -550,39 +552,27 @@ $remarks = $PAYMENT->payment_remark_view([$uuid]);
     let totalVat = 0;
     let totalWt = 0;
 
-    $('.amount-item').each(function() {
+    $('.item-amount').each(function() {
       var amount = parseFloat($(this).val()) || 0;
       totalAmount += amount;
     });
 
-    $('.vat-item').each(function() {
+    $('.item-vat').each(function() {
       var vat = parseFloat($(this).val()) || 0;
       totalVat += vat;
     });
 
-    $('.wt-item').each(function() {
+    $('.item-wt').each(function() {
       var wt = parseFloat($(this).val()) || 0;
       totalWt += wt;
     });
 
-    grandTotal = totalAmount + totalVat - totalWt;
+    let grandTotal = totalAmount + totalVat - totalWt;
 
-    $(".amount-total").text(totalAmount.toFixed(2).toLocaleString('th-TH', {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    }));
-    $(".vat-total").text(totalVat.toFixed(2).toLocaleString('th-TH', {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    }));
-    $(".wt-total").text(totalWt.toFixed(2).toLocaleString('th-TH', {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    }));
-    $(".all-total").text(grandTotal.toFixed(2).toLocaleString('th-TH', {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    }));
+    $(".total-amount").text(totalAmount.toFixed(2));
+    $(".total-vat").text(totalVat.toFixed(2));
+    $(".total-wt").text(totalWt.toFixed(2));
+    $(".total-all").text(grandTotal.toFixed(2));
   }
 
   $(document).on("change", "input[name='file[]']", function() {
@@ -717,5 +707,22 @@ $remarks = $PAYMENT->payment_remark_view([$uuid]);
         return false;
       }
     })
+  });
+
+  $('.item-amount, .item-vat, .item-wt').on('blur', function() {
+    var value = $(this).val();
+
+    value = value.replace(/[^0-9.]/g, '');
+
+    var parts = value.split('.');
+    if (parts.length > 2) {
+      value = parts[0] + '.' + parts.slice(1).join('');
+    }
+
+    if (value) {
+      value = parseFloat(value).toFixed(2);
+    }
+
+    $(this).val(value);
   });
 </script>

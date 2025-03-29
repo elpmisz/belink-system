@@ -13,7 +13,8 @@ $uuid = (!empty($param[0]) ? $param[0] : "");
 $row = $OUTSTANDING->outstanding_view([$uuid]);
 $items = $OUTSTANDING->outstanding_item_view([$uuid]);
 $files = $OUTSTANDING->outstanding_file_view([$uuid]);
-// $remarks = $OUTSTANDING->outstanding_remark_view([$uuid]);
+$remarks = $OUTSTANDING->outstanding_remark_view([$uuid]);
+$total = $OUTSTANDING->outstanding_item_total([$uuid]);
 ?>
 
 <div class="card shadow">
@@ -96,10 +97,12 @@ $files = $OUTSTANDING->outstanding_file_view([$uuid]);
               <thead>
                 <tr>
                   <th width="10%">#</th>
-                  <th width="50%">รายละเอียด</th>
+                  <th width="20%">รายจ่าย</th>
+                  <th width="20%">รายละเอียด</th>
                   <th width="10%">จำนวน</th>
-                  <th width="10%">หน่วยนับ</th>
+                  <th width="10%">หน่วย</th>
                   <th width="10%">จำนวนเงิน</th>
+                  <th width="10%">ยอดคงเหลือ</th>
                 </tr>
               </thead>
               <tbody>
@@ -109,20 +112,18 @@ $files = $OUTSTANDING->outstanding_file_view([$uuid]);
                       <a href="javascript:void(0)" class="badge badge-danger font-weight-light item-delete" id="<?php echo $item['id'] ?>">ลบ</a>
                       <input type="hidden" class="form-control form-control-sm text-center" name="item__id[]" value="<?php echo $item['id'] ?>" readonly>
                     </td>
-                    <td class="text-left"><?php echo $item['name'] ?></td>
-                    <td class="text-center"><?php echo $item['amount'] ?></td>
+                    <td class="text-left"><?php echo $item['expense_name'] ?></td>
+                    <td class="text-left"><?php echo $item['text'] ?></td>
                     <td>
-                      <input type="text" class="form-control form-control-sm item-unit" name="item__unit[]" value="<?php echo $item['unit'] ?>">
-                      <div class="invalid-feedback">
-                        กรุณากรอกข้อมูล!
-                      </div>
+                      <input type="number" class="form-control form-control-sm text-right item-amount" name="item__amount[]" value="<?php echo $item['amount'] ?>" readonly>
                     </td>
                     <td>
-                      <input type="number" class="form-control form-control-sm text-right item-estimate" value="<?php echo $item['estimate'] ?>" min="1" step="0.01" name="item__estimate[]" required>
-                      <div class="invalid-feedback">
-                        กรุณากรอกข้อมูล!
-                      </div>
+                      <input type="text" class="form-control form-control-sm item-unit" name="item__unit[]" value="<?php echo $item['unit'] ?>" readonly>
                     </td>
+                    <td>
+                      <input type="number" class="form-control form-control-sm text-right item-estimate" value="<?php echo $item['estimate'] ?>" min="1" step="0.01" name="item__estimate[]" readonly>
+                    </td>
+                    <td class="text-right"><span class="item-remain"></span></td>
                   </tr>
                 <?php endforeach; ?>
                 <tr class="item-tr">
@@ -131,28 +132,41 @@ $files = $OUTSTANDING->outstanding_file_view([$uuid]);
                     <button type="button" class="btn btn-sm btn-danger item-decrease">-</button>
                   </td>
                   <td>
-                    <select class="form-control form-control-sm item-select" name="item_name[]"></select>
+                    <select class="form-control form-control-sm expense-select" name="expense_id[]"></select>
                     <div class="invalid-feedback">
                       กรุณากรอกข้อมูล!
                     </div>
                   </td>
                   <td>
-                    <input type="number" class="form-control form-control-sm text-center item-amount" min="1" step="0.01" name="item_amount[]">
+                    <input type="text" class="form-control form-control-sm text-left item-text" name="item_text[]">
                     <div class="invalid-feedback">
                       กรุณากรอกข้อมูล!
                     </div>
                   </td>
                   <td>
-                    <input type="text" class="form-control form-control-sm item-unit" name="item_unit[]">
+                    <input type="number" class="form-control form-control-sm text-right item-amount" name="item_amount[]" min="1" step="0.01">
                     <div class="invalid-feedback">
                       กรุณากรอกข้อมูล!
                     </div>
                   </td>
                   <td>
-                    <input type="number" class="form-control form-control-sm text-right item-estimate" min="1" step="0.01" name="item_estimate[]">
+                    <input type="text" class="form-control form-control-sm text-left item-unit" name="item_unit[]">
                     <div class="invalid-feedback">
                       กรุณากรอกข้อมูล!
                     </div>
+                  </td>
+                  <td>
+                    <input type="number" class="form-control form-control-sm text-right item-estimate" name="item_estimate[]" min="1" step="0.01">
+                    <div class="invalid-feedback">
+                      กรุณากรอกข้อมูล!
+                    </div>
+                  </td>
+                  <td class="text-right"><span class="item-remain"></span></td>
+                </tr>
+                <tr>
+                  <td colspan="5" class="text-right">รวมทั้งสิ้น</td>
+                  <td class="text-right">
+                    <span class="total-all"><?php echo number_format($total['total'], 2) ?></span>
                   </td>
                 </tr>
               </tbody>
@@ -219,12 +233,12 @@ $files = $OUTSTANDING->outstanding_file_view([$uuid]);
 <?php include_once(__DIR__ . "/../layout/footer.php"); ?>
 <script>
   const order = ($(".order-select").val() || "");
-  $(".item-select").select2({
+  $(".expense-select").select2({
     placeholder: "-- รายจ่าย --",
     width: "100%",
     allowClear: true,
     ajax: {
-      url: "/outstanding/item-select",
+      url: "/purchase/expense-select",
       method: "POST",
       data: function(params) {
         return {
@@ -243,9 +257,145 @@ $files = $OUTSTANDING->outstanding_file_view([$uuid]);
     }
   });
 
+  $(document).on("change", ".order-select", function() {
+    $(".expense-select").empty();
+    $(".item-text, .item-amount, .item-vat, .item-wt").val("");
+    $(".item-total, .item-remain, .total-amount, .total-vat, .total-wt, .total-all").text("");
+    const order = ($(this).val() || "");
+
+    if (order) {
+      $(".order-div, .items-div").show();
+      axios.post("/purchase/order-view", {
+          order
+        })
+        .then((res) => {
+          const result = res.data;
+          if (result) {
+            $(".order-customer").text(result.customer_name);
+            $(".order-product").text(result.product_name);
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+
+      axios.post("/purchase/get-expense", {
+          order,
+        })
+        .then((res) => {
+          let result = res.data;
+          let tableContent = '';
+          if (result.length > 0) {
+            tableContent = `
+              <tr>
+                <th width="10%">#</th>
+                <th width="20%">รายจ่าย</th>
+                <th width="20%">รายละเอียด</th>
+                <th width="10%">จำนวน</th>
+                <th width="10%">หน่วย</th>
+                <th width="10%">จำนวนเงิน</th>
+                <th width="10%">ยอดคงเหลือ</th>
+              </tr>
+            `;
+
+            result.forEach((item, index) => {
+              tableContent += `
+                <tr class="item-tr">
+                  <td class="text-center">${++index}</td>
+                  <td class="text-left">
+                    ${item.expense_name}
+                    <input type="hidden" class="form-control form-control-sm text-left" name="expense_id[]" value="${item.expense_id}">
+                  </td>
+                  <td>
+                    <input type="text" class="form-control form-control-sm text-left item-text" name="item_text[]" required>
+                    <div class="invalid-feedback">
+                      กรุณากรอกข้อมูล!
+                    </div>
+                  </td>
+                  <td>
+                    <input type="number" class="form-control form-control-sm text-right item-amount" name="item_amount[]" min="1" step="0.01">
+                    <div class="invalid-feedback">
+                      กรุณากรอกข้อมูล!
+                    </div>
+                  </td>
+                  <td>
+                    <input type="text" class="form-control form-control-sm text-left item-unit" name="item_unit[]">
+                    <div class="invalid-feedback">
+                      กรุณากรอกข้อมูล!
+                    </div>
+                  </td>
+                  <td>
+                    <input type="number" class="form-control form-control-sm text-right item-estimate" name="item_estimate[]" min="1" step="0.01">
+                    <div class="invalid-feedback">
+                      กรุณากรอกข้อมูล!
+                    </div>
+                  </td>
+                  <td class="text-right"><span class="item-remain">${item.remain}</span></td>
+                </tr>
+              `;
+            });
+          }
+
+          $(".items-table").html(tableContent);
+        }).catch((error) => {
+          console.log(error);
+        });
+
+      $(".expense-select").select2({
+        placeholder: "-- รายจ่าย --",
+        width: "100%",
+        allowClear: true,
+        ajax: {
+          url: "/purchase/expense-select",
+          method: "POST",
+          data: function(params) {
+            return {
+              keyword: params.term,
+              order
+            };
+          },
+          dataType: "json",
+          delay: 100,
+          processResults: function(data) {
+            return {
+              results: data
+            };
+          },
+          cache: true
+        }
+      });
+    } else {
+      $(".order-div, .items-div").hide();
+
+      $(".expense-select").select2({
+        placeholder: "-- รายจ่าย --",
+        width: "100%",
+        allowClear: true,
+        ajax: {
+          url: "/purchase/expense-select",
+          method: "POST",
+          data: function(params) {
+            return {
+              keyword: params.term,
+              order
+            };
+          },
+          dataType: "json",
+          delay: 100,
+          processResults: function(data) {
+            return {
+              results: data
+            };
+          },
+          cache: true
+        }
+      });
+    }
+  });
+
   $(".item-decrease, .file-decrease").hide();
   $(document).on("click", ".item-increase", function() {
-    $(".item-select").select2('destroy');
+    $(".expense-select").select2('destroy');
 
     let row = $(".item-tr:last");
     let clone = row.clone();
@@ -261,13 +411,17 @@ $files = $OUTSTANDING->outstanding_file_view([$uuid]);
 
     row.after(clone);
 
+    initializeSelect2(".expense-select", "/estimate/expense-select", "-- รายชื่อรายจ่าย --");
+
+    updateTotal();
+
     const order = ($(".order-select").val() || "");
-    $(".item-select").select2({
+    $(".expense-select").select2({
       placeholder: "-- รายจ่าย --",
       width: "100%",
       allowClear: true,
       ajax: {
-        url: "/outstanding/item-select",
+        url: "/purchase/expense-select",
         method: "POST",
         data: function(params) {
           return {
@@ -285,33 +439,108 @@ $files = $OUTSTANDING->outstanding_file_view([$uuid]);
         cache: true
       }
     });
+
+    $('.item-amount, .item-estimate').on('blur', function() {
+      var value = $(this).val();
+
+      value = value.replace(/[^0-9.]/g, '');
+
+      var parts = value.split('.');
+      if (parts.length > 2) {
+        value = parts[0] + '.' + parts.slice(1).join('');
+      }
+
+      if (value) {
+        value = parseFloat(value).toFixed(2);
+      }
+
+      $(this).val(value);
+    });
   });
 
-  $(document).on("change", ".item-select", function() {
-    const item = $(this).val();
+  $(document).on("change", ".expense-select", function() {
+    const expense = ($(this).val() || "");
     const order = ($(".order-select").val() || "");
+    const purchase = ($(".purchase-select").val() || "");
     const row = $(this).closest("tr");
+    row.find(".item-text, .item-amount, .item-vat, .item-wt").val("");
+    row.find(".item-total").text("");
 
-    if (item) {
-      axios.post("/outstanding/item-view", {
-          item,
-          order
+    if (expense && order) {
+      axios.post("/payment/order-view", {
+          expense,
+          order,
+          purchase
         })
         .then((res) => {
           const result = res.data;
-          row.find(".item-amount").val(result.amount);
-          row.find(".item-unit").val(result.unit);
-          row.find(".item-estimate").val(result.estimate);
+          row.find(".item-remain").text(result.remain);
         })
         .catch((error) => {
           console.error(error);
         });
 
-      row.find(".item-amount, .item-estimate").prop("required", true);
+      row.find(".item-text, .item-amount, .item-unit, .item-estimate").prop("required", true);
     } else {
-      row.find(".item-amount, .item-estimate").prop("required", false);
+      row.find(".item-text, .item-amount, .item-unit, .item-estimate").prop("required", false);
     }
   });
+
+  $(document).on("input", ".item-estimate", function() {
+    const order = ($(".order-select").val() || "");
+    const row = $(this).closest("tr");
+    const estimate = parseFloat(row.find(".item-estimate").val() || 0);
+    let remain = parseFloat(row.find(".item-remain").text() || 0);
+
+    if (order) {
+      row.find(".item-estimate").prop("max", remain);
+    } else {
+      row.find(".item-estimate").prop("max", false);
+    }
+
+    if (remain && estimate > remain) {
+      Swal.fire({
+        icon: "error",
+        title: "รายจ่ายเกินวงเงิน \nกรุณาตรวจสอบอีกครั้ง!",
+      });
+      row.find(".item-estimate").val("");
+    }
+
+    updateTotal();
+
+    $('.item-amount, .item-estimate').on('blur', function() {
+      var value = $(this).val();
+
+      value = value.replace(/[^0-9.]/g, '');
+
+      var parts = value.split('.');
+      if (parts.length > 2) {
+        value = parts[0] + '.' + parts.slice(1).join('');
+      }
+
+      if (value) {
+        value = parseFloat(value).toFixed(2);
+      }
+
+      $(this).val(value);
+    });
+  });
+
+  function updateTotal() {
+    let totalEstimate = 0;
+
+    $('.item-estimate').each(function() {
+      let estimate = parseFloat($(this).val()) || 0;
+      totalEstimate += estimate;
+    });
+
+    let formattedTotalEstimate = totalEstimate.toLocaleString('en-US', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    });
+
+    $(".total-all").text(formattedTotalEstimate);
+  }
 
   $(document).on("click", ".file-increase", function() {
     let row = $(".file-tr:last");
@@ -351,92 +580,6 @@ $files = $OUTSTANDING->outstanding_file_view([$uuid]);
     }
   });
 
-  $(document).on("click", ".item-delete", function(e) {
-    let id = $(this).prop("id");
-    e.preventDefault();
-    Swal.fire({
-      title: "ยืนยันที่จะลบ?",
-      icon: "question",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "ยืนยัน",
-      cancelButtonText: "ปิด",
-    }).then((result) => {
-      if (result.value) {
-        axios.post("/outstanding/item-delete", {
-          id
-        }).then((res) => {
-          let result = res.data;
-          if (result === 200) {
-            Swal.fire({
-              title: "ดำเนินการเรียบร้อย!",
-              text: "",
-              icon: "success"
-            }).then((result) => {
-              location.reload()
-            });
-          } else {
-            Swal.fire({
-              title: "ระบบมีปัญหา\nกรุณาลองใหม่อีกครั้ง!",
-              text: "",
-              icon: "error"
-            }).then((result) => {
-              location.reload()
-            });
-          }
-        }).catch((error) => {
-          console.log(error);
-        });
-      } else {
-        return false;
-      }
-    })
-  });
-
-  $(document).on("click", ".file-delete", function(e) {
-    let id = $(this).prop("id");
-    e.preventDefault();
-    Swal.fire({
-      title: "ยืนยันที่จะลบ?",
-      icon: "question",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "ยืนยัน",
-      cancelButtonText: "ปิด",
-    }).then((result) => {
-      if (result.value) {
-        axios.post("/outstanding/file-delete", {
-          id
-        }).then((res) => {
-          let result = res.data;
-          if (result === 200) {
-            Swal.fire({
-              title: "ดำเนินการเรียบร้อย!",
-              text: "",
-              icon: "success"
-            }).then((result) => {
-              location.reload()
-            });
-          } else {
-            Swal.fire({
-              title: "ระบบมีปัญหา\nกรุณาลองใหม่อีกครั้ง!",
-              text: "",
-              icon: "error"
-            }).then((result) => {
-              location.reload()
-            });
-          }
-        }).catch((error) => {
-          console.log(error);
-        });
-      } else {
-        return false;
-      }
-    })
-  });
-
   $(".date-select").daterangepicker({
     singleDatePicker: true,
     showDropdowns: true,
@@ -464,7 +607,20 @@ $files = $OUTSTANDING->outstanding_file_view([$uuid]);
     e.preventDefault();
   });
 
-  $(document).on("change", "#check_all", function() {
-    $("input:checkbox").prop('checked', $(this).prop("checked"));
+  $('.item-amount, .item-estimate').on('blur', function() {
+    var value = $(this).val();
+
+    value = value.replace(/[^0-9.]/g, '');
+
+    var parts = value.split('.');
+    if (parts.length > 2) {
+      value = parts[0] + '.' + parts.slice(1).join('');
+    }
+
+    if (value) {
+      value = parseFloat(value).toFixed(2);
+    }
+
+    $(this).val(value);
   });
 </script>

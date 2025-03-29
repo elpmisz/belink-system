@@ -55,6 +55,12 @@ $remarks = $ADVANCE->advance_remark_view([$uuid]);
         </div>
       </div>
       <div class="row mb-2">
+        <label class="col-xl-2 offset-xl-2 col-form-label">เลขที่สัญญา SO</label>
+        <div class="col-xl-4 text-underline">
+          <?php echo $row['order_number'] ?>
+        </div>
+      </div>
+      <div class="row mb-2">
         <label class="col-xl-2 offset-xl-2 col-form-label">วันที่เอกสาร</label>
         <div class="col-xl-4 text-underline">
           <?php echo $row['doc_date'] ?>

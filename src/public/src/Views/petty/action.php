@@ -53,14 +53,13 @@ if ($action === "create") {
       $PETTY->petty_insert([$petty_last, $login_id, $department_number, $doc_date, $objective]);
       $request_id = $PETTY->last_insert_id();
 
-      foreach ($_POST['expense_id'] as $key => $row) {
-        $expense_id = (isset($_POST['expense_id'][$key]) ? $VALIDATION->input($_POST['expense_id'][$key]) : "");
+      foreach ($_POST['item_text'] as $key => $row) {
         $item_text = (isset($_POST['item_text'][$key]) ? $VALIDATION->input($_POST['item_text'][$key]) : "");
         $item_amount = (isset($_POST['item_amount'][$key]) ? $VALIDATION->input($_POST['item_amount'][$key]) : "");
 
-        $petty_item_count = $PETTY->petty_item_count([$request_id, $expense_id]);
+        $petty_item_count = $PETTY->petty_item_count([$request_id, $item_text, $item_amount]);
         if (intval($petty_item_count) === 0) {
-          $PETTY->petty_item_insert([$request_id, $expense_id, $item_text, $item_amount]);
+          $PETTY->petty_item_insert([$request_id, $item_text, $item_amount]);
         }
       }
 
@@ -108,7 +107,7 @@ if ($action === "update") {
     $doc_date = (isset($_POST['doc_date']) ? $VALIDATION->input($_POST['doc_date']) : "");
     $doc_date = (!empty($doc_date) ? DateTime::createFromFormat('d/m/Y', $doc_date)->format('Y-m-d') : "");
     $objective = (isset($_POST['objective']) ? $VALIDATION->input($_POST['objective']) : "");
-    $PETTY->petty_update([$doc_date, $objective, $uuid]);
+    $PETTY->petty_update([$department_number, $doc_date, $objective, $uuid]);
 
     foreach ($_POST['item__id'] as $key => $row) {
       $item__id = (isset($_POST['item__id'][$key]) ? $VALIDATION->input($_POST['item__id'][$key]) : "");
@@ -118,15 +117,14 @@ if ($action === "update") {
       $PETTY->petty_item_update([$item__text, $item__amount, $item__id]);
     }
 
-    if (isset($_POST['expense_id'])) {
-      foreach ($_POST['expense_id'] as $key => $row) {
-        $expense_id = (isset($_POST['expense_id'][$key]) ? $VALIDATION->input($_POST['expense_id'][$key]) : "");
+    if (isset($_POST['item_text'])) {
+      foreach ($_POST['item_text'] as $key => $row) {
         $item_text = (isset($_POST['item_text'][$key]) ? $VALIDATION->input($_POST['item_text'][$key]) : "");
         $item_amount = (isset($_POST['item_amount'][$key]) ? $VALIDATION->input($_POST['item_amount'][$key]) : "");
 
-        $petty_item_count = $PETTY->petty_item_count([$request_id, $expense_id, $item_text]);
+        $petty_item_count = $PETTY->petty_item_count([$request_id, $item_text, $item_amount]);
         if (intval($petty_item_count) === 0) {
-          $PETTY->petty_item_insert([$request_id, $expense_id, $item_text, $item_amount]);
+          $PETTY->petty_item_insert([$request_id, $item_text, $item_amount]);
         }
       }
     }

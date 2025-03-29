@@ -41,14 +41,12 @@ $VALIDATION = new Validation();
 
 if ($action === "create") {
   try {
-    echo "<pre>";
-    print_r($_POST);
-    die();
     $login_id = (isset($user['login_id']) ? $VALIDATION->input($user['login_id']) : "");
     $department_number = (isset($_POST['department_number']) ? $VALIDATION->input($_POST['department_number']) : "");
     $doc_date = (isset($_POST['doc_date']) ? $VALIDATION->input($_POST['doc_date']) : "");
     $doc_date = (!empty($doc_date) ? DateTime::createFromFormat('d/m/Y', $doc_date)->format('Y-m-d') : "");
     $order_number = (isset($_POST['order_number']) ? $VALIDATION->input($_POST['order_number']) : "");
+    $purchase_number = (isset($_POST['purchase_number']) ? $VALIDATION->input($_POST['purchase_number']) : "");
     $receiver = (isset($_POST['receiver']) ? $VALIDATION->input($_POST['receiver']) : "");
     $type = (isset($_POST['type']) ? $VALIDATION->input($_POST['type']) : "");
     $cheque_bank = (isset($_POST['cheque_bank']) ? $VALIDATION->input($_POST['cheque_bank']) : "");
@@ -58,10 +56,10 @@ if ($action === "create") {
     $cheque_date = (!empty($cheque_date) ? date("Y-m-d", strtotime(str_replace("/", "-", $cheque_date))) : "");
     $payment_last = $PAYMENT->payment_last();
 
-    $payment_count = $PAYMENT->payment_count([$login_id, $department_number, $doc_date, $order_number, $receiver, $type, $cheque_bank, $cheque_branch, $cheque_number, $cheque_date]);
+    $payment_count = $PAYMENT->payment_count([$login_id, $department_number, $doc_date, $order_number, $purchase_number, $receiver, $type, $cheque_bank, $cheque_branch, $cheque_number, $cheque_date]);
 
     if (intval($payment_count) === 0) {
-      $PAYMENT->payment_insert([$payment_last, $login_id, $department_number, $doc_date, $order_number, $receiver, $type, $cheque_bank, $cheque_branch, $cheque_number, $cheque_date]);
+      $PAYMENT->payment_insert([$payment_last, $login_id, $department_number, $doc_date, $order_number, $purchase_number, $receiver, $type, $cheque_bank, $cheque_branch, $cheque_number, $cheque_date]);
       $request_id = $PAYMENT->last_insert_id();
 
       foreach ($_POST['expense_id'] as $key => $row) {
@@ -73,7 +71,7 @@ if ($action === "create") {
         $item_wt = (isset($_POST['item_wt'][$key]) ? $VALIDATION->input($_POST['item_wt'][$key]) : "");
 
         $payment_item_count = $PAYMENT->payment_item_count([$request_id, $expense_id, $item_text, $item_text2, $item_amount]);
-        if (!empty($expense_id) && intval($payment_item_count) === 0) {
+        if (!empty($expense_id) && intval($payment_item_count) === 0 && !empty($item_text) && !empty($item_text2) && !empty($item_amount)) {
           $PAYMENT->payment_item_insert([$request_id, $expense_id, $item_text, $item_text2, $item_amount, $item_vat, $item_wt]);
         }
       }

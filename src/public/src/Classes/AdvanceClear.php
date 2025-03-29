@@ -277,14 +277,13 @@ class AdvanceClear
 
   public function advance_select($keyword)
   {
-    $sql = "SELECT a.id,
-      CONCAT('AR',YEAR(a.created),LPAD(a.`last`,4,'0')) `text`
-    FROM belink.advance_request a
-    WHERE a.`status` = 2 ";
+    $sql = "SELECT a.department_number `id`,
+    a.department_number `text`
+    FROM belink.advance_request a ";
     if (!empty($keyword)) {
-      $sql .= " AND (a.objective LIKE '%{$keyword}%') ";
+      $sql .= " WHERE (a.department_number LIKE '%{$keyword}%') ";
     }
-    $sql .= " ORDER BY  a.last ASC LIMIT 20";
+    $sql .= " ORDER BY a.created DESC LIMIT 20";
     $stmt = $this->dbcon->prepare($sql);
     $stmt->execute();
     return $stmt->fetchAll();
@@ -293,10 +292,11 @@ class AdvanceClear
   public function advance_amount($data)
   {
     $sql = "SELECT SUM(b.amount) total
-    FROM belink.advance_clear_request a
+    FROM belink.advance_request a
     LEFT JOIN belink.advance_item b
-    ON b.`status` = 1
-    WHERE a.id = ?";
+    ON a.id = b.request_id
+    WHERE b.status = 1
+    AND a.department_number = ?";
     $stmt = $this->dbcon->prepare($sql);
     $stmt->execute($data);
     $row = $stmt->fetch();
@@ -305,12 +305,15 @@ class AdvanceClear
 
   public function advance_order($data)
   {
-    $sql = "SELECT a.expense_id,CONCAT('[',b.`code`,'] ',b.`name`) expense_name,a.amount
-    FROM belink.advance_item a
-    LEFT JOIN belink.expense b
-    ON a.expense_id = b.id
-    WHERE a.request_id = ?
-    AND a.`status` = 1";
+    $sql = "SELECT b.id,CONCAT('[',c.`code`,'] ',c.`name`) expense_name,
+    b.text,b.amount
+    FROM belink.advance_request a
+    LEFT JOIN belink.advance_item b
+    ON a.id = b.request_id
+    LEFT JOIN belink.expense c
+    ON b.expense_id = c.id
+    WHERE b.`status` = 1
+    and a.department_number = ?";
     $stmt = $this->dbcon->prepare($sql);
     $stmt->execute($data);
     return $stmt->fetchAll();

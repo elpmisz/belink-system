@@ -73,6 +73,12 @@ $remarks = $PAYMENT->payment_remark_view([$uuid]);
         </div>
       </div>
       <div class="row mb-2">
+        <label class="col-xl-2 offset-xl-2 col-form-label">เลขที่ใบขอซื้อ PR</label>
+        <div class="col-xl-4 text-underline">
+          <?php echo $row['purchase_number'] ?>
+        </div>
+      </div>
+      <div class="row mb-2">
         <label class="col-xl-2 offset-xl-2 col-form-label">จ่ายให้</label>
         <div class="col-xl-4 text-underline">
           <?php echo $row['receiver'] ?>

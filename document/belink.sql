@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: database
--- Generation Time: Mar 27, 2025 at 03:00 PM
+-- Generation Time: Mar 29, 2025 at 02:57 PM
 -- Server version: 11.6.2-MariaDB-ubu2404
 -- PHP Version: 8.2.27
 
@@ -106,6 +106,13 @@ CREATE TABLE `advance_file` (
   `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `advance_file`
+--
+
+INSERT INTO `advance_file` (`id`, `request_id`, `name`, `status`, `updated`, `created`) VALUES
+(1, 1, 'a28dd2a99a51b4ea567954a638a52d22.pdf', 1, NULL, '2025-03-29 13:14:07');
+
 -- --------------------------------------------------------
 
 --
@@ -123,6 +130,20 @@ CREATE TABLE `advance_item` (
   `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `advance_item`
+--
+
+INSERT INTO `advance_item` (`id`, `request_id`, `expense_id`, `text`, `amount`, `status`, `updated`, `created`) VALUES
+(1, 1, 5, 'aaa', 100.00, 1, '2025-03-29 15:15:38', '2025-03-29 13:14:07'),
+(2, 1, 8, 'bbb', 100.00, 0, '2025-03-29 15:15:47', '2025-03-29 13:14:07'),
+(3, 1, 5, 'ccc', 100.00, 0, '2025-03-29 15:16:07', '2025-03-29 13:14:07'),
+(4, 1, 8, 'ddd', 100.00, 1, '2025-03-29 15:15:38', '2025-03-29 13:14:07'),
+(7, 2, 5, 'aaaa', 1000.00, 1, '2025-03-29 15:16:33', '2025-03-29 13:41:41'),
+(8, 1, 5, 'eee', 200.00, 0, '2025-03-29 15:16:04', '2025-03-29 15:15:38'),
+(9, 1, 8, 'fff', 200.00, 0, '2025-03-29 15:15:50', '2025-03-29 15:15:38'),
+(10, 2, 5, 'bbbb', 1000.00, 1, NULL, '2025-03-29 15:16:33');
+
 -- --------------------------------------------------------
 
 --
@@ -138,6 +159,14 @@ CREATE TABLE `advance_remark` (
   `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `advance_remark`
+--
+
+INSERT INTO `advance_remark` (`id`, `request_id`, `login_id`, `text`, `status`, `created`) VALUES
+(1, 1, 1, '', 2, '2025-03-29 15:16:38'),
+(2, 2, 1, '', 2, '2025-03-29 15:17:02');
+
 -- --------------------------------------------------------
 
 --
@@ -150,6 +179,7 @@ CREATE TABLE `advance_request` (
   `last` int(11) NOT NULL,
   `login_id` int(11) NOT NULL,
   `department_number` varchar(20) NOT NULL,
+  `order_number` varchar(20) NOT NULL,
   `doc_date` date NOT NULL,
   `finish` date NOT NULL,
   `objective` text NOT NULL,
@@ -158,6 +188,14 @@ CREATE TABLE `advance_request` (
   `updated` datetime DEFAULT NULL,
   `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `advance_request`
+--
+
+INSERT INTO `advance_request` (`id`, `uuid`, `last`, `login_id`, `department_number`, `order_number`, `doc_date`, `finish`, `objective`, `action`, `status`, `updated`, `created`) VALUES
+(1, '0f35cf4f-0c65-11f0-904e-0242ac120003', 1, 1, 'it-68008', 'SO68030017', '2025-03-29', '2025-03-29', 'reason-test', 1, 2, '2025-03-29 15:16:38', '2025-03-29 13:14:07'),
+(2, 'eacdcfe5-0c68-11f0-904e-0242ac120003', 2, 1, 'it-680011', '', '2025-03-29', '2025-03-29', 'obj-test', 1, 2, '2025-03-29 15:17:02', '2025-03-29 13:41:41');
 
 -- --------------------------------------------------------
 
@@ -1909,7 +1947,7 @@ CREATE TABLE `outstanding_file` (
 --
 
 INSERT INTO `outstanding_file` (`id`, `request_id`, `name`, `status`, `updated`, `created`) VALUES
-(3, 1, '8d3ca723dec771d73d19696ffbd18431.pdf', 1, NULL, '2025-03-20 19:46:03');
+(1, 1, '4fa38865164b3349f1e7fc2882812bde.pdf', 1, NULL, '2025-03-29 20:37:17');
 
 -- --------------------------------------------------------
 
@@ -1920,8 +1958,9 @@ INSERT INTO `outstanding_file` (`id`, `request_id`, `name`, `status`, `updated`,
 CREATE TABLE `outstanding_item` (
   `id` int(11) NOT NULL,
   `request_id` int(11) NOT NULL,
-  `name` varchar(100) NOT NULL,
-  `amount` int(11) NOT NULL,
+  `expense_id` int(11) NOT NULL,
+  `text` varchar(100) NOT NULL,
+  `amount` decimal(20,2) NOT NULL,
   `unit` varchar(50) NOT NULL,
   `estimate` decimal(20,2) NOT NULL,
   `status` int(11) NOT NULL DEFAULT 1,
@@ -1933,12 +1972,13 @@ CREATE TABLE `outstanding_item` (
 -- Dumping data for table `outstanding_item`
 --
 
-INSERT INTO `outstanding_item` (`id`, `request_id`, `name`, `amount`, `unit`, `estimate`, `status`, `updated`, `created`) VALUES
-(1, 1, '[ค่าเดินทาง] aaaa aaa', 1, '', 3000.00, 1, '2025-03-20 19:46:03', '2025-03-19 20:22:54'),
-(2, 1, '[ค่าที่พัก] bbbb bbb', 1, '', 4000.00, 1, '2025-03-20 19:46:03', '2025-03-19 20:22:54'),
-(3, 1, '[ค่าอาหาร] cccc ccc', 1, '', 2000.00, 1, '2025-03-20 19:46:03', '2025-03-19 20:22:54'),
-(8, 1, 'Notebook', 2, 'เครื่อง', 20000.00, 0, '2025-03-20 19:43:02', '2025-03-20 19:41:54'),
-(9, 1, 'Notebook', 2, 'เครื่อง', 20000.00, 1, '2025-03-20 19:46:03', '2025-03-20 19:43:05');
+INSERT INTO `outstanding_item` (`id`, `request_id`, `expense_id`, `text`, `amount`, `unit`, `estimate`, `status`, `updated`, `created`) VALUES
+(1, 1, 5, 'aaa', 10.00, 'ea', 100.00, 1, '2025-03-29 20:37:51', '2025-03-29 19:18:14'),
+(2, 1, 8, 'bbb', 10.00, 'ea', 200.00, 1, '2025-03-29 20:37:51', '2025-03-29 19:18:14'),
+(3, 1, 5, 'ccc', 20.00, 'ea', 200.00, 1, '2025-03-29 20:37:51', '2025-03-29 19:18:14'),
+(4, 1, 8, 'ddd', 20.00, 'ea', 400.00, 1, '2025-03-29 20:37:51', '2025-03-29 19:18:14'),
+(5, 1, 5, 'eee', 30.00, 'ea', 300.00, 1, NULL, '2025-03-29 20:37:51'),
+(6, 1, 8, 'fff', 30.00, 'ea', 600.00, 1, NULL, '2025-03-29 20:37:51');
 
 -- --------------------------------------------------------
 
@@ -1960,7 +2000,7 @@ CREATE TABLE `outstanding_remark` (
 --
 
 INSERT INTO `outstanding_remark` (`id`, `request_id`, `login_id`, `text`, `status`, `created`) VALUES
-(1, 1, 1, '', 2, '2025-03-20 20:00:53');
+(1, 1, 1, '', 2, '2025-03-29 20:37:57');
 
 -- --------------------------------------------------------
 
@@ -1988,7 +2028,7 @@ CREATE TABLE `outstanding_request` (
 --
 
 INSERT INTO `outstanding_request` (`id`, `uuid`, `last`, `login_id`, `department_number`, `doc_date`, `order_number`, `text`, `action`, `status`, `updated`, `created`) VALUES
-(1, '445fc415-04c5-11f0-91e9-0242ac120003', 1, 1, 'IT-680004', '2025-03-20', 'SO-680001', 'testtest\ntesttest', 1, 2, '2025-03-20 20:00:53', '2025-03-19 20:22:54');
+(1, 'e3e59ab0-0c97-11f0-9003-0242ac120003', 1, 1, 'it-680013', '2025-03-29', 'SO68030017', 'text-test', 1, 2, '2025-03-29 20:37:57', '2025-03-29 19:18:14');
 
 -- --------------------------------------------------------
 
@@ -2004,6 +2044,13 @@ CREATE TABLE `payment_file` (
   `updated` datetime DEFAULT NULL,
   `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `payment_file`
+--
+
+INSERT INTO `payment_file` (`id`, `request_id`, `name`, `status`, `updated`, `created`) VALUES
+(1, 1, '6ddb414cf552b8c5e31f4e1a0dfc25e1.pdf', 1, NULL, '2025-03-29 09:15:02');
 
 -- --------------------------------------------------------
 
@@ -2025,6 +2072,18 @@ CREATE TABLE `payment_item` (
   `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `payment_item`
+--
+
+INSERT INTO `payment_item` (`id`, `request_id`, `expense_id`, `text`, `text2`, `amount`, `vat`, `wt`, `status`, `updated`, `created`) VALUES
+(1, 1, 5, 'aaa', 'aa', 1000.00, 70.00, 0.00, 1, NULL, '2025-03-29 09:15:02'),
+(2, 1, 8, 'bbb', 'bb', 1000.00, 70.00, 0.00, 1, NULL, '2025-03-29 09:15:02'),
+(3, 1, 5, 'ccc', 'cc', 2000.00, 140.00, 0.00, 1, NULL, '2025-03-29 09:15:02'),
+(4, 1, 8, 'ddd', 'dd', 2000.00, 140.00, 0.00, 1, NULL, '2025-03-29 09:15:02'),
+(5, 1, 5, 'eee', 'ee', 1000.00, 0.00, 0.00, 1, NULL, '2025-03-29 09:39:41'),
+(6, 2, 5, 'aaaa', 'aa', 1000.00, 0.00, 0.00, 1, NULL, '2025-03-29 13:38:36');
+
 -- --------------------------------------------------------
 
 --
@@ -2040,6 +2099,18 @@ CREATE TABLE `payment_remark` (
   `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `payment_remark`
+--
+
+INSERT INTO `payment_remark` (`id`, `request_id`, `login_id`, `text`, `status`, `created`) VALUES
+(1, 1, 1, '', 2, '2025-03-29 11:12:31'),
+(2, 1, 1, '', 3, '2025-03-29 11:13:05'),
+(3, 1, 1, '', 4, '2025-03-29 11:13:19'),
+(4, 2, 1, '', 2, '2025-03-29 13:38:52'),
+(5, 2, 1, '', 3, '2025-03-29 13:39:00'),
+(6, 2, 1, '', 4, '2025-03-29 13:39:04');
+
 -- --------------------------------------------------------
 
 --
@@ -2054,6 +2125,7 @@ CREATE TABLE `payment_request` (
   `department_number` varchar(20) NOT NULL,
   `doc_date` date NOT NULL,
   `order_number` varchar(20) NOT NULL,
+  `purchase_number` varchar(20) NOT NULL,
   `receiver` varchar(100) NOT NULL,
   `type` int(11) NOT NULL,
   `cheque_bank` varchar(100) DEFAULT NULL,
@@ -2065,6 +2137,14 @@ CREATE TABLE `payment_request` (
   `updated` datetime DEFAULT NULL,
   `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `payment_request`
+--
+
+INSERT INTO `payment_request` (`id`, `uuid`, `last`, `login_id`, `department_number`, `doc_date`, `order_number`, `purchase_number`, `receiver`, `type`, `cheque_bank`, `cheque_branch`, `cheque_number`, `cheque_date`, `action`, `status`, `updated`, `created`) VALUES
+(1, '9f71b4de-0c43-11f0-904e-0242ac120003', 1, 1, 'it-680007', '2025-03-29', '', 'it-test', 'it', 1, '', '', '', '1970-01-01', 1, 4, '2025-03-29 11:13:19', '2025-03-29 09:15:02'),
+(2, '7c27bd3f-0c68-11f0-904e-0242ac120003', 2, 1, 'it-680010', '2025-03-29', '', '', 'it', 1, '', '', '', '1970-01-01', 1, 4, '2025-03-29 13:39:04', '2025-03-29 13:38:36');
 
 -- --------------------------------------------------------
 
@@ -2080,6 +2160,13 @@ CREATE TABLE `petty_file` (
   `updated` datetime DEFAULT NULL,
   `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `petty_file`
+--
+
+INSERT INTO `petty_file` (`id`, `request_id`, `name`, `status`, `updated`, `created`) VALUES
+(1, 1, 'a4e53a89a255d75b9905bcd134e4714e.pdf', 1, NULL, '2025-03-29 20:49:19');
 
 -- --------------------------------------------------------
 
@@ -2097,6 +2184,15 @@ CREATE TABLE `petty_item` (
   `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `petty_item`
+--
+
+INSERT INTO `petty_item` (`id`, `request_id`, `text`, `amount`, `status`, `updated`, `created`) VALUES
+(1, 1, 'aaaa', 1000.00, 1, '2025-03-29 20:58:10', '2025-03-29 20:49:19'),
+(2, 1, 'bbbb', 1500.00, 1, '2025-03-29 20:58:10', '2025-03-29 20:49:19'),
+(3, 1, 'cccc', 1700.00, 1, NULL, '2025-03-29 20:58:10');
+
 -- --------------------------------------------------------
 
 --
@@ -2111,6 +2207,13 @@ CREATE TABLE `petty_remark` (
   `status` int(11) NOT NULL,
   `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `petty_remark`
+--
+
+INSERT INTO `petty_remark` (`id`, `request_id`, `login_id`, `text`, `status`, `created`) VALUES
+(1, 1, 1, '', 2, '2025-03-29 20:58:24');
 
 -- --------------------------------------------------------
 
@@ -2131,6 +2234,13 @@ CREATE TABLE `petty_request` (
   `updated` datetime DEFAULT NULL,
   `created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `petty_request`
+--
+
+INSERT INTO `petty_request` (`id`, `uuid`, `last`, `login_id`, `department_number`, `doc_date`, `objective`, `action`, `status`, `updated`, `created`) VALUES
+(1, '9f0b3067-0ca4-11f0-9003-0242ac120003', 1, 1, 'it-680015', '2025-03-29', 'petty-test\r\npetty-test', 1, 2, '2025-03-29 20:58:24', '2025-03-29 20:49:19');
 
 -- --------------------------------------------------------
 
@@ -3241,25 +3351,25 @@ ALTER TABLE `advance_clear_request`
 -- AUTO_INCREMENT for table `advance_file`
 --
 ALTER TABLE `advance_file`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `advance_item`
 --
 ALTER TABLE `advance_item`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `advance_remark`
 --
 ALTER TABLE `advance_remark`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `advance_request`
 --
 ALTER TABLE `advance_request`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `asset`
@@ -3415,13 +3525,13 @@ ALTER TABLE `login`
 -- AUTO_INCREMENT for table `outstanding_file`
 --
 ALTER TABLE `outstanding_file`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `outstanding_item`
 --
 ALTER TABLE `outstanding_item`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `outstanding_remark`
@@ -3439,49 +3549,49 @@ ALTER TABLE `outstanding_request`
 -- AUTO_INCREMENT for table `payment_file`
 --
 ALTER TABLE `payment_file`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `payment_item`
 --
 ALTER TABLE `payment_item`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `payment_remark`
 --
 ALTER TABLE `payment_remark`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `payment_request`
 --
 ALTER TABLE `payment_request`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `petty_file`
 --
 ALTER TABLE `petty_file`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `petty_item`
 --
 ALTER TABLE `petty_item`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `petty_remark`
 --
 ALTER TABLE `petty_remark`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `petty_request`
 --
 ALTER TABLE `petty_request`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `position`

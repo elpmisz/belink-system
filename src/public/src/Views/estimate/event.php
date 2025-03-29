@@ -263,6 +263,23 @@ $reference = $ESTIMATE->estimate_item_reference([$uuid]);
 
     row.after(clone);
     initializeSelect2(".expense-select", "/estimate/expense-select", "-- รายชื่อรายจ่าย --");
+
+    $('.item-amount, .item-vat, .item-wt, .item-estimate').on('blur', function() {
+      var value = $(this).val();
+
+      value = value.replace(/[^0-9.]/g, '');
+
+      var parts = value.split('.');
+      if (parts.length > 2) {
+        value = parts[0] + '.' + parts.slice(1).join('');
+      }
+
+      if (value) {
+        value = parseFloat(value).toFixed(2);
+      }
+
+      $(this).val(value);
+    });
   });
 
   updateTotal();
@@ -282,4 +299,21 @@ $reference = $ESTIMATE->estimate_item_reference([$uuid]);
 
     $(".item-total").text(totalEstimate.toFixed(2));
   }
+
+  $('.item-amount, .item-vat, .item-wt, .item-estimate').on('blur', function() {
+    var value = $(this).val();
+
+    value = value.replace(/[^0-9.]/g, '');
+
+    var parts = value.split('.');
+    if (parts.length > 2) {
+      value = parts[0] + '.' + parts.slice(1).join('');
+    }
+
+    if (value) {
+      value = parseFloat(value).toFixed(2);
+    }
+
+    $(this).val(value);
+  });
 </script>

@@ -94,10 +94,10 @@ $files = $PETTY->petty_file_view([$uuid]);
                       <input type="hidden" class="form-control form-control-sm text-center" name="item__id[]" value="<?php echo $item['id'] ?>" readonly>
                     </td>
                     <td class="text-left">
-                      <input type="text" class="form-control form-control-sm text-left" name="item__text[]" value="<?php echo $item['text'] ?>" required>
+                      <input type="text" class="form-control form-control-sm text-left item-text" name="item__text[]" value="<?php echo $item['text'] ?>" required>
                     </td>
                     <td>
-                      <input type="number" class="form-control form-control-sm text-right amount-item" name="item__amount[]" value="<?php echo $item['amount'] ?>" max="<?php echo $item['remain'] ?>" required>
+                      <input type="number" class="form-control form-control-sm text-right item-amount" name="item__amount[]" value="<?php echo $item['amount'] ?>" max="<?php echo $item['remain'] ?>" required>
                       <div class="invalid-feedback">
                         กรุณากรอกข้อมูล!
                       </div>
@@ -110,13 +110,13 @@ $files = $PETTY->petty_file_view([$uuid]);
                     <button type="button" class="btn btn-sm btn-danger item-decrease">-</button>
                   </td>
                   <td>
-                    <input type="text" class="form-control form-control-sm text-left" name="item_text[]">
+                    <input type="text" class="form-control form-control-sm text-left item-text" name="item_text[]">
                     <div class="invalid-feedback">
                       กรุณากรอกข้อมูล!
                     </div>
                   </td>
                   <td>
-                    <input type="number" class="form-control form-control-sm text-right amount-item" min="1" step="0.01" name="item_amount[]">
+                    <input type="number" class="form-control form-control-sm text-right item-amount" min="1" step="0.01" name="item_amount[]">
                     <div class="invalid-feedback">
                       กรุณากรอกข้อมูล!
                     </div>
@@ -125,7 +125,7 @@ $files = $PETTY->petty_file_view([$uuid]);
                 <tr>
                   <td colspan="2" class="text-right">รวมทั้งสิ้น</td>
                   <td class="text-right">
-                    <span class="amount-total"><?php echo number_format($total['total'], 2) ?></span>
+                    <span class="total-all"><?php echo number_format($total['total'], 2) ?></span>
                   </td>
                 </tr>
               </tbody>
@@ -214,11 +214,28 @@ $files = $PETTY->petty_file_view([$uuid]);
 
     row.after(clone);
     updateTotal();
+
+    $('.item-amount').on('blur', function() {
+      var value = $(this).val();
+
+      value = value.replace(/[^0-9.]/g, '');
+
+      var parts = value.split('.');
+      if (parts.length > 2) {
+        value = parts[0] + '.' + parts.slice(1).join('');
+      }
+
+      if (value) {
+        value = parseFloat(value).toFixed(2);
+      }
+
+      $(this).val(value);
+    });
   });
 
-  $(document).on("blur", ".amount-item", function() {
+  $(document).on("blur", ".item-amount", function() {
     const row = $(this).closest("tr");
-    const amount = parseFloat(row.find(".amount-item").val() || 0);
+    const amount = parseFloat(row.find(".item-amount").val() || 0);
 
     updateTotal();
   });
@@ -226,15 +243,18 @@ $files = $PETTY->petty_file_view([$uuid]);
   function updateTotal() {
     let totalAmount = 0;
 
-    $('.amount-item').each(function() {
-      var amount = parseFloat($(this).val()) || 0;
+    $('.item-amount').each(function() {
+      let amount = parseFloat($(this).val()) || 0;
       totalAmount += amount;
+      console.log(amount)
     });
 
-    $(".amount-total").text(totalAmount.toFixed(2).toLocaleString('th-TH', {
+    let formattedTotalAmount = totalAmount.toLocaleString('en-US', {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2
-    }));
+    });
+
+    $(".total-all").text(formattedTotalAmount);
   }
 
   $(document).on("click", ".file-increase", function() {
@@ -386,5 +406,22 @@ $files = $PETTY->petty_file_view([$uuid]);
         return false;
       }
     })
+  });
+
+  $('.item-amount').on('blur', function() {
+    var value = $(this).val();
+
+    value = value.replace(/[^0-9.]/g, '');
+
+    var parts = value.split('.');
+    if (parts.length > 2) {
+      value = parts[0] + '.' + parts.slice(1).join('');
+    }
+
+    if (value) {
+      value = parseFloat(value).toFixed(2);
+    }
+
+    $(this).val(value);
   });
 </script>

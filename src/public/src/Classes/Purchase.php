@@ -379,17 +379,46 @@ class Purchase
     ON b.expense_id = c.id
     LEFT JOIN 
     (
-      SELECT a.order_number,b.expense_id,(SUM(b.amount) + SUM(b.vat) - SUM(b.wt)) payment
-      FROM belink.payment_request a
-      LEFT JOIN belink.payment_item b
-      ON a.id = b.request_id
-      WHERE b.status = 1
-      GROUP BY a.order_number,b.expense_id
+      SELECT a.order_number,a.purchase_number,a.expense_id,(a.payment + IFNULL(b.amount, 0) + IFNULL(c.amount,0)) payment
+      FROM 
+      (
+        SELECT IF(a.order_number = '',c.order_number,a.order_number) order_number,a.purchase_number,b.expense_id,
+        (SUM(b.amount) + SUM(b.vat) - SUM(b.wt)) payment
+        FROM belink.payment_request a
+        LEFT JOIN belink.payment_item b
+        ON a.id = b.request_id
+        LEFT JOIN belink.purchase_request c
+        ON a.purchase_number = c.department_number
+        WHERE b.status = 1
+        GROUP BY a.order_number,a.purchase_number,b.expense_id
+      ) a
+      LEFT JOIN
+      (
+        SELECT a.order_number,b.expense_id,SUM(b.amount) amount
+        FROM belink.advance_request a
+        LEFT JOIN belink.advance_item b
+        ON a.id = b.request_id
+        WHERE b.`status` = 1
+        GROUP BY a.order_number,b.expense_id
+      ) b
+      ON a.order_number = b.order_number 
+      AND a.expense_id = b.expense_id
+      LEFT JOIN
+      (
+        SELECT a.order_number,b.expense_id,SUM(b.estimate) amount
+        FROM belink.outstanding_request a
+        LEFT JOIN belink.outstanding_item b
+        ON a.id = b.request_id
+        WHERE b.`status` = 1
+        GROUP BY a.order_number,b.expense_id
+      ) c
+      ON a.order_number = c.order_number
+      AND a.expense_id = c.expense_id
     ) d
-    ON a.order_number = d.order_number
-    AND b.expense_id = d.expense_id
-    WHERE a.order_number = ?
-    AND b.`status` = 1";
+    ON b.expense_id = d.expense_id
+    AND (a.order_number = d.order_number OR a.department_number = d.purchase_number)
+    WHERE b.`status` = 1
+    AND a.order_number = ?";
     $stmt = $this->dbcon->prepare($sql);
     $stmt->execute($data);
     return $stmt->fetchAll();

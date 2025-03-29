@@ -45,7 +45,7 @@ include_once(__DIR__ . "/../layout/header.php");
       <div class="row mb-2">
         <label class="col-xl-2 offset-xl-2 col-form-label">เลขที่ใบขอซื้อ PR</label>
         <div class="col-xl-4">
-          <select class="form-control form-control-sm purchase-select" name="pr_number"></select>
+          <select class="form-control form-control-sm purchase-select" name="purchase_number"></select>
           <div class="invalid-feedback">
             กรุณากรอกข้อมูล!
           </div>
@@ -375,6 +375,30 @@ include_once(__DIR__ . "/../layout/header.php");
       });
     } else {
       $(".items-div").hide();
+
+      $(".expense-select").select2({
+        placeholder: "-- รายจ่าย --",
+        width: "100%",
+        allowClear: true,
+        ajax: {
+          url: "/purchase/expense-select",
+          method: "POST",
+          data: function(params) {
+            return {
+              keyword: params.term,
+              order
+            };
+          },
+          dataType: "json",
+          delay: 100,
+          processResults: function(data) {
+            return {
+              results: data
+            };
+          },
+          cache: true
+        }
+      });
     }
   });
 
@@ -471,7 +495,7 @@ include_once(__DIR__ . "/../layout/header.php");
     row.find(".item-text, .item-amount, .item-vat, .item-wt").val("");
     row.find(".item-total").text("");
 
-    if (expense) {
+    if (expense && (order || purchase)) {
       axios.post("/payment/order-view", {
           expense,
           order,
@@ -492,6 +516,8 @@ include_once(__DIR__ . "/../layout/header.php");
   });
 
   $(document).on("input", ".item-amount, .item-vat, .item-wt", function() {
+    const order = ($(".order-select").val() || "");
+    const purchase = ($(".purchase-select").val() || "");
     const row = $(this).closest("tr");
     const amount = parseFloat(row.find(".item-amount").val() || 0);
     const vat = parseFloat(row.find(".item-vat").val() || 0);
@@ -499,7 +525,11 @@ include_once(__DIR__ . "/../layout/header.php");
     let remain = parseFloat(row.find(".item-remain").text() || 0);
     const total = (amount + vat - wt);
 
-    row.find(".item-amount").attr("max", remain);
+    if (order || purchase) {
+      row.find(".item-amount").prop("max", remain);
+    } else {
+      row.find(".item-amount").prop("max", false);
+    }
 
     if (remain && total > remain) {
       Swal.fire({
@@ -513,6 +543,23 @@ include_once(__DIR__ . "/../layout/header.php");
     }
 
     updateTotal();
+
+    $('.item-amount, .item-vat, .item-wt').on('blur', function() {
+      var value = $(this).val();
+
+      value = value.replace(/[^0-9.]/g, '');
+
+      var parts = value.split('.');
+      if (parts.length > 2) {
+        value = parts[0] + '.' + parts.slice(1).join('');
+      }
+
+      if (value) {
+        value = parseFloat(value).toFixed(2);
+      }
+
+      $(this).val(value);
+    });
   });
 
   $(document).on("click", ".file-increase", function() {
@@ -545,10 +592,12 @@ include_once(__DIR__ . "/../layout/header.php");
       totalWt += wt;
     });
 
+    let grandTotal = totalAmount + totalVat - totalWt;
+
     $(".total-amount").text(totalAmount.toFixed(2));
     $(".total-vat").text(totalVat.toFixed(2));
     $(".total-wt").text(totalWt.toFixed(2));
-    $(".total-all").text((totalAmount + totalVat - totalWt).toFixed(2));
+    $(".total-all").text(grandTotal.toFixed(2));
   }
 
   $(document).on("change", "input[name='file[]']", function() {

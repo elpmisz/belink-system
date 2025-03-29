@@ -58,22 +58,16 @@ if ($action === "create") {
     $OUTSTANDING->outstanding_insert([$outstanding_last, $login_id, $department_number, $doc_date, $order_number, $text]);
     $request_id = $OUTSTANDING->last_insert_id();
 
-    $items = $OUTSTANDING->get_item_view([$order_number]);
+    foreach ($_POST['expense_id'] as $key => $row) {
+      $expense_id = (isset($_POST['expense_id'][$key]) ? $VALIDATION->input($_POST['expense_id'][$key]) : "");
+      $item_text = (isset($_POST['item_text'][$key]) ? $VALIDATION->input($_POST['item_text'][$key]) : "");
+      $item_amount = (isset($_POST['item_amount'][$key]) ? $VALIDATION->input($_POST['item_amount'][$key]) : "");
+      $item_unit = (isset($_POST['item_unit'][$key]) ? $VALIDATION->input($_POST['item_unit'][$key]) : "");
+      $item_estimate = (isset($_POST['item_estimate'][$key]) ? $VALIDATION->input($_POST['item_estimate'][$key]) : "");
 
-    $selected  = [];
-    foreach ($_POST['item_index'] as $index) {
-      $selected[] = $items[$index];
-    }
-
-    foreach ($selected as $item) {
-      $name = (isset($item['name']) ? $VALIDATION->input($item['name']) : "");
-      $amount = (isset($item['amount']) ? $VALIDATION->input($item['amount']) : "");
-      $unit = (isset($item['unit']) ? $VALIDATION->input($item['unit']) : "");
-      $estimate = (isset($item['estimate']) ? $VALIDATION->input($item['estimate']) : "");
-
-      $outstanding_item_count = $OUTSTANDING->outstanding_item_count([$request_id, $name, $amount, $unit, $estimate]);
-      if (intval($outstanding_item_count) === 0) {
-        $OUTSTANDING->outstanding_item_insert([$request_id, $name, $amount, $unit, $estimate]);
+      $outstanding_item_count = $OUTSTANDING->outstanding_item_count([$request_id, $expense_id, $item_text, $item_amount, $item_unit, $item_estimate]);
+      if (intval($outstanding_item_count) === 0 && !empty($expense_id) && !empty($item_text)) {
+        $OUTSTANDING->outstanding_item_insert([$request_id, $expense_id, $item_text, $item_amount, $item_unit, $item_estimate]);
       }
     }
 
@@ -121,26 +115,28 @@ if ($action === "update") {
     $text = (isset($_POST['text']) ? $VALIDATION->input($_POST['text']) : "");
     $OUTSTANDING->outstanding_update([$department_number, $doc_date, $text, $uuid]);
 
-    if (isset($_POST['item_name']) && !empty($_POST['item_name'])) {
-      foreach ($_POST['item_name'] as $key => $item) {
-        $item_name = (isset($_POST['item_name'][$key]) ? $VALIDATION->input($_POST['item_name'][$key]) : "");
+    if (isset($_POST['expense_id']) && !empty($_POST['expense_id'])) {
+      foreach ($_POST['expense_id'] as $key => $row) {
+        $expense_id = (isset($_POST['expense_id'][$key]) ? $VALIDATION->input($_POST['expense_id'][$key]) : "");
+        $item_text = (isset($_POST['item_text'][$key]) ? $VALIDATION->input($_POST['item_text'][$key]) : "");
         $item_amount = (isset($_POST['item_amount'][$key]) ? $VALIDATION->input($_POST['item_amount'][$key]) : "");
         $item_unit = (isset($_POST['item_unit'][$key]) ? $VALIDATION->input($_POST['item_unit'][$key]) : "");
         $item_estimate = (isset($_POST['item_estimate'][$key]) ? $VALIDATION->input($_POST['item_estimate'][$key]) : "");
 
-        $outstanding_item_count = $OUTSTANDING->outstanding_item_count([$request_id, $item_name, $item_amount, $item_unit, $item_estimate]);
-        if (intval($outstanding_item_count) === 0) {
-          $OUTSTANDING->outstanding_item_insert([$request_id, $item_name, $item_amount, $item_unit, $item_estimate]);
+        $outstanding_item_count = $OUTSTANDING->outstanding_item_count([$request_id, $expense_id, $item_text, $item_amount, $item_unit, $item_estimate]);
+        if (intval($outstanding_item_count) === 0 && !empty($expense_id) && !empty($item_text)) {
+          $OUTSTANDING->outstanding_item_insert([$request_id, $expense_id, $item_text, $item_amount, $item_unit, $item_estimate]);
         }
       }
     }
 
     foreach ($_POST['item__id'] as $key => $row) {
       $item__id = (isset($_POST['item__id'][$key]) ? $VALIDATION->input($_POST['item__id'][$key]) : "");
+      $item__amount = (isset($_POST['item__amount'][$key]) ? $VALIDATION->input($_POST['item__amount'][$key]) : "");
       $item__unit = (isset($_POST['item__unit'][$key]) ? $VALIDATION->input($_POST['item__unit'][$key]) : "");
       $item__estimate = (isset($_POST['item__estimate'][$key]) ? $VALIDATION->input($_POST['item__estimate'][$key]) : "");
 
-      $OUTSTANDING->outstanding_item_update([$item__unit, $item__estimate, $item__id]);
+      $OUTSTANDING->outstanding_item_update([$item__amount, $item__unit, $item__estimate, $item__id]);
     }
 
     foreach ($_FILES['file']['name'] as $key => $row) {

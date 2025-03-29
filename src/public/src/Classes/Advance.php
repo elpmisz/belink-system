@@ -22,6 +22,7 @@ class Advance
     WHERE a.status = 1
     AND a.login_id = ?
     AND a.department_number = ?
+    AND a.order_number = ?
     AND a.doc_date = ?
     AND a.finish = ?
     AND a.objective = ?";
@@ -46,7 +47,7 @@ class Advance
 
   public function advance_insert($data)
   {
-    $sql = "INSERT INTO belink.advance_request(`uuid`, `last`, `login_id`, `department_number`, `doc_date`, `finish`, `objective`) VALUES(uuid(),?,?,?,?,?,?)";
+    $sql = "INSERT INTO belink.advance_request(`uuid`, `last`, `login_id`, `department_number`, `order_number`, `doc_date`, `finish`, `objective`) VALUES(uuid(),?,?,?,?,?,?,?)";
     $stmt = $this->dbcon->prepare($sql);
     return $stmt->execute($data);
   }
@@ -58,6 +59,7 @@ class Advance
       CONCAT('AV-',RIGHT((YEAR(a.created) + 543),2),LPAD(a.`last`,4,'0')) ticket,
       CONCAT(b.firstname,' ',b.lastname) username,
       a.department_number,
+      a.order_number,
       DATE_FORMAT(a.doc_date,'%d/%m/%Y') `doc_date`,
       DATE_FORMAT(a.finish,'%d/%m/%Y') `finish`,
       a.objective,
@@ -74,7 +76,7 @@ class Advance
   public function advance_update($data)
   {
     $sql = "UPDATE belink.advance_request SET
-    department_update = ?,
+    department_number = ?,
     doc_date = ?,
     `finish` = ?,
     objective = ?,
@@ -93,7 +95,8 @@ class Advance
     WHERE a.status = 1
     AND a.request_id = ?
     AND a.expense_id = ?
-    AND a.text = ?";
+    AND a.text = ?
+    AND a.amount = ?";
     $stmt = $this->dbcon->prepare($sql);
     $stmt->execute($data);
     return $stmt->fetchColumn();
@@ -250,6 +253,21 @@ class Advance
     ORDER BY a.created DESC";
     $stmt = $this->dbcon->prepare($sql);
     $stmt->execute($data);
+    return $stmt->fetchAll();
+  }
+
+  public function order_select($keyword)
+  {
+    $sql = "SELECT a.order_number `id`, 
+    a.order_number `text`
+    FROM belink.advance_request a
+    WHERE a.order_number != '' ";
+    if (!empty($keyword)) {
+      $sql .= " WHERE (a.order_number LIKE '%{$keyword}%') ";
+    }
+    $sql .= " GROUP BY a.order_number ORDER BY a.order_number ASC ";
+    $stmt = $this->dbcon->prepare($sql);
+    $stmt->execute();
     return $stmt->fetchAll();
   }
 

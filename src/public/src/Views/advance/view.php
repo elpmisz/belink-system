@@ -34,6 +34,12 @@ $files = $ADVANCE->advance_file_view([$uuid]);
             <input type="text" class="form-control form-control-sm" name="uuid" value="<?php echo $row['uuid'] ?>" readonly>
           </div>
         </div>
+        <div class="row mb-2">
+          <label class="col-xl-2 offset-xl-2 col-form-label">ORDER NUMBER</label>
+          <div class="col-xl-4">
+            <input type="text" class="form-control form-control-sm order-select" value="<?php echo $row['order_number'] ?>" readonly>
+          </div>
+        </div>
       </div>
       <div class="row mb-2">
         <label class="col-xl-2 offset-xl-2 col-form-label">เลขที่เอกสาร</label>
@@ -54,6 +60,12 @@ $files = $ADVANCE->advance_file_view([$uuid]);
           <div class="invalid-feedback">
             กรุณากรอกข้อมูล!
           </div>
+        </div>
+      </div>
+      <div class="row mb-2">
+        <label class="col-xl-2 offset-xl-2 col-form-label">เลขที่สัญญา SO</label>
+        <div class="col-xl-4 text-underline">
+          <?php echo $row['order_number'] ?>
         </div>
       </div>
       <div class="row mb-2">
@@ -94,6 +106,7 @@ $files = $ADVANCE->advance_file_view([$uuid]);
                   <th width="20%">รายจ่าย</th>
                   <th width="40%">รายละเอียด</th>
                   <th width="20%">จำนวนเงิน</th>
+                  <th width="10%">ยอดคงเหลือ</th>
                 </tr>
               </thead>
               <tbody>
@@ -108,11 +121,12 @@ $files = $ADVANCE->advance_file_view([$uuid]);
                       <input type="text" class="form-control form-control-sm text-left" name="item__text[]" value="<?php echo $item['text'] ?>" required>
                     </td>
                     <td>
-                      <input type="number" class="form-control form-control-sm text-right amount-item" name="item__amount[]" value="<?php echo $item['amount'] ?>" max="<?php echo $item['remain'] ?>" required>
+                      <input type="number" class="form-control form-control-sm text-right item-amount" name="item__amount[]" value="<?php echo $item['amount'] ?>" max="<?php echo $item['remain'] ?>" required>
                       <div class="invalid-feedback">
                         กรุณากรอกข้อมูล!
                       </div>
                     </td>
+                    <td class="text-right"><span class="item-remain"></span></td>
                   </tr>
                 <?php endforeach; ?>
                 <tr class="item-tr">
@@ -133,16 +147,17 @@ $files = $ADVANCE->advance_file_view([$uuid]);
                     </div>
                   </td>
                   <td>
-                    <input type="number" class="form-control form-control-sm text-right amount-item" min="1" step="0.01" name="item_amount[]">
+                    <input type="number" class="form-control form-control-sm text-right item-amount" min="1" step="0.01" name="item_amount[]">
                     <div class="invalid-feedback">
                       กรุณากรอกข้อมูล!
                     </div>
                   </td>
+                  <td class="text-right"><span class="item-remain"></span></td>
                 </tr>
                 <tr>
                   <td colspan="3" class="text-right">รวมทั้งสิ้น</td>
                   <td class="text-right">
-                    <span class="amount-total"><?php echo number_format($total['total'], 2) ?></span>
+                    <span class="total-amount"><?php echo number_format($total['total'], 2) ?></span>
                   </td>
                 </tr>
               </tbody>
@@ -213,8 +228,32 @@ $files = $ADVANCE->advance_file_view([$uuid]);
 
 <?php include_once(__DIR__ . "/../layout/footer.php"); ?>
 <script>
-  initializeSelect2(".order-select", "/payment/order-select", "-- รายชื่อเลขที่สัญญา --");
-  initializeSelect2(".expense-select", "/estimate/expense-select", "-- รายชื่อรายจ่าย --");
+  const order = ($(".order-select").val() || "");
+  const purchase = ($(".purchase-select").val() || "");
+  $(".expense-select").select2({
+    placeholder: "-- รายจ่าย --",
+    width: "100%",
+    allowClear: true,
+    ajax: {
+      url: "/payment/expense-select",
+      method: "POST",
+      data: function(params) {
+        return {
+          keyword: params.term,
+          order,
+          purchase
+        };
+      },
+      dataType: "json",
+      delay: 100,
+      processResults: function(data) {
+        return {
+          results: data
+        };
+      },
+      cache: true
+    }
+  });
 
   $(".item-decrease, .file-decrease").hide();
   $(document).on("click", ".item-increase", function() {
@@ -233,35 +272,114 @@ $files = $ADVANCE->advance_file_view([$uuid]);
     });
 
     row.after(clone);
-    initializeSelect2(".expense-select", "/estimate/expense-select", "-- รายชื่อรายจ่าย --");
+
+    const order = ($(".order-select").val() || "");
+    const purchase = ($(".purchase-select").val() || "");
+    $(".expense-select").select2({
+      placeholder: "-- รายจ่าย --",
+      width: "100%",
+      allowClear: true,
+      ajax: {
+        url: "/payment/expense-select",
+        method: "POST",
+        data: function(params) {
+          return {
+            keyword: params.term,
+            order,
+            purchase
+          };
+        },
+        dataType: "json",
+        delay: 100,
+        processResults: function(data) {
+          return {
+            results: data
+          };
+        },
+        cache: true
+      }
+    });
+
     updateTotal();
   });
 
   $(document).on("change", ".expense-select", function() {
     const expense = ($(this).val() || "");
-    if (expense) {
-      $("input[name='item_text[]'], input[name='item_amount[]']").prop("required", true);
+    const order = ($(".order-select").val() || "");
+    const purchase = ($(".purchase-select").val() || "");
+    const row = $(this).closest("tr");
+    row.find(".item-text, .item-amount, .item-vat, .item-wt").val("");
+    row.find(".item-total").text("");
+
+    if (expense && order) {
+      axios.post("/payment/order-view", {
+          expense,
+          order,
+          purchase
+        })
+        .then((res) => {
+          const result = res.data;
+          row.find(".item-remain").text(result.remain);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+
+      row.find(".item-text, .item-amount").prop("required", true);
     } else {
-      $("input[name='item_text[]'], input[name='item_amount[]']").prop("required", false);
+      row.find(".item-text, .item-amount").prop("required", false);
     }
   });
 
-  $(document).on("blur", ".amount-item", function() {
+  $(document).on("input", ".item-amount", function() {
+    const order = ($(".order-select").val() || "");
     const row = $(this).closest("tr");
-    const amount = parseFloat(row.find(".amount-item").val() || 0);
+    const amount = parseFloat(row.find(".item-amount").val() || 0);
+    let remain = parseFloat(row.find(".item-remain").text() || 0);
+
+    if (order) {
+      row.find(".item-amount").prop("max", remain);
+    } else {
+      row.find(".item-amount").prop("max", false);
+    }
+
+    if (remain && amount > remain) {
+      Swal.fire({
+        icon: "error",
+        title: "รายจ่ายเกินวงเงิน \nกรุณาตรวจสอบอีกครั้ง!",
+      });
+      row.find(".item-amount").val("");
+    }
 
     updateTotal();
+
+    $('.item-amount, .item-vat, .item-wt').on('blur', function() {
+      var value = $(this).val();
+
+      value = value.replace(/[^0-9.]/g, '');
+
+      var parts = value.split('.');
+      if (parts.length > 2) {
+        value = parts[0] + '.' + parts.slice(1).join('');
+      }
+
+      if (value) {
+        value = parseFloat(value).toFixed(2);
+      }
+
+      $(this).val(value);
+    });
   });
 
   function updateTotal() {
     let totalAmount = 0;
 
-    $('.amount-item').each(function() {
+    $('.item-amount').each(function() {
       var amount = parseFloat($(this).val()) || 0;
       totalAmount += amount;
     });
 
-    $(".amount-total").text(totalAmount.toFixed(2).toLocaleString('th-TH', {
+    $(".total-amount").text(totalAmount.toFixed(2).toLocaleString('th-TH', {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2
     }));
@@ -416,5 +534,22 @@ $files = $ADVANCE->advance_file_view([$uuid]);
         return false;
       }
     })
+  });
+
+  $('.item-amount, .item-vat, .item-wt').on('blur', function() {
+    var value = $(this).val();
+
+    value = value.replace(/[^0-9.]/g, '');
+
+    var parts = value.split('.');
+    if (parts.length > 2) {
+      value = parts[0] + '.' + parts.slice(1).join('');
+    }
+
+    if (value) {
+      value = parseFloat(value).toFixed(2);
+    }
+
+    $(this).val(value);
   });
 </script>

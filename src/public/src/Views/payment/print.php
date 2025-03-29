@@ -116,7 +116,7 @@ ob_start();
       <td colspan="8" class="no-border">เงินสด/โอนเข้าบัญชี</td>
     </tr>
     <tr>
-      <td width="10%" class="text-center no-border">[<?php echo (intval($row['type']) === 1 ? "/" : "") ?>]</td>
+      <td width="10%" class="text-center no-border">[<?php echo (intval($row['type']) === 2 ? "/" : " ") ?>]</td>
       <td width="10%" class="no-border">เช็คธนาคาร</td>
       <td width="10%" class="bottom-border"></td>
       <td width="10%" class="text-center no-border">สาขา</td>

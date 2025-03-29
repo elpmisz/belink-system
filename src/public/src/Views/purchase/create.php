@@ -174,7 +174,7 @@ include_once(__DIR__ . "/../layout/header.php");
                 <tr>
                   <td colspan="5" class="text-right">รวมทั้งสิ้น</td>
                   <td class="text-right">
-                    <span class=" all-total"></span>
+                    <span class="total-all"></span>
                   </td>
                 </tr>
               </tbody>
@@ -248,6 +248,9 @@ include_once(__DIR__ . "/../layout/header.php");
   });
 
   $(document).on("change", ".order-select", function() {
+    $(".expense-select").empty();
+    $(".item-text, .item-amount, .item-unit, .item-estimate").val("");
+    $(".total-all").text("");
     const order = ($(this).val() || "");
 
     if (order) {
@@ -285,10 +288,6 @@ include_once(__DIR__ . "/../layout/header.php");
             `;
 
             result.forEach((item, index) => {
-              const remain = parseFloat(item.remain).toLocaleString('th-TH', {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2
-              });
               tableContent += `
                 <tr class="item-tr">
                   <td class="text-center">${++index}</td>
@@ -353,8 +352,33 @@ include_once(__DIR__ . "/../layout/header.php");
           cache: true
         }
       });
+
     } else {
       $(".order-div, .items-div").hide();
+
+      $(".expense-select").select2({
+        placeholder: "-- รายจ่าย --",
+        width: "100%",
+        allowClear: true,
+        ajax: {
+          url: "/purchase/expense-select",
+          method: "POST",
+          data: function(params) {
+            return {
+              keyword: params.term,
+              order
+            };
+          },
+          dataType: "json",
+          delay: 100,
+          processResults: function(data) {
+            return {
+              results: data
+            };
+          },
+          cache: true
+        }
+      });
     }
   });
 
@@ -427,6 +451,23 @@ include_once(__DIR__ . "/../layout/header.php");
 
   $(document).on("input", ".item-estimate", function() {
     updateTotal();
+
+    $('.item-amount, .item-vat, .item-wt, .item-estimate').on('blur', function() {
+      var value = $(this).val();
+
+      value = value.replace(/[^0-9.]/g, '');
+
+      var parts = value.split('.');
+      if (parts.length > 2) {
+        value = parts[0] + '.' + parts.slice(1).join('');
+      }
+
+      if (value) {
+        value = parseFloat(value).toFixed(2);
+      }
+
+      $(this).val(value);
+    });
   })
 
   function updateTotal() {
@@ -438,12 +479,7 @@ include_once(__DIR__ . "/../layout/header.php");
       totalEstimate += estimate;
     });
 
-    totalEstimate.toLocaleString('en-US', {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    });
-
-    $(".all-total").text(totalEstimate);
+    $(".total-all").text(totalEstimate.toFixed(2));
   }
 
   $(document).on("click", ".file-increase", function() {

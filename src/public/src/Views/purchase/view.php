@@ -244,7 +244,7 @@ $files = $PURCHASE->purchase_file_view([$uuid]);
                 <tr>
                   <td colspan="5" class="text-right">รวมทั้งสิ้น</td>
                   <td class="text-right">
-                    <span class="all-total"><?php echo number_format($total['total'], 2) ?></span>
+                    <span class="total-all"><?php echo number_format($total['total'], 2) ?></span>
                   </td>
                 </tr>
               </tbody>
@@ -423,7 +423,7 @@ $files = $PURCHASE->purchase_file_view([$uuid]);
       maximumFractionDigits: 2
     });
 
-    $(".all-total").text(formattedTotalEstimate);
+    $(".total-all").text(formattedTotalEstimate);
   }
 
   $(document).on("click", ".file-increase", function() {

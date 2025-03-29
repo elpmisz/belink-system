@@ -34,7 +34,7 @@ include_once(__DIR__ . "/../layout/header.php");
         </div>
       </div>
       <div class="row mb-2">
-        <label class="col-xl-2 offset-xl-2 col-form-label">เลขที่ใบเบิก</label>
+        <label class="col-xl-2 offset-xl-2 col-form-label">เลขที่เอกสารฝ่าย</label>
         <div class="col-xl-4">
           <select class="form-control form-control-sm advance-select" name="advance_number" required></select>
           <div class="invalid-feedback">
@@ -127,11 +127,11 @@ include_once(__DIR__ . "/../layout/header.php");
     }
   });
 
-  $(document).on("blur", ".amount-item, .vat-item, .wt-item", function() {
+  $(document).on("blur", ".item-amount, .item-vat, .item-wt", function() {
     const row = $(this).closest("tr");
-    const amount = parseFloat(row.find(".amount-item").val() || 0);
-    const vat = parseFloat(row.find(".vat-item").val() || 0);
-    const wt = parseFloat(row.find(".wt-item").val() || 0);
+    const amount = parseFloat(row.find(".item-amount").val() || 0);
+    const vat = parseFloat(row.find(".item-vat").val() || 0);
+    const wt = parseFloat(row.find(".item-wt").val() || 0);
 
     const total = (amount + vat - wt).toFixed(2);
     row.find(".total-item").text(total);
@@ -145,19 +145,19 @@ include_once(__DIR__ . "/../layout/header.php");
     let totalWt = 0;
 
     $("tr.item-tr").each(function() {
-      const amount = parseFloat($(this).find(".amount-item").val() || 0);
-      const vat = parseFloat($(this).find(".vat-item").val() || 0);
-      const wt = parseFloat($(this).find(".wt-item").val() || 0);
+      const amount = parseFloat($(this).find(".item-amount").val() || 0);
+      const vat = parseFloat($(this).find(".item-vat").val() || 0);
+      const wt = parseFloat($(this).find(".item-wt").val() || 0);
 
       totalAmount += amount;
       totalVat += vat;
       totalWt += wt;
     });
 
-    $(".amount-total").text(totalAmount.toFixed(2));
-    $(".vat-total").text(totalVat.toFixed(2));
-    $(".wt-total").text(totalWt.toFixed(2));
-    $(".all-total").text((totalAmount + totalVat - totalWt).toFixed(2));
+    $(".item-amount").text(totalAmount.toFixed(2));
+    $(".item-vat").text(totalVat.toFixed(2));
+    $(".item-wt").text(totalWt.toFixed(2));
+    $(".item-all").text((totalAmount + totalVat - totalWt).toFixed(2));
   }
 
   $(document).on("change", ".advance-select", function() {
@@ -169,6 +169,7 @@ include_once(__DIR__ . "/../layout/header.php");
         })
         .then((res) => {
           let result = res.data;
+          console.log(result)
           $(".advance-amount").val(result);
         }).catch((error) => {
           console.log(error);
@@ -179,7 +180,6 @@ include_once(__DIR__ . "/../layout/header.php");
         })
         .then((res) => {
           const items = res.data;
-          console.log(items)
           let tableContent = '';
           if (items.length > 0) {
             tableContent = `
@@ -209,17 +209,17 @@ include_once(__DIR__ . "/../layout/header.php");
                 <div class="invalid-feedback">กรุณากรอกข้อมูล!</div>
               </td>
               <td>
-                <input type="text" class="form-control form-control-sm text-left" name="item_text[]" required>
+                <input type="text" class="form-control form-control-sm text-left item-text" name="item_text[]" required>
                 <div class="invalid-feedback">กรุณากรอกข้อมูล!</div>
               </td>
               <td>
-                <input type="number" class="form-control form-control-sm text-right amount-item" min="1" max="${item.estimate}" step="0.01" name="item_amount[]" required><div class="invalid-feedback">กรุณากรอกข้อมูล!</div>
+                <input type="number" class="form-control form-control-sm text-right item-amount" min="1" max="${item.estimate}" step="0.01" name="item_amount[]" required><div class="invalid-feedback">กรุณากรอกข้อมูล!</div>
               </td>
               <td>
-                <input type="number" class="form-control form-control-sm text-right vat-item" min="1" step="0.01" name="item_vat[]">
+                <input type="number" class="form-control form-control-sm text-right item-vat" min="1" step="0.01" name="item_vat[]">
               </td>
               <td>
-                <input type="number" class="form-control form-control-sm text-right wt-item" min="1" step="0.01" name="item_wt[]">
+                <input type="number" class="form-control form-control-sm text-right item-wt" min="1" step="0.01" name="item_wt[]">
               </td>
               <td class="text-right"><span class="total-item"></span></td>
               <td class="text-right">${amount}</span></td>
@@ -230,10 +230,10 @@ include_once(__DIR__ . "/../layout/header.php");
             tableContent += `
             <tr>
               <td colspan="3" class="text-right">รวมทั้งสิ้น</td>
-              <td class="text-right"><span class="amount-total"></span></td>
-              <td class="text-right"><span class="vat-total"></span></td>
-              <td class="text-right"><span class="wt-total"></span></td>
-              <td class="text-right"><span class="all-total"></span></td>
+              <td class="text-right"><span class="item-amount"></span></td>
+              <td class="text-right"><span class="item-vat"></span></td>
+              <td class="text-right"><span class="item-wt"></span></td>
+              <td class="text-right"><span class="item-all"></span></td>
             </tr>
           `;
 
